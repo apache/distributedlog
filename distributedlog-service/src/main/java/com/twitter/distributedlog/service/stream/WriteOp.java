@@ -26,6 +26,8 @@ import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.RequestDeniedException;
 import com.twitter.distributedlog.service.ResponseUtils;
+import com.twitter.distributedlog.service.streamset.Partition;
+import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.thrift.service.ResponseHeader;
 import com.twitter.distributedlog.thrift.service.StatusCode;
@@ -67,6 +69,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
                    ByteBuffer data,
                    StatsLogger statsLogger,
                    StatsLogger perStreamStatsLogger,
+                   StreamPartitionConverter streamPartitionConverter,
                    ServerConfiguration conf,
                    byte dlsnVersion,
                    Long checksum,
@@ -78,14 +81,15 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
         data.get(payload);
         this.isRecordSet = isRecordSet;
 
+        final Partition partition = streamPartitionConverter.convert(stream);
         StreamOpStats streamOpStats = new StreamOpStats(statsLogger, perStreamStatsLogger);
         this.successRecordCounter = streamOpStats.recordsCounter("success");
         this.failureRecordCounter = streamOpStats.recordsCounter("failure");
         this.redirectRecordCounter = streamOpStats.recordsCounter("redirect");
         this.deniedWriteCounter = streamOpStats.requestDeniedCounter("write");
         this.writeBytes = streamOpStats.scopedRequestCounter("write", "bytes");
-        this.latencyStat = streamOpStats.streamRequestLatencyStat(stream, "write");
-        this.bytes = streamOpStats.streamRequestCounter(stream, "write", "bytes");
+        this.latencyStat = streamOpStats.streamRequestLatencyStat(partition, "write");
+        this.bytes = streamOpStats.streamRequestCounter(partition, "write", "bytes");
 
         this.dlsnVersion = dlsnVersion;
         this.accessControlManager = accessControlManager;

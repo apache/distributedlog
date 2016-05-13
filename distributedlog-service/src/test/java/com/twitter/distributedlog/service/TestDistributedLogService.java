@@ -600,6 +600,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             ByteBuffer.wrap("test".getBytes()),
             new NullStatsLogger(),
             new NullStatsLogger(),
+            new IdentityStreamPartitionConverter(),
             new ServerConfiguration(),
             (byte)0,
             checksum,
