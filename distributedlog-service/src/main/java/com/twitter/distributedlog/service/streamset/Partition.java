@@ -57,6 +57,14 @@ public class Partition {
         return id;
     }
 
+    /**
+     * Get the 6 digit 0 padded id of this partition as a String.
+     * @return partition id
+     */
+    public String getPaddedId() {
+        return String.format("%06d", getId());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

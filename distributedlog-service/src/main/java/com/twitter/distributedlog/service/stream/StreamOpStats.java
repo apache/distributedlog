@@ -85,8 +85,9 @@ public class StreamOpStats {
 
     public StatsLogger streamRequestStatsLogger(Partition partition) {
         return BroadCastStatsLogger.masterslave(
-            streamStatsLogger.scope(partition.getStream()).scope("partition").scope(Integer.toString(partition.getId())),
-            streamStatsLogger.scope(partition.getStream()).scope("aggregate"));
+            streamStatsLogger.scope(partition.getStream()).scope("partition")
+                .scope(partition.getPaddedId()), streamStatsLogger.scope(partition.getStream())
+                .scope("aggregate"));
     }
 
     public StatsLogger streamRequestScope(Partition partition, String scopeName) {
