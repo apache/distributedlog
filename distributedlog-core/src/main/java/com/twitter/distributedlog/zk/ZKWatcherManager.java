@@ -139,7 +139,7 @@ public class ZKWatcherManager implements Watcher {
         return this;
     }
 
-    public void unregisterChildWatcher(String path, Watcher watcher) {
+    public void unregisterChildWatcher(String path, Watcher watcher, boolean removeFromServer) {
         Set<Watcher> watchers = childWatches.get(path);
         if (null == watchers) {
             logger.warn("No watchers found on path {} while unregistering child watcher {}.",
@@ -155,7 +155,7 @@ public class ZKWatcherManager implements Watcher {
             if (watchers.isEmpty()) {
                 // best-efforts to remove watches
                 try {
-                    if (null != zkc) {
+                    if (null != zkc && removeFromServer) {
                         zkc.get().removeWatches(path, this, WatcherType.Children, true, new AsyncCallback.VoidCallback() {
                             @Override
                             public void processResult(int rc, String path, Object ctx) {

@@ -72,7 +72,7 @@ public class TestZKWatcherManager {
         assertEquals(event2, events.get(1));
 
         // unregister watcher
-        watcherManager.unregisterChildWatcher(path, watcher);
+        watcherManager.unregisterChildWatcher(path, watcher, true);
 
         assertEquals(0, watcherManager.childWatches.size());
     }
