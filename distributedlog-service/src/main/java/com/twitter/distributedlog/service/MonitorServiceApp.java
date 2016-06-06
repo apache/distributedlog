@@ -99,6 +99,7 @@ public class MonitorServiceApp {
                 getOptionalIntegerArg(cmdline, "hck"),
                 getOptionalBooleanArg(cmdline, "hsci"),
                 getOptionalBooleanArg(cmdline, "w"),
+                getOptionalBooleanArg(cmdline, "mx"),
                 statsReceiver,
                 statsProvider);
 
