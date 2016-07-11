@@ -1293,21 +1293,4 @@ public abstract class BKLogHandler implements Watcher, AsyncCloseable, AsyncAbor
         }
     }
 
-    // ZooKeeper Watchers
-
-    Watcher registerExpirationHandler(final ZooKeeperClient.ZooKeeperSessionExpireNotifier onExpired) {
-        if (conf.getZKNumRetries() > 0) {
-            return new Watcher() {
-                @Override
-                public void process(WatchedEvent event) {
-                    // nop
-                }
-            };
-        }
-        return zooKeeperClient.registerExpirationHandler(onExpired);
-    }
-
-    boolean unregister(Watcher watcher) {
-        return zooKeeperClient.unregister(watcher);
-    }
 }

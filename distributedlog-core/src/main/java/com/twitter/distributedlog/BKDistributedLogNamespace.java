@@ -622,13 +622,10 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
                                                                   DistributedLogConfiguration conf,
                                                                   String zkServers,
                                                                   StatsLogger statsLogger) {
-        RetryPolicy retryPolicy = null;
-        if (conf.getZKNumRetries() > 0) {
-            retryPolicy = new BoundExponentialBackoffRetryPolicy(
+        RetryPolicy retryPolicy = new BoundExponentialBackoffRetryPolicy(
                     conf.getBKClientZKRetryBackoffStartMillis(),
                     conf.getBKClientZKRetryBackoffMaxMillis(),
                     conf.getBKClientZKNumRetries());
-        }
         ZooKeeperClientBuilder builder = ZooKeeperClientBuilder.newBuilder()
                 .name(zkcName)
                 .sessionTimeoutMs(conf.getBKClientZKSessionTimeoutMilliSeconds())
