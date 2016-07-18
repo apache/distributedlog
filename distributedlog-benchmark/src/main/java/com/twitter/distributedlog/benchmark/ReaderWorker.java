@@ -270,6 +270,7 @@ public class ReaderWorker implements Worker {
                     .redirectBackoffMaxMs(500)
                     .requestTimeoutMs(2000)
                     .statsReceiver(statsReceiver)
+                    .thriftmux(true)
                     .name("reader");
 
             if (serverSetPaths.isEmpty()) {
