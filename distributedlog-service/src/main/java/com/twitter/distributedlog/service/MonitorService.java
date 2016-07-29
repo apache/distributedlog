@@ -177,6 +177,11 @@ public class MonitorService implements NamespaceListener {
         }
 
         @Override
+        public void onLogStreamDeleted() {
+            logger.info("Stream {} is deleted", name);
+        }
+
+        @Override
         public void onSuccess(Void value) {
             successStat.add(stopwatch.stop().elapsed(TimeUnit.MICROSECONDS));
             scheduleCheck();
