@@ -19,7 +19,11 @@ package com.twitter.distributedlog.service;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.twitter.distributedlog.DistributedLogConfiguration;
+import com.twitter.distributedlog.client.routing.RoutingService;
+import com.twitter.distributedlog.client.routing.RoutingUtils;
+import com.twitter.distributedlog.client.serverset.DLZkServerSet;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
 import org.apache.bookkeeper.stats.NullStatsProvider;
@@ -38,7 +42,9 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static com.twitter.distributedlog.util.CommandLineUtils.*;
 
@@ -119,8 +125,17 @@ public class DistributedLogServerApp {
                     }
                 }).or(new NullStatsProvider());
 
+        final Optional<String> uriOption = getOptionalStringArg(cmdline, "u");
+        Preconditions.checkArgument(uriOption.isPresent(), "No distributedlog uri provided.");
+        URI dlUri = URI.create(uriOption.get());
+
+        DLZkServerSet serverSet = DLZkServerSet.of(dlUri, (int) TimeUnit.SECONDS.toMillis(60));
+        RoutingService routingService = RoutingUtils.buildRoutingService(serverSet.getServerSet())
+                .statsReceiver(statsReceiver.scope("routing"))
+                .build();
+
         final DistributedLogServer server = DistributedLogServer.runServer(
-                getOptionalStringArg(cmdline, "u"),
+                uriOption,
                 confOptional,
                 getOptionalStringArg(cmdline, "sc"),
                 getOptionalIntegerArg(cmdline, "p"),
@@ -128,6 +143,7 @@ public class DistributedLogServerApp {
                 getOptionalIntegerArg(cmdline, "si"),
                 getOptionalBooleanArg(cmdline, "a"),
                 getOptionalBooleanArg(cmdline, "mx"),
+                routingService,
                 statsReceiver,
                 statsProvider);
 

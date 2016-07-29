@@ -24,6 +24,9 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.acl.AccessControlManager;
+import com.twitter.distributedlog.client.resolver.RegionResolver;
+import com.twitter.distributedlog.client.resolver.TwitterRegionResolver;
+import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.exceptions.RegionUnavailableException;
 import com.twitter.distributedlog.exceptions.ServiceUnavailableException;
@@ -67,6 +70,7 @@ import com.twitter.distributedlog.rate.MovingAverageRate;
 import com.twitter.distributedlog.util.ConfUtils;
 import com.twitter.distributedlog.util.OrderedScheduler;
 import com.twitter.distributedlog.util.SchedulerUtils;
+import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Function0;
@@ -85,6 +89,8 @@ import org.slf4j.LoggerFactory;
 import scala.runtime.BoxedUnit;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -116,6 +122,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     private final StreamConfigProvider streamConfigProvider;
     private final StreamManager streamManager;
     private final StreamFactory streamFactory;
+    private final RoutingService routingService;
+    private final RegionResolver regionResolver;
     private final MovingAverageRateFactory movingAvgFactory;
     private final MovingAverageRate windowedRps;
     private final MovingAverageRate windowedBps;
@@ -149,6 +157,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                               StreamConfigProvider streamConfigProvider,
                               URI uri,
                               StreamPartitionConverter converter,
+                              RoutingService routingService,
                               StatsLogger statsLogger,
                               StatsLogger perStreamStatsLogger,
                               CountDownLatch keepAliveLatch)
@@ -224,6 +233,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                 converter,
                 streamConfigProvider,
                 dlNamespace);
+        this.routingService = routingService;
+        this.regionResolver = new TwitterRegionResolver();
 
         // Service features
         this.featureRegionStopAcceptNewStream = this.featureProvider.getFeature(
@@ -467,6 +478,53 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         return op.result();
     }
 
+    //
+    // Ownership RPC
+    //
+
+    @Override
+    public Future<WriteResponse> getOwner(String streamName, WriteContext ctx) {
+        if (streamManager.isAcquired(streamName)) {
+            // the stream is already acquired
+            return Future.value(new WriteResponse(ResponseUtils.ownerToHeader(clientId)));
+        }
+
+        Stream stream = streamManager.getStream(streamName);
+        String owner;
+        if (null != stream && null != (owner = stream.getOwner())) {
+            return Future.value(new WriteResponse(ResponseUtils.ownerToHeader(owner)));
+        }
+
+        RoutingService.RoutingContext routingContext = RoutingService.RoutingContext.of(regionResolver);
+
+        if (ctx.isSetTriedHosts()) {
+            for (String triedHost : ctx.getTriedHosts()) {
+                routingContext.addTriedHost(
+                        DLSocketAddress.parseSocketAddress(triedHost), StatusCode.STREAM_UNAVAILABLE);
+            }
+        }
+
+        try {
+            SocketAddress host = routingService.getHost(streamName, routingContext);
+            if (host instanceof InetSocketAddress) {
+                // use shard id '-1' as the shard id here won't be used for redirection
+                return Future.value(new WriteResponse(
+                        ResponseUtils.ownerToHeader(DLSocketAddress.toLockId((InetSocketAddress) host, -1))));
+            } else {
+                return Future.value(new WriteResponse(
+                        ResponseUtils.streamUnavailableHeader()));
+            }
+        } catch (NoBrokersAvailableException e) {
+            return Future.value(new WriteResponse(
+                    ResponseUtils.streamUnavailableHeader()));
+        }
+    }
+
+
+    //
+    // Admin RPCs
+    //
+
     @Override
     public Future<Void> setAcceptNewStream(boolean enabled) {
         closeLock.writeLock().lock();
@@ -654,6 +712,16 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     @VisibleForTesting
     WriteOp newWriteOp(String stream, ByteBuffer data, Long checksum) {
         return newWriteOp(stream, data, checksum, false);
+    }
+
+    @VisibleForTesting
+    RoutingService getRoutingService() {
+        return this.routingService;
+    }
+
+    @VisibleForTesting
+    DLSocketAddress getServiceAddress() throws IOException {
+        return DLSocketAddress.deserialize(clientId);
     }
 
     WriteOp newWriteOp(String stream,

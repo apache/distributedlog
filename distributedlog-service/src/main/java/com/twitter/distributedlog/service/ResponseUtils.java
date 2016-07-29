@@ -32,6 +32,10 @@ public class ResponseUtils {
         return new ResponseHeader(StatusCode.REQUEST_DENIED);
     }
 
+    public static ResponseHeader streamUnavailableHeader() {
+        return new ResponseHeader(StatusCode.STREAM_UNAVAILABLE);
+    }
+
     public static ResponseHeader successHeader() {
         return new ResponseHeader(StatusCode.SUCCESS);
     }

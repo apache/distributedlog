@@ -20,6 +20,7 @@ package com.twitter.distributedlog.service;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.distributedlog.DistributedLogConfiguration;
+import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.config.DynamicConfigurationFactory;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.service.announcer.Announcer;
@@ -73,6 +74,7 @@ public class DistributedLogServer {
 
     private DistributedLogServiceImpl dlService = null;
     private Server server = null;
+    private RoutingService routingService;
     private StatsProvider statsProvider;
     private Announcer announcer = null;
     private ScheduledExecutorService configExecutorService;
@@ -97,6 +99,7 @@ public class DistributedLogServer {
                          Optional<Integer> shardId,
                          Optional<Boolean> announceServerSet,
                          Optional<Boolean> thriftmux,
+                         RoutingService routingService,
                          StatsReceiver statsReceiver,
                          StatsProvider statsProvider) {
         this.uri = uri;
@@ -107,6 +110,7 @@ public class DistributedLogServer {
         this.shardId = shardId;
         this.announceServerSet = announceServerSet;
         this.thriftmux = thriftmux;
+        this.routingService = routingService;
         this.statsReceiver = statsReceiver;
         this.statsProvider = statsProvider;
     }
@@ -183,6 +187,7 @@ public class DistributedLogServer {
                 dynDlConf,
                 dlUri,
                 converter,
+                routingService,
                 statsProvider,
                 port.or(0),
                 keepAliveLatch,
@@ -195,6 +200,9 @@ public class DistributedLogServer {
 
         // announce the service
         announcer.announce();
+        // start the routing service after announced
+        routingService.startService();
+        logger.info("Started the routing service.");
     }
 
     protected void preRun(DistributedLogConfiguration conf, ServerConfiguration serverConf) {
@@ -245,19 +253,22 @@ public class DistributedLogServer {
             DistributedLogConfiguration dlConf,
             URI dlUri,
             StreamPartitionConverter converter,
+            RoutingService routingService,
             StatsProvider provider,
-            int port) throws IOException {
+            int port,
+            boolean thriftmux) throws IOException {
 
         return runServer(serverConf,
                 dlConf,
                 ConfUtils.getConstDynConf(dlConf),
                 dlUri,
                 converter,
+                routingService,
                 provider,
                 port,
                 new CountDownLatch(0),
                 new NullStatsReceiver(),
-                false,
+                thriftmux,
                 new NullStreamConfigProvider());
     }
 
@@ -267,6 +278,7 @@ public class DistributedLogServer {
             DynamicDistributedLogConfiguration dynDlConf,
             URI dlUri,
             StreamPartitionConverter partitionConverter,
+            RoutingService routingService,
             StatsProvider provider,
             int port,
             CountDownLatch keepAliveLatch,
@@ -291,6 +303,7 @@ public class DistributedLogServer {
                 streamConfProvider,
                 dlUri,
                 partitionConverter,
+                routingService,
                 provider.getStatsLogger(""),
                 perStreamStatsLogger,
                 keepAliveLatch);
@@ -358,6 +371,7 @@ public class DistributedLogServer {
             announcer.close();
         }
         closeServer(Pair.of(dlService, server), gracefulShutdownMs, TimeUnit.MILLISECONDS);
+        routingService.stopService();
         if (null != statsProvider) {
             statsProvider.stop();
         }
@@ -396,6 +410,7 @@ public class DistributedLogServer {
                Optional<Integer> shardId,
                Optional<Boolean> announceServerSet,
                Optional<Boolean> thriftmux,
+               RoutingService routingService,
                StatsReceiver statsReceiver,
                StatsProvider statsProvider)
             throws ConfigurationException, IllegalArgumentException, IOException {
@@ -409,6 +424,7 @@ public class DistributedLogServer {
                 shardId,
                 announceServerSet,
                 thriftmux,
+                routingService,
                 statsReceiver,
                 statsProvider);
 

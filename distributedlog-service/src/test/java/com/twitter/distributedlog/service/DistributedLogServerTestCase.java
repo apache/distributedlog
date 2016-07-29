@@ -34,7 +34,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,7 +148,7 @@ public abstract class DistributedLogServerTestCase {
     public void setupNoAdHocCluster() throws Exception {
         noAdHocCluster = createCluster(noAdHocConf);
         noAdHocCluster.start();
-        noAdHocServer = new DLServer(noAdHocConf, noAdHocCluster.getUri(), 7002);
+        noAdHocServer = new DLServer(noAdHocConf, noAdHocCluster.getUri(), 7002, false);
         noAdHocClient = createDistributedLogClient("no-ad-hoc-client");
     }
 
@@ -193,12 +192,12 @@ public abstract class DistributedLogServerTestCase {
     }
 
     protected DLServer createDistributedLogServer(int port) throws Exception {
-        return new DLServer(conf, dlCluster.getUri(), port);
+        return new DLServer(conf, dlCluster.getUri(), port, false);
     }
 
     protected DLServer createDistributedLogServer(DistributedLogConfiguration conf, int port)
             throws Exception {
-        return new DLServer(conf, dlCluster.getUri(), port);
+        return new DLServer(conf, dlCluster.getUri(), port, false);
     }
 
     protected DLClient createDistributedLogClient(String clientName) throws Exception {
