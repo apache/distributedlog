@@ -15,28 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.callback;
+package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.LogSegmentMetadata;
-
-import java.util.List;
+import com.twitter.distributedlog.thrift.service.StatusCode;
 
 /**
- * Listener on log segments changes for a given stream used by {@link com.twitter.distributedlog.BKLogReadHandler}
+ * Exception on log segment not found.
  */
-public interface LogSegmentListener {
+public class LogSegmentNotFoundException extends DLException {
 
-    /**
-     * Notified when <i>segments</i> updated. The new sorted log segments
-     * list is returned in this method.
-     *
-     * @param segments
-     *          updated list of segments.
-     */
-    void onSegmentsUpdated(List<LogSegmentMetadata> segments);
+    private static final long serialVersionUID = -2482324226595903864L;
 
-    /**
-     * Notified when the log stream is deleted.
-     */
-    void onLogStreamDeleted();
+    public LogSegmentNotFoundException(String logSegmentPath) {
+        super(StatusCode.LOG_SEGMENT_NOT_FOUND, "Log Segment " + logSegmentPath + " not found");
+    }
 }
