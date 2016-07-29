@@ -20,28 +20,44 @@ package com.twitter.distributedlog.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.client.ClientConfig;
 import com.twitter.distributedlog.client.DistributedLogClientImpl;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
+import com.twitter.distributedlog.client.proxy.ClusterClient;
 import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
 import com.twitter.distributedlog.client.resolver.RegionResolver;
 import com.twitter.distributedlog.client.routing.RegionsRoutingService;
 import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.client.routing.RoutingUtils;
+import com.twitter.distributedlog.thrift.service.DistributedLogService;
+import com.twitter.finagle.Name;
+import com.twitter.finagle.Resolver$;
+import com.twitter.finagle.Service;
+import com.twitter.finagle.ThriftMux;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.finagle.thrift.ClientId;
+import com.twitter.finagle.thrift.ThriftClientFramedCodec;
+import com.twitter.finagle.thrift.ThriftClientRequest;
+import com.twitter.util.Duration;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.Random;
 import org.apache.commons.lang.StringUtils;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import scala.Option;
 
 /**
  * Builder to build {@link DistributedLogClient}.
  */
 public final class DistributedLogClientBuilder {
+
+    private static final Logger logger = LoggerFactory.getLogger(DistributedLogClientBuilder.class);
 
     private static final Random random = new Random(System.currentTimeMillis());
 
@@ -49,6 +65,7 @@ public final class DistributedLogClientBuilder {
     private ClientId clientId = null;
     private RoutingService.Builder routingServiceBuilder = null;
     private ClientBuilder clientBuilder = null;
+    private String serverRoutingServiceFinagleName = null;
     private StatsReceiver statsReceiver = new NullStatsReceiver();
     private StatsReceiver streamStatsReceiver = new NullStatsReceiver();
     private ClientConfig clientConfig = new ClientConfig();
@@ -478,6 +495,18 @@ public final class DistributedLogClientBuilder {
         return newBuilder;
     }
 
+    /**
+     * Configure the finagle name string for the server-side routing service.
+     *
+     * @param nameStr name string of the server-side routing service
+     * @return client builder
+     */
+    public DistributedLogClientBuilder serverRoutingServiceFinagleNameStr(String nameStr) {
+        DistributedLogClientBuilder newBuilder = newBuilder(this);
+        newBuilder.serverRoutingServiceFinagleName = nameStr;
+        return newBuilder;
+    }
+
     DistributedLogClientBuilder clientConfig(ClientConfig clientConfig) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
         newBuilder.clientConfig = ClientConfig.newConfig(clientConfig);
@@ -499,7 +528,45 @@ public final class DistributedLogClientBuilder {
      * @return monitor service client.
      */
     public MonitorServiceClient buildMonitorClient() {
+
         return buildClient();
+    }
+
+    @SuppressWarnings("unchecked")
+    ClusterClient buildServerRoutingServiceClient(String serverRoutingServiceFinagleName) {
+        ClientBuilder builder = _clientBuilder;
+        if (null == builder) {
+            builder = ClientBuilder.get()
+                    .tcpConnectTimeout(Duration.fromMilliseconds(200))
+                    .connectTimeout(Duration.fromMilliseconds(200))
+                    .requestTimeout(Duration.fromSeconds(1))
+                    .retries(20);
+            if (!_clientConfig.getThriftMux()) {
+                builder = builder.hostConnectionLimit(1);
+            }
+        }
+        if (_clientConfig.getThriftMux()) {
+            builder = builder.stack(ThriftMux.client().withClientId(_clientId));
+        } else {
+            builder = builder.codec(ThriftClientFramedCodec.apply(Option.apply(_clientId)));
+        }
+
+        Name name;
+        try {
+            name = Resolver$.MODULE$.eval(serverRoutingServiceFinagleName);
+        } catch (Exception exc) {
+            logger.error("Exception in Resolver.eval for name {}", serverRoutingServiceFinagleName, exc);
+            throw new RuntimeException(exc);
+        }
+
+        // builder the client
+        Service<ThriftClientRequest, byte[]> client =
+                ClientBuilder.safeBuildFactory(
+                        builder.dest(name).reportTo(_statsReceiver.scope("routing"))
+                ).toService();
+        DistributedLogService.ServiceIface service =
+                new DistributedLogService.ServiceToClient(client, new TBinaryProtocol.Factory());
+        return new ClusterClient(client, service);
     }
 
     DistributedLogClientImpl buildClient() {
@@ -511,13 +578,27 @@ public final class DistributedLogClientBuilder {
             streamStatsReceiver = new NullStatsReceiver();
         }
 
+        Optional<ClusterClient> serverRoutingServiceClient = Optional.absent();
+        if (null != serverRoutingServiceFinagleName) {
+            serverRoutingServiceClient = Optional.of(
+                    buildServerRoutingServiceClient(serverRoutingServiceFinagleName));
+        }
+
         RoutingService routingService = routingServiceBuilder
                 .statsReceiver(statsReceiver.scope("routing"))
                 .build();
         DistributedLogClientImpl clientImpl =
                 new DistributedLogClientImpl(
-                    name, clientId, routingService, clientBuilder, clientConfig,
-                    statsReceiver, streamStatsReceiver, regionResolver, enableRegionStats);
+                        name,
+                        clientId,
+                        routingService,
+                        clientBuilder,
+                        clientConfig,
+                        serverRoutingServiceClient,
+                        statsReceiver,
+                        streamStatsReceiver,
+                        regionResolver,
+                        enableRegionStats);
         routingService.startService();
         clientImpl.handshake();
         return clientImpl;

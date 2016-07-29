@@ -17,6 +17,7 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
+import com.google.common.base.Optional;
 import com.twitter.distributedlog.service.DistributedLogClient;
 import com.twitter.distributedlog.service.DistributedLogCluster.DLServer;
 import com.twitter.distributedlog.service.DistributedLogServerTestCase;
@@ -35,12 +36,16 @@ public class TestStreamMover extends DistributedLogServerTestCase {
     DLClient targetClient;
     DLServer targetServer;
 
+    public TestStreamMover() {
+        super(true);
+    }
+
     @Before
     @Override
     public void setup() throws Exception {
         super.setup();
         targetServer = createDistributedLogServer(7003);
-        targetClient = createDistributedLogClient("target");
+        targetClient = createDistributedLogClient("target", Optional.<String>absent());
     }
 
     @After

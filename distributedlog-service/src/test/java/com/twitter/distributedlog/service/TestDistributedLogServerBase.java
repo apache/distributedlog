@@ -17,6 +17,7 @@
  */
 package com.twitter.distributedlog.service;
 
+import com.google.common.base.Optional;
 import com.twitter.distributedlog.AsyncLogReader;
 import com.twitter.distributedlog.DLMTestUtil;
 import com.twitter.distributedlog.DLSN;
@@ -30,7 +31,6 @@ import com.twitter.distributedlog.LogRecordWithDLSN;
 import com.twitter.distributedlog.ZooKeeperClient;
 import com.twitter.distributedlog.acl.AccessControlManager;
 import com.twitter.distributedlog.acl.ZKAccessControl;
-import com.twitter.distributedlog.client.DistributedLogClientImpl;
 import com.twitter.distributedlog.client.routing.LocalRoutingService;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.metadata.BKDLConfig;
@@ -43,7 +43,6 @@ import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.distributedlog.thrift.service.WriteContext;
 import com.twitter.distributedlog.util.FailpointUtils;
 import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Await;
@@ -74,11 +73,15 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class TestDistributedLogServer extends DistributedLogServerTestCase {
-    static final Logger logger = LoggerFactory.getLogger(TestDistributedLogServer.class);
+public abstract class TestDistributedLogServerBase extends DistributedLogServerTestCase {
+    static final Logger logger = LoggerFactory.getLogger(TestDistributedLogServerBase.class);
 
     @Rule
     public TestName testName = new TestName();
+
+    protected TestDistributedLogServerBase(boolean clientSideRouting) {
+        super(clientSideRouting);
+    }
 
     /**
      * {@link https://issues.apache.org/jira/browse/DL-27}
@@ -648,7 +651,10 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
                     ByteBuffer.wrap(streamName.getBytes(UTF_8))));
         }
 
-        DLClient client = createDistributedLogClient("test-stream-name-regex", streamNameRegex);
+        DLClient client = createDistributedLogClient(
+                "test-stream-name-regex",
+                streamNameRegex,
+                Optional.<String>absent());
         try {
             client.routingService.addHost("unknown", dlServer.getAddress());
             client.handshake();
@@ -681,29 +687,7 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
         checkStream(0, 0, 0, name, dlServer.getAddress(), false, false);
     }
 
-    @Test(timeout = 60000)
-    public void testAcceptNewStream() throws Exception {
-        String name = "dlserver-accept-new-stream";
-
-        dlClient.routingService.addHost(name, dlServer.getAddress());
-        dlClient.routingService.setAllowRetrySameHost(false);
-
-        Await.result(dlClient.dlClient.setAcceptNewStream(false));
-
-        try {
-            Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))));
-            fail("Should fail because the proxy couldn't accept new stream");
-        } catch (NoBrokersAvailableException nbae) {
-            // expected
-        }
-        checkStream(0, 0, 0, name, dlServer.getAddress(), false, false);
-
-        Await.result(dlServer.dlServer.getLeft().setAcceptNewStream(true));
-        Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))));
-        checkStream(1, 1, 1, name, dlServer.getAddress(), true, true);
-    }
-
-    private void checkStream(int expectedNumProxiesInClient, int expectedClientCacheSize, int expectedServerCacheSize,
+    protected void checkStream(int expectedNumProxiesInClient, int expectedClientCacheSize, int expectedServerCacheSize,
                              String name, SocketAddress owner, boolean existedInServer, boolean existedInClient) {
         Map<SocketAddress, Set<String>> distribution = dlClient.dlClient.getStreamOwnershipDistribution();
         assertEquals(expectedNumProxiesInClient, distribution.size());

@@ -19,13 +19,14 @@ package com.twitter.distributedlog.client;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.LogRecordSetBuffer;
-import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
 import com.twitter.distributedlog.client.ownership.OwnershipCache;
+import com.twitter.distributedlog.client.proxy.ClusterClient;
 import com.twitter.distributedlog.client.proxy.HostProvider;
 import com.twitter.distributedlog.client.proxy.ProxyClient;
 import com.twitter.distributedlog.client.proxy.ProxyClientManager;
@@ -38,6 +39,7 @@ import com.twitter.distributedlog.client.stats.OpStats;
 import com.twitter.distributedlog.exceptions.DLClientClosedException;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.ServiceUnavailableException;
+import com.twitter.distributedlog.exceptions.StreamUnavailableException;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.distributedlog.service.DistributedLogClient;
 import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
@@ -66,6 +68,8 @@ import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
+import com.twitter.util.Return;
+import com.twitter.util.Throw;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -118,6 +122,8 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
     private final OwnershipCache ownershipCache;
     // Channel/Client management
     private final ProxyClientManager clientManager;
+    // Cluster Client (for routing service)
+    private final Optional<ClusterClient> clusterClient;
 
     // Close Status
     private boolean closed = false;
@@ -140,6 +146,16 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             this.opStats = opStats;
         }
 
+        boolean shouldTimeout() {
+            long elapsedMs = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+            return shouldTimeout(elapsedMs);
+        }
+
+        boolean shouldTimeout(long elapsedMs) {
+            return clientConfig.getRequestTimeoutMs() > 0
+                && elapsedMs >= clientConfig.getRequestTimeoutMs();
+        }
+
         void send(SocketAddress address) {
             long elapsedMs = stopwatch.elapsed(TimeUnit.MILLISECONDS);
             if (clientConfig.getMaxRedirects() > 0
@@ -147,8 +163,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                 fail(address, new RequestTimeoutException(Duration.fromMilliseconds(elapsedMs),
                         "Exhausted max redirects in " + elapsedMs + " ms"));
                 return;
-            } else if (clientConfig.getRequestTimeoutMs() > 0
-                && elapsedMs >= clientConfig.getRequestTimeoutMs()) {
+            } else if (shouldTimeout(elapsedMs)) {
                 fail(address, new RequestTimeoutException(Duration.fromMilliseconds(elapsedMs),
                         "Exhausted max request timeout " + clientConfig.getRequestTimeoutMs()
                                 + " in " + elapsedMs + " ms"));
@@ -225,6 +240,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             // to go so large for other reasons though.
             this.results = new ArrayList<Promise<DLSN>>(data.size());
             for (int i = 0; i < data.size(); i++) {
+                Preconditions.checkNotNull(data.get(i));
                 this.results.add(new Promise<DLSN>());
             }
         }
@@ -549,6 +565,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                                     RoutingService routingService,
                                     ClientBuilder clientBuilder,
                                     ClientConfig clientConfig,
+                                    Optional<ClusterClient> clusterClient,
                                     StatsReceiver statsReceiver,
                                     StatsReceiver streamStatsReceiver,
                                     RegionResolver regionResolver,
@@ -579,6 +596,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                 this.dlTimer,       // timer
                 this,               // host provider
                 clientStats);       // client stats
+        this.clusterClient = clusterClient;
         this.clientManager.registerProxyListener(this);
 
         // Cache Stats
@@ -614,8 +632,10 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
     @Override
     public Set<SocketAddress> getHosts() {
         Set<SocketAddress> hosts = Sets.newHashSet();
-        // use both routing service and ownership cache for the handshaking source
-        hosts.addAll(this.routingService.getHosts());
+        // if using server side routing, we only handshake with the hosts in ownership cache.
+        if (!clusterClient.isPresent()) {
+            hosts.addAll(this.routingService.getHosts());
+        }
         hosts.addAll(this.ownershipCache.getStreamOwnershipDistribution().keySet());
         return hosts;
     }
@@ -675,7 +695,12 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
     @Override
     public void onServerJoin(SocketAddress address) {
-        clientManager.createClient(address);
+        // we only pre-create connection for client-side routing
+        // if it is server side routing, we only know the exact proxy address
+        // when #getOwner.
+        if (!clusterClient.isPresent()) {
+            clientManager.createClient(address);
+        }
     }
 
     public void close() {
@@ -807,17 +832,77 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             op.routingContext.addTriedHost(previousAddr, StatusCode.WRITE_EXCEPTION);
         }
         // Get host first
-        SocketAddress address = ownershipCache.getOwner(op.stream);
+        final SocketAddress address = ownershipCache.getOwner(op.stream);
         if (null == address || op.routingContext.isTriedHost(address)) {
-            // pickup host by hashing
-            try {
-                address = routingService.getHost(op.stream, op.routingContext);
-            } catch (NoBrokersAvailableException nbae) {
-                op.fail(null, nbae);
-                return;
-            }
+            getOwner(op).addEventListener(new FutureEventListener<SocketAddress>() {
+                @Override
+                public void onFailure(Throwable cause) {
+                    op.fail(null, cause);
+                }
+
+                @Override
+                public void onSuccess(SocketAddress ownerAddr) {
+                    op.send(ownerAddr);
+                }
+            });
+        } else {
+            op.send(address);
         }
-        op.send(address);
+    }
+
+    private void retryGetOwnerFromRoutingServer(final StreamOp op,
+                                                final Promise<SocketAddress> getOwnerPromise,
+                                                final Throwable cause) {
+        if (op.shouldTimeout()) {
+            op.fail(null, cause);
+            return;
+        }
+        getOwnerFromRoutingServer(op, getOwnerPromise);
+    }
+
+    private void getOwnerFromRoutingServer(final StreamOp op,
+                                           final Promise<SocketAddress> getOwnerPromise) {
+        clusterClient.get().getService().getOwner(op.stream, op.ctx)
+            .addEventListener(new FutureEventListener<WriteResponse>() {
+                @Override
+                public void onFailure(Throwable cause) {
+                    getOwnerPromise.updateIfEmpty(new Throw<SocketAddress>(cause));
+                }
+
+                @Override
+                public void onSuccess(WriteResponse value) {
+                    if (StatusCode.FOUND == value.getHeader().getCode() &&
+                            null != value.getHeader().getLocation()) {
+                        SocketAddress addr;
+                        try {
+                             addr = DLSocketAddress.deserialize(value.getHeader().getLocation()).getSocketAddress();
+                        } catch (IOException e) {
+                            // retry from the routing server again
+                            retryGetOwnerFromRoutingServer(op, getOwnerPromise, e);
+                            return;
+                        }
+                        getOwnerPromise.updateIfEmpty(new Return<SocketAddress>(addr));
+                    } else {
+                        // retry from the routing server again
+                        retryGetOwnerFromRoutingServer(op, getOwnerPromise,
+                                new StreamUnavailableException("Stream " + op.stream + "'s owner is unknown"));
+                    }
+                }
+            });
+    }
+
+    private Future<SocketAddress> getOwner(final StreamOp op) {
+        if (clusterClient.isPresent()) {
+            final Promise<SocketAddress> getOwnerPromise = new Promise<SocketAddress>();
+            getOwnerFromRoutingServer(op, getOwnerPromise);
+            return getOwnerPromise;
+        }
+        // pickup host by hashing
+        try {
+            return Future.value(routingService.getHost(op.stream, op.routingContext));
+        } catch (NoBrokersAvailableException nbae) {
+            return Future.exception(nbae);
+        }
     }
 
     private void sendWriteRequest(final SocketAddress addr, final StreamOp op) {
