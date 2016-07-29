@@ -17,6 +17,7 @@
  */
 package com.twitter.distributedlog.service;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.client.DistributedLogClientImpl;
@@ -60,14 +61,12 @@ public abstract class DistributedLogServerTestCase {
 
     protected static class DLClient {
         public final LocalRoutingService routingService;
-        public final DistributedLogClientBuilder dlClientBuilder;
+        public DistributedLogClientBuilder dlClientBuilder;
         public final DistributedLogClientImpl dlClient;
 
-        protected DLClient(String name) {
-            this(name, ".*");
-        }
-
-        protected DLClient(String name, String streamNameRegex) {
+        protected DLClient(String name,
+                           String streamNameRegex,
+                           Optional<String> serverSideRoutingFinagleName) {
             routingService = LocalRoutingService.newBuilder().build();
             dlClientBuilder = DistributedLogClientBuilder.newBuilder()
                         .name(name)
@@ -79,6 +78,10 @@ public abstract class DistributedLogServerTestCase {
                             .hostConnectionLimit(1)
                             .connectionTimeout(Duration.fromSeconds(1))
                             .requestTimeout(Duration.fromSeconds(60)));
+            if (serverSideRoutingFinagleName.isPresent()) {
+                dlClientBuilder =
+                        dlClientBuilder.serverRoutingServiceFinagleNameStr(serverSideRoutingFinagleName.get());
+            }
             dlClient = (DistributedLogClientImpl) dlClientBuilder.build();
         }
 
@@ -123,6 +126,7 @@ public abstract class DistributedLogServerTestCase {
         }
     }
 
+    private final boolean clientSideRouting;
     protected DLServer dlServer;
     protected DLClient dlClient;
     protected DLServer noAdHocServer;
@@ -149,7 +153,12 @@ public abstract class DistributedLogServerTestCase {
         noAdHocCluster = createCluster(noAdHocConf);
         noAdHocCluster.start();
         noAdHocServer = new DLServer(noAdHocConf, noAdHocCluster.getUri(), 7002, false);
-        noAdHocClient = createDistributedLogClient("no-ad-hoc-client");
+        Optional<String> serverSideRoutingFinagleName = Optional.absent();
+        if (!clientSideRouting) {
+            serverSideRoutingFinagleName =
+                    Optional.of("inet!" + DLSocketAddress.toString(noAdHocServer.getAddress()));
+        }
+        noAdHocClient = createDistributedLogClient("no-ad-hoc-client", serverSideRoutingFinagleName);
     }
 
     public void tearDownNoAdHocCluster() throws Exception {
@@ -175,10 +184,19 @@ public abstract class DistributedLogServerTestCase {
         return dlCluster.getUri();
     }
 
+    protected DistributedLogServerTestCase(boolean clientSideRouting) {
+        this.clientSideRouting = clientSideRouting;
+    }
+
     @Before
     public void setup() throws Exception {
         dlServer = createDistributedLogServer(7001);
-        dlClient = createDistributedLogClient("test");
+        Optional<String> serverSideRoutingFinagleName = Optional.absent();
+        if (!clientSideRouting) {
+            serverSideRoutingFinagleName =
+                    Optional.of("inet!" + DLSocketAddress.toString(dlServer.getAddress()));
+        }
+        dlClient = createDistributedLogClient("test", serverSideRoutingFinagleName);
     }
 
     @After
@@ -200,13 +218,17 @@ public abstract class DistributedLogServerTestCase {
         return new DLServer(conf, dlCluster.getUri(), port, false);
     }
 
-    protected DLClient createDistributedLogClient(String clientName) throws Exception {
-        return createDistributedLogClient(clientName, ".*");
+    protected DLClient createDistributedLogClient(String clientName,
+                                                  Optional<String> serverSideRoutingFinagleName)
+            throws Exception {
+        return createDistributedLogClient(clientName, ".*", serverSideRoutingFinagleName);
     }
 
-    protected DLClient createDistributedLogClient(String clientName, String streamNameRegex)
+    protected DLClient createDistributedLogClient(String clientName,
+                                                  String streamNameRegex,
+                                                  Optional<String> serverSideRoutingFinagleName)
             throws Exception {
-        return new DLClient(clientName, streamNameRegex);
+        return new DLClient(clientName, streamNameRegex, serverSideRoutingFinagleName);
     }
 
     protected TwoRegionDLClient createTwoRegionDLClient(String clientName,

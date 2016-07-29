@@ -24,8 +24,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.acl.AccessControlManager;
+import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
 import com.twitter.distributedlog.client.resolver.RegionResolver;
-import com.twitter.distributedlog.client.resolver.TwitterRegionResolver;
 import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.exceptions.RegionUnavailableException;
@@ -234,7 +234,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                 streamConfigProvider,
                 dlNamespace);
         this.routingService = routingService;
-        this.regionResolver = new TwitterRegionResolver();
+        this.regionResolver = new DefaultRegionResolver();
 
         // Service features
         this.featureRegionStopAcceptNewStream = this.featureProvider.getFeature(
