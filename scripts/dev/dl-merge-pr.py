@@ -336,6 +336,7 @@ def resolve_jira_issue(merge_branches, comment, jira_id):
       cur_summary, cur_assignee, cur_status, JIRA_BASE, jira_id))
 
   versions = asf_jira.project_versions(CAPITALIZED_PROJECT_NAME)
+  print versions
   versions = sorted(versions, key=lambda x: x.name, reverse=True)
   versions = filter(lambda x: x.raw['released'] is False, versions)
 
