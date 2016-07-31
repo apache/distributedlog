@@ -85,8 +85,6 @@ RELEASE_BRANCH_PREFIX = ''
 
 DEV_BRANCH_NAME = 'master'
 
-DEFAULT_FIX_VERSION = os.environ.get('DEFAULT_FIX_VERSION', '0.9.1.0')
-
 def get_json(url):
   """
   Returns parsed JSON from an API call to the GitHub API.
@@ -292,7 +290,6 @@ def cherry_pick(pr_num, merge_hash, default_branch):
 def fix_version_from_branch(branch, versions):
   # Note: Assumes this is a sorted (newest->oldest) list of un-released versions
   if branch == DEV_BRANCH_NAME:
-    versions = filter(lambda x: x == DEFAULT_FIX_VERSION, versions)
     if len(versions) > 0:
       return versions[0]
     else:
@@ -336,7 +333,6 @@ def resolve_jira_issue(merge_branches, comment, jira_id):
       cur_summary, cur_assignee, cur_status, JIRA_BASE, jira_id))
 
   versions = asf_jira.project_versions(CAPITALIZED_PROJECT_NAME)
-  print versions
   versions = sorted(versions, key=lambda x: x.name, reverse=True)
   versions = filter(lambda x: x.raw['released'] is False, versions)
 
