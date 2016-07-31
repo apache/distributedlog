@@ -230,7 +230,9 @@ def merge_pr(pr_num, target_ref, title, body, default_pr_reviewers, pr_repo_desc
   close_line = 'Closes #{0} from {1}'.format(pr_num, pr_repo_desc)
   if should_list_commits:
     close_line += ' and squashes the following commits:'
-    merge_message_flags += ['-m', close_line]
+
+  # Append 'Closes #%s' commit message to close the PR
+  merge_message_flags += ['-m', close_line]
 
   if should_list_commits:
     merge_message_flags += ['-m', '\n'.join(commits)]
@@ -384,7 +386,7 @@ def standardize_jira_ref(text):
   components = []
 
   # Extract JIRA ref(s):
-  pattern = re.compile(r'(%s[-\s]*[0-9]{3,6})+' % CAPITALIZED_PROJECT_NAME, re.IGNORECASE)
+  pattern = re.compile(r'(%s[-\s]*[0-9]+)+' % CAPITALIZED_PROJECT_NAME, re.IGNORECASE)
   for ref in pattern.findall(text):
     # Add brackets, replace spaces with a dash, & convert to uppercase
     jira_refs.append(re.sub(r'\s+', '-', ref.upper()))
