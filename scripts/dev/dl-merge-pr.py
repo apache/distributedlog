@@ -162,7 +162,7 @@ def merge_pr(pr_num, target_ref, title, body, default_pr_reviewers, pr_repo_desc
   pr_branch_name = '{0}_MERGE_PR_{1}'.format(TEMP_BRANCH_PREFIX, pr_num)
   target_branch_name = '{0}_MERGE_PR_{1}_{2}'.format(TEMP_BRANCH_PREFIX, pr_num, target_ref.upper())
   run_cmd(['git', 'fetch', PR_REMOTE_NAME, 'pull/{0}/head:{1}'.format(pr_num, pr_branch_name)])
-  run_cmd(['git', 'fetch',PUSH_PR_REMOTE, '{0}:{1}'.format(target_ref, target_branch_name)])
+  run_cmd(['git', 'fetch', PUSH_PR_REMOTE, '{0}:{1}'.format(target_ref, target_branch_name)])
   run_cmd(['git', 'checkout', target_branch_name])
 
   had_conflicts = False
@@ -240,7 +240,7 @@ def merge_pr(pr_num, target_ref, title, body, default_pr_reviewers, pr_repo_desc
   continue_maybe('Merge complete (local ref {0}). Push to {1}?'.format(target_branch_name, PUSH_REMOTE_NAME))
 
   try:
-    run_cmd(['git', 'push', PUSH_REMOTE_NAME, target_branch_name, target_ref])
+    run_cmd(['git', 'push', PUSH_REMOTE_NAME, '{0}:{1}'.format(target_branch_name, target_ref)])
   except Exception as e:
     clean_up()
     fail('Exception while pushing: {0}'.format(e))
@@ -365,7 +365,7 @@ def resolve_jira_issues(title, merge_branches, comment):
   """
   Resolves a list of jira issues.
   """
-  jira_ids = re.findall('%s-[0-9]{3,6}' % CAPITALIZED_PROJECT_NAME, title)
+  jira_ids = re.findall('%s-[0-9]+' % CAPITALIZED_PROJECT_NAME, title)
 
   if len(jira_ids) == 0:
     print 'No JIRA issue found to update'
