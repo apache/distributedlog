@@ -44,7 +44,7 @@ except ImportError:
 
 PROJECT_NAME = 'incubator-distributedlog'
 
-CAPITALIZED_PROJECT_NAME = 'distributedlog'.upper()
+CAPITALIZED_PROJECT_NAME = 'DL'
 
 # Location of the local git repository
 REPO_HOME = os.environ.get('{0}_HOME'.format(CAPITALIZED_PROJECT_NAME), os.getcwd())
@@ -378,7 +378,7 @@ def standardize_jira_ref(text):
   Standardize the jira reference commit message prefix to "PROJECT_NAME-XXX: Issue"
 
   >>> standardize_jira_ref("%s-877: Script for generating patch for reviews" % CAPITALIZED_PROJECT_NAME)
-  'DISTRIBUTEDLOG-877: Script for generating patch for reviews'
+  'DL-877: Script for generating patch for reviews'
   """
   jira_refs = []
   components = []
@@ -552,13 +552,13 @@ def main():
 
   if JIRA_IMPORTED:
     if JIRA_USERNAME and JIRA_PASSWORD:
-      jira_comment = '''Issue resolved by merging pull request {0}
-      [{1}/{2}]
+      jira_comment = '''Issue resolved by merging pull request %s
+      [%s/%s]
 
       {noformat}
-      {3}
+      %s
       {noformat}
-      '''.format(pr_num, GITHUB_BASE, pr_num, merge_commit_log)
+      ''' % (pr_num, GITHUB_BASE, pr_num, merge_commit_log)
       resolve_jira_issues(commit_title, merged_refs, jira_comment)
     else:
       print 'JIRA_USERNAME and JIRA_PASSWORD are not set'
