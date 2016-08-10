@@ -231,7 +231,8 @@ public class StreamImpl implements Stream {
     private DistributedLogManager openLog(String name) throws IOException {
         Optional<DistributedLogConfiguration> dlConf = Optional.<DistributedLogConfiguration>absent();
         Optional<DynamicDistributedLogConfiguration> dynDlConf = Optional.of(dynConf);
-        return dlNamespace.openLog(name, dlConf, dynDlConf);
+        Optional<StatsLogger> perStreamStatsLogger = Optional.of(streamLogger);
+        return dlNamespace.openLog(name, dlConf, dynDlConf, perStreamStatsLogger);
     }
 
     // Expensive initialization, only called once per stream.
