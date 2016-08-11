@@ -1,6 +1,6 @@
 package com.twitter.distributedlog.lock;
 
-import com.twitter.distributedlog.LockingException;
+import com.twitter.distributedlog.exceptions.LockingException;
 import com.twitter.util.Future;
 
 /**

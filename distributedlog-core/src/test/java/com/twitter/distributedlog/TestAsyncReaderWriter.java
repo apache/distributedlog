@@ -885,7 +885,6 @@ public class TestAsyncReaderWriter extends TestDistributedLogBase {
     }
 
     @Test(timeout = 300000)
-    @DistributedLogAnnotations.FlakyTest
     public void testSimpleAsyncReadWriteSimulateErrors() throws Exception {
         String name = runtime.getMethodName();
         DistributedLogConfiguration confLocal = new DistributedLogConfiguration();
