@@ -184,6 +184,7 @@
 	    <exclude>GROUPS</exclude>
 	    <exclude>OWNERS</exclude>
 	    <exclude>CONFIG.ini</exclude>
+            <exclude>**/**.md</exclude>
           </excludes>
         </configuration>
       </plugin>
