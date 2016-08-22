@@ -1,0 +1,116 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="{{ "/images/distributedlog_logo_navbar.png" | prepend: site.baseurl }}">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="{{ site.docurl }}/architecture/main.html">Overview</a></li>
+        <!-- Downloads -->
+        <li><a href="{{ site.docurl }}/download.html">Downloads</a></li>
+        <!-- FAQ -->
+        <li><a href="{{ site.baseurl }}/faq">FAQ</a></li>
+        <!-- Quick Start -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quick Start<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ site.docurl }}/basics/quickstart.html">Setup</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">Tutorials</li>
+            <li>
+              <a href="{{ site.docurl }}/tutorials/main.html">
+              <small><span class="glyphicon glyphicon-pencil"></span></small>
+              Basic
+              </a>
+            </li>
+            <li>
+              <a href="{{ site.docurl }}/tutorials/main.html">
+              <small><span class="glyphicon glyphicon-envelope"></span></small>
+              Messaging
+              </a>
+            </li>
+            <li>
+              <a href="{{ site.docurl }}/tutorials/main.html">
+              <small><span class="glyphicon glyphicon-stats"></span></small>
+              Analytics
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- Documentation -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header">Snapshot (Developement)</li>
+            <li><a href="{{ site.docurl }}">Latest</a></li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a href="https://cwiki.apache.org/confluence/display/DL/Project+Ideas">
+                <small><span class="glyphicon glyphicon-new-window"></span></small>
+                Project Ideas
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <!-- Right Side -->
+      <ul class="nav navbar-nav navbar-right">
+        <!-- Blog -->
+        <li><a href="{{ site.baseurl }}/blog">Blog</a></li>
+        <!-- Community -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header">Community</li>
+            <li><a href="{{ site.baseurl }}/community">Mailing Lists</a></li>
+            <li><a href="{{ site.baseurl }}/community">Source Code</a></li>
+            <li><a href="{{ site.baseurl }}/community">Issue Tracking</a></li>
+            <li><a href="{{ site.baseurl }}/community/team/">Team</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">Contribute</li>
+            <li><a href="{{ site.baseurl }}/contribute/how-to">How to Contribute</a></li>
+          </ul>
+        </li>
+        <!-- Project -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Project<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+			      <li class="dropdown-header">Project</li>
+            <li><a href="{{ site.baseurl }}/project/presentations/">Presentations</a></li>
+            <li><a href="{{ site.baseurl }}/project/material/">Material</a></li>
+            <li>
+              <a href="{{ site.twitter_url }}">
+                <small><span class="glyphicon glyphicon-new-window"></span></small>
+                Twitter
+              </a>
+            </li>
+            <li>
+              <a href="{{ site.github_url }}">
+                <small><span class="glyphicon glyphicon-new-window"></span></small>
+                Github
+              </a>
+            </li>
+            <li>
+              <a href="{{ site.wiki_url }}">
+                <small><span class="glyphicon glyphicon-new-window"></span></small>
+                Wiki
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
