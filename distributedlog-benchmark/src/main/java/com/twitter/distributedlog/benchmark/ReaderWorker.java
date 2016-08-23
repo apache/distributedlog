@@ -106,12 +106,13 @@ public class ReaderWorker implements Worker {
         final String streamName;
         DLSN prevDLSN = null;
         long prevSequenceId = Long.MIN_VALUE;
+        private static final String gaugeLabel = "sequence_id";
 
         StreamReader(int idx, StatsLogger statsLogger) {
             this.streamIdx = idx;
             int streamId = startStreamId + streamIdx;
             streamName = String.format("%s_%d", streamPrefix, streamId);
-            statsLogger.scope(streamName).registerGauge("sequence_id", this);
+            statsLogger.scope(streamName).registerGauge(gaugeLabel, this);
         }
 
         @Override
@@ -217,6 +218,10 @@ public class ReaderWorker implements Worker {
         @Override
         public synchronized Number getSample() {
             return prevSequenceId;
+        }
+
+        void unregisterGauge() {
+            statsLogger.scope(streamName).unregisterGauge(gaugeLabel, this);
         }
     }
 
@@ -445,6 +450,10 @@ public class ReaderWorker implements Worker {
         }
         for (DLZkServerSet serverSet: serverSets) {
             serverSet.close();
+        }
+        // Unregister gauges to prevent GC spirals
+        for(StreamReader sr : streamReaders) {
+            sr.unregisterGauge();
         }
     }
 

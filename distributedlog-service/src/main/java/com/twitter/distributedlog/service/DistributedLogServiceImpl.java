@@ -150,6 +150,11 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     private final ConcurrentHashMap<StatusCode, Counter> statusCodeCounters =
             new ConcurrentHashMap<StatusCode, Counter>();
     private final Counter statusCodeTotal;
+    private final Gauge<Number> proxyStatusGauge;
+    private final Gauge<Number> movingAvgRpsGauge;
+    private final Gauge<Number> movingAvgBpsGauge;
+    private final Gauge<Number> streamAcquiredGauge;
+    private final Gauge<Number> streamCachedGauge;
 
     DistributedLogServiceImpl(ServerConfiguration serverConf,
                               DistributedLogConfiguration dlConf,
@@ -260,9 +265,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         // Stats
         this.statsLogger = statsLogger;
 
-        // Stats on server
-        // Gauge for server status/health
-        statsLogger.registerGauge("proxy_status", new Gauge<Number>() {
+        // Gauges for server status/health
+        this.proxyStatusGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -271,11 +275,10 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             @Override
             public Number getSample() {
                 return ServerStatus.DOWN == serverStatus ? -1 : (featureRegionStopAcceptNewStream.isAvailable() ?
-                        3 : (ServerStatus.WRITE_AND_ACCEPT == serverStatus ? 1 : 2));
+                    3 : (ServerStatus.WRITE_AND_ACCEPT == serverStatus ? 1 : 2));
             }
-        });
-        // Global moving average rps
-        statsLogger.registerGauge("moving_avg_rps", new Gauge<Number>() {
+        };
+        this.movingAvgRpsGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -285,9 +288,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return windowedRps.get();
             }
-        });
-        // Global moving average bps
-        statsLogger.registerGauge("moving_avg_bps", new Gauge<Number>() {
+        };
+        this.movingAvgBpsGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -297,19 +299,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return windowedBps.get();
             }
-        });
-
-        // Stats on requests
-        this.bulkWritePendingStat = streamOpStats.requestPendingCounter("bulkWritePending");
-        this.writePendingStat = streamOpStats.requestPendingCounter("writePending");
-        this.redirects = streamOpStats.requestCounter("redirect");
-        this.statusCodeStatLogger = streamOpStats.requestScope("statuscode");
-        this.statusCodeTotal = streamOpStats.requestCounter("statuscode_count");
-        this.receivedRecordCounter = streamOpStats.recordsCounter("received");
-
-        // Stats on streams
-        StatsLogger streamsStatsLogger = statsLogger.scope("streams");
-        streamsStatsLogger.registerGauge("acquired", new Gauge<Number>() {
+        };
+        // Gauges for streams
+        this.streamAcquiredGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -319,8 +311,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return streamManager.numAcquired();
             }
-        });
-        streamsStatsLogger.registerGauge("cached", new Gauge<Number>() {
+        };
+        this.streamCachedGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -330,7 +322,26 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return streamManager.numCached();
             }
-        });
+        };
+
+        // Stats on server
+        statsLogger.registerGauge("proxy_status", proxyStatusGauge);
+        // Global moving average rps
+        statsLogger.registerGauge("moving_avg_rps", movingAvgRpsGauge);
+        // Global moving average bps
+        statsLogger.registerGauge("moving_avg_bps", movingAvgBpsGauge);
+        // Stats on requests
+        this.bulkWritePendingStat = streamOpStats.requestPendingCounter("bulkWritePending");
+        this.writePendingStat = streamOpStats.requestPendingCounter("writePending");
+        this.redirects = streamOpStats.requestCounter("redirect");
+        this.statusCodeStatLogger = streamOpStats.requestScope("statuscode");
+        this.statusCodeTotal = streamOpStats.requestCounter("statuscode_count");
+        this.receivedRecordCounter = streamOpStats.recordsCounter("received");
+
+        // Stats for streams
+        StatsLogger streamsStatsLogger = statsLogger.scope("streams");
+        streamsStatsLogger.registerGauge("acquired", this.streamAcquiredGauge);
+        streamsStatsLogger.registerGauge("cached", this.streamCachedGauge);
 
         // Setup complete
         logger.info("Running distributedlog server : client id {}, allocator pool {}, perstream stat {}, dlsn version {}.",
@@ -669,6 +680,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             // Stop the timer.
             timer.stop();
 
+            // clean up gauge
+            unregisterGauge();
+
             // shutdown the executor after requesting closing streams.
             SchedulerUtils.shutdownScheduler(scheduler, 60, TimeUnit.SECONDS);
         } catch (Exception ex) {
@@ -702,6 +716,17 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         } else {
             return ConfUtils.getConstDynConf(dlConfig);
         }
+    }
+
+    /**
+     * clean up the gauge before we close to help GC
+     */
+    private void unregisterGauge(){
+        this.statsLogger.unregisterGauge("proxy_status",this.proxyStatusGauge);
+        this.statsLogger.unregisterGauge("moving_avg_rps",this.movingAvgRpsGauge);
+        this.statsLogger.unregisterGauge("moving_avg_bps",this.movingAvgBpsGauge);
+        this.statsLogger.unregisterGauge("acquired",this.streamAcquiredGauge);
+        this.statsLogger.unregisterGauge("cached",this.streamCachedGauge);
     }
 
     @VisibleForTesting
