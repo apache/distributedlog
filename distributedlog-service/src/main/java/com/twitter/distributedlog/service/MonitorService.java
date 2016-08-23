@@ -41,6 +41,8 @@ import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Duration;
 import com.twitter.util.FutureEventListener;
+
+import org.apache.bookkeeper.stats.Gauge;
 import org.apache.bookkeeper.stats.StatsProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
@@ -107,6 +109,7 @@ public class MonitorService implements NamespaceListener {
     private final StatsReceiver monitorReceiver;
     private final Stat successStat;
     private final Stat failureStat;
+    private final Gauge<Number> numOfStreamsGauge;
     // Hash Function
     private final HashFunction hashFunction = Hashing.md5();
 
@@ -254,6 +257,17 @@ public class MonitorService implements NamespaceListener {
         this.successStat = monitorReceiver.stat0("success");
         this.failureStat = monitorReceiver.stat0("failure");
         this.statsProvider = statsProvider;
+        this.numOfStreamsGauge = new Gauge<Number>() {
+            @Override
+            public Number getDefaultValue() {
+                return 0;
+            }
+
+            @Override
+            public Number getSample() {
+                return knownStreams.size();
+            }
+        };
     }
 
     public void runServer() throws IllegalArgumentException, IOException {
@@ -394,17 +408,7 @@ public class MonitorService implements NamespaceListener {
 
     void runMonitor(DistributedLogConfiguration conf, URI dlUri) throws IOException {
         // stats
-        statsProvider.getStatsLogger("monitor").registerGauge("num_streams", new org.apache.bookkeeper.stats.Gauge<Number>() {
-            @Override
-            public Number getDefaultValue() {
-                return 0;
-            }
-
-            @Override
-            public Number getSample() {
-                return knownStreams.size();
-            }
-        });
+        statsProvider.getStatsLogger("monitor").registerGauge("num_streams", numOfStreamsGauge);
         logger.info("Construct dl namespace @ {}", dlUri);
         dlNamespace = DistributedLogNamespaceBuilder.newBuilder()
                 .conf(conf)
@@ -442,6 +446,8 @@ public class MonitorService implements NamespaceListener {
             logger.error("Interrupted on waiting shutting down monitor executor service : ", e);
         }
         if (null != statsProvider) {
+            // clean up the gauges
+            unregisterGauge();
             statsProvider.stop();
         }
         keepAliveLatch.countDown();
@@ -450,6 +456,13 @@ public class MonitorService implements NamespaceListener {
 
     public void join() throws InterruptedException {
         keepAliveLatch.await();
+    }
+
+    /**
+     * clean up the gauge before we close to help GC
+     */
+    private void unregisterGauge(){
+        statsProvider.getStatsLogger("monitor").unregisterGauge("num_streams", numOfStreamsGauge);
     }
 
 }
