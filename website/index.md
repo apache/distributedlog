@@ -10,7 +10,7 @@ The Apache DistributedLog project is in the process of bootstrapping. This inclu
 
 <!-- landing page -->
 <div class="jumbotron">
-    <img class="img-responsive center-block" src="/images/distributedlog_logo_l.png" alt="Apache DistributedLog" />
+    <img class="img-responsive center-block" src="{{ "/images/distributedlog_logo_l.png" | prepend: site.baseurl }}" alt="Apache DistributedLog" />
     <p class="text-center">
         A <strong>high-throughput</strong>, <strong>low-latency</strong> replicated log service, offering <strong>durability</strong>, <strong>replication</strong> and <strong>strong consistency</strong> as essentials for building reliable <strong>real-time</strong> applications.
     </p>
