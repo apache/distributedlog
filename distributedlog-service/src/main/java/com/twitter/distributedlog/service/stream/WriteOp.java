@@ -146,6 +146,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
                 record.setRecordSet();
             }
             writeResult = writer.write(record);
+            sequencer.advance(record);
         }
         return writeResult.map(new AbstractFunction1<DLSN, WriteResponse>() {
             @Override

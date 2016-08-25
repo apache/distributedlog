@@ -25,6 +25,8 @@ import com.twitter.distributedlog.feature.DefaultFeatureProvider;
 import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import com.twitter.distributedlog.net.DNSResolverForRacks;
 import com.twitter.distributedlog.net.DNSResolverForRows;
+import com.twitter.distributedlog.util.Sequencer;
+import com.twitter.distributedlog.util.TimeSequencer;
 import org.apache.bookkeeper.conf.ClientConfiguration;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.net.DNSToSwitchMapping;
@@ -293,6 +295,9 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
     public static final int BKDL_GLOBAL_OUTSTANDING_WRITE_LIMIT_DEFAULT = -1;
     public static final String BKDL_OUTSTANDING_WRITE_LIMIT_DARKMODE = "outstandingWriteLimitDarkmode";
     public static final boolean BKDL_OUTSTANDING_WRITE_LIMIT_DARKMODE_DEFAULT = true;
+
+    // Transaction ID Sequencer Settings
+    public static final String BKDL_STREAM_SEQUENCER_CLASS = "streamSequencerClass";
 
     //
     // DL Reader Settings
@@ -2300,6 +2305,35 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      */
     public DistributedLogConfiguration setOutstandingWriteLimitDarkmode(boolean darkmoded) {
         setProperty(BKDL_OUTSTANDING_WRITE_LIMIT_DARKMODE, darkmoded);
+        return this;
+    }
+
+    //
+    // Sequencer Settings
+    //
+
+    /**
+     * Get the class name of the sequencer used for generating transaction id.
+     *
+     * @return class name of the sequencer used for generating transaction id.
+     * @throws ConfigurationException
+     */
+    public Class<? extends Sequencer> getStreamSequencerClass() throws ConfigurationException {
+        return ReflectionUtils.getClass(this,
+                BKDL_STREAM_SEQUENCER_CLASS,
+                TimeSequencer.class,
+                Sequencer.class,
+                defaultLoader);
+    }
+
+    /**
+     * Set the class name of the sequencer used for generating transaction id.
+     *
+     * @param sequencerClass class name of the sequencer used for generating transaction id.
+     * @return distributedlog configuration
+     */
+    public DistributedLogConfiguration setStreamSequencerClass(Class<? extends Sequencer> sequencerClass) {
+        setProperty(BKDL_STREAM_SEQUENCER_CLASS, sequencerClass.getName());
         return this;
     }
 

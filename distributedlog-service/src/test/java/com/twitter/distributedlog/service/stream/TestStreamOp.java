@@ -93,8 +93,19 @@ public class TestStreamOp {
         when(writer.getStreamName()).thenReturn("test");
         WriteOp writeOp = getWriteOp();
         writeOp.execute(writer, new Sequencer() {
+            @Override
+            public void setLastId(long id) {
+                // no-op
+            }
+
             public long nextId() {
+                // no-op
                 return 0;
+            }
+
+            @Override
+            public void advance(LogRecord record) {
+                // no-op
             }
         }, new Object());
         writeOp.fail(new InternalServerException("test2"));

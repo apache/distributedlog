@@ -213,7 +213,9 @@ public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements 
         for (ByteBuffer buffer : buffers) {
             byte[] payload = new byte[buffer.remaining()];
             buffer.get(payload);
-            records.add(new LogRecord(sequencer.nextId(), payload));
+            LogRecord record = new LogRecord(sequencer.nextId(), payload);
+            records.add(record);
+            sequencer.advance(record);
         }
         return records;
     }
