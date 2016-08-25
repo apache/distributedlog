@@ -83,6 +83,7 @@
     <module>distributedlog-benchmark</module>
     <module>distributedlog-example</module>
     <module>distributedlog-tutorials</module>
+    <module>distributedlog-kafka</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
