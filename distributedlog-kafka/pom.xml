@@ -22,11 +22,11 @@
     <artifactId>distributedlog</artifactId>
     <groupId>com.twitter</groupId>
     <version>0.4.0-incubating-SNAPSHOT</version>
-    <relativePath>../..</relativePath>
+    <relativePath>..</relativePath>
   </parent>
   <groupId>com.twitter</groupId>
   <artifactId>distributedlog-kafka</artifactId>
-  <name>Apache DistributedLog :: Tutorials :: Kafka Tutorial</name>
+  <name>Apache DistributedLog :: Kafka Client</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,8 +35,24 @@
   <dependencies>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>distributedlog-messaging</artifactId>
+      <artifactId>distributedlog-client</artifactId>
       <version>${project.parent.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.zookeeper</groupId>
+          <artifactId>zookeeper</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.twitter</groupId>
+      <artifactId>distributedlog-core</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>0.9.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
