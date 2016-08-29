@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Write Proxy Configuration
+
 Write Proxy Configuration
 =========================
 

@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Release
+
 Release
 =======
 

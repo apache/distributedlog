@@ -1,7 +1,11 @@
+---
+layout: default
+---
+
 Considerations
 ==============
 
-As different applications have different requirements, we’ve carefully considered the capabilities
+As different applications have different requirements, we've carefully considered the capabilities
 that should be included in DistributedLog leaving the rest up to the applications. These considerations are: 
 
 Consistency, Durability and Ordering
@@ -40,7 +44,7 @@ partitioning scheme depends on the characteristics of the application and is clo
 related to the ordering guarantees that the application requires. For example, distributed
 key/value store that uses DistributedLog as its transaction log, distributes the data into
 partitions each of which is a unit of consistency. Modifications within each partition are
-required to be strictly ordered. On the other hand, real-time analytics workloads don’t
+required to be strictly ordered. On the other hand, real-time analytics workloads don't
 require strict order, can use *round-robin* partitioning to evenly distribute the reads and
 writes across all partitions. It is therefore prudent to provide applications the flexibility
 to choose a suitable partitioning scheme.

@@ -16,8 +16,8 @@ The Apache DistributedLog project is in the process of bootstrapping. This inclu
     </p>
     <div class="row">
         <div class="text-center">
-            <a href="{{ site.docurl }}/download.html" class="btn btn-primary btn-lg">Download</a>
-            <a href="{{ site.docurl }}/basics/quickstart.html" class="btn btn-primary btn-lg">Quick Start</a>
+            <a href="{{ site.baseurl }}/docs/latest/download" class="btn btn-primary btn-lg">Download</a>
+            <a href="{{ site.baseurl }}/docs/latest/basics/quickstart" class="btn btn-primary btn-lg">Quick Start</a>
         </div>
     </div>
 </div>

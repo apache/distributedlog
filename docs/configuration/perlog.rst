@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Per Stream Configuration
+
 Per Stream Configuration
 ========================
 

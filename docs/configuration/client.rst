@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Client Configuration
+
 Client Configuration
 ====================
 

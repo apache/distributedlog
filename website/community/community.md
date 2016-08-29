@@ -4,6 +4,9 @@ title: "Community"
 permalink: /community/
 ---
 
+* TOC
+{:toc}
+
 # Community
 
 There are many ways to get help from the Apache DistributedLog community. The [mailing lists](#mailing-lists) are the primary place where all DistributedLog committers are present. Bugs and feature requests can either be discussed on *dev mailing list* or on [JIRA]({{ site.jira_url }}). Those interested in contributing to DistributedLog should check out the [contribution guide](how-to-contribute.html).

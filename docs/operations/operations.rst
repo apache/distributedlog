@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: DistributedLog Operations
+
 DistributedLog Operations
 =========================
 

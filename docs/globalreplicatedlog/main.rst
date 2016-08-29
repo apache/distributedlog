@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Global Replicated Log
+
 Global Replicated Log
 =====================
 
@@ -20,7 +26,7 @@ or more regions in a datacenter if they have isolated power or network supplies.
 
 Figure 1 illustrates the servers in a `Global Replicated Log` setup. There is no inter datacenter
 communication between write proxies or log segment storage nodes. The only component that does
-inter datacenters communications within its hosts is the “Global” metadata store, which is a global
+inter datacenters communications within its hosts is the 'Global' metadata store, which is a global
 setup of ZooKeeper. Write clients will talk to the write proxies in its local region to bootstrap
 the ownership cache and redirect to correct write proxies in other regions through direct TCP
 connections. While readers will identify the regions of the log segment storage nodes according to
@@ -65,7 +71,7 @@ For instance consider the following scenario with three regions each containing 
     ack quorum =  8
 
 
-Let’s say that one of the regions is currently unavailable and we want to still ensure that writes can continue.
+Let's say that one of the regions is currently unavailable and we want to still ensure that writes can continue.
 The ensemble placement may then have to choose bookies from the two available regions. Given that *15* bookies have
 to be allocated, we will have to allocate at least *8* bookies from one of the remaining regions - but with ack quorum
 of *8* we run the risk of satisfying ack quorum with bookies from a single region. Therefore we must require that

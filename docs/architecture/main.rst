@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Architecture
+
 Architecture
 ============
 
@@ -85,7 +91,7 @@ operation error. We use HDFS as our cold storage.
 Metadata Store
 ++++++++++++++
 
-The metadata in DistributedLog consists of the mapping from log streams to their constituent log segments as well as each log segment’s metadata.
+The metadata in DistributedLog consists of the mapping from log streams to their constituent log segments as well as each log segment's metadata.
 The log segment metadata includes the `log segment ID`, `start and end transaction IDs`, `completion time`, and its `status`. The metadata store
 is required to provide metadata operations such as consistent read and write ordering to guarantee metadata consistency in the event of failures.
 Also the metadata store should provide a notification mechanism to support streaming reads. We use ZooKeeper as the metadata store, because it is
@@ -141,7 +147,7 @@ each other.
    Figure 3. Lifecycle of a record 
 
 The application constructs the log records and initiates write requests (step 1). The write requests will be forwarded to the write proxy that is the master
-of the log stream. The master writer proxy will write the records in the log stream’s transmit buffer. Based on the configured transmit policy, records in
+of the log stream. The master writer proxy will write the records in the log stream's transmit buffer. Based on the configured transmit policy, records in
 the transmit buffer will be transmitted as a batched entry to log segment store (step 2). Application can trade latency for throughput by transmitting
 `immediately` (lowest latency), `periodically` (grouping records that appear within the transmit period) or when transmit buffer has accumulated more than
 `max-outstanding bytes`.
@@ -155,6 +161,6 @@ consensus agreement has been reached for this record. The writer must therefore 
 This `commit` can piggyback on the next batch of records from the application. If no new application records are received within the specified SLA for
 persistence, the writer will issue a special `control log record` notifying the log segment store that the record can now be made visible to readers (step 5).
 
-The readers’ request that is waiting for new data using `long polling` will now receive the recent committed log records (step 6). Speculative long poll reads will be sent to other replicas to archieve predictable low 99.9% percentile latency (step 7).
+The readers' request that is waiting for new data using `long polling` will now receive the recent committed log records (step 6). Speculative long poll reads will be sent to other replicas to archieve predictable low 99.9% percentile latency (step 7).
 
 The log records will be cached in read proxies (step 8) for fanout readers. The read clients also use similar long poll read mechanism to read data from read proxies (step 9).

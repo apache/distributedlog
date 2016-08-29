@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Detail Design
+
 Detail Design
 =============
 
@@ -12,7 +18,7 @@ and `versioned updates` in the metadata store to guarantee metadata consistency.
 LastAddConfirmed
 ~~~~~~~~~~~~~~~~
 
-DistributedLog leverages bookkeeper’s `LAC` (LastAddConfirmed) protocol - a variation of `two-phase-commit` algorithm to build its data pipeline
+DistributedLog leverages bookkeeper's `LAC` (LastAddConfirmed) protocol - a variation of `two-phase-commit` algorithm to build its data pipeline
 and achieve consistency around it. Figure 1 illustrates the basic concepts of this protocol.
 
 .. figure:: ../images/lacprotocol.png
@@ -35,7 +41,7 @@ followers, they can leverage LAC to read durable data from any of the replicas w
 DL introduces one type of system record, which is called `control record` - it acts as the `commit` request in `two-phases-commit` algorithm.
 If no application records arrive within the specified SLA, the writer will generate a control record. With writing the control record, it would advance
 the LAC of the log stream. The control record is added either immediately after receiving acknowledges from writing a user record or periodically if
-no application records are added. It is configured as part of writer’s flushing policy. While control log records are present in the physical log stream,
+no application records are added. It is configured as part of writer's flushing policy. While control log records are present in the physical log stream,
 they are not delivered by the log readers to the application.
 
 Fencing
@@ -45,7 +51,7 @@ LAC is a very simple and useful mechanism to guarantee consistency across reader
 of a log stream is changed - there might be multiple writers exist at the same time when network partition happens. DistributedLog addresses this by `fencing`
 data in log segment store and conditionally (via versioned set) updating log segment metadata in metadata store. Fencing is a built-in mechanism in bookkeeper - when
 a client wants to fence a ledger, it would send a special fence request to all the replicas of that ledger; the bookies that host that ledger will change the state of
-that ledger to fenced. once a ledger’s state is changed to fenced, all the write attempts to it would be failed immediately. Client claims a success fence when
+that ledger to fenced. once a ledger's state is changed to fenced, all the write attempts to it would be failed immediately. Client claims a success fence when
 it receives successful fence responses from majorities of the replicas.
 
 Figure 2 illustrates how does DistributedLog work when ownership is changed for a log stream.
@@ -56,7 +62,7 @@ Figure 2 illustrates how does DistributedLog work when ownership is changed for 
    Figure 2. Fencing & Consistency
 
 Whenever the ownership is changed from one writer to the other writer (step 0), the new owner of the log stream will first retrieve the list of log segments of
-that log stream along with their versions (the versions will used for versioned set on updating log segments’ metadata). The new owner will find current inprogress
+that log stream along with their versions (the versions will used for versioned set on updating log segments' metadata). The new owner will find current inprogress
 log segment and recover the log segment in following sequence:
 
 1. It would first fence the log segment (step 2.1). Fencing successfully means no writes will succeed any more after that. 
@@ -67,15 +73,15 @@ log segment and recover the log segment in following sequence:
 Completing an inprogress log segment and creating a new log segment could be executed in parallel to achieve fast log stream recovery. It will reduce the latency
 penalty for writes during ownership changed.
 
-Creating a new log segment during ownership change is known as ‘*obtaining an epoch during leader election*’ in distributed consensus algorithms. It makes clean 
-implementation for a replicated log service, as the client that lost the ownership (aka mastership, lock) doesn’t even know the identity of the new epoch (in DL,
-it is the new log segment id) so it can’t accidentally write to the new log segment. We leverage zookeeper’s sequential znode on generating new log segment id.
+Creating a new log segment during ownership change is known as '*obtaining an epoch during leader election*' in distributed consensus algorithms. It makes clean 
+implementation for a replicated log service, as the client that lost the ownership (aka mastership, lock) doesn't even know the identity of the new epoch (in DL,
+it is the new log segment id) so it can't accidentally write to the new log segment. We leverage zookeeper's sequential znode on generating new log segment id.
 
 Ownership Tracking
 ~~~~~~~~~~~~~~~~~~
 
-With the built-in fencing mechanism in storage layer and metadata updates, DistributedLog doesn’t require strict leader election
-to guarantee correctness. Therefore we use ‘`ownership tracking`’ as opposed to ‘`leader election`’ for the log stream ownership management.
+With the built-in fencing mechanism in storage layer and metadata updates, DistributedLog doesn't require strict leader election
+to guarantee correctness. Therefore we use '`ownership tracking`' as opposed to '`leader election`' for the log stream ownership management.
 
 DistributedLog uses ZooKeeper ephemeral znodes for tracking the ownerships of log streams. Since ZooKeeper already provides `sessions` that
 can be used to track leases for failure detection. In production environment, we tuned the zookeeper settings to ensure failures could be
@@ -92,7 +98,7 @@ Applications write the log records by the write client. Write client will first 
 between log stream name and its corresponding log stream owner. If the stream is not cached yet, the client will use consistent hashing based
 `routing service` to compute a candidate write proxy (step 1.1) and then send the write request to this candidate write proxy (step 1.2). If it
 already owns the log stream or it could successfully claim the ownership, it would satisfy the write request and respond back to the client (step 1.3).
-If it can’t claim the ownership, it then send the response back to the client to ask it redirect to the right owner (1.4). All succeed write requests
+If it can't claim the ownership, it then send the response back to the client to ask it redirect to the right owner (1.4). All succeed write requests
 will keep the local ownership cache up-to-date, which help avoiding the subsequent requests being redirected.
 
 Streaming Reads
@@ -126,14 +132,14 @@ Figure 4 illustrates reading batched entries from log segment store. The are two
 
 Since an entry is immutable after it is appended to a log segment, reading a given entry by entry id could go to any replicas of that log segment and retry others
 if encountered failures. In order to achieve low predictable 99.9 percentile latency even during bookie failures, a **speculative** read mechanism is deployed:
-a read request will be sent to first replica; if client doesn’t receive the response with a speculative timeout, it would send another request to second replica;
+a read request will be sent to first replica; if client doesn't receive the response with a speculative timeout, it would send another request to second replica;
 then wait for the responses of both first replica and second replica; and so forth until receiving a valid response to complete the read request or timeout.
 
 Reading LAC is an operation for readers to catch up with the writer. It is typically a quorum-read operation to guarantee freshness: the client sends the read requests
 to all replicas in the log segment and waits for the responses from the majority of them. It could be optimized to be a best-effort quorum-read operation for tailing reads,
-which it doesn’t have to wait for quorum responses from the replicas and could return whenever it sees an advanced LAC.
+which it doesn't have to wait for quorum responses from the replicas and could return whenever it sees an advanced LAC.
 
-`Figure 4(c)` illustrates the third type of read request, which is called `“Long Poll Read”`. It is a combination of (a) and (b), serving the purpose of
+`Figure 4(c)` illustrates the third type of read request, which is called `"Long Poll Read"`. It is a combination of (a) and (b), serving the purpose of
 reading next available entry in the log segment. The client sends a long poll read request along with next read entry id to the log segment store.
 If the log segment store already saw the entry and it is committed (entry id is not greater than LAC), it responds the request immediately with latest LAC
 and requested entry. Otherwise, it would wait for LAC being advanced to given entry id and respond back requested entry. Similar speculative mechanism is
@@ -142,7 +148,7 @@ deployed in long polling to achieve predictable low 99.9 percentile latency.
 Notifications
 ~~~~~~~~~~~~~
 
-Once the reader is caught up with the writer, it would turn itself into `‘notification’` mode. In this mode, it would wait notifications of new records
+Once the reader is caught up with the writer, it would turn itself into `'notification'` mode. In this mode, it would wait notifications of new records
 by `long polling` reads (described above) and `notification` of state changes of log segments. The notification mechanism for state changes of log segments
 is provided by Metadata Store. Currently it is ZooKeeper watcher. The notifications are triggered when an inprogress log segment is completed or a new inprogress
 log segment is created.
@@ -179,7 +185,7 @@ Distribution
 A log segment is placed on multiple log segment storage nodes according configured placement policy. DistributedLog uses a `rack-aware` placement policy on
 placing log segments in a local datacenter setup, which the rack-aware placement policy will guarantee all the replicas of same log segment placed in
 different racks for network fault-tolerance. It uses a `region-aware` placement policy on placing log segments among multiple datacenters for a global setup
-(see more in section `“Global Replicated Log”`), which guarantees all the replicas of same log segment placed in multiple datacenters and ensures receiving
+(see more in section `"Global Replicated Log"`), which guarantees all the replicas of same log segment placed in multiple datacenters and ensures receiving
 acknowledges from majority of the data centers.
 
 As DistributedLog breaks down the streams into multiple log segments, the log segments could be evenly distributed across multiple log segment storage nodes

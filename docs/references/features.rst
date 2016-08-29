@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: BookKeeper Features
+
 Features
 ========
 

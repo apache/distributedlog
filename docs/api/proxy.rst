@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Write Proxy Client API
+
 Write Proxy Client API
 ======================
 

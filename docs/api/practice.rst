@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Best Practices
+
 Best Practices
 ==============
 

@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Cluster Setup & Deployment
+
 Cluster Setup & Deployment
 ==========================
 

@@ -1,3 +1,9 @@
+---
+layout: default
+---
+
+.. contents:: Core Library Configuration
+
 Core Library Configuration
 ==========================
 
