@@ -533,11 +533,11 @@ class BKAsyncLogReaderDLSN implements ZooKeeperClient.ZooKeeperSessionExpireNoti
                         backgroundReaderRunTime.registerSuccessfulEvent(runTime.stop().elapsed(TimeUnit.MICROSECONDS));
                         return;
                     }
-                }
 
-                if (disableProcessingReadRequests) {
-                    LOG.info("Reader of {} is forced to stop processing read requests", bkLedgerManager.getFullyQualifiedName());
-                    return;
+                    if (disableProcessingReadRequests) {
+                        LOG.info("Reader of {} is forced to stop processing read requests", bkLedgerManager.getFullyQualifiedName());
+                        return;
+                    }
                 }
 
                 // If the oldest pending promise is interrupted then we must mark
