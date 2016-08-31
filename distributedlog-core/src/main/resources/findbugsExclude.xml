@@ -22,7 +22,8 @@
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.Entry" />
+    <Class name="com.twitter.distributedlog.Entry$Builder" />
+    <Method name="setData" />
     <Bug pattern="EI_EXPOSE_REP2" />
   </Match>
   <Match>
