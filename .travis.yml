@@ -27,4 +27,4 @@ cache:
     - $HOME/.m2
 
 script:
-  - mvn clean apache-rat:check package
+  - travis_wait 60 mvn clean apache-rat:check package
