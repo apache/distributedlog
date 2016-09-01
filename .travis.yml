@@ -27,4 +27,6 @@ cache:
     - $HOME/.m2
 
 script:
-  - travis_wait 60 mvn clean apache-rat:check package
+  - mvn clean apache-rat:check
+  - export MAVEN_OPTS="-Xmx3G"
+  - travis_wait 60 mvn package
