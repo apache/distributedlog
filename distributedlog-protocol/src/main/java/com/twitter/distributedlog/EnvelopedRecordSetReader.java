@@ -75,9 +75,9 @@ class EnvelopedRecordSetReader implements LogRecordSet.Reader {
 
         if (COMPRESSION_CODEC_LZ4 == codecCode) {
             CompressionCodec codec = CompressionUtils.getCompressionCodec(CompressionCodec.Type.LZ4);
-            byte[] decompressedData = codec.decompress(compressedData, 0, actualDataLen,
+            ByteBuffer decompressedData = codec.decompress(ByteBuffer.wrap(compressedData), 0, actualDataLen,
                     originDataLen, NullOpStatsLogger);
-            this.reader = ByteBuffer.wrap(decompressedData);
+            this.reader = decompressedData;
         } else {
             if (originDataLen != actualDataLen) {
                 throw new IOException("Inconsistent data length found for a non-compressed record set : original = "

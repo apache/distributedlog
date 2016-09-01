@@ -17,11 +17,11 @@
  */
 package com.twitter.distributedlog;
 
+import com.twitter.distributedlog.exceptions.LogRecordTooLongException;
+import com.twitter.distributedlog.exceptions.WriteException;
 import com.twitter.distributedlog.io.Buffer;
 import com.twitter.distributedlog.io.CompressionCodec;
 import com.twitter.distributedlog.io.CompressionUtils;
-import com.twitter.distributedlog.exceptions.LogRecordTooLongException;
-import com.twitter.distributedlog.exceptions.WriteException;
 import com.twitter.util.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
-import static com.twitter.distributedlog.LogRecordSet.*;
+import static com.twitter.distributedlog.LogRecordSet.COMPRESSION_CODEC_LZ4;
+import static com.twitter.distributedlog.LogRecordSet.COMPRESSION_CODEC_NONE;
+import static com.twitter.distributedlog.LogRecordSet.HEADER_LEN;
+import static com.twitter.distributedlog.LogRecordSet.METADATA_COMPRESSION_MASK;
+import static com.twitter.distributedlog.LogRecordSet.METADATA_VERSION_MASK;
+import static com.twitter.distributedlog.LogRecordSet.NullOpStatsLogger;
+import static com.twitter.distributedlog.LogRecordSet.VERSION;
 
 /**
  * {@link Buffer} based log record set writer.
@@ -139,17 +145,18 @@ class EnvelopedRecordSetWriter implements LogRecordSet.Writer {
     }
 
     ByteBuffer createBuffer() {
-        byte[] data = buffer.getData();
+        ByteBuffer data = buffer.getData();
         int dataOffset = HEADER_LEN;
         int dataLen = buffer.size() - HEADER_LEN;
 
         if (COMPRESSION_CODEC_LZ4 != codecCode) {
-            ByteBuffer recordSetBuffer = ByteBuffer.wrap(data, 0, buffer.size());
+            ByteBuffer recordSetBuffer = data;
             // update count
             recordSetBuffer.putInt(4, count);
             // update data len
             recordSetBuffer.putInt(8, dataLen);
             recordSetBuffer.putInt(12, dataLen);
+            recordSetBuffer.flip();
             return recordSetBuffer;
         }
 
@@ -157,16 +164,16 @@ class EnvelopedRecordSetWriter implements LogRecordSet.Writer {
 
         CompressionCodec compressor =
                     CompressionUtils.getCompressionCodec(codec);
-        byte[] compressed =
+        ByteBuffer compressed =
                 compressor.compress(data, dataOffset, dataLen, NullOpStatsLogger);
 
         ByteBuffer recordSetBuffer;
-        if (compressed.length > dataLen) {
-            byte[] newData = new byte[HEADER_LEN + compressed.length];
-            System.arraycopy(data, 0, newData, 0, HEADER_LEN + dataLen);
+        if (compressed.limit() > dataLen) {
+            byte[] newData = new byte[HEADER_LEN + compressed.limit()];
+            System.arraycopy(data.array(), 0, newData, 0, HEADER_LEN + dataLen);
             recordSetBuffer = ByteBuffer.wrap(newData);
         } else {
-            recordSetBuffer = ByteBuffer.wrap(data);
+            recordSetBuffer = data;
         }
         // version
         recordSetBuffer.position(4);
@@ -174,7 +181,7 @@ class EnvelopedRecordSetWriter implements LogRecordSet.Writer {
         recordSetBuffer.putInt(count);
         // update data len
         recordSetBuffer.putInt(dataLen);
-        recordSetBuffer.putInt(compressed.length);
+        recordSetBuffer.putInt(compressed.limit());
         recordSetBuffer.put(compressed);
         recordSetBuffer.flip();
         return recordSetBuffer;

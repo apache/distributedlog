@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -162,7 +163,7 @@ class EnvelopedEntryWriter implements Writer {
         // We can't escape this allocation because things need to be read from one byte array
         // and then written to another. This is the destination.
         Buffer toSend = new Buffer(buffer.size());
-        byte[] decompressed = buffer.getData();
+        ByteBuffer decompressed = buffer.getData();
         int length = buffer.size();
         EnvelopedEntry entry = new EnvelopedEntry(EnvelopedEntry.CURRENT_VERSION,
                                                   codec,

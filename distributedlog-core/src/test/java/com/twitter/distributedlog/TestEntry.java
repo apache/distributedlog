@@ -17,14 +17,12 @@
  */
 package com.twitter.distributedlog;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.twitter.distributedlog.Entry.Reader;
 import com.twitter.distributedlog.Entry.Writer;
 import com.twitter.distributedlog.exceptions.LogRecordTooLongException;
 import com.twitter.distributedlog.io.Buffer;
 import com.twitter.distributedlog.io.CompressionCodec;
-import com.twitter.io.Buf;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
@@ -38,7 +36,8 @@ import java.util.List;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test Case of {@link Entry}
@@ -58,7 +57,7 @@ public class TestEntry {
 
         Buffer buffer = writer.getBuffer();
         Entry recordSet = Entry.newBuilder()
-                .setData(buffer.getData(), 0, buffer.size())
+                .setData(buffer.getData().array(), 0, buffer.size())
                 .setLogSegmentInfo(1L, 0L)
                 .setEntryId(0L)
                 .build();
@@ -145,7 +144,7 @@ public class TestEntry {
 
         // Test reading from buffer
         Entry recordSet = Entry.newBuilder()
-                .setData(buffer.getData(), 0, buffer.size())
+                .setData(buffer.getData().array(), 0, buffer.size())
                 .setLogSegmentInfo(1L, 1L)
                 .setEntryId(0L)
                 .build();
@@ -278,7 +277,7 @@ public class TestEntry {
                           DLSN expectedDLSN,
                           long expectedTxId) throws Exception {
         Entry recordSet = Entry.newBuilder()
-                .setData(data.getData(), 0, data.size())
+                .setData(data.getData().array(), 0, data.size())
                 .setLogSegmentInfo(lssn, startSequenceId)
                 .setEntryId(entryId)
                 .deserializeRecordSet(deserializeRecordSet)
