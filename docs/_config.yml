@@ -13,6 +13,8 @@ description: > # this means to ignore newlines until "baseurl:"
 # the subpath of your site, e.g. /blog
 baseurl: ""
 
+distributedlog_version: "0.4.0-SNAPSHOT"
+
 # output directory of generated html files
 destination: _site
 
@@ -27,6 +29,15 @@ jira_url: https://issues.apache.org/jira/browse/DL
 
 # Build settings
 markdown: kramdown
+
+kramdown:
+  auto_ids: true
+
+redcarpet:
+  # https://george-hawkins.github.io/basic-gfm-jekyll/redcarpet-extensions.html
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink",
+               "tables", "with_toc_data", "strikethrough", "superscript",
+               "lax_spacing"]
 
 # Things to ignore in the build
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
