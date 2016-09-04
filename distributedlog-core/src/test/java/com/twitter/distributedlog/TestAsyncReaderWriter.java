@@ -1483,6 +1483,8 @@ public class TestAsyncReaderWriter extends TestDistributedLogBase {
         dlm.close();
     }
 
+    @DistributedLogAnnotations.FlakyTest
+    @Ignore
     @Test(timeout = 60000)
     public void testAsyncReadMissingZKNotification() throws Exception {
         String name = "distrlog-async-reader-missing-zk-notification";
