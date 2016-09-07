@@ -1,6 +1,4 @@
 /**
- * Copyright 2007 The Apache Software Foundation
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,9 +15,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace java com.twitter.distributedlog.thrift.messaging
+package com.twitter.distributedlog.lock;
 
-struct TransformedRecord {
-    1: required binary payload
-    2: optional binary srcDlsn
+import com.twitter.distributedlog.exceptions.LockingException;
+import com.twitter.util.Future;
+
+/**
+ * An implementation of {@link DistributedLock} which does nothing.
+ */
+public class NopDistributedLock implements DistributedLock {
+
+    public static final DistributedLock INSTANCE = new NopDistributedLock();
+
+    private NopDistributedLock() {}
+
+    @Override
+    public Future<? extends DistributedLock> asyncAcquire() {
+        return Future.value(this);
+    }
+
+    @Override
+    public void checkOwnershipAndReacquire() throws LockingException {
+        // no-op
+    }
+
+    @Override
+    public void checkOwnership() throws LockingException {
+        // no-op
+    }
+
+    @Override
+    public Future<Void> asyncClose() {
+        return Future.Void();
+    }
 }
