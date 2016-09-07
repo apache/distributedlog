@@ -1,3 +1,4 @@
+{% capture start %}{{site.baseurl}}/start{% endcapture %}
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
@@ -14,41 +15,46 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <!-- Overview -->
-        <li><a href="{{ site.baseurl }}/docs/latest/basics/introduction">Overview</a></li>
-        <!-- Downloads -->
-        <li><a href="{{ site.baseurl }}/docs/latest/download">Downloads</a></li>
-        <!-- FAQ -->
-        <li><a href="{{ site.baseurl }}/faq">FAQ</a></li>
+        <li><a href="{{ site.baseurl}}/">V{{ site.distributedlog_version_short }}</a></li>
+        <!-- Concepts -->
+        <li><a href="{{ site.baseurl }}/basics/introduction">Concepts</a></li>
         <!-- Quick Start -->
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quick Start<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{{ site.baseurl }}/docs/latest/basics/quickstart">Setup</a></li>
+        <li class="dropdown {% if page.url contains '/start/' %} active{% endif %}">
+          <a href="{{ start }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            {% assign setup_group = (site.pages | where: "top-nav-group" , "setup" | sort: "top-nav-pos") %}
+            {% for setup_group_page in setup_group %}
+            <li class="{% if page.url contains setup_group_page.url %}active{% endif %}">
+              <a href="{{ site.baseurl }}{{ setup_group_page.url }}">
+                {% if setup_group_page.top-nav-title %}{{ setup_group_page.top-nav-title }}{% else %}{{ setup_group_page.title }}{% endif %}
+              </a>
+            </li>
+            {% endfor %}
             <li role="separator" class="divider"></li>
-            <li class="dropdown-header">Tutorials</li>
-            <li>
-              <a href="{{ site.docurl }}/tutorials/main.html">
-              <small><span class="glyphicon glyphicon-pencil"></span></small>
-              Basic
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            {% assign quickstart_group = (site.pages | where: "top-nav-group" , "quickstart" | sort: "top-nav-pos") %}
+            {% for quickstart_group_page in quickstart_group %}
+            <li class="{% if page.url contains quickstart_group_page.url %}active{% endif %}">
+              <a href="{{ site.baseurl }}{{ quickstart_group_page.url }}">
+                {% if quickstart_group_page.top-nav-title %}{{ quickstart_group_page.top-nav-title }}{% else %}{{ quickstart_group_page.title }}{% endif %}
               </a>
             </li>
-            <li>
-              <a href="{{ site.docurl }}/tutorials/main.html">
-              <small><span class="glyphicon glyphicon-envelope"></span></small>
-              Messaging
+            {% endfor %}
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            {% assign deployment_group = (site.pages | where: "top-nav-group" , "deployment" | sort: "top-nav-pos") %}
+            {% for deployment_group_page in deployment_group %}
+            <li class="{% if page.url contains deployment_group_page.url %}active{% endif %}">
+              <a href="{{ site.baseurl }}{{ deployment_group_page.url }}">
+                {% if deployment_group_page.top-nav-title %}{{ deployment_group_page.top-nav-title }}{% else %}{{ deployment_group_page.title }}{% endif %}
               </a>
             </li>
-            <li>
-              <a href="{{ site.docurl }}/tutorials/main.html">
-              <small><span class="glyphicon glyphicon-stats"></span></small>
-              Analytics
-              </a>
-            </li>
+            {% endfor %}
           </ul>
         </li>
-        <!-- Documentation -->
+        <!-- Programming Guide -->
         <li class="dropdown">
-		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Documentation<span class="caret"></span></a>
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li class="dropdown-header">Snapshot (Developement)</li>
             <li><a href="{{ site.docurl }}">Latest</a></li>
@@ -61,48 +67,32 @@
             </li>
           </ul>
         </li>
-      </ul>
-      <!-- Right Side -->
-      <ul class="nav navbar-nav navbar-right">
-        <!-- Blog -->
-        <li><a href="{{ site.baseurl }}/blog">Blog</a></li>
-        <!-- Community -->
+        <!-- Admin Guide -->
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Community<span class="caret"></span></a>
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Developer Guide<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li class="dropdown-header">Community</li>
-            <li><a href="{{ site.baseurl }}/community/#mailing-lists">Mailing Lists</a></li>
-            <li><a href="{{ site.baseurl }}/community/#source-code">Source Code</a></li>
-            <li><a href="{{ site.baseurl }}/community/#issue-tracker">Issue Tracking</a></li>
-            <li><a href="{{ site.baseurl }}/community/team/">Team</a></li>
+            <li class="dropdown-header">Snapshot (Developement)</li>
+            <li><a href="{{ site.docurl }}">Latest</a></li>
             <li role="separator" class="divider"></li>
-            <li class="dropdown-header">Contribute</li>
-            <li><a href="{{ site.baseurl }}/contribute/how-to">How to Contribute</a></li>
+            <li>
+              <a href="https://cwiki.apache.org/confluence/display/DL/Project+Ideas">
+                <small><span class="glyphicon glyphicon-new-window"></span></small>
+                Project Ideas
+              </a>
+            </li>
           </ul>
         </li>
-        <!-- Project -->
+        <!-- Developer Guide -->
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Project<span class="caret"></span></a>
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
           <ul class="dropdown-menu">
-			      <li class="dropdown-header">Project</li>
-            <li><a href="{{ site.baseurl }}/project/presentations/">Presentations</a></li>
-            <li><a href="{{ site.baseurl }}/project/material/">Material</a></li>
+            <li class="dropdown-header">Snapshot (Developement)</li>
+            <li><a href="{{ site.docurl }}">Latest</a></li>
+            <li role="separator" class="divider"></li>
             <li>
-              <a href="{{ site.twitter_url }}">
+              <a href="https://cwiki.apache.org/confluence/display/DL/Project+Ideas">
                 <small><span class="glyphicon glyphicon-new-window"></span></small>
-                Twitter
-              </a>
-            </li>
-            <li>
-              <a href="{{ site.github_url }}">
-                <small><span class="glyphicon glyphicon-new-window"></span></small>
-                Github
-              </a>
-            </li>
-            <li>
-              <a href="{{ site.wiki_url }}">
-                <small><span class="glyphicon glyphicon-new-window"></span></small>
-                Wiki
+                Project Ideas
               </a>
             </li>
           </ul>

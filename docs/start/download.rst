@@ -1,6 +1,12 @@
 ---
+title: Download Releases
+top-nav-group: setup
+top-nav-pos: 2
+top-nav-title: Download Releases
 layout: default
 ---
+
+.. contents:: This page covers how to download DistributedLog releases.
 
 Releases
 ========

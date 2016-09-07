@@ -1,8 +1,12 @@
 ---
+title: Setup & Run Example
+top-nav-group: quickstart
+top-nav-pos: 1
+top-nav-title: Setup & Run Example
 layout: default
 ---
 
-.. contents:: Quick Start
+.. contents:: Get a DistributedLog cluster up running locally and run the example program in a few simple steps.
 
 Quick Start
 ===========

@@ -1,5 +1,12 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: apis
+sub-nav-pos: 4
+sub-nav-title: Proxy Client API
+
 ---
 
 .. contents:: Write Proxy Client API

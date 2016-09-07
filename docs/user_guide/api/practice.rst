@@ -1,5 +1,12 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: apis
+sub-nav-pos: 5
+sub-nav-title: Best Practise
+
 ---
 
 .. contents:: Best Practices

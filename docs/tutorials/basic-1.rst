@@ -1,8 +1,12 @@
 ---
+title: API - Write Records
+top-nav-group: quickstart
+top-nav-pos: 2
+top-nav-title: API - Write Records
 layout: default
 ---
 
-.. contents:: Basic Tutorial - Using Core Library
+.. contents:: Basic Tutorial - Using Core Library to write records
 
 Basic Tutorial - Write Records using Core Library
 =================================================

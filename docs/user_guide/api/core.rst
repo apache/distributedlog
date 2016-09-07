@@ -1,5 +1,13 @@
 ---
+title: "Core Library"
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: apis
+sub-nav-pos: 3
+sub-nav-title: Core Library API
+
 ---
 
 .. contents:: Core Library API
