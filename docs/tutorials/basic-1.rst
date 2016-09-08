@@ -1,8 +1,8 @@
 ---
-title: API - Write Records
+title: API - Write Records (via core library)
 top-nav-group: quickstart
 top-nav-pos: 2
-top-nav-title: API - Write Records
+top-nav-title: API - Write Records (via core library)
 layout: default
 ---
 

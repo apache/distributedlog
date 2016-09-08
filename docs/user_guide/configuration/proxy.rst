@@ -1,5 +1,12 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: configuration
+sub-nav-id: write-proxy-configuration
+sub-nav-pos: 2
+sub-nav-title: Write Proxy Configuration
 ---
 
 .. contents:: Write Proxy Configuration

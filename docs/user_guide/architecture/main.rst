@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: user-guide
+top-nav-pos: 2
+top-nav-title: Architecture
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: user-guide
+sub-nav-id: architecture
+sub-nav-pos: 2
+sub-nav-title: Architecture
 ---
 
 .. contents:: Architecture
@@ -14,7 +26,7 @@ DistributedLog exposes the `log stream` as the unit of operations. A `log stream
 immutable sequence of log records. A `log record` is a sequence of bytes. Log records are batched into `entries`
 and written into `log segments`. Figure 1 illustrates the logical elements of a log stream.
 
-.. figure:: ../images/datamodel.png
+.. figure:: ../../images/datamodel.png
    :align: center
 
    Figure 1. Anatomy of a log stream
@@ -58,7 +70,7 @@ Software Stack
 The software stack is shown in Figure 2. The software stack is divided into three layers, with each layer is responsible for
 different features of DistributedLog. These layers are `Persistent Storage`, `DistributedLog Core` and `Stateless Serving`.
 
-.. figure:: ../images/softwarestack.png
+.. figure:: ../../images/softwarestack.png
    :align: center
 
    Figure 2. DistributedLog Software Stack
@@ -141,7 +153,7 @@ Lifecyle of records
 Figure 3 illustrates the lifecycle of a log record in DistributedLog as it flows from writers to readers and we discuss how different layers interact with
 each other.
 
-.. figure:: ../images/requestflow.png
+.. figure:: ../../images/requestflow.png
    :align: center
 
    Figure 3. Lifecycle of a record 

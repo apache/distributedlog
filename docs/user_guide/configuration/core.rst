@@ -1,5 +1,12 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: configuration
+sub-nav-id: core-library-configuration
+sub-nav-pos: 1
+sub-nav-title: Core Library Configuration
 ---
 
 .. contents:: Core Library Configuration
@@ -213,12 +220,11 @@ are listed in the below table.
 A general rule for log segment metadata upgrade is described as below. For example, we are upgrading
 from version *X* to version *X+1*.
 
-1. Upgrade the readers before upgrading writers. So the readers are able to recognize the log segments
-of version *X+1*.
-2. Upgrade the writers with the new binary of version *X+1* only. Keep the configuration `ledgerMetadataLayoutVersion`
-unchanged - still in version *X*.
-3. Once all the writers are running in same binary of version *X+1*. Update writers again with `ledgerMetadataLayoutVersion`
-set to version *X+1*.
+1. Upgrade the readers before upgrading writers. So the readers are able to recognize the log segments of version *X+1*.
+2. Upgrade the writers with the new binary of version *X+1* only. Keep the configuration `ledgerMetadataLayoutVersion` unchanged - still in version *X*.
+3. Once all the writers are running in same binary of version *X+1*. Update writers again with `ledgerMetadataLayoutVersion` set to version *X+1*.
+
+**Available Settings**
 
 - *ledgerMetadataLayoutVersion*: The logsegment metadata layout version. The default value is 5. Apply for `writers` only.
 - *ledgerMetadataSkipMinVersionCheck*: The flag indicates whether DL should enforce minimum log segment metadata vesion check.
@@ -272,28 +278,18 @@ Transmit Settings
 DL writes the log records into a transmit buffer before writing to bookkeeper. The following settings control
 the frequency of transmits and commits.
 
-- *writerOutputBufferSize*: The output buffer size in bytes. Larger buffer size will result in higher compression ratio and
-  it would reduce the entries sent to bookkeeper, use the disk bandwidth more efficiently and improve throughput.
-  Set this setting to `0` will ask DL to transmit the data immediately, which it would achieve low latency.
-- *periodicFlushFrequencyMilliSeconds*: The periodic flush frequency in milliseconds. If the setting is set to a positive value,
-  the data in transmit buffer will be flushed in every half of the provided interval. Otherwise, the periodical flush will be
-  disabled. For example, if this setting is set to `10` milliseconds, the data will be flushed (`transmit`) every 5 milliseconds.
-- *enableImmediateFlush*: The flag to enable immediate flush a control record. It is a flag to control the period to make data
-  visible to the readers. If this settings is true, DL would flush a control record immediately after transmitting the user data
-  is completed. The default value is false.
-- *minimumDelayBetweenImmediateFlushMilliSeconds*: The minimum delay between two immediate flushes, in milliseconds. This setting
-  only takes effects when immediate flush is enabled. It is designed to tolerant the bursty of traffic when immediate flush is enabled,
-  which prevents sending too many control records to the bookkeeper.
+- *writerOutputBufferSize*: The output buffer size in bytes. Larger buffer size will result in higher compression ratio and it would reduce the entries sent to bookkeeper, use the disk bandwidth more efficiently and improve throughput. Set this setting to `0` will ask DL to transmit the data immediately, which it would achieve low latency.
+- *periodicFlushFrequencyMilliSeconds*: The periodic flush frequency in milliseconds. If the setting is set to a positive value, the data in transmit buffer will be flushed in every half of the provided interval. Otherwise, the periodical flush will be disabled. For example, if this setting is set to `10` milliseconds, the data will be flushed (`transmit`) every 5 milliseconds.
+- *enableImmediateFlush*: The flag to enable immediate flush a control record. It is a flag to control the period to make data visible to the readers. If this settings is true, DL would flush a control record immediately after transmitting the user data is completed. The default value is false.
+- *minimumDelayBetweenImmediateFlushMilliSeconds*: The minimum delay between two immediate flushes, in milliseconds. This setting only takes effects when immediate flush is enabled. It is designed to tolerant the bursty of traffic when immediate flush is enabled, which prevents sending too many control records to the bookkeeper.
 
 LogSegment Retention Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following settings are related to log segment retention.
 
-- *logSegmentRetentionHours*: The log segment retention period, in hours. In other words, how long should DL keep the log segment
-  once it is `truncated` (`explicitTruncationByApp`==true) or `completed` (`explicitTruncationByApp`==false).
-- *explicitTruncationByApp*: The flag indicates that truncation is managed explicitly by the application. If this is set then time
-  based retention only clean the log segments which are marked as `truncated`. By default it is disabled.
+- *logSegmentRetentionHours*: The log segment retention period, in hours. In other words, how long should DL keep the log segment once it is `truncated` (`explicitTruncationByApp`==true) or `completed` (`explicitTruncationByApp`==false).
+- *explicitTruncationByApp*: The flag indicates that truncation is managed explicitly by the application. If this is set then time based retention only clean the log segments which are marked as `truncated`. By default it is disabled.
 
 LogSegment Rolling Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

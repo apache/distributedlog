@@ -1,5 +1,12 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: configuration
+sub-nav-id: client-configuration
+sub-nav-pos: 3
+sub-nav-title: Client Configuration
 ---
 
 .. contents:: Client Configuration

@@ -1,8 +1,12 @@
 ---
+title: Cluster Setup
+top-nav-group: deployment
+top-nav-pos: 1
+top-nav-title: Cluster Setup
 layout: default
 ---
 
-.. contents:: Cluster Setup & Deployment
+.. contents:: This page provides instructions on how to run **DistributedLog** in a fully distributed fashion.
 
 Cluster Setup & Deployment
 ==========================

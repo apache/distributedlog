@@ -19,12 +19,12 @@
         <!-- Concepts -->
         <li><a href="{{ site.baseurl }}/basics/introduction">Concepts</a></li>
         <!-- Quick Start -->
-        <li class="dropdown {% if page.url contains '/start/' %} active{% endif %}">
+        <li>
           <a href="{{ start }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             {% assign setup_group = (site.pages | where: "top-nav-group" , "setup" | sort: "top-nav-pos") %}
             {% for setup_group_page in setup_group %}
-            <li class="{% if page.url contains setup_group_page.url %}active{% endif %}">
+            <li>
               <a href="{{ site.baseurl }}{{ setup_group_page.url }}">
                 {% if setup_group_page.top-nav-title %}{{ setup_group_page.top-nav-title }}{% else %}{{ setup_group_page.title }}{% endif %}
               </a>
@@ -34,7 +34,7 @@
             <li class="dropdown-header"><strong>Quickstart</strong></li>
             {% assign quickstart_group = (site.pages | where: "top-nav-group" , "quickstart" | sort: "top-nav-pos") %}
             {% for quickstart_group_page in quickstart_group %}
-            <li class="{% if page.url contains quickstart_group_page.url %}active{% endif %}">
+            <li>
               <a href="{{ site.baseurl }}{{ quickstart_group_page.url }}">
                 {% if quickstart_group_page.top-nav-title %}{{ quickstart_group_page.top-nav-title }}{% else %}{{ quickstart_group_page.title }}{% endif %}
               </a>
@@ -44,7 +44,7 @@
             <li class="dropdown-header"><strong>Deployment</strong></li>
             {% assign deployment_group = (site.pages | where: "top-nav-group" , "deployment" | sort: "top-nav-pos") %}
             {% for deployment_group_page in deployment_group %}
-            <li class="{% if page.url contains deployment_group_page.url %}active{% endif %}">
+            <li>
               <a href="{{ site.baseurl }}{{ deployment_group_page.url }}">
                 {% if deployment_group_page.top-nav-title %}{{ deployment_group_page.top-nav-title }}{% else %}{{ deployment_group_page.title }}{% endif %}
               </a>
@@ -52,37 +52,21 @@
             {% endfor %}
           </ul>
         </li>
-        <!-- Programming Guide -->
+        <!-- User Guide -->
         <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li class="dropdown-header">Snapshot (Developement)</li>
-            <li><a href="{{ site.docurl }}">Latest</a></li>
-            <li role="separator" class="divider"></li>
+            {% assign userguide_group = (site.pages | where: "top-nav-group" , "user-guide" | sort: "top-nav-pos") %}
+            {% for userguide_group_page in userguide_group %}
             <li>
-              <a href="https://cwiki.apache.org/confluence/display/DL/Project+Ideas">
-                <small><span class="glyphicon glyphicon-new-window"></span></small>
-                Project Ideas
+              <a href="{{ site.baseurl }}{{ userguide_group_page.url }}">
+                {% if userguide_group_page.top-nav-title %}{{ userguide_group_page.top-nav-title }}{% else %}{{ userguide_group_page.title }}{% endif %}
               </a>
             </li>
+            {% endfor %}
           </ul>
         </li>
         <!-- Admin Guide -->
-        <li class="dropdown">
-		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Developer Guide<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li class="dropdown-header">Snapshot (Developement)</li>
-            <li><a href="{{ site.docurl }}">Latest</a></li>
-            <li role="separator" class="divider"></li>
-            <li>
-              <a href="https://cwiki.apache.org/confluence/display/DL/Project+Ideas">
-                <small><span class="glyphicon glyphicon-new-window"></span></small>
-                Project Ideas
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- Developer Guide -->
         <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
           <ul class="dropdown-menu">
@@ -95,6 +79,42 @@
                 Project Ideas
               </a>
             </li>
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="{{ site.baseurl }}/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="{{ site.baseurl }}/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="{{ site.baseurl }}/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="{{ site.baseurl }}/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="{{ site.baseurl }}/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="{{ site.baseurl }}/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            {% assign messaging_group = (site.pages | where: "top-nav-group" , "messaging" | sort: "top-nav-pos") %}
+            {% for messaging_group_page in messaging_group %}
+            <li>
+              <a href="{{ site.baseurl }}{{ messaging_group_page.url }}">
+                {% if messaging_group_page.top-nav-title %}{{ messaging_group_page.top-nav-title }}{% else %}{{ messaging_group_page.title }}{% endif %}
+              </a>
+            </li>
+            {% endfor %}
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            {% assign rsm_group = (site.pages | where: "top-nav-group" , "replicatedstatemachine" | sort: "top-nav-pos") %}
+            {% for rsm_group_page in rsm_group %}
+            <li>
+              <a href="{{ site.baseurl }}{{ rsm_group_page.url }}">
+                {% if rsm_group_page.top-nav-title %}{{ rsm_group_page.top-nav-title }}{% else %}{{ rsm_group_page.title }}{% endif %}
+              </a>
+            </li>
+            {% endfor %}
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="{{ site.baseurl }}/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
           </ul>
         </li>
       </ul>

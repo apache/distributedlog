@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: user-guide
+top-nav-pos: 4
+top-nav-title: Configuration
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: user-guide
+sub-nav-id: configuration
+sub-nav-pos: 4
+sub-nav-title: Configuration
 ---
 
 Configuration
@@ -15,10 +27,18 @@ In DistributedLog, we only put non-environment related settings in the configura
 Those environment related settings, such as zookeeper connect string, bookkeeper
 ledgers path, should not be loaded from configuration. They should be added in `namespace binding`.
 
-.. toctree::
-   :maxdepth: 1
+- `Core Library Configuration`_
 
-   core
-   proxy
-   client
-   perlog
+.. _Core Library Configuration: ./core
+
+- `Write Proxy Configuration`_
+
+.. _Write Proxy Configuration: ./proxy
+
+- `Write Proxy Client Configuration`_
+
+.. _Write Proxy Client Configuration: ./client
+
+- `Per Stream Configuration`_
+
+.. _Per Stream Configuration: ./perlog

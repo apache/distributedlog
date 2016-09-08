@@ -1,5 +1,12 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: configuration
+sub-nav-id: per-stream-configuration
+sub-nav-pos: 4
+sub-nav-title: Per Stream Configuration
 ---
 
 .. contents:: Per Stream Configuration

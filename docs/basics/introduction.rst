@@ -1,4 +1,16 @@
 ---
+# Top navigation
+top-nav-group: user-guide
+top-nav-pos: 1
+top-nav-title: Introduction
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: user-guide
+sub-nav-id: introduction
+sub-nav-pos: 1
+sub-nav-title: Introduction
+
 layout: default
 ---
 
