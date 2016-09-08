@@ -15,11 +15,6 @@ DL_VERSION_STABLE: 0.3.51-RC1
 
 # the subpath of your site, e.g. /blog
 baseurl: ""
-# doc site
-docurl: "http://distributedlog.io"
-
-# output directory of generated html files
-destination: _site
 
 # the base hostname & protocol for your site
 url: "http://distributedlog.incubator.apache.org"
@@ -29,6 +24,9 @@ twitter_url: https://twitter.com/distributedlog
 github_url: https://github.com/apache/incubator-distributedlog
 wiki_url: https://cwiki.apache.org/confluence/display/DL/Apache+DistributedLog+Home
 jira_url: https://issues.apache.org/jira/browse/DL
+developer_setup_url: https://cwiki.apache.org/confluence/display/DL/Developer+Setup
+contribute_how_to_url: https://cwiki.apache.org/confluence/display/DL/Contributing+to+DistributedLog
+coding_guide_url: https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=65867477
 
 # Build settings
 markdown: kramdown
@@ -38,10 +36,15 @@ collections:
 - mentors
 
 # Things to ignore in the build
-exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile', 'docs']
+exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile', 'docs', 'build.sh']
+
+# Things to keep in the build
+keep_files: ['docs']
 
 # Downloads directory
 downloads: downloads
+
+tracking_id: UA-83870961-1
 
 gems:
   - jekyll-redirect-from

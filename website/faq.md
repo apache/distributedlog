@@ -11,19 +11,11 @@ permalink: /faq/
 The Apache DistributedLog FAQ page is in the process of bootstrapping. So please file issues you find in <a href="/community">Jira</a>. Thanks!
 </div>
 
-
 # Frequently Asked Questions
 
-## Project Motivation
+The following questions are frequently asked with regard to the DistributedLog project in general. If you have further questions, make sure to consult the [documentation]({{ site.baseurl }}/docs/latest) or [ask the community]({{ site.baseurl }}/community).
 
-## Project Status
+* TOC
+{:toc}
 
-## Getting Started
-
-## Storage Details
-
-## Consistency
-
-## Hardware and Operations
-
-## Security
+Coming soon...

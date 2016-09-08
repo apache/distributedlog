@@ -16,9 +16,6 @@ baseurl: ""
 distributedlog_version: "0.4.0-SNAPSHOT"
 distributedlog_version_short: "0.4.0"
 
-# output directory of generated html files
-destination: _site
-
 # the base hostname & protocol for your site
 # url: "http://distributedlog.incubator.apache.org"
 url: ""
@@ -46,6 +43,8 @@ exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
 
 # Downloads directory
 downloads: downloads
+
+tracking_id: UA-83870961-1
 
 gems:
   - jekyll-redirect-from

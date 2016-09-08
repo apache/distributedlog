@@ -16,8 +16,8 @@ The Apache DistributedLog project is in the process of bootstrapping. This inclu
     </p>
     <div class="row">
         <div class="text-center">
-            <a href="{{ site.baseurl }}/docs/latest/download" class="btn btn-primary btn-lg">Download</a>
-            <a href="{{ site.baseurl }}/docs/latest/basics/quickstart" class="btn btn-primary btn-lg">Quick Start</a>
+            <a href="{{ site.baseurl }}/docs/latest/start/download" class="btn btn-primary btn-lg">Download</a>
+            <a href="{{ site.baseurl }}/docs/latest/start/quickstart" class="btn btn-primary btn-lg">Quick Start</a>
         </div>
     </div>
 </div>
@@ -26,7 +26,7 @@ The Apache DistributedLog project is in the process of bootstrapping. This inclu
     <div class="col-lg-4">
         <h3>
             <span class="glyphicon glyphicon-flash"></span>
-            <a href="{{ site.docurl }}/architecture/main.html">
+            <a href="{{ site.baseurl }}/docs/latest/user_guide/architecture/main.html">
             High Performance
             </a>
         </h3>
@@ -39,7 +39,7 @@ thousands of clients.
     <div class="col-lg-4">
         <h3>
             <span class="glyphicon glyphicon-menu-hamburger"></span>
-            <a href="{{ site.docurl }}/architecture/main.html">
+            <a href="{{ site.baseurl }}/docs/latest/user_guide/architecture/main.html">
             Durable and Consistent 
             </a>
         </h3>
@@ -52,7 +52,7 @@ readers in terms of <strong>strict ordering</strong>.
     <div class="col-lg-4">
         <h3>
             <span class="glyphicon glyphicon-random"></span>
-            <a href="{{ site.docurl }}/architecture/main.html">
+            <a href="{{ site.baseurl }}/docs/latest/user_guide/architecture/main.html">
             Efficient Fan-in and Fan-out
             </a>
         </h3>
@@ -65,7 +65,7 @@ to support large scale writes (fan-in) and reads (fan-out).
     <div class="col-lg-4">
         <h3>
             <span class="glyphicon glyphicon-fire"></span>
-            <a href="{{ site.docurl }}/architecture/main.html">
+            <a href="{{ site.baseurl }}/docs/latest/user_guide/architecture/main.html">
             Various Workloads
             </a>
         </h3>
@@ -79,7 +79,7 @@ analytical processing.
     <div class="col-lg-4">
         <h3>
             <span class="glyphicon glyphicon-user"></span>
-            <a href="{{ site.docurl }}/architecture/main.html">
+            <a href="{{ site.baseurl }}/docs/latest/user_guide/architecture/main.html">
             Multi Tenant
             </a>
         </h3>
@@ -91,7 +91,7 @@ isolation in real-world workloads.
     <div class="col-lg-4">
         <h3>
             <span class="glyphicon glyphicon-send"></span>
-            <a href="{{ site.docurl }}/architecture/main.html">
+            <a href="{{ site.baseurl }}/docs/latest/user_guide/architecture/main.html">
             Layered Architecture
             </a>
         </h3>
