@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: admin-guide
+top-nav-pos: 5
+top-nav-title: ZooKeeper
+
+# Sub-level navigation
+sub-nav-group: admin-guide
+sub-nav-parent: admin-guide
+sub-nav-id: zookeeper
+sub-nav-pos: 5
+sub-nav-title: ZooKeeper
 ---
 
 ZooKeeper

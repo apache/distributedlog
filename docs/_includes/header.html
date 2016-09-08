@@ -70,15 +70,15 @@
         <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li class="dropdown-header">Snapshot (Developement)</li>
-            <li><a href="{{ site.docurl }}">Latest</a></li>
-            <li role="separator" class="divider"></li>
+            <li><a href="{{ site.baseurl }}/deployment/cluster">Cluster Setup</a></li>
+            {% assign adminguide_group = (site.pages | where: "top-nav-group" , "admin-guide" | sort: "top-nav-pos") %}
+            {% for adminguide_group_page in adminguide_group %}
             <li>
-              <a href="https://cwiki.apache.org/confluence/display/DL/Project+Ideas">
-                <small><span class="glyphicon glyphicon-new-window"></span></small>
-                Project Ideas
+              <a href="{{ site.baseurl }}{{ adminguide_group_page.url }}">
+                {% if adminguide_group_page.top-nav-title %}{{ adminguide_group_page.top-nav-title }}{% else %}{{ adminguide_group_page.title }}{% endif %}
               </a>
             </li>
+            {% endfor %}
           </ul>
         </li>
         <!-- Tutorials -->

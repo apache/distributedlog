@@ -1,8 +1,18 @@
 ---
 title: Cluster Setup
+
 top-nav-group: deployment
 top-nav-pos: 1
 top-nav-title: Cluster Setup
+
+# Sub-level navigation
+sub-nav-group: admin-guide
+sub-nav-id: cluster-deployment
+sub-nav-parent: admin-guide
+sub-nav-group-title: Cluster Setup
+sub-nav-pos: 1
+sub-nav-title: Cluster Setup
+
 layout: default
 ---
 
@@ -81,7 +91,9 @@ You could verify the zookeeper setup using `zkshell`.
     [zookeeper]
     [zk: localhost:2181(CONNECTED) 1]
 
-Please refer to the :doc:`zookeeper` for more details on setting up zookeeper cluster.
+Please refer to the `ZooKeeper Guide`_ for more details on setting up zookeeper cluster.
+
+.. _ZooKeeper Guide: ../admin_guide/zookeeper
 
 Bookkeeper
 ----------
@@ -331,7 +343,9 @@ Verify if the bookie is running in `readonly` mode.
     [127.0.0.1:3181]
     [zk: localhost:2181(CONNECTED) 2]
 
-Please refer to the :doc:`bookkeeper` for more details on setting up bookkeeper cluster.
+Please refer to the `BookKeeper Guide`_ for more details on setting up bookkeeper cluster.
+
+.. _BookKeeper Guide: ../admin_guide/bookkeeper
 
 Create Namespace
 ----------------
@@ -540,4 +554,6 @@ Check the terminal running `MultiReader`. You will see similar output as below:
 
 
 
-Please refer to the :doc:`performance` for more details on tuning performance.
+Please refer to the Performance_ page for more details on tuning performance.
+
+.. _Performance: ../admin_guide/performance

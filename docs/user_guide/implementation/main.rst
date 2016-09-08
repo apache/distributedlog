@@ -1,9 +1,25 @@
+---
+layout: default
+
+# Top navigation
+top-nav-group: user-guide
+top-nav-pos: 8
+top-nav-title: Implementation
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: user-guide
+sub-nav-id: implementation
+sub-nav-pos: 8
+sub-nav-title: Implementation
+---
+
 Implementation
 ==============
 
-.. toctree::
-   :maxdepth: 1
+This page covers the implementation details for `DistributedLog`.
 
-   storage
-   core
-   writeproxy
+- `Storage`_
+
+.. _Storage: ./storage
+

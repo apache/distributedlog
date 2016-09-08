@@ -1,8 +1,14 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: references
+sub-nav-pos: 3
+sub-nav-title: Available Features
 ---
 
-.. contents:: BookKeeper Features
+.. contents:: Available Features
 
 Features
 ========

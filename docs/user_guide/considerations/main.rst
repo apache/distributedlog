@@ -1,5 +1,18 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: user-guide
+top-nav-pos: 2
+top-nav-title: Considerations
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: user-guide
+sub-nav-id: architecture
+sub-nav-pos: 2
+sub-nav-title: Considerations
+
 ---
 
 Considerations
@@ -23,8 +36,9 @@ partition, the slaves may elect a new master to continue forward progress. A fen
 mechanism is necessary for the old master to discover that it has lost ownership and
 prevent it from modifying state after network connectivity is restored.
 
-.. figure:: ../images/pubsub.png
+.. figure:: ../../images/pubsub.png
    :align: center
+   :width: 600px
 
    Figure 1. The uses of a log in distributed systems
 

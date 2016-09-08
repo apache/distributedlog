@@ -1,6 +1,6 @@
 ---
 title: "User Guide"
-layout: default
+layout: guide
 
 # Sub-level navigation
 sub-nav-group: user-guide
@@ -11,5 +11,3 @@ sub-nav-pos: 1
 sub-nav-title: User Guide
 
 ---
-
-

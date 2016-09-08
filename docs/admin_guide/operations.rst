@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: admin-guide
+top-nav-pos: 1
+top-nav-title: Operations
+
+# Sub-level navigation
+sub-nav-group: admin-guide
+sub-nav-parent: admin-guide
+sub-nav-id: operations
+sub-nav-pos: 1
+sub-nav-title: Operations
 ---
 
 .. contents:: DistributedLog Operations
@@ -120,7 +132,9 @@ adjust the availability values in overlay config file.
 Available Features
 __________________
 
-Check the :doc:`../references/features` reference page for the features exposed by DistributedLog.
+Check the Features_ reference page for the features exposed by DistributedLog.
+
+.. _Features: ../user_guide/references/features
 
 `dlog`
 ~~~~~~

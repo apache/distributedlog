@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: admin-guide
+top-nav-pos: 4
+top-nav-title: Monitoring
+
+# Sub-level navigation
+sub-nav-group: admin-guide
+sub-nav-parent: admin-guide
+sub-nav-id: monitoring
+sub-nav-pos: 4
+sub-nav-title: Monitoring
 ---
 
 .. contents:: Monitoring
@@ -381,4 +393,6 @@ The stats provider used by *Bookie Servers* is configured by setting the followi
 Metrics
 ~~~~~~~
 
-Check the :doc:`../references/metrics` reference page for the metrics exposed by DistributedLog.
+Check the Metrics_ reference page for the metrics exposed by DistributedLog.
+
+.. _Metrics: ../user_guide/references/metrics

@@ -3,14 +3,14 @@ layout: default
 
 # Top navigation
 top-nav-group: user-guide
-top-nav-pos: 2
+top-nav-pos: 3
 top-nav-title: Architecture
 
 # Sub-level navigation
 sub-nav-group: user-guide
 sub-nav-parent: user-guide
 sub-nav-id: architecture
-sub-nav-pos: 2
+sub-nav-pos: 3
 sub-nav-title: Architecture
 ---
 

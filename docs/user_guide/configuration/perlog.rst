@@ -92,8 +92,7 @@ Available Dynamic Settings
 Storage Settings
 ~~~~~~~~~~~~~~~~
 
-- *logSegmentRetentionHours*: The log segment retention period, in hours. In other words, how long should DL keep the log segment
-  once it is `truncated` (`explicitTruncationByApp`==true) or `completed` (`explicitTruncationByApp`==false).
+- *logSegmentRetentionHours*: The log segment retention period, in hours. In other words, how long should DL keep the log segment once it is `truncated` or `completed`.
 - *bkcEnsembleSize*: The ensemble size of the log segment. The default value is 3.
 - *bkcWriteQuorumSize*: The write quorum size of the log segment. The default value is 3.
 - *bkcAckQuorumSize*: The ack quorumm size of the log segment. The default value is 2.
@@ -137,4 +136,3 @@ NOTE: `bps` stands for `bytes per second`, while `rps` stands for `requests per 
   By default it is disabled.
 - *rpsHardWriteLimit*: The hard limit for rps. Setting it to 0 or negative value will disable this feature.
   By default it is disabled.
-

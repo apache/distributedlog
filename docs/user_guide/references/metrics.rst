@@ -1,5 +1,12 @@
 ---
 layout: default
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: references
+sub-nav-pos: 2
+sub-nav-title: Metrics
+
 ---
 
 .. contents:: Metrics
@@ -137,8 +144,7 @@ these operations are *create_client*, *get_data*, *set_data*, *delete*, *get_chi
 Watched Event Stats
 ~~~~~~~~~~~~~~~~~~~
 
-All stats on zookeeper watched events are exposed under {scope}/watcher. The stats are *Counter*
-about the watched events that this client received:
+All stats on zookeeper watched events are exposed under {scope}/watcher. The stats are *Counter* about the watched events that this client received:
 
 **{scope}/watcher/state/{keeper_state}**
 
@@ -148,7 +154,7 @@ or *Expired* it would help understanding the healthy of this zookeeper client.
 
 **{scope}/watcher/events/{event}**
 
-the number of `Watcher.Event`s received by this client. Those events are *None*, *NodeCreated*, *NodeDeleted*,
+the number of `Watcher.Event` received by this client. Those events are *None*, *NodeCreated*, *NodeDeleted*,
 *NodeDataChanged*, *NodeChildrenChanged*.
 
 Watcher Manager Stats

@@ -288,7 +288,7 @@ LogSegment Retention Settings
 
 The following settings are related to log segment retention.
 
-- *logSegmentRetentionHours*: The log segment retention period, in hours. In other words, how long should DL keep the log segment once it is `truncated` (`explicitTruncationByApp`==true) or `completed` (`explicitTruncationByApp`==false).
+- *logSegmentRetentionHours*: The log segment retention period, in hours. In other words, how long should DL keep the log segment once it is `truncated`.
 - *explicitTruncationByApp*: The flag indicates that truncation is managed explicitly by the application. If this is set then time based retention only clean the log segments which are marked as `truncated`. By default it is disabled.
 
 LogSegment Rolling Settings

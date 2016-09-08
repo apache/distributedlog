@@ -3,14 +3,14 @@ layout: default
 
 # Top navigation
 top-nav-group: user-guide
-top-nav-pos: 4
+top-nav-pos: 5
 top-nav-title: Configuration
 
 # Sub-level navigation
 sub-nav-group: user-guide
 sub-nav-parent: user-guide
 sub-nav-id: configuration
-sub-nav-pos: 4
+sub-nav-pos: 5
 sub-nav-title: Configuration
 ---
 

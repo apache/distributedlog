@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: user-guide
+top-nav-pos: 6
+top-nav-title: Detail Design
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: user-guide
+sub-nav-id: detail-design
+sub-nav-pos: 6
+sub-nav-title: Detail Design
 ---
 
 .. contents:: Detail Design
@@ -21,7 +33,7 @@ LastAddConfirmed
 DistributedLog leverages bookkeeper's `LAC` (LastAddConfirmed) protocol - a variation of `two-phase-commit` algorithm to build its data pipeline
 and achieve consistency around it. Figure 1 illustrates the basic concepts of this protocol.
 
-.. figure:: ../images/lacprotocol.png
+.. figure:: ../../images/lacprotocol.png
    :align: center
 
    Figure 1. Consistency in Log Segment Store
@@ -56,7 +68,7 @@ it receives successful fence responses from majorities of the replicas.
 
 Figure 2 illustrates how does DistributedLog work when ownership is changed for a log stream.
 
-.. figure:: ../images/fencing.png
+.. figure:: ../../images/fencing.png
    :align: center
 
    Figure 2. Fencing & Consistency
@@ -89,7 +101,7 @@ detected within one second. An aggressive bound on failure detection increases t
 write proxies, delays will result from writes blocking for log stream recovery. `Deterministic routing` allows multiple clients to choose the
 same write proxy to fail over when the current owner proxy is unavailable. The details are described in Figure 3. 
 
-.. figure:: ../images/requestrouting.png
+.. figure:: ../../images/requestrouting.png
    :align: center
 
    Figure 3. Request Routing
@@ -125,7 +137,7 @@ Reading
 
 Figure 4 illustrates reading batched entries from log segment store. The are two basic read operations: read a given entry by entry id (a) and read LAC (b). 
 
-.. figure:: ../images/readrequests.png
+.. figure:: ../../images/readrequests.png
    :align: center
 
    Figure 4. Read entries from log segment store
@@ -174,7 +186,7 @@ the `Min-Active-DLSN` pointer reaches the end of the log segment. The truncated 
 disaster recovery, and eventually be deleted after TTL expiration. Figure 5 illustrates a log stream that contains 5 log segments which each of them are in
 different states. The dot line describes the transition between states.
 
-.. figure:: ../images/logsegments.png
+.. figure:: ../../images/logsegments.png
    :align: center
 
    Figure 5. The lifecycle of log segments
@@ -192,7 +204,7 @@ As DistributedLog breaks down the streams into multiple log segments, the log se
 for load balancing. It helps the data distribution balancing and read workload balancing. Figure 6 shows an example how the data of 2 streams (*x*, *y*) is
 stored as 3 replicas in a *5-nodes* cluster in a balanced way.
  
-.. figure:: ../images/distribution.png
+.. figure:: ../../images/distribution.png
    :align: center
 
    Figure 6. Log Segment Distribution Example

@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: admin-guide
+top-nav-pos: 6
+top-nav-title: BookKeeper
+
+# Sub-level navigation
+sub-nav-group: admin-guide
+sub-nav-parent: admin-guide
+sub-nav-id: bookkeeper
+sub-nav-pos: 6
+sub-nav-title: BookKeeper
 ---
 
 .. contents:: BookKeeper
@@ -121,7 +133,9 @@ Stats Provider
 ^^^^^^^^^^^^^^
 
 Bookies use `StatsProvider` to expose its metrics. The `StatsProvider` is a pluggable library to
-adopt to various stats collecting systems. Please check :doc:`monitoring` for more details.
+adopt to various stats collecting systems. Please check monitoring_ for more details.
+
+.. _monitoring: ./monitoring
 
 ::
     

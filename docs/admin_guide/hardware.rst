@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: admin-guide
+top-nav-pos: 3
+top-nav-title: Hardware
+
+# Sub-level navigation
+sub-nav-group: admin-guide
+sub-nav-parent: admin-guide
+sub-nav-id: hardware
+sub-nav-pos: 3
+sub-nav-title: Hardware
 ---
 
 .. contents:: Hardware

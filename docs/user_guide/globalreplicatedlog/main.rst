@@ -1,5 +1,17 @@
 ---
 layout: default
+
+# Top navigation
+top-nav-group: user-guide
+top-nav-pos: 7
+top-nav-title: Global Replicated Log
+
+# Sub-level navigation
+sub-nav-group: user-guide
+sub-nav-parent: user-guide
+sub-nav-id: global-replicated-log
+sub-nav-pos: 7
+sub-nav-title: Global Replicated Log
 ---
 
 .. contents:: Global Replicated Log
@@ -19,8 +31,9 @@ to or removed from a running system as new datacenters are brought into service 
 are turned off, respectively. Regions are also the unit of physical isolation: there may be one
 or more regions in a datacenter if they have isolated power or network supplies.
 
-.. figure:: ../images/globalreplicatedlog.png
+.. figure:: ../../images/globalreplicatedlog.png
    :align: center
+   :width: 600px
 
    Figure 1. Global Replicated Log
 

@@ -34,20 +34,16 @@ replication and strong consistency as essentials for building reliable real-time
   This will help you to fully understand the other parts of the documentation, including the setup, integration,
   and operation guides. It is highly recommended to read this first.
 
-- **Quickstarts**: [Run DistributedLog]({{ site.baseurl }}/basics/quickstart) on your local machine or follow the tutorial to [write a simple program]({{ site.baseurl }}/tutorials/basic-1) to interact with _DistributedLog_.
+- **Quickstarts**: [Run DistributedLog]({{ site.baseurl }}/start/quickstart) on your local machine or follow the tutorial to [write a simple program]({{ site.baseurl }}/tutorials/basic-1) to interact with _DistributedLog_.
 
-- **Setup**: The [local], [docker] and [cluster] setup guides show how to deploy DistributedLog Stack.
+- **Setup**: The [docker]({{ site.baseurl }}/deployment/docker) and [cluster]({{ site.baseurl }}/deployment/cluster) setup guides show how to deploy DistributedLog Stack.
 
-- **Programming Guide**: You can check out our guides about [basic concepts] and the [Core Library API] or [Proxy Client API] to learn how to use DistributedLog to build your reliable real-time services.
+- **Programming Guide**: You can check out our guides about [basic concepts]({{ site.baseurl }}/basics/introduction) and the [Core Library API]({{ site.baseurl }}/user_guide/api/core) or [Proxy Client API]({{ site.baseurl }}/user_guide/api/proxy) to learn how to use DistributedLog to build your reliable real-time services.
 
 ## Next Steps
 
-- **Design Documents**: Learn about the [architecture], [design considerations] and [implementation details] of DistributedLog.
+- **Design Documents**: Learn about the [architecture]({{ site.baseurl }}/user_guide/architecture/main), [design considerations]({{ site.baseurl }}/user_guide/design/main) and [implementation details]({{ site.baseurl }}/user_guide/implementation/main) of DistributedLog.
 
-- **Operation Guide**: You can check out our guides about how to [operate] the DistributedLog Stack.
+- **Tutorials**: You can check out the [tutorials]({{ site.baseurl }}/tutorials/main) on how to build real applications.
 
-## Stack
-
-This is an overview of DistributedLog's stack. Click on any component to go to the respective documentation page.
-
-[TBD]
+- **Operation Guide**: You can check out our guides about how to [operate]({{ site.baseurl }}/admin_guide/main) the DistributedLog Stack.
