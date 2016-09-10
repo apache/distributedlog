@@ -139,7 +139,7 @@ def clean_up():
     print('Restoring head pointer to {0}'.format(original_head))
     run_cmd(['git', 'checkout', original_head])
 
-  branches = run_cmd(['git', 'branch']).rstrip().split('\n')
+  branches = run_cmd(['git', 'branch']).strip().split('\n')
 
   for branch in filter(lambda x: x.startswith(TEMP_BRANCH_PREFIX), branches):
     print('Deleting local branch {0}'.format(branch))
