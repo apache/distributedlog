@@ -22,6 +22,7 @@ import com.twitter.distributedlog.DLMTestUtil;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.annotations.DistributedLogAnnotations;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.exceptions.LogNotFoundException;
 import com.twitter.distributedlog.LogReader;
 import com.twitter.distributedlog.LogRecord;
@@ -31,7 +32,7 @@ import com.twitter.distributedlog.ZooKeeperClientBuilder;
 import com.twitter.distributedlog.acl.AccessControlManager;
 import com.twitter.distributedlog.acl.ZKAccessControl;
 import com.twitter.distributedlog.client.DistributedLogClientImpl;
-import com.twitter.distributedlog.client.routing.LocalRoutingService;
+import com.twitter.distributedlog.client.finagle.routing.LocalRoutingService;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.metadata.BKDLConfig;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
@@ -124,7 +125,7 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
         String name = "dlserver-basic-write";
         LocalRoutingService routingService = LocalRoutingService.newBuilder().build();
         routingService.addHost(name, dlServer.getAddress());
-        DistributedLogClientBuilder dlClientBuilder = DistributedLogClientBuilder.newBuilder()
+        DistributedLogClientBuilder dlClientBuilder = DistributedLogThriftClientBuilder.newBuilder()
             .name(name)
             .clientId(ClientId$.MODULE$.apply("test"))
             .routingService(routingService)
@@ -259,7 +260,7 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
             DLSN dlsn = Await.result(future, Duration.fromSeconds(10));
             fail("should have failed");
         } catch (DLException dle) {
-            assertEquals(StatusCode.TOO_LARGE_RECORD, dle.getCode());
+            assertEquals(StatusCode.TOO_LARGE_RECORD.getValue(), dle.getCode());
         } catch (Exception ex) {
             failDueToWrongException(ex);
         }
@@ -608,7 +609,7 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
             Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))));
             fail("Should fail with request denied exception");
         } catch (DLException dle) {
-            assertEquals(StatusCode.REQUEST_DENIED, dle.getCode());
+            assertEquals(StatusCode.REQUEST_DENIED.getValue(), dle.getCode());
         }
     }
 

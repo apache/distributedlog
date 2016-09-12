@@ -37,10 +37,16 @@
       <groupId>com.twitter</groupId>
       <artifactId>distributedlog-core</artifactId>
       <version>${project.parent.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.thrift</groupId>
+          <artifactId>libthrift</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>distributedlog-client</artifactId>
+      <artifactId>distributedlog-client-thrift</artifactId>
       <version>${project.parent.version}</version>
       <exclusions>
         <exclusion>
@@ -58,11 +64,6 @@
       <groupId>org.iq80.leveldb</groupId>
       <artifactId>leveldb</artifactId>
       <version>0.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.thrift</groupId>
-      <artifactId>libthrift</artifactId>
-      <version>0.5.0-1</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>

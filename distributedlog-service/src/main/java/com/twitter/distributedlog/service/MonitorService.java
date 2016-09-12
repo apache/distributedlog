@@ -32,7 +32,8 @@ import com.twitter.distributedlog.LogSegmentMetadata;
 import com.twitter.distributedlog.callback.LogSegmentListener;
 import com.twitter.distributedlog.callback.NamespaceListener;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
-import com.twitter.distributedlog.client.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.finagle.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import com.twitter.finagle.builder.ClientBuilder;
@@ -300,7 +301,7 @@ public class MonitorService implements NamespaceListener {
         ServerSet[] remotes  = new ServerSet[serverSets.length - 1];
         System.arraycopy(serverSets, 1, remotes, 0, remotes.length);
 
-        dlClient = DistributedLogClientBuilder.newBuilder()
+        dlClient = DistributedLogThriftClientBuilder.newBuilder()
                 .name("monitor")
                 .clientId(ClientId$.MODULE$.apply("monitor"))
                 .redirectBackoffMaxMs(50)

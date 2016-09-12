@@ -20,7 +20,8 @@ package com.twitter.distributedlog.service.tools;
 import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
-import com.twitter.distributedlog.client.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.finagle.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.service.ClientUtils;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.distributedlog.service.DistributedLogClient;
@@ -77,7 +78,7 @@ public class ProxyTool extends Tool {
             DLZkServerSet serverSet = DLZkServerSet.of(uri, 60000);
             logger.info("Created serverset for {}", uri);
             try {
-                DistributedLogClient client = DistributedLogClientBuilder.newBuilder()
+                DistributedLogClient client = DistributedLogThriftClientBuilder.newBuilder()
                         .name("proxy_tool")
                         .clientId(ClientId$.MODULE$.apply("proxy_tool"))
                         .maxRedirects(2)
@@ -267,7 +268,7 @@ public class ProxyTool extends Tool {
                 return -1;
             }
 
-            DistributedLogClientBuilder clientBuilder = DistributedLogClientBuilder.newBuilder()
+            DistributedLogClientBuilder clientBuilder = DistributedLogThriftClientBuilder.newBuilder()
                     .name("proxy_tool")
                     .clientId(ClientId$.MODULE$.apply("proxy_tool"))
                     .maxRedirects(2)

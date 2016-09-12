@@ -17,8 +17,7 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.exceptions.DLException;
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 
 public class LockingException extends DLException {
 
@@ -32,11 +31,11 @@ public class LockingException extends DLException {
         this(StatusCode.LOCKING_EXCEPTION, lockPath, message, cause);
     }
 
-    protected LockingException(StatusCode code, String lockPath, String message) {
+    protected LockingException(int code, String lockPath, String message) {
         super(code, String.format("LockPath - %s: %s", lockPath, message));
     }
 
-    protected LockingException(StatusCode code, String lockPath, String message, Throwable cause) {
+    protected LockingException(int code, String lockPath, String message, Throwable cause) {
         super(code, String.format("LockPath - %s: %s", lockPath, message), cause);
     }
 }

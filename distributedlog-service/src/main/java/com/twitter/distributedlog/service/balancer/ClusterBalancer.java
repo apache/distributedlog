@@ -20,6 +20,7 @@ package com.twitter.distributedlog.service.balancer;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.service.ClientUtils;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.distributedlog.service.DistributedLogClient;
@@ -135,7 +136,7 @@ public class ClusterBalancer implements Balancer {
     static Pair<DistributedLogClient, MonitorServiceClient> createDistributedLogClient(
             SocketAddress host, DistributedLogClientBuilder clientBuilder) {
         DistributedLogClientBuilder newBuilder =
-                DistributedLogClientBuilder.newBuilder(clientBuilder).host(host);
+                DistributedLogThriftClientBuilder.newBuilder(clientBuilder).host(host);
         return ClientUtils.buildClient(newBuilder);
     }
 

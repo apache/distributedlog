@@ -79,9 +79,10 @@
     <module>distributedlog-protocol</module>
     <module>distributedlog-core</module>
     <module>distributedlog-client</module>
+    <module>distributedlog-service-protocol-thrift</module>
+    <module>distributedlog-client-thrift</module>
     <module>distributedlog-service</module>
     <module>distributedlog-benchmark</module>
-    <module>distributedlog-example</module>
     <module>distributedlog-tutorials</module>
   </modules>
   <properties>
@@ -94,6 +95,8 @@
     <scrooge-maven-plugin.version>3.17.0</scrooge-maven-plugin.version>
     <codahale.metrics.version>3.0.1</codahale.metrics.version>
     <jetty.version>8.1.19.v20160209</jetty.version>
+    <guava.version>19.0</guava.version>
+    <commons-codec.version>1.6</commons-codec.version>
   </properties>
   <build>
     <plugins>
@@ -140,6 +143,13 @@
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+          <compilerArguments>
+            <!-- TODO: enable Werror after removing deprecation method usages
+            <Werror />
+            -->
+            <Xlint:deprecation />
+            <Xlint:unchecked />
+          </compilerArguments>
         </configuration>
       </plugin>
       <plugin>
@@ -200,11 +210,6 @@
         <updatePolicy>always</updatePolicy>
       </snapshots>
     </repository> 
-    <repository>
-      <id>twitter-repo</id>
-      <name>Twitter Maven Repo</name>
-      <url>http://maven.twttr.com</url>
-    </repository>
   </repositories>
   <reporting>
     <plugins>

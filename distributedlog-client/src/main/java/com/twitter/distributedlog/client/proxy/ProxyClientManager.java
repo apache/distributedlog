@@ -17,13 +17,15 @@
  */
 package com.twitter.distributedlog.client.proxy;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import com.twitter.distributedlog.client.ClientConfig;
 import com.twitter.distributedlog.client.stats.ClientStats;
 import com.twitter.distributedlog.client.stats.OpStats;
-import com.twitter.distributedlog.thrift.service.ClientInfo;
-import com.twitter.distributedlog.thrift.service.ServerInfo;
+import com.twitter.distributedlog.service.protocol.ClientInfo;
+import com.twitter.distributedlog.service.protocol.ServerInfo;
 import com.twitter.util.FutureEventListener;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timeout;
@@ -84,7 +86,8 @@ public class ProxyClientManager implements TimerTask {
         }
     }
 
-    void setPeriodicHandshakeEnabled(boolean enabled) {
+    @VisibleForTesting
+    public void setPeriodicHandshakeEnabled(boolean enabled) {
         this.periodicHandshakeEnabled = enabled;
     }
 
@@ -166,9 +169,9 @@ public class ProxyClientManager implements TimerTask {
                                         boolean logging,
                                         Stopwatch stopwatch) {
         if (logging) {
-            if (null != serverInfo && serverInfo.isSetOwnerships()) {
+            if (null != serverInfo && serverInfo.getOwnerships().isPresent()) {
                 logger.info("Handshaked with {} : {} ownerships returned.",
-                        address, serverInfo.getOwnerships().size());
+                        address, serverInfo.getOwnershipsSize());
             } else {
                 logger.info("Handshaked with {} : no ownerships returned", address);
             }
@@ -279,21 +282,13 @@ public class ProxyClientManager implements TimerTask {
                            FutureEventListener<ServerInfo> listener,
                            boolean logging,
                            boolean getOwnerships) {
-        if (clientConfig.getHandshakeWithClientInfo()) {
-            ClientInfo clientInfo = new ClientInfo();
-            clientInfo.setGetOwnerships(getOwnerships);
-            clientInfo.setStreamNameRegex(clientConfig.getStreamNameRegex());
-            if (logging) {
-                logger.info("Handshaking with {} : {}", address, clientInfo);
-            }
-            sc.getService().handshakeWithClientInfo(clientInfo)
-                    .addEventListener(listener);
-        } else {
-            if (logging) {
-                logger.info("Handshaking with {}", address);
-            }
-            sc.getService().handshake().addEventListener(listener);
+        ClientInfo clientInfo = new ClientInfo(
+                Optional.fromNullable(clientConfig.getStreamNameRegex()),
+                Optional.fromNullable(getOwnerships));
+        if (logging) {
+            logger.info("Handshaking with {} : {}", address, clientInfo);
         }
+        sc.handshake(clientInfo).addEventListener(listener);
     }
 
     /**

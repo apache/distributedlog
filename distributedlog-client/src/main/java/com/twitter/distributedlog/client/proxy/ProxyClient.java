@@ -17,30 +17,24 @@
  */
 package com.twitter.distributedlog.client.proxy;
 
-import com.twitter.distributedlog.client.ClientConfig;
-import com.twitter.distributedlog.client.stats.ClientStats;
-import com.twitter.distributedlog.thrift.service.DistributedLogService;
-import com.twitter.finagle.Service;
-import com.twitter.finagle.ThriftMux;
-import com.twitter.finagle.builder.ClientBuilder;
-import com.twitter.finagle.thrift.ClientId;
-import com.twitter.finagle.thrift.ThriftClientFramedCodec;
-import com.twitter.finagle.thrift.ThriftClientRequest;
-import com.twitter.util.Duration;
+import com.twitter.distributedlog.DLSN;
+import com.twitter.distributedlog.service.protocol.ClientInfo;
+import com.twitter.distributedlog.service.protocol.HeartbeatOptions;
+import com.twitter.distributedlog.service.protocol.ServerInfo;
+import com.twitter.distributedlog.service.protocol.WriteContext;
+import com.twitter.distributedlog.service.protocol.WriteResponse;
 import com.twitter.util.Future;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import scala.Option;
 import scala.runtime.BoxedUnit;
 
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.nio.ByteBuffer;
 
 /**
  * Client talks to a single proxy.
  */
-public class ProxyClient {
+public interface ProxyClient {
 
-    public static interface Builder {
+    interface Builder {
         /**
          * Build a proxy client to <code>address</code>.
          *
@@ -51,104 +45,91 @@ public class ProxyClient {
         ProxyClient build(SocketAddress address);
     }
 
-    public static Builder newBuilder(String clientName,
-                                     ClientId clientId,
-                                     ClientBuilder clientBuilder,
-                                     ClientConfig clientConfig,
-                                     ClientStats clientStats) {
-        return new DefaultBuilder(clientName, clientId, clientBuilder, clientConfig, clientStats);
-    }
+    /**
+     * Get the socket address of this proxy client connects to.
+     *
+     * @return socket address
+     */
+    SocketAddress getAddress();
 
-    public static class DefaultBuilder implements Builder {
+    /**
+     * Handshake with the write proxy.
+     *
+     * @param clientInfo
+     *          client info to pass to server during handshaking
+     * @return server info
+     */
+    Future<ServerInfo> handshake(ClientInfo clientInfo);
 
-        private final String clientName;
-        private final ClientId clientId;
-        private final ClientBuilder clientBuilder;
-        private final ClientStats clientStats;
+    /**
+     * Send heartbeats to a given stream.
+     *
+     * @param stream stream to heartbeat
+     * @param context write context for the request
+     * @param heartbeatOptions heartbeat options
+     * @return write response
+     */
+    Future<WriteResponse> heartbeat(String stream, WriteContext context, HeartbeatOptions heartbeatOptions);
 
-        private DefaultBuilder(String clientName,
-                               ClientId clientId,
-                               ClientBuilder clientBuilder,
-                               ClientConfig clientConfig,
-                               ClientStats clientStats) {
-            this.clientName = clientName;
-            this.clientId = clientId;
-            this.clientStats = clientStats;
-            // client builder
-            ClientBuilder builder = setDefaultSettings(null == clientBuilder ? getDefaultClientBuilder() : clientBuilder);
-            if (clientConfig.getThriftMux()) {
-                builder = enableThriftMux(builder, clientId);
-            }
-            this.clientBuilder = builder;
-        }
+    /**
+     * Write <code>data</code> to a given <i>stream</i>.
+     *
+     * @param stream stream to write
+     * @param data data to write
+     * @param context context of the request
+     * @return write response
+     */
+    Future<WriteResponse> write(String stream, ByteBuffer data, WriteContext context);
 
-        @SuppressWarnings("unchecked")
-        private ClientBuilder enableThriftMux(ClientBuilder builder, ClientId clientId) {
-            return builder.stack(ThriftMux.client().withClientId(clientId));
-        }
+    /**
+     * Truncate the <code>stream</code>.
+     *
+     * @param stream stream to truncate
+     * @param dlsn dlsn to truncate
+     * @param context context of the request
+     * @return write response
+     */
+    Future<WriteResponse> truncate(String stream, DLSN dlsn, WriteContext context);
 
-        private ClientBuilder getDefaultClientBuilder() {
-            return ClientBuilder.get()
-                .hostConnectionLimit(1)
-                .tcpConnectTimeout(Duration.fromMilliseconds(200))
-                .connectTimeout(Duration.fromMilliseconds(200))
-                .requestTimeout(Duration.fromSeconds(1));
-        }
+    /**
+     * Release the ownership of the <code>stream</code>.
+     *
+     * @param stream stream to release ownership
+     * @param context context of the request
+     * @return write response
+     */
+    Future<WriteResponse> release(String stream, WriteContext context);
 
-        @SuppressWarnings("unchecked")
-        private ClientBuilder setDefaultSettings(ClientBuilder builder) {
-            return builder.name(clientName)
-                   .codec(ThriftClientFramedCodec.apply(Option.apply(clientId)))
-                   .failFast(false)
-                   .noFailureAccrual()
-                   // disable retries on finagle client builder, as there is only one host per finagle client
-                   // we should throw exception immediately on first failure, so DL client could quickly detect
-                   // failures and retry other proxies.
-                   .retries(1)
-                   .keepAlive(true);
-        }
+    /**
+     * Create the <i>stream</i>.
+     *
+     * @param stream stream to create
+     * @param context context of the request
+     * @return write response
+     */
+    Future<WriteResponse> create(String stream, WriteContext context);
 
-        @Override
-        @SuppressWarnings("unchecked")
-        public ProxyClient build(SocketAddress address) {
-            Service<ThriftClientRequest, byte[]> client =
-                ClientBuilder.safeBuildFactory(
-                        clientBuilder
-                                .hosts((InetSocketAddress) address)
-                                .reportTo(clientStats.getFinagleStatsReceiver(address))
-                ).toService();
-            DistributedLogService.ServiceIface service =
-                    new DistributedLogService.ServiceToClient(client, new TBinaryProtocol.Factory());
-            return new ProxyClient(address, client, service);
-        }
+    /**
+     * Delete the <i>stream</i>.
+     *
+     * @param stream stream to delete
+     * @param context context of the request
+     * @return write response
+     */
+    Future<WriteResponse> delete(String stream, WriteContext context);
 
-    }
+    /**
+     * Set a proxy server to enable/disable accepting new streams.
+     *
+     * @param enabled flag to enable/disable accepting new streams.
+     * @return void
+     */
+    Future<Void> setAcceptNewStream(boolean enabled);
 
-    private final SocketAddress address;
-    private final Service<ThriftClientRequest, byte[]> client;
-    private final DistributedLogService.ServiceIface service;
-
-    protected ProxyClient(SocketAddress address,
-                          Service<ThriftClientRequest, byte[]> client,
-                          DistributedLogService.ServiceIface service) {
-        this.address = address;
-        this.client  = client;
-        this.service = service;
-    }
-
-    public SocketAddress getAddress() {
-        return address;
-    }
-
-    public Service<ThriftClientRequest, byte[]> getClient() {
-        return client;
-    }
-
-    public DistributedLogService.ServiceIface getService() {
-        return service;
-    }
-
-    public Future<BoxedUnit> close() {
-        return client.close();
-    }
+    /**
+     * Close the proxy client.
+     *
+     * @return
+     */
+    Future<BoxedUnit> close();
 }

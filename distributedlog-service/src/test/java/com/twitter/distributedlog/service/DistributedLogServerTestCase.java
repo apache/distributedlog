@@ -21,8 +21,9 @@ import com.google.common.collect.Sets;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.client.DistributedLogClientImpl;
 import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
-import com.twitter.distributedlog.client.routing.LocalRoutingService;
-import com.twitter.distributedlog.client.routing.RegionsRoutingService;
+import com.twitter.distributedlog.client.finagle.routing.LocalRoutingService;
+import com.twitter.distributedlog.client.finagle.routing.RegionsRoutingService;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.service.DistributedLogCluster.DLServer;
 import com.twitter.distributedlog.service.stream.StreamManagerImpl;
 import com.twitter.distributedlog.service.stream.StreamManager;
@@ -70,7 +71,7 @@ public abstract class DistributedLogServerTestCase {
 
         protected DLClient(String name, String streamNameRegex) {
             routingService = LocalRoutingService.newBuilder().build();
-            dlClientBuilder = DistributedLogClientBuilder.newBuilder()
+            dlClientBuilder = DistributedLogThriftClientBuilder.newBuilder()
                         .name(name)
                         .clientId(ClientId$.MODULE$.apply(name))
                         .routingService(routingService)
@@ -105,7 +106,7 @@ public abstract class DistributedLogServerTestCase {
             RegionsRoutingService regionsRoutingService =
                     RegionsRoutingService.of(new DefaultRegionResolver(regionMap),
                             localRoutingService, remoteRoutingService);
-            dlClientBuilder = DistributedLogClientBuilder.newBuilder()
+            dlClientBuilder = DistributedLogThriftClientBuilder.newBuilder()
                         .name(name)
                         .clientId(ClientId$.MODULE$.apply(name))
                         .routingService(regionsRoutingService)

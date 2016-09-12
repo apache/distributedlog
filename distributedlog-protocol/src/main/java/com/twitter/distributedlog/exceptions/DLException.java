@@ -17,31 +17,33 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.thrift.service.ResponseHeader;
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.google.common.base.Optional;
+import com.twitter.distributedlog.StatusCode;
 
 import java.io.IOException;
 
+import static com.twitter.distributedlog.StatusCode.*;
+
 public class DLException extends IOException {
     private static final long serialVersionUID = -4485775468586114393L;
-    protected final StatusCode code;
+    protected final int code;
 
-    protected DLException(StatusCode code) {
+    protected DLException(int code) {
         super();
         this.code = code;
     }
 
-    protected DLException(StatusCode code, String msg) {
+    protected DLException(int code, String msg) {
         super(msg);
         this.code = code;
     }
 
-    protected DLException(StatusCode code, Throwable t) {
+    protected DLException(int code, Throwable t) {
         super(t);
         this.code = code;
     }
 
-    protected DLException(StatusCode code, String msg, Throwable t) {
+    protected DLException(int code, String msg, Throwable t) {
         super(msg, t);
         this.code = code;
     }
@@ -51,29 +53,32 @@ public class DLException extends IOException {
      *
      * @return status code representing the exception.
      */
-    public StatusCode getCode() {
+    public int getCode() {
         return code;
     }
 
-    public static DLException of(ResponseHeader response) {
+    public static DLException of(int code,
+                                 Optional<String> errMsgOptional,
+                                 Optional<String> locationOptional) {
         String errMsg;
-        switch (response.getCode()) {
+        switch (code) {
             case FOUND:
-                if (response.isSetErrMsg()) {
-                    errMsg = response.getErrMsg();
+                if (errMsgOptional.isPresent()) {
+                    errMsg = errMsgOptional.get();
                 } else {
-                    errMsg = "Request is redirected to " + response.getLocation();
+                    errMsg = "Request is redirected to " + locationOptional;
                 }
-                return new OwnershipAcquireFailedException(errMsg, response.getLocation());
+                return new OwnershipAcquireFailedException(errMsg, locationOptional.get());
             case SUCCESS:
                 throw new IllegalArgumentException("Can't instantiate an exception for success response.");
             default:
-                if (response.isSetErrMsg()) {
-                    errMsg = response.getErrMsg();
+                if (errMsgOptional.isPresent()) {
+                    errMsg = errMsgOptional.get();
                 } else {
-                    errMsg = response.getCode().name();
+                    errMsg = StatusCode.getStatusName(code);
                 }
-                return new DLException(response.getCode(), errMsg);
+                return new DLException(code, errMsg);
         }
     }
+
 }

@@ -17,7 +17,7 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 
 public class OwnershipAcquireFailedException extends LockingException {
     private static final long serialVersionUID = 8176056926552748001L;

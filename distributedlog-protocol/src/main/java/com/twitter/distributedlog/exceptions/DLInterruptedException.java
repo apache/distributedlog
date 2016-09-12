@@ -17,7 +17,7 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 
 /**
  * An interrupted exception wrapper indicates dl operations are interrupted.

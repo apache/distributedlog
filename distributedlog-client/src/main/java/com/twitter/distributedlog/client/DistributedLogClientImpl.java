@@ -20,10 +20,22 @@ package com.twitter.distributedlog.client;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.distributedlog.DLSN;
+import com.twitter.distributedlog.LogRecord;
+import com.twitter.distributedlog.LogRecordSet;
 import com.twitter.distributedlog.LogRecordSetBuffer;
+import com.twitter.distributedlog.StatusCode;
+import com.twitter.distributedlog.client.functions.Functions;
+import com.twitter.distributedlog.exceptions.LogRecordTooLongException;
+import com.twitter.distributedlog.io.CompressionCodec;
+import com.twitter.distributedlog.service.protocol.HeartbeatOptions;
+import com.twitter.distributedlog.service.protocol.ResponseHeader;
+import com.twitter.distributedlog.service.protocol.ServerInfo;
+import com.twitter.distributedlog.service.protocol.WriteContext;
+import com.twitter.distributedlog.service.protocol.WriteResponse;
 import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.client.proxy.HostProvider;
 import com.twitter.distributedlog.client.proxy.ProxyClient;
@@ -32,8 +44,8 @@ import com.twitter.distributedlog.client.proxy.ProxyListener;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
 import com.twitter.distributedlog.client.ownership.OwnershipCache;
 import com.twitter.distributedlog.client.resolver.RegionResolver;
-import com.twitter.distributedlog.client.routing.RoutingService;
-import com.twitter.distributedlog.client.routing.RoutingService.RoutingContext;
+import com.twitter.distributedlog.client.finagle.routing.RoutingService;
+import com.twitter.distributedlog.client.finagle.routing.RoutingService.RoutingContext;
 import com.twitter.distributedlog.client.stats.ClientStats;
 import com.twitter.distributedlog.client.stats.OpStats;
 import com.twitter.distributedlog.exceptions.DLClientClosedException;
@@ -41,14 +53,6 @@ import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.ServiceUnavailableException;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.distributedlog.service.DistributedLogClient;
-import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
-import com.twitter.distributedlog.thrift.service.HeartbeatOptions;
-import com.twitter.distributedlog.thrift.service.ResponseHeader;
-import com.twitter.distributedlog.thrift.service.ServerInfo;
-import com.twitter.distributedlog.thrift.service.ServerStatus;
-import com.twitter.distributedlog.thrift.service.StatusCode;
-import com.twitter.distributedlog.thrift.service.WriteContext;
-import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.finagle.CancelledRequestException;
 import com.twitter.finagle.ConnectionFailedException;
 import com.twitter.finagle.Failure;
@@ -57,16 +61,13 @@ import com.twitter.finagle.RequestTimeoutException;
 import com.twitter.finagle.ServiceException;
 import com.twitter.finagle.ServiceTimeoutException;
 import com.twitter.finagle.WriteException;
-import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.StatsReceiver;
-import com.twitter.finagle.thrift.ClientId;
 import com.twitter.util.Duration;
 import com.twitter.util.Function;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
-import org.apache.thrift.TApplicationException;
 import org.jboss.netty.channel.ChannelException;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timeout;
@@ -81,8 +82,6 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -91,6 +90,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.twitter.distributedlog.StatusCode.*;
 
 /**
  * Implementation of distributedlog client
@@ -101,7 +102,6 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
     static final Logger logger = LoggerFactory.getLogger(DistributedLogClientImpl.class);
 
     private final String clientName;
-    private final ClientId clientId;
     private final ClientConfig clientConfig;
     private final RoutingService routingService;
     private final ProxyClient.Builder clientBuilder;
@@ -156,7 +156,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             }
             synchronized (this) {
                 String addrStr = address.toString();
-                if (ctx.isSetTriedHosts() && ctx.getTriedHosts().contains(addrStr)) {
+                if (ctx.isHostTried(addrStr)) {
                     nextAddressToSend = address;
                     dlTimer.newTimeout(this,
                             Math.min(clientConfig.getRedirectBackoffMaxMs(),
@@ -171,7 +171,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         abstract Future<ResponseHeader> sendRequest(ProxyClient sc);
 
         void doSend(SocketAddress address) {
-            ctx.addToTriedHosts(address.toString());
+            ctx.addTriedHost(address.toString());
             if (clientConfig.isChecksumEnabled()) {
                 Long crc32 = computeChecksum();
                 if (null != crc32) {
@@ -209,103 +209,6 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             } else {
                 fail(null, new CancelledRequestException());
             }
-        }
-    }
-
-    class BulkWriteOp extends StreamOp {
-
-        final List<ByteBuffer> data;
-        final ArrayList<Promise<DLSN>> results;
-
-        BulkWriteOp(final String name, final List<ByteBuffer> data) {
-            super(name, clientStats.getOpStats("bulk_write"));
-            this.data = data;
-
-            // This could take a while (relatively speaking) for very large inputs. We probably don't want
-            // to go so large for other reasons though.
-            this.results = new ArrayList<Promise<DLSN>>(data.size());
-            for (int i = 0; i < data.size(); i++) {
-                this.results.add(new Promise<DLSN>());
-            }
-        }
-
-        @Override
-        Future<ResponseHeader> sendRequest(final ProxyClient sc) {
-            return sc.getService().writeBulkWithContext(stream, data, ctx).addEventListener(new FutureEventListener<BulkWriteResponse>() {
-                @Override
-                public void onSuccess(BulkWriteResponse response) {
-                    // For non-success case, the ResponseHeader handler (the caller) will handle it.
-                    // Note success in this case means no finagle errors have occurred (such as finagle connection issues).
-                    // In general code != SUCCESS means there's some error reported by dlog service. The caller will handle such
-                    // errors.
-                    if (response.getHeader().getCode() == StatusCode.SUCCESS) {
-                        beforeComplete(sc, response.getHeader());
-                        BulkWriteOp.this.complete(sc.getAddress(), response);
-                        if (response.getWriteResponses().size() == 0 && data.size() > 0) {
-                            logger.error("non-empty bulk write got back empty response without failure for stream {}", stream);
-                        }
-                    }
-                }
-                @Override
-                public void onFailure(Throwable cause) {
-                    // Handled by the ResponseHeader listener (attached by the caller).
-                }
-            }).map(new AbstractFunction1<BulkWriteResponse, ResponseHeader>() {
-                @Override
-                public ResponseHeader apply(BulkWriteResponse response) {
-                    // We need to return the ResponseHeader to the caller's listener to process DLOG errors.
-                    return response.getHeader();
-                }
-            });
-        }
-
-        void complete(SocketAddress address, BulkWriteResponse bulkWriteResponse) {
-            super.complete(address);
-            Iterator<WriteResponse> writeResponseIterator = bulkWriteResponse.getWriteResponses().iterator();
-            Iterator<Promise<DLSN>> resultIterator = results.iterator();
-
-            // Fill in errors from thrift responses.
-            while (resultIterator.hasNext() && writeResponseIterator.hasNext()) {
-                Promise<DLSN> result = resultIterator.next();
-                WriteResponse writeResponse = writeResponseIterator.next();
-                if (StatusCode.SUCCESS == writeResponse.getHeader().getCode()) {
-                    result.setValue(DLSN.deserialize(writeResponse.getDlsn()));
-                } else {
-                    result.setException(DLException.of(writeResponse.getHeader()));
-                }
-            }
-
-            // Should never happen, but just in case so there's some record.
-            if (bulkWriteResponse.getWriteResponses().size() != data.size()) {
-                logger.error("wrong number of results, response = {} records = ", bulkWriteResponse.getWriteResponses().size(), data.size());
-            }
-        }
-
-        @Override
-        void fail(SocketAddress address, Throwable t) {
-
-            // StreamOp.fail is called to fail the overall request. In case of BulkWriteOp we take the request level
-            // exception to apply to the first write. In fact for request level exceptions no request has ever been
-            // attempted, but logically we associate the error with the first write.
-            super.fail(address, t);
-            Iterator<Promise<DLSN>> resultIterator = results.iterator();
-
-            // Fail the first write with the batch level failure.
-            if (resultIterator.hasNext()) {
-                Promise<DLSN> result = resultIterator.next();
-                result.setException(t);
-            }
-
-            // Fail the remaining writes as cancelled requests.
-            while (resultIterator.hasNext()) {
-                Promise<DLSN> result = resultIterator.next();
-                result.setException(new CancelledRequestException());
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Future<DLSN>> result() {
-            return (List) results;
         }
     }
 
@@ -372,7 +275,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().writeWithContext(stream, data, ctx);
+            return sc.write(stream, data, ctx);
         }
 
         @Override
@@ -386,12 +289,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
 
         Future<DLSN> result() {
-            return result.map(new AbstractFunction1<WriteResponse, DLSN>() {
-                @Override
-                public DLSN apply(WriteResponse response) {
-                    return DLSN.deserialize(response.getDlsn());
-                }
-            });
+            return result.map(Functions.EXTRACT_DLSN_FUNC);
         }
     }
 
@@ -413,7 +311,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().truncate(stream, dlsn.serialize(), ctx);
+            return sc.truncate(stream, dlsn, ctx);
         }
 
         Future<Boolean> result() {
@@ -430,11 +328,10 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         WriteRecordSetOp(String name, LogRecordSetBuffer recordSet) {
             super(name, recordSet.getBuffer());
-            ctx.setIsRecordSet(true);
+            ctx.setRecordSet(true);
         }
 
     }
-
 
     class ReleaseOp extends AbstractWriteOp {
 
@@ -444,7 +341,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().release(stream, ctx);
+            return sc.release(stream, ctx);
         }
 
         @Override
@@ -470,7 +367,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().delete(stream, ctx);
+            return sc.delete(stream, ctx);
         }
 
         @Override
@@ -496,7 +393,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().create(stream, ctx);
+            return sc.create(stream, ctx);
         }
 
         @Override
@@ -519,13 +416,12 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         HeartbeatOp(String name, boolean sendReaderHeartBeat) {
             super(name, clientStats.getOpStats("heartbeat"));
-            options = new HeartbeatOptions();
-            options.setSendHeartBeatToReader(sendReaderHeartBeat);
+            options = new HeartbeatOptions(Optional.fromNullable(sendReaderHeartBeat));
         }
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().heartbeatWithOptions(stream, ctx, options);
+            return sc.heartbeat(stream, ctx, options);
         }
 
         Future<Void> result() {
@@ -542,16 +438,15 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
     private final ClientStats clientStats;
 
     public DistributedLogClientImpl(String name,
-                                    ClientId clientId,
                                     RoutingService routingService,
-                                    ClientBuilder clientBuilder,
                                     ClientConfig clientConfig,
+                                    ProxyClient.Builder proxyClientBuilder,
                                     StatsReceiver statsReceiver,
                                     StatsReceiver streamStatsReceiver,
+                                    ClientStats clientStats,
                                     RegionResolver regionResolver,
                                     boolean enableRegionStats) {
         this.clientName = name;
-        this.clientId = clientId;
         this.routingService = routingService;
         this.clientConfig = clientConfig;
         this.streamFailfast = clientConfig.getStreamFailfast();
@@ -567,9 +462,9 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         // build the ownership cache
         this.ownershipCache = new OwnershipCache(this.clientConfig, this.dlTimer, statsReceiver, streamStatsReceiver);
         // Client Stats
-        this.clientStats = new ClientStats(statsReceiver, enableRegionStats, regionResolver);
+        this.clientStats = clientStats;
         // Client Manager
-        this.clientBuilder = ProxyClient.newBuilder(clientName, clientId, clientBuilder, clientConfig, clientStats);
+        this.clientBuilder = proxyClientBuilder;
         this.clientManager = new ProxyClientManager(
                 this.clientConfig,  // client config
                 this.clientBuilder, // client builder
@@ -597,8 +492,8 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             }
         });
 
-        logger.info("Build distributedlog client : name = {}, client_id = {}, routing_service = {}, stats_receiver = {}, thriftmux = {}",
-                    new Object[] { name, clientId, routingService.getClass(), statsReceiver.getClass(), clientConfig.getThriftMux() });
+        logger.info("Build distributedlog client : name = {}, routing_service = {}, stats_receiver = {}, thriftmux = {}",
+                    new Object[] { name, routingService.getClass(), statsReceiver.getClass(), clientConfig.getThriftMux() });
     }
 
     @Override
@@ -612,17 +507,15 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
     @Override
     public void onHandshakeSuccess(SocketAddress address, ProxyClient client, ServerInfo serverInfo) {
-        if (null != serverInfo &&
-                serverInfo.isSetServerStatus() &&
-                ServerStatus.DOWN == serverInfo.getServerStatus()) {
+        if (null != serverInfo && serverInfo.isServerDown()) {
             logger.info("{} is detected as DOWN during handshaking", address);
             // server is shutting down
             handleServiceUnavailable(address, client, Optional.<StreamOp>absent());
             return;
         }
 
-        if (null != serverInfo && serverInfo.isSetOwnerships()) {
-            Map<String, String> ownerships = serverInfo.getOwnerships();
+        if (null != serverInfo && serverInfo.getOwnerships().isPresent()) {
+            Map<String, String> ownerships = serverInfo.getOwnerships().get();
             logger.debug("Handshaked with {} : {} ownerships returned.", address, ownerships.size());
             for (Map.Entry<String, String> entry : ownerships.entrySet()) {
                 Matcher matcher = streamNameRegexPattern.matcher(entry.getKey());
@@ -708,7 +601,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         Map<SocketAddress, ProxyClient> snapshot = clientManager.getAllClients();
         List<Future<Void>> futures = new ArrayList<Future<Void>>(snapshot.size());
         for (Map.Entry<SocketAddress, ProxyClient> entry : snapshot.entrySet()) {
-            futures.add(entry.getValue().getService().setAcceptNewStream(enabled));
+            futures.add(entry.getValue().setAcceptNewStream(enabled));
         }
         return Future.collect(futures).map(new Function<List<Void>, Void>() {
             @Override
@@ -732,15 +625,67 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         return op.result();
     }
 
+    private void transmitRecordSet(String stream, final LogRecordSetBuffer recordSetBuffer) {
+        writeRecordSet(stream, recordSetBuffer).addEventListener(new FutureEventListener<DLSN>() {
+            @Override
+            public void onFailure(Throwable cause) {
+                recordSetBuffer.abortTransmit(cause);
+            }
+
+            @Override
+            public void onSuccess(DLSN dlsn) {
+                recordSetBuffer.completeTransmit(
+                        dlsn.getLogSegmentSequenceNo(),
+                        dlsn.getEntryId(),
+                        dlsn.getSlotId());
+            }
+        });
+    }
+
     @Override
     public List<Future<DLSN>> writeBulk(String stream, List<ByteBuffer> data) {
-        if (data.size() > 0) {
-            final BulkWriteOp op = new BulkWriteOp(stream, data);
-            sendRequest(op);
-            return op.result();
-        } else {
-            return Collections.emptyList();
+        LogRecordSet.Writer recordSetBuffer = LogRecordSet.newWriter(
+                16 * 1024, CompressionCodec.Type.NONE);
+
+        List<Future<DLSN>> futures = Lists.newArrayListWithExpectedSize(data.size());
+        Throwable cause = null;
+        for (ByteBuffer buffer : data) {
+            Promise<DLSN> writePromise = new Promise<DLSN>();
+            futures.add(writePromise);
+            // already encountered errors
+            if (null != cause) {
+                writePromise.setException(cause);
+                continue;
+            }
+
+            int logRecordSize = buffer.remaining();
+            if (logRecordSize > LogRecord.MAX_LOGRECORD_SIZE) {
+                writePromise.setException(new LogRecordTooLongException(
+                        "Log record of size " + logRecordSize + " written when only "
+                        + LogRecord.MAX_LOGRECORD_SIZE + " is allowed"));
+                continue;
+            }
+
+            // if exceed max number of bytes
+            if (recordSetBuffer.getNumBytes() + logRecordSize > LogRecord.MAX_LOGRECORDSET_SIZE) {
+                transmitRecordSet(stream, recordSetBuffer);
+                recordSetBuffer = LogRecordSet.newWriter(
+                        16 * 1024, CompressionCodec.Type.NONE);
+            }
+
+            // append a new record
+            try {
+                recordSetBuffer.writeRecord(buffer, writePromise);
+            } catch (LogRecordTooLongException e) {
+                writePromise.setException(e);
+            } catch (com.twitter.distributedlog.exceptions.WriteException e) {
+                cause = e;
+                writePromise.setException(cause);
+            }
         }
+
+        transmitRecordSet(stream, recordSetBuffer);
+        return futures;
     }
 
     @Override
@@ -834,7 +779,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                     // for overcapacity, dont report failure since this normally happens quite a bit
                     case OVER_CAPACITY:
                         logger.debug("Failed to write request to {} : {}", op.stream, header);
-                        op.fail(addr, DLException.of(header));
+                        op.fail(addr, DLException.of(header.getCode(), header.getErrMsg(), header.getLocation()));
                         break;
                     // for responses that indicate the requests definitely failed,
                     // we should fail them immediately (e.g. TOO_LARGE_RECORD, METADATA_EXCEPTION)
@@ -852,7 +797,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                     // status code NOT_READY is returned if failfast is enabled in the server. don't redirect
                     // since the proxy may still own the stream.
                     case STREAM_NOT_READY:
-                        op.fail(addr, DLException.of(header));
+                        op.fail(addr, DLException.of(header.getCode(), header.getErrMsg(), header.getLocation()));
                         break;
                     case SERVICE_UNAVAILABLE:
                         handleServiceUnavailable(addr, sc, Optional.of(op));
@@ -876,7 +821,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                     default:
                         // when we are receiving these exceptions from proxy, it means proxy or the stream is closed
                         // redirect the request.
-                        ownershipCache.removeOwnerFromStream(op.stream, addr, header.getCode().name());
+                        ownershipCache.removeOwnerFromStream(op.stream, addr, StatusCode.getStatusName(header.getCode()));
                         handleRedirectableError(addr, op, header);
                         break;
                 }
@@ -917,7 +862,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                                          StreamOp op,
                                          ResponseHeader header) {
         if (streamFailfast) {
-            op.fail(addr, DLException.of(header));
+            op.fail(addr, DLException.of(header.getCode(), header.getErrMsg(), header.getLocation()));
         } else {
             redirect(op, null);
         }
@@ -975,8 +920,6 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             // redirect the request to other host.
             clientManager.removeClient(addr, sc);
             resendOp = true;
-        } else if (cause instanceof TApplicationException) {
-            handleTApplicationException(cause, op, addr, sc);
         } else if (cause instanceof Failure) {
             handleFinagleFailure((Failure) cause, op, addr);
         } else {
@@ -1045,29 +988,10 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
     }
 
-    void handleTApplicationException(Throwable cause,
-                                     Optional<StreamOp> op,
-                                     SocketAddress addr,
-                                     ProxyClient sc) {
-        TApplicationException ex = (TApplicationException) cause;
-        if (ex.getType() == TApplicationException.UNKNOWN_METHOD) {
-            // if we encountered unknown method exception on thrift server, it means this proxy
-            // has problem. we should remove it from routing service, clean up ownerships
-            routingService.removeHost(addr, cause);
-            onServerLeft(addr, sc);
-            if (op.isPresent()) {
-                ownershipCache.removeOwnerFromStream(op.get().stream, addr, cause.getMessage());
-                doSend(op.get(), addr);
-            }
-        } else {
-            handleException(cause, op, addr);
-        }
-    }
-
     void handleRedirectResponse(ResponseHeader header, StreamOp op, SocketAddress curAddr) {
         SocketAddress ownerAddr = null;
-        if (header.isSetLocation()) {
-            String owner = header.getLocation();
+        if (header.getLocation().isPresent()) {
+            String owner = header.getLocation().get();
             try {
                 ownerAddr = DLSocketAddress.deserialize(owner).getSocketAddress();
                 // if we are receiving a direct request to same host, we won't try the same host.

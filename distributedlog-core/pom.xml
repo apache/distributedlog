@@ -69,17 +69,6 @@
       <version>1.6.4</version>
     </dependency>
     <dependency>
-      <groupId>com.twitter.common</groupId>
-      <artifactId>stats-util</artifactId>
-      <version>0.0.58</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-jdk14</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-core_2.11</artifactId>
       <version>${birdcage.sha}</version>
@@ -90,19 +79,9 @@
       <version>3.3.2</version>
     </dependency>
     <dependency>
-      <groupId>jline</groupId>
-      <artifactId>jline</artifactId>
-      <version>0.9.94</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.thrift</groupId>
       <artifactId>libthrift</artifactId>
-      <version>0.5.0-1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>scrooge-core_2.11</artifactId>
-      <version>${scrooge.version}</version>
+      <version>0.9.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.bookkeeper</groupId>
@@ -149,31 +128,49 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.twitter</groupId>
-        <artifactId>scrooge-maven-plugin</artifactId>
-        <version>${scrooge-maven-plugin.version}</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.1</version>
         <configuration>
-          <language>java</language>
         </configuration>
         <executions>
           <execution>
-            <id>thrift-sources</id>
-            <phase>generate-sources</phase>
+            <phase>package</phase>
             <goals>
-              <goal>compile</goal>
+              <goal>shade</goal>
             </goals>
+            <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <artifactSet>
+                <includes>
+                  <include>org.apache.thrift:libthrift</include>
+                </includes>
+              </artifactSet>
+              <minimizeJar>true</minimizeJar>
+              <relocations>
+                <relocation>
+                  <pattern>org.apache.thrift</pattern>
+                  <shadedPattern>dl-shade.org.apache.thrift</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <compilerArguments>
-            <Xlint:deprecation />
-            <Xlint:unchecked />
-          </compilerArguments>
-        </configuration>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>add-source</goal></goals>
+            <configuration>
+              <sources>
+                <source>src/main/gen-java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

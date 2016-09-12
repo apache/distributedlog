@@ -19,7 +19,7 @@ package com.twitter.distributedlog.service.announcer;
 
 import com.twitter.common.zookeeper.Group;
 import com.twitter.common.zookeeper.ServerSet;
-import com.twitter.distributedlog.client.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.finagle.serverset.DLZkServerSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

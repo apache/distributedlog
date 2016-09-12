@@ -17,7 +17,7 @@
  */
 package com.twitter.distributedlog.client.proxy;
 
-import com.twitter.distributedlog.thrift.service.ServerInfo;
+import com.twitter.distributedlog.service.protocol.ServerInfo;
 
 import java.net.SocketAddress;
 

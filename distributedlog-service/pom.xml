@@ -28,7 +28,7 @@
   <dependencies>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>distributedlog-client</artifactId>
+      <artifactId>distributedlog-client-thrift</artifactId>
       <version>${project.parent.version}</version>
       <exclusions>
         <exclusion>
@@ -41,6 +41,12 @@
       <groupId>com.twitter</groupId>
       <artifactId>distributedlog-core</artifactId>
       <version>${project.parent.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.thrift</groupId>
+          <artifactId>libthrift</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
@@ -58,6 +64,12 @@
       <version>${project.parent.version}</version>
       <scope>test</scope>
       <type>test-jar</type>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.thrift</groupId>
+          <artifactId>libthrift</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.zookeeper</groupId>
@@ -154,6 +166,13 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <id>twitter-repo</id>
+      <name>Twitter Maven Repo</name>
+      <url>http://maven.twttr.com</url>
+    </repository>
+  </repositories>
   <profiles>
     <profile>
       <id>twitter-ostrich-provider</id>

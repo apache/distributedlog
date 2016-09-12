@@ -104,11 +104,13 @@ public class ClientConfig {
         return this.streamNameRegex;
     }
 
+    @Deprecated
     public ClientConfig setHandshakeWithClientInfo(boolean enabled) {
         this.handshakeWithClientInfo = enabled;
         return this;
     }
 
+    @Deprecated
     public boolean getHandshakeWithClientInfo() {
         return this.handshakeWithClientInfo;
     }

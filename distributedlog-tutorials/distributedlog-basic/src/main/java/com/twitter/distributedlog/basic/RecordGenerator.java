@@ -19,8 +19,8 @@ package com.twitter.distributedlog.basic;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.distributedlog.DLSN;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.service.DistributedLogClient;
-import com.twitter.distributedlog.service.DistributedLogClientBuilder;
 import com.twitter.finagle.thrift.ClientId;
 import com.twitter.util.FutureEventListener;
 
@@ -49,7 +49,7 @@ public class RecordGenerator {
         double rate = Double.parseDouble(args[2]);
         RateLimiter limiter = RateLimiter.create(rate);
 
-        DistributedLogClient client = DistributedLogClientBuilder.newBuilder()
+        DistributedLogClient client = DistributedLogThriftClientBuilder.newBuilder()
                 .clientId(ClientId.apply("record-generator"))
                 .name("record-generator")
                 .thriftmux(true)
