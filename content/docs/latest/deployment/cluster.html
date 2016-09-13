@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cluster Setup</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="http://distributedlog.incubator.apache.org/docs/latest/styles/site.css">
+  <link rel="stylesheet" href="http://distributedlog.incubator.apache.org/docs/latest/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="http://distributedlog.incubator.apache.org/docs/latest/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="http://distributedlog.incubator.apache.org/docs/latest/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="http://distributedlog.incubator.apache.org/docs/latest/">V0.4.0</a></li>
+        <!-- Concepts -->
+        <li><a href="http://distributedlog.incubator.apache.org/docs/latest/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="http://distributedlog.incubator.apache.org/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/main.html" class="">Admin Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/operations.html" class="">
+                  Operations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster.html" class="active">
+                  Cluster Setup
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/performance.html" class="">
+                  Performance Tuning
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/hardware.html" class="">
+                  Hardware
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/monitoring.html" class="">
+                  Monitoring
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/zookeeper.html" class="">
+                  ZooKeeper
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/bookkeeper.html" class="">
+                  BookKeeper
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+
+      
+
+      <li><a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/main.html">Admin Guide</a></li>
+      
+      
+      <li class="active">Cluster Setup</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="this-page-provides-instructions-on-how-to-run-distributedlog-in-a-fully-distributed-fashion">
+<p class="topic-title first">This page provides instructions on how to run <strong>DistributedLog</strong> in a fully distributed fashion.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#cluster-setup-deployment" id="id1">Cluster Setup &amp; Deployment</a><ul>
+<li><a class="reference internal" href="#build" id="id2">Build</a></li>
+<li><a class="reference internal" href="#zookeeper" id="id3">Zookeeper</a></li>
+<li><a class="reference internal" href="#bookkeeper" id="id4">Bookkeeper</a><ul>
+<li><a class="reference internal" href="#format-bookkeeper-metadata" id="id5">Format bookkeeper metadata</a></li>
+<li><a class="reference internal" href="#add-bookies" id="id6">Add Bookies</a><ul>
+<li><a class="reference internal" href="#configure-ports" id="id7">Configure Ports</a></li>
+<li><a class="reference internal" href="#configure-disk-layout" id="id8">Configure Disk Layout</a></li>
+<li><a class="reference internal" href="#format-bookie" id="id9">Format bookie</a></li>
+<li><a class="reference internal" href="#start-bookie" id="id10">Start bookie</a></li>
+<li><a class="reference internal" href="#stop-bookie" id="id11">Stop bookie</a></li>
+<li><a class="reference internal" href="#turn-bookie-to-readonly" id="id12">Turn bookie to readonly</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#create-namespace" id="id13">Create Namespace</a></li>
+<li><a class="reference internal" href="#write-proxy" id="id14">Write Proxy</a><ul>
+<li><a class="reference internal" href="#configuration" id="id15">Configuration</a></li>
+<li><a class="reference internal" href="#run-write-proxy" id="id16">Run write proxy</a></li>
+<li><a class="reference internal" href="#add-and-remove-write-proxies" id="id17">Add and Remove Write Proxies</a></li>
+<li><a class="reference internal" href="#write-proxy-naming" id="id18">Write Proxy Naming</a></li>
+<li><a class="reference internal" href="#verify-the-setup" id="id19">Verify the setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="cluster-setup-deployment">
+<h2><a class="toc-backref" href="#id1">Cluster Setup &amp; Deployment</a></h2>
+<p>This section describes how to run DistributedLog in <cite>distributed</cite> mode.
+To run a cluster with DistributedLog, you need a Zookeeper cluster and a Bookkeeper cluster.</p>
+<div class="section" id="build">
+<h3><a class="toc-backref" href="#id2">Build</a></h3>
+<p>To build DistributedLog, run:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>mvn clean install -DskipTests
+</span></code></pre></td></tr></table></div></figure><p>Or run <cite>./scripts/snapshot</cite> to build the release packages from current source. The released
+packages contain the binaries for running <cite>distributedlog-service</cite>, <cite>distributedlog-benchmark</cite>
+and <cite>distributedlog-tutorials</cite>.</p>
+<p>NOTE: we run following instructions from distributedlog source code after running <cite>mvn clean install</cite>.
+And assume <cite>DL_HOME</cite> is the directory of distributedlog source.</p>
+</div>
+<div class="section" id="zookeeper">
+<h3><a class="toc-backref" href="#id3">Zookeeper</a></h3>
+<p>(If you already have a zookeeper cluster running, you could skip this section.)</p>
+<p>We could use the <cite>dlog-daemon.sh</cite> and the <cite>zookeeper.conf.template</cite> to demonstrate run a 1-node
+zookeeper ensemble locally.</p>
+<p>Create a <cite>zookeeper.conf</cite> from the <cite>zookeeper.conf.template</cite>.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ cp distributedlog-service/conf/zookeeper.conf.template distributedlog-service/conf/zookeeper.conf
+</span></code></pre></td></tr></table></div></figure><p>Configure the settings in <cite>zookeeper.conf</cite>. By default, it will use <cite>/tmp/data/zookeeper</cite> for storing
+the zookeeper data. Let's create the data directories for zookeeper.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ mkdir -p /tmp/data/zookeeper/txlog
+</span></code></pre></td></tr></table></div></figure><p>Once the data directory is created, we need to assign <cite>myid</cite> for this zookeeper node.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ <span class="nb">echo</span> <span class="s2">&quot;1&quot;</span> &gt; /tmp/data/zookeeper/myid
+</span></code></pre></td></tr></table></div></figure><p>Start the zookeeper daemon using <cite>dlog-daemon.sh</cite>.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ ./distributedlog-service/bin/dlog-daemon.sh start zookeeper <span class="si">${</span><span class="nv">DL_HOME</span><span class="si">}</span>/distributedlog-service/conf/zookeeper.conf
+</span></code></pre></td></tr></table></div></figure><p>You could verify the zookeeper setup using <cite>zkshell</cite>.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>// ./distributedlog-service/bin/dlog zkshell <span class="si">${</span><span class="nv">zkservers</span><span class="si">}</span>
+</span><span class="line">$ ./distributedlog-service/bin/dlog zkshell localhost:2181
+</span><span class="line">Connecting to localhost:2181
+</span><span class="line">Welcome to ZooKeeper!
+</span><span class="line">JLine support is enabled
+</span><span class="line">
+</span><span class="line">WATCHER::
+</span><span class="line">
+</span><span class="line">WatchedEvent state:SyncConnected type:None path:null
+</span><span class="line"><span class="o">[</span>zk: localhost:2181<span class="o">(</span>CONNECTED<span class="o">)</span> 0<span class="o">]</span> ls /
+</span><span class="line"><span class="o">[</span>zookeeper<span class="o">]</span>
+</span><span class="line"><span class="o">[</span>zk: localhost:2181<span class="o">(</span>CONNECTED<span class="o">)</span> 1<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure><p>Please refer to the <a class="reference external" href="../admin_guide/zookeeper">ZooKeeper Guide</a> for more details on setting up zookeeper cluster.</p>
+</div>
+<div class="section" id="bookkeeper">
+<h3><a class="toc-backref" href="#id4">Bookkeeper</a></h3>
+<p>(If you already have a bookkeeper cluster running, you could skip this section.)</p>
+<p>We could use the <cite>dlog-daemon.sh</cite> and the <cite>bookie.conf.template</cite> to demonstrate run a 3-nodes
+bookkeeper cluster locally.</p>
+<p>Create a <cite>bookie.conf</cite> from the <cite>bookie.conf.template</cite>. Since we are going to run a 3-nodes
+bookkeeper cluster locally. Let's make three copies of <cite>bookie.conf.template</cite>.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ cp distributedlog-service/conf/bookie.conf.template distributedlog-service/conf/bookie-1.conf
+</span><span class="line">$ cp distributedlog-service/conf/bookie.conf.template distributedlog-service/conf/bookie-2.conf
+</span><span class="line">$ cp distributedlog-service/conf/bookie.conf.template distributedlog-service/conf/bookie-3.conf
+</span></code></pre></td></tr></table></div></figure><p>Configure the settings in the bookie configuraiont files.</p>
+<p>First of all, choose the zookeeper cluster that the bookies will use and set <cite>zkServers</cite> in
+the configuration files.</p>
+<pre class="literal-block">
+zkServers=localhost:2181
+</pre>
+<p>Choose the zookeeper path to store bookkeeper metadata and set <cite>zkLedgersRootPath</cite> in the configuration
+files. Let's use <cite>/messaging/bookkeeper/ledgers</cite> in this instruction.</p>
+<pre class="literal-block">
+zkLedgersRootPath=/messaging/bookkeeper/ledgers
+</pre>
+<div class="section" id="format-bookkeeper-metadata">
+<h4><a class="toc-backref" href="#id5">Format bookkeeper metadata</a></h4>
+<p>(NOTE: only format bookkeeper metadata when first time setting up the bookkeeper cluster.)</p>
+<p>The bookkeeper shell doesn't automatically create the <cite>zkLedgersRootPath</cite> when running <cite>metaformat</cite>.
+So using <cite>zkshell</cite> to create the <cite>zkLedgersRootPath</cite>.</p>
+<pre class="literal-block">
+$ ./distributedlog-service/bin/dlog zkshell localhost:2181
+Connecting to localhost:2181
+Welcome to ZooKeeper!
+JLine support is enabled
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+[zk: localhost:2181(CONNECTED) 0] create /messaging ''
+Created /messaging
+[zk: localhost:2181(CONNECTED) 1] create /messaging/bookkeeper ''
+Created /messaging/bookkeeper
+[zk: localhost:2181(CONNECTED) 2] create /messaging/bookkeeper/ledgers ''
+Created /messaging/bookkeeper/ledgers
+[zk: localhost:2181(CONNECTED) 3]
+</pre>
+<p>If the <cite>zkLedgersRootPath</cite>, run <cite>metaformat</cite> to format the bookkeeper metadata.</p>
+<pre class="literal-block">
+$ BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-1.conf ./distributedlog-service/bin/dlog bkshell metaformat
+Are you sure to format bookkeeper metadata ? (Y or N) Y
+</pre>
+</div>
+<div class="section" id="add-bookies">
+<h4><a class="toc-backref" href="#id6">Add Bookies</a></h4>
+<p>Once the bookkeeper metadata is formatted, it is ready to add bookie nodes to the cluster.</p>
+<div class="section" id="configure-ports">
+<h5><a class="toc-backref" href="#id7">Configure Ports</a></h5>
+<p>Configure the ports that used by bookies.</p>
+<p>bookie-1:</p>
+<pre class="literal-block">
+# Port that bookie server listen on
+bookiePort=3181
+# Exporting codahale stats
+185 codahaleStatsHttpPort=9001
+</pre>
+<p>bookie-2:</p>
+<pre class="literal-block">
+# Port that bookie server listen on
+bookiePort=3182
+# Exporting codahale stats
+185 codahaleStatsHttpPort=9002
+</pre>
+<p>bookie-3:</p>
+<pre class="literal-block">
+# Port that bookie server listen on
+bookiePort=3183
+# Exporting codahale stats
+185 codahaleStatsHttpPort=9003
+</pre>
+</div>
+<div class="section" id="configure-disk-layout">
+<h5><a class="toc-backref" href="#id8">Configure Disk Layout</a></h5>
+<p>Configure the disk directories used by a bookie server by setting following options.</p>
+<pre class="literal-block">
+# Directory Bookkeeper outputs its write ahead log
+journalDirectory=/tmp/data/bk/journal
+# Directory Bookkeeper outputs ledger snapshots
+ledgerDirectories=/tmp/data/bk/ledgers
+# Directory in which index files will be stored.
+indexDirectories=/tmp/data/bk/ledgers
+</pre>
+<p>As we are configuring a 3-nodes bookkeeper cluster, we modify the following settings as below:</p>
+<p>bookie-1:</p>
+<pre class="literal-block">
+# Directory Bookkeeper outputs its write ahead log
+journalDirectory=/tmp/data/bk-1/journal
+# Directory Bookkeeper outputs ledger snapshots
+ledgerDirectories=/tmp/data/bk-1/ledgers
+# Directory in which index files will be stored.
+indexDirectories=/tmp/data/bk-1/ledgers
+</pre>
+<p>bookie-2:</p>
+<pre class="literal-block">
+# Directory Bookkeeper outputs its write ahead log
+journalDirectory=/tmp/data/bk-2/journal
+# Directory Bookkeeper outputs ledger snapshots
+ledgerDirectories=/tmp/data/bk-2/ledgers
+# Directory in which index files will be stored.
+indexDirectories=/tmp/data/bk-2/ledgers
+</pre>
+<p>bookie-3:</p>
+<pre class="literal-block">
+# Directory Bookkeeper outputs its write ahead log
+journalDirectory=/tmp/data/bk-3/journal
+# Directory Bookkeeper outputs ledger snapshots
+ledgerDirectories=/tmp/data/bk-3/ledgers
+# Directory in which index files will be stored.
+indexDirectories=/tmp/data/bk-3/ledgers
+</pre>
+</div>
+<div class="section" id="format-bookie">
+<h5><a class="toc-backref" href="#id9">Format bookie</a></h5>
+<p>Once the disk directories are configured correctly in the configuration file, use
+<cite>bkshell bookieformat</cite> to format the bookie.</p>
+<pre class="literal-block">
+BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-1.conf ./distributedlog-service/bin/dlog bkshell bookieformat
+BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-2.conf ./distributedlog-service/bin/dlog bkshell bookieformat
+BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-3.conf ./distributedlog-service/bin/dlog bkshell bookieformat
+</pre>
+</div>
+<div class="section" id="start-bookie">
+<h5><a class="toc-backref" href="#id10">Start bookie</a></h5>
+<p>Start the bookie using <cite>dlog-daemon.sh</cite>.</p>
+<pre class="literal-block">
+SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-1.conf
+SERVICE_PORT=3182 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-2.conf
+SERVICE_PORT=3183 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-3.conf
+</pre>
+<p>Verify whether the bookie is setup correctly. You could simply check whether the bookie is showed up in
+zookeeper <cite>zkLedgersRootPath</cite>/available znode.</p>
+<pre class="literal-block">
+$ ./distributedlog-service/bin/dlog zkshell localhost:2181
+Connecting to localhost:2181
+Welcome to ZooKeeper!
+JLine support is enabled
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+[zk: localhost:2181(CONNECTED) 0] ls /messaging/bookkeeper/ledgers/available
+[127.0.0.1:3181, 127.0.0.1:3182, 127.0.0.1:3183, readonly]
+[zk: localhost:2181(CONNECTED) 1]
+</pre>
+<p>Or check if the bookie is exposing the stats at port <cite>codahaleStatsHttpPort</cite>.</p>
+<pre class="literal-block">
+// ping the service
+$ curl localhost:9001/ping
+pong
+// checking the stats
+curl localhost:9001/metrics?pretty=true
+</pre>
+</div>
+<div class="section" id="stop-bookie">
+<h5><a class="toc-backref" href="#id11">Stop bookie</a></h5>
+<p>Stop the bookie using <cite>dlog-daemon.sh</cite>.</p>
+<pre class="literal-block">
+$ ./distributedlog-service/bin/dlog-daemon.sh stop bookie
+// Example:
+$ SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh stop bookie
+doing stop bookie ...
+stopping bookie
+Shutdown is in progress... Please wait...
+Shutdown completed.
+</pre>
+</div>
+<div class="section" id="turn-bookie-to-readonly">
+<h5><a class="toc-backref" href="#id12">Turn bookie to readonly</a></h5>
+<p>Start the bookie in <cite>readonly</cite> mode.</p>
+<pre class="literal-block">
+$ SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-1.conf --readonly
+</pre>
+<p>Verify if the bookie is running in <cite>readonly</cite> mode.</p>
+<pre class="literal-block">
+$ ./distributedlog-service/bin/dlog zkshell localhost:2181
+Connecting to localhost:2181
+Welcome to ZooKeeper!
+JLine support is enabled
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+[zk: localhost:2181(CONNECTED) 0] ls /messaging/bookkeeper/ledgers/available
+[127.0.0.1:3182, 127.0.0.1:3183, readonly]
+[zk: localhost:2181(CONNECTED) 1] ls /messaging/bookkeeper/ledgers/available/readonly
+[127.0.0.1:3181]
+[zk: localhost:2181(CONNECTED) 2]
+</pre>
+<p>Please refer to the <a class="reference external" href="../admin_guide/bookkeeper">BookKeeper Guide</a> for more details on setting up bookkeeper cluster.</p>
+</div>
+</div>
+</div>
+<div class="section" id="create-namespace">
+<h3><a class="toc-backref" href="#id13">Create Namespace</a></h3>
+<p>After setting up a zookeeper cluster and a bookkeeper cluster, you could provision DL namespaces
+for applications to use.</p>
+<p>Provisioning a DistributedLog namespace is accomplished via the <cite>bind</cite> command available in <cite>dlog tool</cite>.</p>
+<p>Namespace is bound by writing bookkeeper environment settings (e.g. the ledger path, bkLedgersZkPath,
+or the set of Zookeeper servers used by bookkeeper, bkZkServers) as metadata in the zookeeper path of
+the namespace DL URI. The DL library resolves the DL URI to determine which bookkeeper cluster it
+should read and write to.</p>
+<p>The namespace binding has following features:</p>
+<ul class="simple">
+<li><cite>Inheritance</cite>: suppose <cite>distributedlog://&lt;zkservers&gt;/messaging/distributedlog</cite> is bound to bookkeeper
+cluster <cite>X</cite>. All the streams created under <cite>distributedlog://&lt;zkservers&gt;/messaging/distributedlog</cite>,
+will write to bookkeeper cluster <cite>X</cite>.</li>
+<li><cite>Override</cite>: suppose <cite>distributedlog://&lt;zkservers&gt;/messaging/distributedlog</cite> is bound to bookkeeper
+cluster <cite>X</cite>. You want streams under <cite>distributedlog://&lt;zkservers&gt;/messaging/distributedlog/S</cite> write
+to bookkeeper cluster <cite>Y</cite>. You could just bind <cite>distributedlog://&lt;zkservers&gt;/messaging/distributedlog/S</cite>
+to bookkeeper cluster <cite>Y</cite>. The binding to <cite>distributedlog://&lt;zkservers&gt;/messaging/distributedlog/S</cite>
+only affects streams under <cite>distributedlog://&lt;zkservers&gt;/messaging/distributedlog/S</cite>.</li>
+</ul>
+<p>Create namespace binding using <cite>dlog tool</cite>. For example, we create a namespace
+<cite>distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace</cite> pointing to the
+bookkeeper cluster we just created above.</p>
+<pre class="literal-block">
+$ distributedlog-service/bin/dlog admin bind \\
+    -dlzr 127.0.0.1:2181 \\
+    -dlzw 127.0.0.1:2181 \\
+    -s 127.0.0.1:2181 \\
+    -bkzr 127.0.0.1:2181 \\
+    -l /messaging/bookkeeper/ledgers \\
+    -i false \\
+    -r true \\
+    -c \\
+    distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace
+
+No bookkeeper is bound to distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace
+Created binding on distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace.
+</pre>
+<ul class="simple">
+<li>Configure the zookeeper cluster used for storing DistributedLog metadata: <cite>-dlzr</cite> and <cite>-dlzw</cite>.
+Ideally <cite>-dlzr</cite> and <cite>-dlzw</cite> would be same the zookeeper server in distributedlog namespace uri.
+However to scale zookeeper reads, the zookeeper observers sometimes are added in a different
+domain name than participants. In such case, configuring <cite>-dlzr</cite> and <cite>-dlzw</cite> to different
+zookeeper domain names would help isolating zookeeper write and read traffic.</li>
+<li>Configure the zookeeper cluster used by bookkeeper for storing the metadata : <cite>-bkzr</cite> and <cite>-s</cite>.
+Similar as <cite>-dlzr</cite> and <cite>-dlzw</cite>, you could configure the namespace to use different zookeeper
+domain names for readers and writers to access bookkeeper metadatadata.</li>
+<li>Configure the bookkeeper ledgers path: <cite>-l</cite>.</li>
+<li>Configure the zookeeper path to store DistributedLog metadata. It is implicitly included as part
+of namespace URI.</li>
+</ul>
+</div>
+<div class="section" id="write-proxy">
+<h3><a class="toc-backref" href="#id14">Write Proxy</a></h3>
+<p>A write proxy consists of multiple write proxies. They don't store any state locally. So they are
+mostly stateless and can be run as many as you can.</p>
+<div class="section" id="configuration">
+<h4><a class="toc-backref" href="#id15">Configuration</a></h4>
+<p>Different from bookkeeper, DistributedLog tries not to configure any environment related settings
+in configuration files. Any environment related settings are stored and configured via <cite>namespace binding</cite>.
+The configuration file should contain non-environment related settings.</p>
+<p>There is a <cite>write_proxy.conf</cite> template file available under <cite>distributedlog-service</cite> module.</p>
+</div>
+<div class="section" id="run-write-proxy">
+<h4><a class="toc-backref" href="#id16">Run write proxy</a></h4>
+<p>A write proxy could be started using <cite>dlog-daemon.sh</cite> script under <cite>distributedlog-service</cite>.</p>
+<pre class="literal-block">
+WP_SHARD_ID=${WP_SHARD_ID} WP_SERVICE_PORT=${WP_SERVICE_PORT} WP_STATS_PORT=${WP_STATS_PORT} ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
+</pre>
+<ul class="simple">
+<li><cite>WP_SHARD_ID</cite>: A non-negative integer. You don't need to guarantee uniqueness of shard id, as it is just an
+indicator to the client for routing the requests. If you are running the <cite>write proxy</cite> using a cluster scheduler
+like <cite>aurora</cite>, you could easily obtain a shard id and use that to configure <cite>WP_SHARD_ID</cite>.</li>
+<li><cite>WP_SERVICE_PORT</cite>: The port that write proxy listens on.</li>
+<li><cite>WP_STATS_PORT</cite>: The port that write proxy exposes stats to a http endpoint.</li>
+</ul>
+<p>Please check <cite>distributedlog-service/conf/dlogenv.sh</cite> for more environment variables on configuring write proxy.</p>
+<ul class="simple">
+<li><cite>WP_CONF_FILE</cite>: The path to the write proxy configuration file.</li>
+<li><cite>WP_NAMESPACE</cite>: The distributedlog namespace that the write proxy is serving for.</li>
+</ul>
+<p>For example, we start 3 write proxies locally and point to the namespace created above.</p>
+<pre class="literal-block">
+$ WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=20001 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
+$ WP_SHARD_ID=2 WP_SERVICE_PORT=4182 WP_STATS_PORT=20002 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
+$ WP_SHARD_ID=3 WP_SERVICE_PORT=4183 WP_STATS_PORT=20003 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
+</pre>
+<p>The write proxy will announce itself to the zookeeper path <cite>.write_proxy</cite> under the dl namespace path.</p>
+<p>We could verify that the write proxy is running correctly by checking the zookeeper path or checking its stats port.</p>
+<pre class="literal-block">
+$ ./distributedlog-service/bin/dlog zkshell localhost:2181
+Connecting to localhost:2181
+Welcome to ZooKeeper!
+JLine support is enabled
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+[zk: localhost:2181(CONNECTED) 0] ls /messaging/distributedlog/mynamespace/.write_proxy
+[member_0000000000, member_0000000001, member_0000000002]
+</pre>
+<pre class="literal-block">
+$ curl localhost:20001/ping
+pong
+</pre>
+</div>
+<div class="section" id="add-and-remove-write-proxies">
+<h4><a class="toc-backref" href="#id17">Add and Remove Write Proxies</a></h4>
+<p>Removing a write proxy is pretty straightforward by just killing the process.</p>
+<pre class="literal-block">
+WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=10001 ./distributedlog-service/bin/dlog-daemon.sh stop writeproxy
+</pre>
+<p>Adding a new write proxy is just adding a new host and starting the write proxy
+process as described above.</p>
+</div>
+<div class="section" id="write-proxy-naming">
+<h4><a class="toc-backref" href="#id18">Write Proxy Naming</a></h4>
+<p>The <cite>dlog-daemon.sh</cite> script starts the write proxy by announcing it to the <cite>.write_proxy</cite> path under
+the dl namespace. So you could use uri in the distributedlog client builder to access the write proxy cluster.</p>
+</div>
+<div class="section" id="verify-the-setup">
+<h4><a class="toc-backref" href="#id19">Verify the setup</a></h4>
+<p>You could verify the write proxy cluster by running tutorials over the setup cluster.</p>
+<p>Create 10 streams.</p>
+<pre class="literal-block">
+$ ./distributedlog-service/bin/dlog tool create -u distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace -r stream- -e 0-10
+You are going to create streams : [stream-0, stream-1, stream-2, stream-3, stream-4, stream-5, stream-6, stream-7, stream-8, stream-9, stream-10] (Y or N) Y
+</pre>
+<p>Tail read from the 10 streams.</p>
+<pre class="literal-block">
+$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.MultiReader distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace stream-0,stream-1,stream-2,stream-3,stream-4,stream-5,stream-6,stream-7,stream-8,stream-9,stream-10
+</pre>
+<p>Run record generator over some streams</p>
+<pre class="literal-block">
+$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-0 100
+$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-1 100
+</pre>
+<p>Check the terminal running <cite>MultiReader</cite>. You will see similar output as below:</p>
+<pre class="literal-block">
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=21044, slotId=0} from stream stream-0
+&quot;&quot;&quot;
+record-1464085079105
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=21046, slotId=0} from stream stream-0
+&quot;&quot;&quot;
+record-1464085079113
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=9636, slotId=0} from stream stream-1
+&quot;&quot;&quot;
+record-1464085079110
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=21048, slotId=0} from stream stream-0
+&quot;&quot;&quot;
+record-1464085079125
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=9638, slotId=0} from stream stream-1
+&quot;&quot;&quot;
+record-1464085079121
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=21050, slotId=0} from stream stream-0
+&quot;&quot;&quot;
+record-1464085079133
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=9640, slotId=0} from stream stream-1
+&quot;&quot;&quot;
+record-1464085079130
+&quot;&quot;&quot;
+</pre>
+<p>Please refer to the <a class="reference external" href="../admin_guide/performance">Performance</a> page for more details on tuning performance.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

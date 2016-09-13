@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Apache DistributedLog (incubating)</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="http://distributedlog.incubator.apache.org/docs/latest/styles/site.css">
+  <link rel="stylesheet" href="http://distributedlog.incubator.apache.org/docs/latest/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="http://distributedlog.incubator.apache.org/docs/latest/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/core.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="http://distributedlog.incubator.apache.org/docs/latest/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="http://distributedlog.incubator.apache.org/docs/latest/">V0.4.0</a></li>
+        <!-- Concepts -->
+        <li><a href="http://distributedlog.incubator.apache.org/docs/latest/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="http://distributedlog.incubator.apache.org/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="http://distributedlog.incubator.apache.org/docs/latest/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/main.html" class="">User Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/basics/introduction.html" class="">
+                  Introduction
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/considerations/main.html" class="">
+                  Considerations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/architecture/main.html" class="">
+                  Architecture
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/main.html" class="">
+                  API
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/core.html" class="active">
+                        Core Library API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/proxy.html" class="active">
+                        Proxy Client API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/practice.html" class="active">
+                        Best Practise
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/main.html" class="">
+                  Configuration
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/core.html" class="active">
+                        Core Library Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/proxy.html" class="active">
+                        Write Proxy Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/client.html" class="active">
+                        Client Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/perlog.html" class="active">
+                        Per Stream Configuration
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/design/main.html" class="">
+                  Detail Design
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/globalreplicatedlog/main.html" class="">
+                  Global Replicated Log
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/implementation/main.html" class="">
+                  Implementation
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/implementation/storage.html" class="active">
+                        Storage
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/references/main.html" class="">
+                  References
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/references/metrics.html" class="active">
+                        Metrics
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/references/features.html" class="active">
+                        Available Features
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+      <li><a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/main.html">User Guide</a></li>
+      
+
+      
+
+      <li><a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/configuration/main.html">Configuration</a></li>
+      
+      
+      <li class="active">Core Library Configuration</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="core-library-configuration">
+<p class="topic-title first">Core Library Configuration</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id4">Core Library Configuration</a><ul>
+<li><a class="reference internal" href="#zookeeper-settings" id="id5">ZooKeeper Settings</a><ul>
+<li><a class="reference internal" href="#dl-zookeeper-settings" id="id6">DL ZooKeeper Settings</a></li>
+<li><a class="reference internal" href="#bk-zookeeper-settings" id="id7">BK ZooKeeper Settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bookkeeper-settings" id="id8">BookKeeper Settings</a><ul>
+<li><a class="reference internal" href="#general-settings" id="id9">General Settings</a></li>
+<li><a class="reference internal" href="#timer-settings" id="id10">Timer Settings</a></li>
+<li><a class="reference internal" href="#data-placement-settings" id="id11">Data Placement Settings</a><ul>
+<li><a class="reference internal" href="#dns-resolver-settings" id="id12">DNS Resolver Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#namespace-configuration-settings" id="id13">Namespace Configuration Settings</a><ul>
+<li><a class="reference internal" href="#executor-settings" id="id14">Executor Settings</a></li>
+<li><a class="reference internal" href="#metadata-settings" id="id15">Metadata Settings</a></li>
+<li><a class="reference internal" href="#namespace-settings" id="id16">Namespace Settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writer-configuration-settings" id="id17">Writer Configuration Settings</a><ul>
+<li><a class="reference internal" href="#id2" id="id18">General Settings</a></li>
+<li><a class="reference internal" href="#durability-settings" id="id19">Durability Settings</a></li>
+<li><a class="reference internal" href="#transmit-settings" id="id20">Transmit Settings</a></li>
+<li><a class="reference internal" href="#logsegment-retention-settings" id="id21">LogSegment Retention Settings</a></li>
+<li><a class="reference internal" href="#logsegment-rolling-settings" id="id22">LogSegment Rolling Settings</a></li>
+<li><a class="reference internal" href="#logsegment-allocation-settings" id="id23">LogSegment Allocation Settings</a></li>
+<li><a class="reference internal" href="#write-limit-settings" id="id24">Write Limit Settings</a></li>
+<li><a class="reference internal" href="#lock-settings" id="id25">Lock Settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reader-configuration-settings" id="id26">Reader Configuration Settings</a><ul>
+<li><a class="reference internal" href="#id3" id="id27">General Settings</a></li>
+<li><a class="reference internal" href="#readahead-settings" id="id28">ReadAhead Settings</a></li>
+<li><a class="reference internal" href="#reader-constraint-settings" id="id29">Reader Constraint Settings</a></li>
+<li><a class="reference internal" href="#idle-reader-settings" id="id30">Idle Reader Settings</a></li>
+<li><a class="reference internal" href="#scan-settings" id="id31">Scan Settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tracing-stats-settings" id="id32">Tracing/Stats Settings</a></li>
+<li><a class="reference internal" href="#feature-provider-settings" id="id33">Feature Provider Settings</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id4">Core Library Configuration</a></h2>
+<p>This section describes the configuration settings used by DistributedLog Core Library.</p>
+<p>All the core library settings are managed in <cite>DistributedLogConfiguration</cite>, which is
+basically a properties based configuration, which extends from Apache commons
+<cite>CompositeConfiguration</cite>. All the DL settings are in camel case and prefixed with a
+meaningful component name. For example, <cite>zkSessionTimeoutSeconds</cite> means the session timeout
+for component <cite>zk</cite> in seconds.</p>
+<p>The default distributedlog configuration is constructed by instantiating an instance
+of <cite>DistributedLogConfiguration</cite>. This distributedlog configuration will automatically load
+the settings that specified via <cite>SystemConfiguration</cite>.</p>
+<pre class="literal-block">
+DistributedLogConfiguration conf = new DistributedLogConfiguration();
+</pre>
+<p>The recommended way is to load configuration from URL that points to a configuration file
+(<cite>#loadConf(URL)</cite>).</p>
+<pre class="literal-block">
+String configFile = &quot;/path/to/distributedlog/conf/file&quot;;
+DistributedLogConfiguration conf = new DistributedLogConfiguration();
+conf.loadConf(new File(configFile).toURI().toURL());
+</pre>
+<div class="section" id="zookeeper-settings">
+<h3><a class="toc-backref" href="#id5">ZooKeeper Settings</a></h3>
+<p>A distributedlog namespace usually creates two zookeeper client instances: one is used
+for DL metadata operations, while the other one is used by bookkeeper. All the zookeeper
+clients are <em>retryable</em> clients, which they would reconnect when session is expired.</p>
+<div class="section" id="dl-zookeeper-settings">
+<h4><a class="toc-backref" href="#id6">DL ZooKeeper Settings</a></h4>
+<ul class="simple">
+<li><em>zkSessionTimeoutSeconds</em>: ZooKeeper session timeout, in seconds. Default is 30 seconds.</li>
+<li><em>zkNumRetries</em>: Number of retries of each zookeeper request could attempt on retryable exceptions.
+Default is 3.</li>
+<li><em>zkRetryStartBackoffMillis</em>: The initial backoff time of first retry of each zookeeper request, in milliseconds.
+Default is 5000.</li>
+<li><em>zkRetryMaxBackoffMillis</em>: The max backoff time of retries of each zookeeper request, in milliseconds.
+Default is 30000.</li>
+<li><em>zkcNumRetryThreads</em>: The number of retry threads used by this zookeeper client. Default is 1.</li>
+<li><em>zkRequestRateLimit</em>: The rate limiter is basically a guava <cite>RateLimiter</cite>. It is rate limiting the
+requests that sent by zookeeper client per second. If the value is non-positive, the rate limiting
+is disable. Default is 0.</li>
+<li><em>zkAclId</em>: The digest id used for zookeeper ACL. If it is null, ACL is disabled. Default is null.</li>
+</ul>
+</div>
+<div class="section" id="bk-zookeeper-settings">
+<h4><a class="toc-backref" href="#id7">BK ZooKeeper Settings</a></h4>
+<ul class="simple">
+<li><em>bkcZKSessionTimeoutSeconds</em>: ZooKeeper session timeout, in seconds. Default is 30 seconds.</li>
+<li><em>bkcZKNumRetries</em>: Number of retries of each zookeeper request could attempt on retryable exceptions.
+Default is 3.</li>
+<li><em>bkcZKRetryStartBackoffMillis</em>: The initial backoff time of first retry of each zookeeper request, in milliseconds.
+Default is 5000.</li>
+<li><em>bkcZKRetryMaxBackoffMillis</em>: The max backoff time of retries of each zookeeper request, in milliseconds.
+Default is 30000.</li>
+<li><em>bkcZKRequestRateLimit</em>: The rate limiter is basically a guava <cite>RateLimiter</cite>. It is rate limiting the
+requests that sent by zookeeper client per second. If the value is non-positive, the rate limiting
+is disable. Default is 0.</li>
+</ul>
+<p>There are a few rules to follow when optimizing the zookeeper settings:</p>
+<ol class="arabic simple">
+<li>In general, higher session timeout is much better than lower timeout, which will make zookeeper client
+more resilent to any network glitches.</li>
+<li>A lower backoff time is better for latency, as it would trigger fast retries. But it
+could trigger retry storm if the backoff time is too low.</li>
+<li>Number of retries should be tuned based on the backoff time settings and corresponding latency SLA budget.</li>
+<li>BK and DL readers use zookeeper client for metadata accesses. It is recommended to have higher session timeout,
+higher number of retries and proper backoff time.</li>
+<li>DL writers also use zookeeper client for ownership tracking. It is required to act quickly on network glitches.
+It is recommended to have low session timeout, low backoff time and proper number of retries.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="bookkeeper-settings">
+<h3><a class="toc-backref" href="#id8">BookKeeper Settings</a></h3>
+<p>All the bookkeeper client configuration settings could be loaded via <cite>DistributedLogConfiguration</cite>. All of them
+are prefixed with <cite>bkc.</cite>. For example, <cite>bkc.zkTimeout</cite> in distributedlog configuration will be applied as
+<cite>zkTimeout</cite> in bookkeeper client configuration.</p>
+<div class="section" id="general-settings">
+<h4><a class="toc-backref" href="#id9">General Settings</a></h4>
+<ul class="simple">
+<li><em>bkcNumIOThreads</em>: The number of I/O threads used by netty in bookkeeper client.
+The default value is <cite>numWorkerThreads</cite>.</li>
+</ul>
+</div>
+<div class="section" id="timer-settings">
+<h4><a class="toc-backref" href="#id10">Timer Settings</a></h4>
+<ul class="simple">
+<li><em>timerTickDuration</em>: The tick duration in milliseconds that used for timeout
+timer in bookkeeper client. The default value is 100 milliseconds.</li>
+<li><em>timerNumTicks</em>: The number of ticks that used for timeout timer in bookkeeper client.
+The default value is 1024.</li>
+</ul>
+</div>
+<div class="section" id="data-placement-settings">
+<h4><a class="toc-backref" href="#id11">Data Placement Settings</a></h4>
+<p>A log segment is backed by a bookkeeper <cite>ledger</cite>. A ledger's data is stored in an ensemble
+of bookies in a stripping way. Each entry will be added in a <cite>write-quorum</cite> size of bookies.
+The add operation will complete once it receives responses from a <cite>ack-quorum</cite> size of bookies.
+The stripping is done in a round-robin way in bookkeeper.</p>
+<p>For example, we configure the ensemble-size to 5, write-quorum-size to 3,
+and ack-quorum-size to 2. The data will be stored in following stripping way.</p>
+<pre class="literal-block">
+| entry id | bk1 | bk2 | bk3 | bk4 | bk5 |
+|     0    |  x  |  x  |  x  |     |     |
+|     1    |     |  x  |  x  |  x  |     |
+|     2    |     |     |  x  |  x  |  x  |
+|     3    |  x  |     |     |  x  |  x  |
+|     4    |  x  |  x  |     |     |  x  |
+|     5    |  x  |  x  |  x  |     |     |
+</pre>
+<p>We don't recommend stripping within a log segment to increase bandwidth. We'd recommend using
+multiple distributedlog streams to increase bandwidth in higher level of distributedlog. so
+typically the ensemble size will be set to be the same value as <cite>write-quorum-size</cite>.</p>
+<ul class="simple">
+<li><em>bkcEnsembleSize</em>: The ensemble size of the log segment. The default value is 3.</li>
+<li><em>bkcWriteQuorumSize</em>: The write quorum size of the log segment. The default value is 3.</li>
+<li><em>bkcAckQuorumSize</em>: The ack quorumm size of the log segment. The default value is 2.</li>
+</ul>
+<div class="section" id="dns-resolver-settings">
+<h5><a class="toc-backref" href="#id12">DNS Resolver Settings</a></h5>
+<p>DistributedLog uses bookkeeper's <cite>rack-aware</cite> data placement policy on placing data across
+bookkeeper nodes. The <cite>rack-aware</cite> data placement uses a DNS resolver to resolve a bookie
+address into a network location and then use those locations to build the network topology.</p>
+<p>There are two built-in DNS resolvers in DistributedLog:</p>
+<ol class="arabic simple">
+<li><em>DNSResolverForRacks</em>: It resolves domain name like <cite>(region)-(rack)-xxx-xxx.*</cite> to
+network location <cite>/(region)/(rack)</cite>. If resolution failed, it returns <cite>/default-region/default-rack</cite>.</li>
+<li><em>DNSResolverForRows</em>: It resolves domain name like <cite>(region)-(row)xx-xxx-xxx.*</cite> to
+network location <cite>/(region)/(row)</cite>. If resolution failed, it returns <cite>/default-region/default-row</cite>.</li>
+</ol>
+<p>The DNS resolver could be loaded by reflection via <cite>bkEnsemblePlacementDnsResolverClass</cite>.</p>
+<p><cite>(region)</cite> could be overrided in a configured <cite>dnsResolverOverrides</cite>. For example, if the
+host name is <cite>(regionA)-(row1)-xx-yyy</cite>, it would be resolved to <cite>/regionA/row1</cite> without any
+overrides. If the specified overrides is <cite>(regionA)-(row1)-xx-yyy:regionB</cite>,
+the resolved network location would be <cite>/regionB/row1</cite>. Allowing overriding region provides
+the optimization hits to bookkeeper if two <cite>logical</cite> regions are in same or close locations.</p>
+<ul class="simple">
+<li><em>bkEnsemblePlacementDnsResolverClass</em>: The DNS resolver class for bookkeeper rack-aware ensemble placement.
+The default value is <cite>DNSResolverForRacks</cite>.</li>
+<li><em>bkRowAwareEnsemblePlacement</em>: A flag indicates whether <cite>DNSResolverForRows</cite> should be used.
+If enabled, <cite>DNSResolverForRows</cite> will be used for DNS resolution in rack-aware placement policy.
+Otherwise, it would use the DNS resolver configured by <cite>bkEnsemblePlacementDnsResolverClass</cite>.</li>
+<li><em>dnsResolverOverrides</em>: The mapping used to override the region mapping derived by the DNS resolver.
+The value is a string of pairs of host-region mappings (<cite>host:region</cite>) separated by semicolon.
+By default it is empty string.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="namespace-configuration-settings">
+<h3><a class="toc-backref" href="#id13">Namespace Configuration Settings</a></h3>
+<p>This section lists all the general settings used by <cite>DistributedLogNamespace</cite>.</p>
+<div class="section" id="executor-settings">
+<h4><a class="toc-backref" href="#id14">Executor Settings</a></h4>
+<ul class="simple">
+<li><em>numWorkerThreads</em>: The number of worker threads used by the namespace instance.
+The default value is the number of available processors.</li>
+<li><em>numReadAheadWorkerThreads</em>: The number of dedicated readahead worker treads used
+by the namespace instance. If it is non-positive, it would share the same executor
+for readahead. Otherwise, it would create a dedicated executor for readahead.
+The default value is 0.</li>
+<li><em>numLockStateThreads</em>: The number of lock state threads used by the namespace instance.
+The default value is 1.</li>
+<li><em>schedulerShutdownTimeoutMs</em>: The timeout value in milliseconds, for shutting down
+schedulers in the namespace instance. The default value is 5000ms.</li>
+<li><em>useDaemonThread</em>: The flag whether to use daemon thread for DL executor threads.
+The default value is false.</li>
+</ul>
+</div>
+<div class="section" id="metadata-settings">
+<h4><a class="toc-backref" href="#id15">Metadata Settings</a></h4>
+<p>The log segment metadata is serialized into a string of content with a version. The version in log segment
+metadata allows us evolving changes to metadata. All the versions supported by distributedlog right now
+are listed in the below table.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">version</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>0</td>
+<td>Invalid version number.</td>
+</tr>
+<tr><td>1</td>
+<td>Basic version number.
+Inprogress: start tx id, ledger id, region id
+Completed: start/end tx id, ledger id, region id, record count and completion time</td>
+</tr>
+<tr><td>2</td>
+<td>Introduced LSSN (LogSegment Sequence Number)</td>
+</tr>
+<tr><td>3</td>
+<td>Introduced Partial Truncated and Truncated status.
+A min active (entry_id, slot_id) pair is recorded in completed log segment
+metadata.</td>
+</tr>
+<tr><td>4</td>
+<td>Introduced Enveloped Entry Stucture. None &amp; LZ4 compression codec introduced.</td>
+</tr>
+<tr><td>5</td>
+<td>Introduced Sequence Id.</td>
+</tr>
+</tbody>
+</table>
+<p>A general rule for log segment metadata upgrade is described as below. For example, we are upgrading
+from version <em>X</em> to version <em>X+1</em>.</p>
+<ol class="arabic simple">
+<li>Upgrade the readers before upgrading writers. So the readers are able to recognize the log segments of version <em>X+1</em>.</li>
+<li>Upgrade the writers with the new binary of version <em>X+1</em> only. Keep the configuration <cite>ledgerMetadataLayoutVersion</cite> unchanged - still in version <em>X</em>.</li>
+<li>Once all the writers are running in same binary of version <em>X+1</em>. Update writers again with <cite>ledgerMetadataLayoutVersion</cite> set to version <em>X+1</em>.</li>
+</ol>
+<p><strong>Available Settings</strong></p>
+<ul class="simple">
+<li><em>ledgerMetadataLayoutVersion</em>: The logsegment metadata layout version. The default value is 5. Apply for <cite>writers</cite> only.</li>
+<li><em>ledgerMetadataSkipMinVersionCheck</em>: The flag indicates whether DL should enforce minimum log segment metadata vesion check.
+If it is true, DL will skip the checking and read the log segment metadata if it could recognize. Otherwise, it would fail
+the read if the log segment's metadata version is less than the version that DL supports. By default, it is disabled.</li>
+<li><em>firstLogsegmentSequenceNumber</em>: The first log segment sequence number to start with for a stream. The default value is 1.
+The setting is only applied for writers, and only when upgrading metadata from version <cite>1</cite> to version <cite>2</cite>.
+In this upgrade, we need to update old log segments to add ledger sequence number, once the writers start generating
+new log segments with new version starting from this <cite>firstLogSegmentSequenceNumber</cite>.</li>
+<li><em>maxIdSanityCheck</em>: The flag indicates whether DL should do sanity check on transaction id. If it is enabled, DL will throw
+<cite>TransactionIdOutOfOrderException</cite> when it received a smaller transaction id than current maximum transaction id. By default,
+it is enabled.</li>
+<li><em>encodeRegionIDInVersion</em>: The flag indicates whether DL should encode region id into log segment metadata. In a global replicated
+log, the log segments can be created in different regions. The region id in log segment metadata would help figuring out what
+region that a log segment is created. The region id in log segment metadata would help for monitoring and troubleshooting.
+By default, it is disabled.</li>
+</ul>
+</div>
+<div class="section" id="namespace-settings">
+<h4><a class="toc-backref" href="#id16">Namespace Settings</a></h4>
+<ul class="simple">
+<li><em>federatedNamespaceEnabled</em>: The flag indicates whether DL should use federated namespace. By default, it is disabled.</li>
+<li><em>federatedMaxLogsPerSubnamespace</em>: The maximum number of log stream per sub namespace in a federated namespace. By default, it is 15000</li>
+<li><em>federatedCheckExistenceWhenCacheMiss</em>: The flag indicates whether to check the existence of a log stream in zookeeper or not,
+if querying the local cache of the federated namespace missed.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="writer-configuration-settings">
+<h3><a class="toc-backref" href="#id17">Writer Configuration Settings</a></h3>
+<div class="section" id="id2">
+<h4><a class="toc-backref" href="#id18">General Settings</a></h4>
+<ul class="simple">
+<li><em>createStreamIfNotExists</em>: The flag indicates whether to create a log stream if it doesn't exist. By default, it is true.</li>
+<li><em>compressionType</em>: The compression type used when enveloping the output buffer. The available compression types are
+<cite>none</cite> and <cite>lz4</cite>. By default, it is <cite>none</cite> - no compression.</li>
+<li><em>failFastOnStreamNotReady</em>: The flag indicates whether to fail immediately if the stream is not ready rather than enqueueing
+the request. A log stream is considered as <cite>not-ready</cite> when it is either initializing the log stream or rolling a new log
+segment. If this is enabled, DL would fail the write request immediately when the stream isn't ready. Otherwise, it would
+enqueue the request and wait for the stream become ready. Please consider turning it on for the use cases that could retry
+writing to other log streams, which it would result in fast failure hence client could retry other streams immediately.
+By default, it is disabled.</li>
+<li><em>disableRollingOnLogSegmentError</em>: The flag to disable rolling log segment when encountered error. By default, it is true.</li>
+</ul>
+</div>
+<div class="section" id="durability-settings">
+<h4><a class="toc-backref" href="#id19">Durability Settings</a></h4>
+<ul class="simple">
+<li><em>isDurableWriteEnabled</em>: The flag indicates whether durable write is enabled. By default it is true.</li>
+</ul>
+</div>
+<div class="section" id="transmit-settings">
+<h4><a class="toc-backref" href="#id20">Transmit Settings</a></h4>
+<p>DL writes the log records into a transmit buffer before writing to bookkeeper. The following settings control
+the frequency of transmits and commits.</p>
+<ul class="simple">
+<li><em>writerOutputBufferSize</em>: The output buffer size in bytes. Larger buffer size will result in higher compression ratio and it would reduce the entries sent to bookkeeper, use the disk bandwidth more efficiently and improve throughput. Set this setting to <cite>0</cite> will ask DL to transmit the data immediately, which it would achieve low latency.</li>
+<li><em>periodicFlushFrequencyMilliSeconds</em>: The periodic flush frequency in milliseconds. If the setting is set to a positive value, the data in transmit buffer will be flushed in every half of the provided interval. Otherwise, the periodical flush will be disabled. For example, if this setting is set to <cite>10</cite> milliseconds, the data will be flushed (<cite>transmit</cite>) every 5 milliseconds.</li>
+<li><em>enableImmediateFlush</em>: The flag to enable immediate flush a control record. It is a flag to control the period to make data visible to the readers. If this settings is true, DL would flush a control record immediately after transmitting the user data is completed. The default value is false.</li>
+<li><em>minimumDelayBetweenImmediateFlushMilliSeconds</em>: The minimum delay between two immediate flushes, in milliseconds. This setting only takes effects when immediate flush is enabled. It is designed to tolerant the bursty of traffic when immediate flush is enabled, which prevents sending too many control records to the bookkeeper.</li>
+</ul>
+</div>
+<div class="section" id="logsegment-retention-settings">
+<h4><a class="toc-backref" href="#id21">LogSegment Retention Settings</a></h4>
+<p>The following settings are related to log segment retention.</p>
+<ul class="simple">
+<li><em>logSegmentRetentionHours</em>: The log segment retention period, in hours. In other words, how long should DL keep the log segment once it is <cite>truncated</cite>.</li>
+<li><em>explicitTruncationByApp</em>: The flag indicates that truncation is managed explicitly by the application. If this is set then time based retention only clean the log segments which are marked as <cite>truncated</cite>. By default it is disabled.</li>
+</ul>
+</div>
+<div class="section" id="logsegment-rolling-settings">
+<h4><a class="toc-backref" href="#id22">LogSegment Rolling Settings</a></h4>
+<p>The following settings are related to log segment rolling.</p>
+<ul class="simple">
+<li><em>logSegmentRollingMinutes</em>: The log segment rolling interval, in minutes. If the setting is set to a positive value, DL will roll
+log segments based on time. Otherwise, it will roll log segment based on size (<cite>maxLogSegmentBytes</cite>). The default value is 2 hours.</li>
+<li><em>maxLogSegmentBytes</em>: The maximum size of a log segment, in bytes. This setting only takes effects when time based rolling is disabled.
+If it is enabled, DL will roll a new log segment when the current one reaches the provided threshold. The default value is 256MB.</li>
+<li><em>logSegmentRollingConcurrency</em>: The concurrency of log segment rolling. If the value is positive, it means how many log segments
+can be rolled at the same time. Otherwise, it is unlimited. The default value is 1.</li>
+</ul>
+</div>
+<div class="section" id="logsegment-allocation-settings">
+<h4><a class="toc-backref" href="#id23">LogSegment Allocation Settings</a></h4>
+<p>A bookkeeper ledger is allocated when a DL stream is rolling into a new log segment. To reduce the latency penalty on log segment rolling,
+a ledger allocator could be used for pre-allocating the ledgers for DL streams. This section describes the settings related to ledger
+allocation.</p>
+<ul class="simple">
+<li><em>enableLedgerAllocatorPool</em>: The flag indicates whether to use ledger allocator pool or not. It is disabled by default. It is recommended
+to enable on write proxy.</li>
+<li><em>ledgerAllocatorPoolPath</em>: The path of the ledger allocator pool. The default value is &quot;.allocation_pool&quot;. The allocator pool path has to
+be prefixed with <cite>&quot;.&quot;</cite>. A DL namespace is allowed to have multiple allocator pool, as they will be acted independently.</li>
+<li><em>ledgerAllocatorPoolName</em>: The name of the ledger allocator pool. Default value is null. It is set by write proxy on startup.</li>
+<li><em>ledgerAllocatorPoolCoreSize</em>: The number of ledger allocators in the pool. The default value is 20.</li>
+</ul>
+</div>
+<div class="section" id="write-limit-settings">
+<h4><a class="toc-backref" href="#id24">Write Limit Settings</a></h4>
+<p>This section describes the settings related to queue-based write limiting.</p>
+<ul class="simple">
+<li><em>globalOutstandingWriteLimit</em>: The maximum number of outstanding writes. If this setting is set to a positive value, the global
+write limiting is enabled - when the number of outstanding writes go above the threshold, the consequent requests will be rejected
+with <cite>OverCapacity</cite> exceptions. Otherwise, it is disabled. The default value is 0.</li>
+<li><em>perWriterOutstandingWriteLimit</em>: The maximum number of outstanding writes per writer. It is similar as <cite>globalOutstandingWriteLimit</cite>
+but applied per writer instance. The default value is 0.</li>
+<li><em>outstandingWriteLimitDarkmode</em>: The flag indicates whether the write limiting is running in darkmode or not. If it is running in
+dark mode, the request is not rejected when it is over limit, but just record it in the stats. By default, it is in dark mode. It
+is recommended to run in dark mode to understand the traffic pattern before enabling real write limiting.</li>
+</ul>
+</div>
+<div class="section" id="lock-settings">
+<h4><a class="toc-backref" href="#id25">Lock Settings</a></h4>
+<p>This section describes the settings related to distributed lock used by the writers.</p>
+<ul class="simple">
+<li><em>lockTimeoutSeconds</em>: The lock timeout in seconds. The default value is 30. If it is 0 or negative, the caller will attempt claiming
+the lock, if there is no owner, it would claim successfully, otherwise it would return immediately and throw exception to indicate
+who is the current owner.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="reader-configuration-settings">
+<h3><a class="toc-backref" href="#id26">Reader Configuration Settings</a></h3>
+<div class="section" id="id3">
+<h4><a class="toc-backref" href="#id27">General Settings</a></h4>
+<ul class="simple">
+<li><em>readLACLongPollTimeout</em>: The long poll timeout for reading <cite>LastAddConfirmed</cite> requests, in milliseconds.
+The default value is 1 second. It is typically recommended to tune approximately with the request arrival interval. Otherwise, it would
+end up becoming unnecessary short polls.</li>
+</ul>
+</div>
+<div class="section" id="readahead-settings">
+<h4><a class="toc-backref" href="#id28">ReadAhead Settings</a></h4>
+<p>This section describes the settings related to readahead in DL readers.</p>
+<ul class="simple">
+<li><em>enableReadAhead</em>: Flag to enable read ahead in DL readers. It is enabled by default.</li>
+<li><em>readAheadMaxRecords</em>: The maximum number of records that will be cached in readahead cache by the DL readers. The default value
+is 10. A higher value will improve throughput but use more memory. It should be tuned properly to avoid jvm gc if the reader cannot
+keep up with the writing rate.</li>
+<li><em>readAheadBatchSize</em>: The maximum number of entries that readahead worker will read in one batch. The default value is 2.
+Increase the value to increase the concurrency of reading entries from bookkeeper. It is recommended to tune to a proper value for
+catching up readers, not to exhaust bookkeeper's bandwidth.</li>
+<li><em>readAheadWaitTimeOnEndOfStream</em>: The wait time if the reader reaches end of stream and there isn't any new inprogress log segment,
+in milliseconds. The default value is 10 seconds.</li>
+<li><em>readAheadNoSuchLedgerExceptionOnReadLACErrorThresholdMillis</em>: If readahead worker keeps receiving <cite>NoSuchLedgerExists</cite> exceptions
+when reading <cite>LastAddConfirmed</cite> in the given period, it would stop long polling <cite>LastAddConfirmed</cite> and re-initialize the ledger handle
+and retry. The threshold is in milliseconds. The default value is 10 seconds.</li>
+</ul>
+</div>
+<div class="section" id="reader-constraint-settings">
+<h4><a class="toc-backref" href="#id29">Reader Constraint Settings</a></h4>
+<p>This section describes the constraint settings in DL reader.</p>
+<ul class="simple">
+<li><em>ignoreTruncationStatus</em>: The flag whether to ignore truncation status when reading the records. By default, it is false.
+The readers will not attempt to read a log segment that is marked as <cite>Truncated</cite> if this setting is false. It can be enabled for
+tooling and troubleshooting.</li>
+<li><em>alertPositionOnTruncated</em>: The flag whether we should alert when reader is positioned on a truncated segment. By default, it is true.
+It would alert and fail the reader if it is positioned at a <cite>Truncated</cite> log segment when the setting is true. It can be disabled for
+tooling and troubleshooting.</li>
+<li><em>positionGapDetectionEnabled</em>: The flag whether to enable position gap detection or not. This is a very strict constraint on reader,
+to prevent readers miss reading records due to any software bugs. It is enabled by default.</li>
+</ul>
+</div>
+<div class="section" id="idle-reader-settings">
+<h4><a class="toc-backref" href="#id30">Idle Reader Settings</a></h4>
+<p>There is a mechanism to detect idleness of readers, to prevent reader becoming stall due to any bugs.</p>
+<ul class="simple">
+<li><em>readerIdleWarnThresholdMillis</em>: The warning threshold of the time that a reader becomes idle, in milliseconds. If a reader becomes
+idle more than the threshold, it would dump warnings in the log. The default value is 2 minutes.</li>
+<li><em>readerIdleErrorThresholdMillis</em>: The error threshold of the time that a reader becomes idle, in milliseconds. If a reader becomes
+idle more than the threshold, it would throw <cite>IdleReader</cite> exceptions to notify applications. The default value is <cite>Integer.MAX_VALUE</cite>.</li>
+</ul>
+</div>
+<div class="section" id="scan-settings">
+<h4><a class="toc-backref" href="#id31">Scan Settings</a></h4>
+<ul class="simple">
+<li><em>firstNumEntriesEachPerLastRecordScan</em>: Number of entries to scan for first scan of reading last record. The default value is 2.</li>
+<li><em>maxNumEntriesPerReadLastRecordScan</em>: Maximum number of entries for each scan to read last record. The default value is 16.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="tracing-stats-settings">
+<h3><a class="toc-backref" href="#id32">Tracing/Stats Settings</a></h3>
+<p>This section describes the settings related to tracing and stats.</p>
+<ul class="simple">
+<li><em>traceReadAheadDeliveryLatency</em>: Flag to enable tracing read ahead delivery latency. By default it is disabled.</li>
+<li><em>metadataLatencyWarnThresholdMs</em>: The warn threshold of metadata access latency, in milliseconds. If a metadata operation takes
+more than the threshold, it would be logged. By default it is 1 second.</li>
+<li><em>dataLatencyWarnThresholdMs</em>: The warn threshold for data access latency, in milliseconds. If a data operation takes
+more than the threshold, it would be logged. By default it is 2 seconds.</li>
+<li><em>traceReadAheadMetadataChanges</em>: Flag to enable tracing the major metadata changes in readahead. If it is enabled, it will log
+the readahead metadata changes with precise timestamp, which is helpful for troubleshooting latency related issues. By default it
+is disabled.</li>
+<li><em>enableTaskExecutionStats</em>: Flag to trace long running tasks and record task execution stats in the thread pools. It is disabled
+by default.</li>
+<li><em>taskExecutionWarnTimeMicros</em>: The warn threshold for the task execution time, in micros. The default value is 100,000.</li>
+<li><em>enablePerStreamStat</em>: Flag to enable per stream stat. By default, it is disabled.</li>
+</ul>
+</div>
+<div class="section" id="feature-provider-settings">
+<h3><a class="toc-backref" href="#id33">Feature Provider Settings</a></h3>
+<ul class="simple">
+<li><em>featureProviderClass</em>: The feature provider class. The default value is <cite>DefaultFeatureProvider</cite>, which disable all the features
+by default.</li>
+</ul>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>
