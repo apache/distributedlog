@@ -12,11 +12,9 @@ reliable _real-time_ applications.
 
 ## Status
 
-_
-The Apache DistributedLog project is in the process of incubating. This includes the creation of project resources,
+_The Apache DistributedLog project is in the process of incubating. This includes the creation of project resources,
 the refactoring of the initial code submissions, and the formulation of project documentation, planning and the
-improvements of existing user and operation documents. Any feedback and contributions are welcome.
-_
+improvements of existing user and operation documents. Any feedback and contributions are welcome._
 
 ## Features
 
