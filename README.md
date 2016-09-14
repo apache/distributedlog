@@ -1,4 +1,4 @@
-![logo](/website/images/distributedlog_logo_l.png?raw=true "Apache DistributedLog logo")
+![logo](/website/images/distributedlog_logo_m.png?raw=true "Apache DistributedLog logo")
 
 [![Build Status](https://travis-ci.org/apache/incubator-distributedlog.svg?branch=master)](https://travis-ci.org/apache/incubator-distributedlog)
 [![Build Status](https://builds.apache.org/buildStatus/icon?job=distributedlog-nightly-build)](https://builds.apache.org/job/distributedlog-nightly-build/)
@@ -12,11 +12,11 @@ reliable _real-time_ applications.
 
 ## Status
 
-_**
+_
 The Apache DistributedLog project is in the process of incubating. This includes the creation of project resources,
 the refactoring of the initial code submissions, and the formulation of project documentation, planning and the
 improvements of existing user and operation documents. Any feedback and contributions are welcome.
-**_
+_
 
 ## Features
 
