@@ -30,6 +30,9 @@ script:
   - travis_retry mvn clean apache-rat:check
   - travis_wait 60 mvn package
 
+after_success:
+  - travis_retry mvn cobertura:cobertura coveralls:report
+
 cache:
   directories:
     - $HOME/.m2
