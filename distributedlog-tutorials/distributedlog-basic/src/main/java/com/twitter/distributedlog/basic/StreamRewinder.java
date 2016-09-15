@@ -17,7 +17,10 @@
  */
 package com.twitter.distributedlog.basic;
 
-import com.twitter.distributedlog.*;
+import com.twitter.distributedlog.AsyncLogReader;
+import com.twitter.distributedlog.DistributedLogConfiguration;
+import com.twitter.distributedlog.DistributedLogManager;
+import com.twitter.distributedlog.LogRecordWithDLSN;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import com.twitter.distributedlog.util.FutureUtils;

@@ -17,10 +17,6 @@
  */
 package com.twitter.distributedlog.rate;
 
-import com.twitter.common.stats.Rate;
-import com.twitter.util.TimerTask;
-import com.twitter.util.Timer;
-import com.twitter.util.Time;
 import java.util.concurrent.atomic.AtomicLong;
 
 class SampledMovingAverageRate implements MovingAverageRate {
@@ -31,7 +27,7 @@ class SampledMovingAverageRate implements MovingAverageRate {
 
     public SampledMovingAverageRate(int intervalSecs) {
         this.total = new AtomicLong(0);
-        this.rate = Rate.of("Ignore", total)
+        this.rate = Rate.of(total)
             .withWindowSize(intervalSecs)
             .build();
         this.value = 0;

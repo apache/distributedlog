@@ -17,7 +17,7 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 
 public class OverCapacityException extends DLException {
 
@@ -27,7 +27,7 @@ public class OverCapacityException extends DLException {
         super(StatusCode.OVER_CAPACITY, message);
     }
 
-    public OverCapacityException(StatusCode code, String message) {
+    public OverCapacityException(int code, String message) {
         super(code, message);
     }
 }

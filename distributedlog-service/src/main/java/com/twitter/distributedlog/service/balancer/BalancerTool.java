@@ -21,8 +21,9 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.common.zookeeper.ServerSet;
+import com.twitter.distributedlog.client.finagle.serverset.DLZkServerSet;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
-import com.twitter.distributedlog.client.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.service.ClientUtils;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.distributedlog.service.DistributedLogClient;
@@ -50,8 +51,8 @@ public class BalancerTool extends Tool {
 
     static final Logger logger = LoggerFactory.getLogger(BalancerTool.class);
 
-    static DistributedLogClientBuilder createDistributedLogClientBuilder(ServerSet serverSet) {
-        return DistributedLogClientBuilder.newBuilder()
+    static DistributedLogThriftClientBuilder createDistributedLogClientBuilder(ServerSet serverSet) {
+        return DistributedLogThriftClientBuilder.newBuilder()
                         .name("rebalancer_tool")
                         .clientId(ClientId$.MODULE$.apply("rebalancer_tool"))
                         .maxRedirects(2)
@@ -171,7 +172,7 @@ public class BalancerTool extends Tool {
             DLZkServerSet serverSet = DLZkServerSet.of(uri, 60000);
             logger.info("Created serverset for {}", uri);
             try {
-                DistributedLogClientBuilder clientBuilder =
+                DistributedLogThriftClientBuilder clientBuilder =
                         createDistributedLogClientBuilder(serverSet.getServerSet());
                 ClusterBalancer balancer = new ClusterBalancer(clientBuilder);
                 try {
@@ -184,7 +185,7 @@ public class BalancerTool extends Tool {
             }
         }
 
-        protected int runBalancer(DistributedLogClientBuilder clientBuilder,
+        protected int runBalancer(DistributedLogThriftClientBuilder clientBuilder,
                                   ClusterBalancer balancer)
                 throws Exception {
             if (null == source) {
@@ -195,14 +196,14 @@ public class BalancerTool extends Tool {
             return 0;
         }
 
-        protected void balanceFromSource(DistributedLogClientBuilder clientBuilder,
+        protected void balanceFromSource(DistributedLogThriftClientBuilder clientBuilder,
                                          ClusterBalancer balancer,
                                          String source,
                                          Optional<RateLimiter> rateLimiter)
                 throws Exception {
             InetSocketAddress sourceAddr = DLSocketAddress.parseSocketAddress(source);
             DistributedLogClientBuilder sourceClientBuilder =
-                    DistributedLogClientBuilder.newBuilder(clientBuilder)
+                    DistributedLogThriftClientBuilder.newBuilder(clientBuilder)
                             .host(sourceAddr);
 
             Pair<DistributedLogClient, MonitorServiceClient> clientPair =

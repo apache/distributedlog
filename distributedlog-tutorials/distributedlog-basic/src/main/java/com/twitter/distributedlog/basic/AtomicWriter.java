@@ -20,9 +20,9 @@ package com.twitter.distributedlog.basic;
 import com.google.common.collect.Lists;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.LogRecordSet;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.io.CompressionCodec.Type;
 import com.twitter.distributedlog.service.DistributedLogClient;
-import com.twitter.distributedlog.service.DistributedLogClientBuilder;
 import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.finagle.thrift.ClientId;
 import com.twitter.util.Future;
@@ -52,7 +52,7 @@ public class AtomicWriter {
         String[] messages = new String[args.length - 2];
         System.arraycopy(args, 2, messages, 0, messages.length);
 
-        DistributedLogClient client = DistributedLogClientBuilder.newBuilder()
+        DistributedLogClient client = DistributedLogThriftClientBuilder.newBuilder()
                 .clientId(ClientId.apply("atomic-writer"))
                 .name("atomic-writer")
                 .thriftmux(true)

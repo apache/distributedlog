@@ -17,7 +17,7 @@
  */
 package com.twitter.distributedlog.client.stats;
 
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 import com.twitter.finagle.stats.Counter;
 import com.twitter.finagle.stats.Stat;
 import com.twitter.finagle.stats.StatsReceiver;
@@ -33,8 +33,8 @@ public class ClientStatsLogger {
     // Stats
     private final StatsReceiver statsReceiver;
     private final StatsReceiver responseStatsReceiver;
-    private final ConcurrentMap<StatusCode, Counter> responseStats =
-            new ConcurrentHashMap<StatusCode, Counter>();
+    private final ConcurrentMap<Integer, Counter> responseStats =
+            new ConcurrentHashMap<Integer, Counter>();
     private final StatsReceiver exceptionStatsReceiver;
     private final ConcurrentMap<Class<?>, Counter> exceptionStats =
             new ConcurrentHashMap<Class<?>, Counter>();
@@ -55,10 +55,10 @@ public class ClientStatsLogger {
         return statsReceiver;
     }
 
-    private Counter getResponseCounter(StatusCode code) {
+    private Counter getResponseCounter(Integer code) {
         Counter counter = responseStats.get(code);
         if (null == counter) {
-            Counter newCounter = responseStatsReceiver.counter0(code.name());
+            Counter newCounter = responseStatsReceiver.counter0(StatusCode.getStatusName(code));
             Counter oldCounter = responseStats.putIfAbsent(code, newCounter);
             counter = null != oldCounter ? oldCounter : newCounter;
         }
@@ -75,7 +75,7 @@ public class ClientStatsLogger {
         return counter;
     }
 
-    public void completeProxyRequest(StatusCode code, long startTimeNanos) {
+    public void completeProxyRequest(int code, long startTimeNanos) {
         getResponseCounter(code).incr();
         proxySuccessLatencyStat.add(elapsedMicroSec(startTimeNanos));
     }

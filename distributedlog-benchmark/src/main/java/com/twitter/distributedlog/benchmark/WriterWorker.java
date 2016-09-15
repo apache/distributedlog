@@ -21,9 +21,11 @@ import com.google.common.base.Preconditions;
 
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.DLSN;
+import com.twitter.distributedlog.StatusCode;
 import com.twitter.distributedlog.benchmark.utils.ShiftableRateLimiter;
 import com.twitter.distributedlog.client.DistributedLogMultiStreamWriter;
-import com.twitter.distributedlog.client.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.finagle.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.io.CompressionCodec;
 import com.twitter.distributedlog.service.DistributedLogClient;
@@ -171,7 +173,7 @@ public class WriterWorker implements Worker {
 
         ClientId clientId = ClientId$.MODULE$.apply("dlog_loadtest_writer");
 
-        DistributedLogClientBuilder builder = DistributedLogClientBuilder.newBuilder()
+        DistributedLogThriftClientBuilder builder = DistributedLogThriftClientBuilder.newBuilder()
             .clientId(clientId)
             .clientBuilder(clientBuilder)
             .thriftmux(thriftmux)
@@ -249,7 +251,7 @@ public class WriterWorker implements Worker {
             exceptionsLogger.getCounter(cause.getClass().getName()).inc();
             if (cause instanceof DLException) {
                 DLException dle = (DLException) cause;
-                dlErrorCodeLogger.getCounter(dle.getCode().toString()).inc();
+                dlErrorCodeLogger.getCounter(StatusCode.getStatusName(dle.getCode())).inc();
             }
         }
     }

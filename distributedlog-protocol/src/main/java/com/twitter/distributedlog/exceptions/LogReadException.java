@@ -17,8 +17,7 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.exceptions.DLException;
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 
 /**
  * Thrown when there's a failure to read an edit log op from disk when loading

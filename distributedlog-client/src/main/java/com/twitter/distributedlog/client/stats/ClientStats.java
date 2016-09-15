@@ -18,7 +18,6 @@
 package com.twitter.distributedlog.client.stats;
 
 import com.twitter.distributedlog.client.resolver.RegionResolver;
-import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.finagle.stats.StatsReceiver;
 
 import java.net.SocketAddress;
@@ -93,7 +92,7 @@ public class ClientStats {
         }
     }
 
-    public void completeProxyRequest(SocketAddress addr, StatusCode code, long startTimeNanos) {
+    public void completeProxyRequest(SocketAddress addr, Integer code, long startTimeNanos) {
         clientStatsLogger.completeProxyRequest(code, startTimeNanos);
         if (enableRegionStats && null != addr) {
             getRegionClientStatsLogger(addr).completeProxyRequest(code, startTimeNanos);

@@ -27,12 +27,12 @@ import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.LogRecordWithDLSN;
 import com.twitter.distributedlog.benchmark.thrift.Message;
-import com.twitter.distributedlog.client.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.finagle.serverset.DLZkServerSet;
+import com.twitter.distributedlog.client.thrift.DistributedLogThriftClientBuilder;
 import com.twitter.distributedlog.exceptions.DLInterruptedException;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import com.twitter.distributedlog.service.DistributedLogClient;
-import com.twitter.distributedlog.service.DistributedLogClientBuilder;
 import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.distributedlog.util.SchedulerUtils;
 import com.twitter.finagle.builder.ClientBuilder;
@@ -233,7 +233,7 @@ public class ReaderWorker implements Worker {
 
         if (truncationIntervalInSeconds > 0 && (!finagleNames.isEmpty() || !serverSetPaths.isEmpty())) {
             // Construct client for truncation
-            DistributedLogClientBuilder builder = DistributedLogClientBuilder.newBuilder()
+            DistributedLogThriftClientBuilder builder = DistributedLogThriftClientBuilder.newBuilder()
                     .clientId(ClientId$.MODULE$.apply("dlog_loadtest_reader"))
                     .clientBuilder(ClientBuilder.get()
                         .hostConnectionLimit(10)

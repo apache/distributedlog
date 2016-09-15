@@ -17,7 +17,7 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 
 public class TransactionIdOutOfOrderException extends DLException {
 

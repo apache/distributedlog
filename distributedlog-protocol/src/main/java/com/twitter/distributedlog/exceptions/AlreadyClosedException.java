@@ -17,8 +17,7 @@
  */
 package com.twitter.distributedlog.exceptions;
 
-import com.twitter.distributedlog.exceptions.DLException;
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.StatusCode;
 
 /**
  * Thrown when the distributed log manager has already been closed
