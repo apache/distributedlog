@@ -54,28 +54,85 @@ The right diagram in Figure 1 shows the data flow in DistributedLog.
 
 For an apples-to-apples comparison, we will only compare Kafka partitions with DistributedLog streams in this blog post. The table below lists the most important differences between the two systems.
 
-|   | **Kafka** | **DistributedLog** |
-| - | --------- | ------------------ |
-| **Data Segmentation/Distribution** | The data of a Kafka partition lives in a set of brokers; The data is segmented into log segment files locally on each broker. | The data of a DL stream is segmented into multiple log segments. The log segments are evenly distributed across the storage nodes. |
-| - | --------- | ------------------ |
-| **Data Retention** | The data is expired after configured retention time or compacted to keep the latest values for keys. | The data can be either expired after configured retention time or explicitly truncated to given positions. |
-| - | --------- | ------------------ |
-| **Write** | Multiple-Writers via Broker | Multiple-Writers via Write Proxy; Single-Writer via Core Library |
-| - | --------- | ------------------ |
-| **Read** | Read from leader broker | Read from any storage node which has the data |
-| - | --------- | ------------------ |
-| **Replication** | ISR (In-Sync-Replica) Replication - Both leader and followers are brokers. | Quorum vote replication - Leaders are write proxies; Followers are bookies. |
-| - | --------- | ------------------ |
-| **Replication Repair** | Done by adding new replica to copy data from the leader broker. | The replication repair is done by bookie AutoRecovery mechanism to ensure replication factor. |
-| - | --------- | ------------------ |
-| **Cluster Expand** | Need to re-distribute (balance) partition when adding new brokers. Carefully track the size of each partition and make sure rebalancing doesn't saturate network and I/O. | No data redistribution when either adding write proxies or bookies; New log segment will be automatically allocated on newly added bookies. |
-| - | --------- | ------------------ |
-| **Storage** | File (set of files) per partition | Interleaved Storage Format |
-| - | --------- | ------------------ |
-| **Durability** | Only write to filesystem page cache. Configurable to either wait for acknowledgement from leader or from all replicas in ISR. | All writes are persisted to disk via explicit fsync. Wait for acknowledgements from a configurable quorum of bookies. |
-| - | --------- | ------------------ |
-| **I/O Isolation** | No physical I/O isolation. Rely on filesystem page cache. | Physical I/O isolation. Separate journal disk for write and ledger disks for reads. |
-| - | --------- | ------------------ |
+<table border="1px">
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th><strong>Kafka</strong></th>
+      <th><strong>DistributedLog</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Data Segmentation/Distribution</strong></td>
+      <td>The data of a Kafka partition lives in a set of brokers; The data is segmented into log segment files locally on each broker.</td>
+      <td>The data of a DL stream is segmented into multiple log segments. The log segments are evenly distributed across the storage nodes.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Data Retention</strong></td>
+      <td>The data is expired after configured retention time or compacted to keep the latest values for keys.</td>
+      <td>The data can be either expired after configured retention time or explicitly truncated to given positions.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Write</strong></td>
+      <td>Multiple-Writers via Broker</td>
+      <td>Multiple-Writers via Write Proxy; Single-Writer via Core Library</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Read</strong></td>
+      <td>Read from leader broker</td>
+      <td>Read from any storage node which has the data</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Replication</strong></td>
+      <td>ISR (In-Sync-Replica) Replication - Both leader and followers are brokers.</td>
+      <td>Quorum vote replication - Leaders are write proxies; Followers are bookies.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Replication Repair</strong></td>
+      <td>Done by adding new replica to copy data from the leader broker.</td>
+      <td>The replication repair is done by bookie AutoRecovery mechanism to ensure replication factor.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Cluster Expand</strong></td>
+      <td>Need to re-distribute (balance) partition when adding new brokers. Carefully track the size of each partition and make sure rebalancing doesn’t saturate network and I/O.</td>
+      <td>No data redistribution when either adding write proxies or bookies; New log segment will be automatically allocated on newly added bookies.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Storage</strong></td>
+      <td>File (set of files) per partition</td>
+      <td>Interleaved Storage Format</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>Durability</strong></td>
+      <td>Only write to filesystem page cache. Configurable to either wait for acknowledgement from leader or from all replicas in ISR.</td>
+      <td>All writes are persisted to disk via explicit fsync. Wait for acknowledgements from a configurable quorum of bookies.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><strong>I/O Isolation</strong></td>
+      <td>No physical I/O isolation. Rely on filesystem page cache.</td>
+      <td>Physical I/O isolation. Separate journal disk for write and ledger disks for reads.</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Data Model
 
