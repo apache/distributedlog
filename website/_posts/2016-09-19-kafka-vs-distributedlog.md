@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  'A Technical Review of Kafka and DistributedLog'
-date:   2015-09-19 10:00:00
+date:   2016-09-19 10:00:00
 categories: technical-review
 authors:
 - sijie
@@ -37,7 +37,8 @@ The left diagram in Figure 1 shows the data flow in Kafka.
 
 Unlike Kafka, DistributedLog is not a partitioned pub/sub system. It is a replicated log stream store.
 The key abstraction in DistributedLog is a continuous replicated log stream. A log stream is segmented
-into multiple log segments. Each log segment is stored as a [ledger](http://BookKeeper.apache.org/docs/r4.1.0/BookKeeperOverview.html) in Apache BookKeeper,
+into multiple log segments. Each log segment is stored as
+a [ledger](http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html) in Apache BookKeeper,
 whose data is replicated and distributed evenly across multiple bookies (a bookie is a storage node in Apache BookKeeper).
 All the records of a log stream are sequenced by the owner of the log stream - a set of write proxies that
 manage the ownership of log streams [^corelibrary]. Each of the log records appended to a log stream will
