@@ -8,10 +8,10 @@ authors:
 - sijie
 ---
 
-We open sourced [DistributedLog](http://DistributedLog.io) in May 2016.
+We open sourced [DistributedLog](http://DistributedLog.io) [^distributedlog] in May 2016.
 It generated a lot of interest in the community. One frequent question we are asked is how does DistributedLog
-compare to [Apache Kafka](http://kafka.apache.org/) . Technically DistributedLog is not a full fledged partitioned
-pub/sub system like Apache Kafka. DistributedLog is a replicated log stream store, using [Apache BookKeeper](http://bookKeeper.apache.org/) as its log segment store.
+compare to [Apache Kafka](http://kafka.apache.org/) [^kafka]. Technically DistributedLog is not a full fledged partitioned
+pub/sub system like Apache Kafka. DistributedLog is a replicated log stream store, using [Apache BookKeeper](http://bookKeeper.apache.org/) [^bookkeeper] as its log segment store.
 It focuses on offering *durability*, *replication* and *strong consistency* as essentials for building reliable
 real-time systems. One can use DistributedLog to build and experiment with different messaging models
 (such as Queue, Pub/Sub). 
@@ -39,7 +39,7 @@ The left diagram in Figure 1 shows the data flow in Kafka.
 Unlike Kafka, DistributedLog is not a partitioned pub/sub system. It is a replicated log stream store.
 The key abstraction in DistributedLog is a continuous replicated log stream. A log stream is segmented
 into multiple log segments. Each log segment is stored as
-a [ledger](http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html) in Apache BookKeeper,
+a [ledger](http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html) [^ledger] in Apache BookKeeper,
 whose data is replicated and distributed evenly across multiple bookies (a bookie is a storage node in Apache BookKeeper).
 All the records of a log stream are sequenced by the owner of the log stream - a set of write proxies that
 manage the ownership of log streams [^corelibrary]. Each of the log records appended to a log stream will
@@ -140,7 +140,7 @@ For an apples-to-apples comparison, we will only compare Kafka partitions with D
 
 A Kafka partition is a log stored as a (set of) file(s) in the broker's disks.
 Each record is a key/value pair (key can be omitted for round-robin publishes). 
-The key is used for assigning the record to a Kafka partition and also for [log compaction](https://cwiki.apache.org/confluence/display/KAFKA/Log+Compaction).
+The key is used for assigning the record to a Kafka partition and also for [log compaction](https://cwiki.apache.org/confluence/display/KAFKA/Log+Compaction) [^logcompaction].
 All the data of a partition is stored only on a set of brokers, replicated from leader broker to follower brokers.
 
 A DistributedLog stream is a `virtual` stream stored as a list of log segments.
@@ -164,7 +164,7 @@ Figure 2 shows the differences between DistributedLog and Kafka data model.
 All the data of a Kafka partition is stored on one broker (replicated to other brokers). Data is expired and deleted after a configured retention period. Additionally, a Kafka partition can be configured to do log compaction to keep only the latest values for keys.
 
 Similar to Kafka, DistributedLog also allows configuring retention periods for individual streams and expiring / deleting log segments after they are expired. Besides that, DistributedLog also provides an explicit-truncation mechanism. Application can explicitly truncate a log stream to a given position in the stream. This is important for building replicated state machines as the replicated state machines require persisting state before deleting log records.
-[Manhattan](https://blog.twitter.com/2016/strong-consistency-in-manhattan) is one example of a system that uses this functionality.
+[Manhattan](https://blog.twitter.com/2016/strong-consistency-in-manhattan) [^consistency] is one example of a system that uses this functionality.
 
 #### Operations
 
@@ -176,7 +176,7 @@ Expanding a DistributedLog cluster works in a very different way. DistributedLog
 
 ### Writer & Producer
 
-As shown in Figure 1, Kafka producers write batches of records to the leader broker of a Kafka partition. The follower brokers in the [ISR (in-sync-replica) set](https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication) will replicate the records from the leader broker. A record is considered as committed only when the leader receives acknowledgments from all the replicas in the ISR. The producer can be configured to wait for the response from leader broker or from all brokers in the ISR.
+As shown in Figure 1, Kafka producers write batches of records to the leader broker of a Kafka partition. The follower brokers in the [ISR (in-sync-replica) set](https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication) [^kafkareplication] will replicate the records from the leader broker. A record is considered as committed only when the leader receives acknowledgments from all the replicas in the ISR. The producer can be configured to wait for the response from leader broker or from all brokers in the ISR.
 
 There are two ways in DistributedLog to write log records to a DistributedLog stream, one is using a thin thrift client to write records through the write proxies (aka multiple-writer semantic), while the other one is using the DistributedLog core library to talk directly to the storage nodes (aka single-writer semantics). The first approach is common for building messaging systems while the second approach is common for building replicated state machines. You can check the [Best Practices](http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/practice) section in DistributedLog documentation for more details about what should be used. 
 
@@ -196,7 +196,7 @@ The differences in considerations and mechanisms on reads are mostly due to the 
 
 Kafka uses an ISR replication algorithm - a broker is elected as the leader. All the writes are published to the leader broker and all the followers in a ISR set will read and replicate data from the leader. The leader maintains a high watermark (HW), which is the offset of last committed record for a partition. The high watermark is continuously propagated to the followers and is checkpointed to disk in each broker periodically for recovery. The HW is updated when all replicas in ISR successfully write the records to the filesystem (not necessarily to disk) and acknowledge back to the leader. 
 
-ISR mechanism allows adding and dropping replicas to achieve tradeoff between availability and performance. However the side effect of allowing adding and shrinking replica set is increased probability of [data loss](https://aphyr.com/posts/293-jepsen-kafka).
+ISR mechanism allows adding and dropping replicas to achieve tradeoff between availability and performance. However the side effect of allowing adding and shrinking replica set is increased probability of [data loss](https://aphyr.com/posts/293-jepsen-kafka)[^jepsen].
 
 DistributedLog uses a quorum-vote replication algorithm, which is typically seen in consensus algorithms like Zab, Raft and Viewstamped Replication. The owner of the log stream writes the records to all the storage nodes in parallel and waits until a configured quorum of storage nodes have acknowledged before they are considered to be committed. The storage nodes acknowledge the write requests only after the data has been persisted to disk by explicitly calling flush. The owner of the log stream also maintains the offset of last committed record for a log stream, which is known as LAC (LastAddConfirmed) in Apache BookKeeper. The LAC is piggybacked into entries (to save extra rpc calls) and continuously propagated to the storage nodes. The size of replica set in DistributedLog is configured and fixed per log segment per stream. The change of replication settings only affect the newly allocated log segments but not the old log segments.
 
@@ -216,5 +216,21 @@ DistributedLog uses a different I/O model. Figure 3 illustrates the I/O system o
 Both Kafka and DistributedLog are designed for log stream related workloads. They share some similarities but different design principles for storage and replication lead to different implementations. Hopefully this blog post clarifies the differences and address some of the questions. We are also working on  followup blog posts to explain the performance characteristics of DistributedLog. 
 
 ## References
+
+[^distributedlog]: DistributedLog Website: http://distributedLog.io
+
+[^kafka]: Apache Kafka Website: http://kafka.apache.org/
+
+[^bookkeeper] Apache BookKeeper Website: http://bookKeeper.apache.org/
+
+[^ledger] BookKeeper Ledger: http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html
+
+[^logcompaction] Kafka Log Compaction: https://cwiki.apache.org/confluence/display/KAFKA/Log+Compaction
+
+[^consistency] Strong consistency in Manhattan: https://blog.twitter.com/2016/strong-consistency-in-manhattan
+
+[^kafkareplication] Kafka Replication: https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication
+
+[^jepsen] Jepsen: Kafka: https://aphyr.com/posts/293-jepsen-Kafka
 
 [^corelibrary]: Applications can also use the core library directly to append log records. This is very useful for use cases like replicated state machines that require ordering and exclusive write semantics.
