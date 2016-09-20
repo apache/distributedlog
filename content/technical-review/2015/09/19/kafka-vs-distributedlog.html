@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/css/theme.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
-  <link rel="canonical" href="http://distributedlog.incubator.apache.org/technical-review/2015/09/19/kafka-vs-distributedlog.html" data-proofer-ignore>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/technical-review/2015/09/19/kafka-vs-distributedlog" data-proofer-ignore>
   <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/feed.xml">
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -160,7 +160,7 @@
   <div class="col-md-8 col-md-offset-2">
     <header class="post-header">
       <h1 class="post-title" itemprop="name headline">A Technical Review of Kafka and DistributedLog</h1>
-      <p class="post-meta"><time datetime="2015-09-19T18:00:00+08:00" itemprop="datePublished">Sep 19, 2015</time> •  Sijie Guo [<a href="https://twitter.com/sijieg">@sijieg</a>]
+      <p class="post-meta"><time datetime="2016-09-19T18:00:00+08:00" itemprop="datePublished">Sep 19, 2016</time> •  Sijie Guo [<a href="https://twitter.com/sijieg">@sijieg</a>]
 </p>
     </header>
 
@@ -196,7 +196,8 @@ The left diagram in Figure 1 shows the data flow in Kafka.</p>
 
 <p>Unlike Kafka, DistributedLog is not a partitioned pub/sub system. It is a replicated log stream store.
 The key abstraction in DistributedLog is a continuous replicated log stream. A log stream is segmented
-into multiple log segments. Each log segment is stored as a <a href="http://BookKeeper.apache.org/docs/r4.1.0/BookKeeperOverview.html">ledger</a> in Apache BookKeeper,
+into multiple log segments. Each log segment is stored as
+a <a href="http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html">ledger</a> in Apache BookKeeper,
 whose data is replicated and distributed evenly across multiple bookies (a bookie is a storage node in Apache BookKeeper).
 All the records of a log stream are sequenced by the owner of the log stream - a set of write proxies that
 manage the ownership of log streams <sup id="fnref:corelibrary"><a href="#fn:corelibrary" class="footnote">1</a></sup>. Each of the log records appended to a log stream will
