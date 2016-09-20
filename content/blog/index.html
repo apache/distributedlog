@@ -163,13 +163,27 @@ for the project.</p>
 <p><i>Sep 19, 2016 •  Sijie Guo [<a href="https://twitter.com/sijieg">@sijieg</a>]
 </i></p>
 
-<p>We open sourced <a href="http://DistributedLog.io">DistributedLog</a> in May 2016.
+<p>We open sourced <a href="http://DistributedLog.io">DistributedLog</a> <sup id="fnref:distributedlog"><a href="#fn:distributedlog" class="footnote">1</a></sup> in May 2016.
 It generated a lot of interest in the community. One frequent question we are asked is how does DistributedLog
-compare to <a href="http://kafka.apache.org/">Apache Kafka</a> . Technically DistributedLog is not a full fledged partitioned
-pub/sub system like Apache Kafka. DistributedLog is a replicated log stream store, using <a href="http://bookKeeper.apache.org/">Apache BookKeeper</a> as its log segment store.
+compare to <a href="http://kafka.apache.org/">Apache Kafka</a> <sup id="fnref:kafka"><a href="#fn:kafka" class="footnote">2</a></sup>. Technically DistributedLog is not a full fledged partitioned
+pub/sub system like Apache Kafka. DistributedLog is a replicated log stream store, using <a href="http://bookKeeper.apache.org/">Apache BookKeeper</a> <sup id="fnref:bookkeeper"><a href="#fn:bookkeeper" class="footnote">3</a></sup> as its log segment store.
 It focuses on offering <em>durability</em>, <em>replication</em> and <em>strong consistency</em> as essentials for building reliable
 real-time systems. One can use DistributedLog to build and experiment with different messaging models
 (such as Queue, Pub/Sub).</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:distributedlog">
+      <p>DistributedLog Website: http://distributedLog.io <a href="#fnref:distributedlog" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:kafka">
+      <p>Apache Kafka Website: http://kafka.apache.org/ <a href="#fnref:kafka" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:bookkeeper">
+      <p>Apache BookKeeper Website: http://bookKeeper.apache.org/ <a href="#fnref:bookkeeper" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
 <!-- Render a "read more" button if the post is longer than the excerpt -->
 
