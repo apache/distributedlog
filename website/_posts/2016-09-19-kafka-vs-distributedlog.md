@@ -221,16 +221,16 @@ Both Kafka and DistributedLog are designed for log stream related workloads. The
 
 [^kafka]: Apache Kafka Website: http://kafka.apache.org/
 
-[^bookkeeper] Apache BookKeeper Website: http://bookKeeper.apache.org/
+[^bookkeeper]: Apache BookKeeper Website: http://bookKeeper.apache.org/
 
-[^ledger] BookKeeper Ledger: http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html
+[^ledger]: BookKeeper Ledger: http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html
 
-[^logcompaction] Kafka Log Compaction: https://cwiki.apache.org/confluence/display/KAFKA/Log+Compaction
+[^logcompaction]: Kafka Log Compaction: https://cwiki.apache.org/confluence/display/KAFKA/Log+Compaction
 
-[^consistency] Strong consistency in Manhattan: https://blog.twitter.com/2016/strong-consistency-in-manhattan
+[^consistency]: Strong consistency in Manhattan: https://blog.twitter.com/2016/strong-consistency-in-manhattan
 
-[^kafkareplication] Kafka Replication: https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication
+[^kafkareplication]: Kafka Replication: https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication
 
-[^jepsen] Jepsen: Kafka: https://aphyr.com/posts/293-jepsen-Kafka
+[^jepsen]: Jepsen: Kafka: https://aphyr.com/posts/293-jepsen-Kafka
 
 [^corelibrary]: Applications can also use the core library directly to append log records. This is very useful for use cases like replicated state machines that require ordering and exclusive write semantics.
