@@ -15,26 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace java com.twitter.distributedlog.thrift
+package com.twitter.distributedlog.namespace.resolver;
 
-struct BKDLConfigFormat {
-    1: optional string bkZkServers
-    2: optional string bkLedgersPath
-    3: optional bool sanityCheckTxnID
-    4: optional bool encodeRegionID
-    5: optional string bkZkServersForReader
-    6: optional string dlZkServersForWriter
-    7: optional string dlZkServersForReader
-    8: optional string aclRootPath
-    9: optional i64 firstLogSegmentSeqNo
-    10: optional bool federatedNamespace
-    11: optional string namespaceResolverClassName
-}
+import com.twitter.distributedlog.exceptions.InvalidStreamNameException;
+import org.junit.Test;
 
-struct AccessControlEntry {
-    1: optional bool denyWrite
-    2: optional bool denyTruncate
-    3: optional bool denyDelete
-    4: optional bool denyAcquire
-    5: optional bool denyRelease
+import static org.junit.Assert.*;
+
+/**
+ * Test case for the default namespace resolver
+ */
+public class TestDefaultNamespaceResolver {
+
+    @Test(timeout = 10000)
+    public void testResolveStreamPath() {
+        String streamName = "test-resolve-stream";
+        assertEquals(streamName, DefaultNamespaceResolver.INSTANCE.resolveStreamPath(streamName));
+    }
+
+    @Test(timeout = 10000, expected = InvalidStreamNameException.class)
+    public void testValidateBadStreamName() throws Exception {
+        String streamName = "/test-bad-stream-name";
+        DefaultNamespaceResolver.INSTANCE.validateStreamName(streamName);
+    }
+
 }

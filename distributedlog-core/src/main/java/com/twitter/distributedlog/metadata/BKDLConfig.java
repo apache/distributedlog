@@ -19,9 +19,11 @@ package com.twitter.distributedlog.metadata;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.DistributedLogConstants;
 import com.twitter.distributedlog.ZooKeeperClient;
+import com.twitter.distributedlog.namespace.resolver.NamespaceResolver;
 import com.twitter.distributedlog.thrift.BKDLConfigFormat;
 import com.twitter.distributedlog.util.DLUtils;
 import org.apache.thrift.TException;
@@ -93,6 +95,7 @@ public class BKDLConfig implements DLConfig {
     private String aclRootPath;
     private Long firstLogSegmentSeqNo;
     private boolean isFederatedNamespace = false;
+    private Optional<String> namespaceResolverClassName = Optional.absent();
 
     /**
      * Construct a empty config with given <i>uri</i>.
@@ -270,11 +273,31 @@ public class BKDLConfig implements DLConfig {
         return this.isFederatedNamespace;
     }
 
+    /**
+     * Set the namespace resolver class name.
+     *
+     * @param resolverClass namespace resolver class name
+     * @return bk dl config
+     */
+    public BKDLConfig setNamespaceResolverClass(Class<? extends NamespaceResolver> resolverClass) {
+        this.namespaceResolverClassName = Optional.fromNullable(resolverClass.getName());
+        return this;
+    }
+
+    /**
+     * Get the namespace resolver class name.
+     *
+     * @return namespace resolver class name
+     */
+    public Optional<String> getNamespaceResolverClass() {
+        return this.namespaceResolverClassName;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(bkZkServersForWriter, bkZkServersForReader,
                                 dlZkServersForWriter, dlZkServersForReader,
-                                bkLedgersPath);
+                                bkLedgersPath, namespaceResolverClassName);
     }
 
     @Override
@@ -292,7 +315,8 @@ public class BKDLConfig implements DLConfig {
                encodeRegionID == another.encodeRegionID &&
                Objects.equal(aclRootPath, another.aclRootPath) &&
                Objects.equal(firstLogSegmentSeqNo, another.firstLogSegmentSeqNo) &&
-               Objects.equal(isFederatedNamespace, another.isFederatedNamespace);
+               Objects.equal(isFederatedNamespace, another.isFederatedNamespace) &&
+               Objects.equal(namespaceResolverClassName, another.namespaceResolverClassName);
 
     }
 
@@ -329,6 +353,9 @@ public class BKDLConfig implements DLConfig {
         }
         if (isFederatedNamespace) {
             configFormat.setFederatedNamespace(true);
+        }
+        if (namespaceResolverClassName.isPresent()) {
+            configFormat.setNamespaceResolverClassName(namespaceResolverClassName.get());
         }
         return serialize(configFormat);
     }
@@ -390,6 +417,10 @@ public class BKDLConfig implements DLConfig {
             firstLogSegmentSeqNo = configFormat.getFirstLogSegmentSeqNo();
         }
         isFederatedNamespace = configFormat.isSetFederatedNamespace() && configFormat.isFederatedNamespace();
+
+        if (configFormat.isSetNamespaceResolverClassName()) {
+            namespaceResolverClassName = Optional.fromNullable(configFormat.getNamespaceResolverClassName());
+        }
 
         // Validate the settings
         if (null == bkZkServersForWriter || null == bkZkServersForReader || null == bkLedgersPath ||
