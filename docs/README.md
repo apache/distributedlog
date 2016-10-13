@@ -6,6 +6,8 @@ http://distributedlog.incubator.apache.org/docs/latest is also generated from th
 
 # Requirements
 
+First, make sure you have Ruby installed. The minimal ruby version is 2.0.0.
+
 The dependencies are declared in the Gemfile in this directory. We use [reStructuredText](http://docutils.sourceforge.net/rst.html)
 to write and [Jekyll](https://jekyllrb.com/) and [jekyll-rst](https://github.com/xdissent/jekyll-rst) to translate the documentation to static HTML.
 You can use Ruby's Bundler Gem to install all the depenencies for building the documentation:

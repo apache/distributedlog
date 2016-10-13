@@ -22,6 +22,9 @@ website. This is the static content is what is actually hosted on the Apache
 DistributedLog website.
 
 ### Development setup
+
+First, make sure you have Ruby installed. The minimal ruby version is 2.0.0.
+
 Before working with the Jekyll code, you can use Ruby's Bundler Gem to install all the dependencies for building this website:
 
     gem install bundler
