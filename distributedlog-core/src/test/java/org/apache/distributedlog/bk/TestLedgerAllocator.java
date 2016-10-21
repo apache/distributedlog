@@ -15,23 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.bk;
+package org.apache.distributedlog.bk;
 
-import com.twitter.distributedlog.BookKeeperClient;
-import com.twitter.distributedlog.BookKeeperClientBuilder;
-import com.twitter.distributedlog.TestZooKeeperClientBuilder;
-import com.twitter.distributedlog.annotations.DistributedLogAnnotations;
-import com.twitter.distributedlog.bk.SimpleLedgerAllocator.AllocationException;
-import com.twitter.distributedlog.bk.SimpleLedgerAllocator.Phase;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.TestDistributedLogBase;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.exceptions.ZKException;
-import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.distributedlog.util.Transaction.OpListener;
-import com.twitter.distributedlog.util.Utils;
-import com.twitter.distributedlog.zk.DefaultZKOp;
-import com.twitter.distributedlog.zk.ZKTransaction;
+import org.apache.distributedlog.BookKeeperClient;
+import org.apache.distributedlog.BookKeeperClientBuilder;
+import org.apache.distributedlog.TestZooKeeperClientBuilder;
+import org.apache.distributedlog.annotations.DistributedLogAnnotations;
+import org.apache.distributedlog.bk.SimpleLedgerAllocator.AllocationException;
+import org.apache.distributedlog.bk.SimpleLedgerAllocator.Phase;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.TestDistributedLogBase;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.exceptions.ZKException;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.Transaction.OpListener;
+import org.apache.distributedlog.util.Utils;
+import org.apache.distributedlog.zk.DefaultZKOp;
+import org.apache.distributedlog.zk.ZKTransaction;
 import com.twitter.util.Future;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;

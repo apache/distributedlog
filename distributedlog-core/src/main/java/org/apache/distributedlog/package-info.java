@@ -18,4 +18,4 @@
 /**
  * Protocol & Core of DistributedLog
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;

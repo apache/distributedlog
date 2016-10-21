@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.base.Optional;
 
-import com.twitter.distributedlog.net.DNSResolverForRacks;
-import com.twitter.distributedlog.net.DNSResolverForRows;
+import org.apache.distributedlog.net.DNSResolverForRacks;
+import org.apache.distributedlog.net.DNSResolverForRows;
 import org.apache.bookkeeper.net.DNSToSwitchMapping;
 import org.apache.commons.configuration.StrictConfigurationComparator;
 import org.junit.Test;

@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
-import com.twitter.distributedlog.LogSegmentMetadata.LogSegmentMetadataBuilder;
-import com.twitter.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
-import com.twitter.distributedlog.LogSegmentMetadata.TruncationStatus;
-import com.twitter.distributedlog.exceptions.UnsupportedMetadataVersionException;
+import org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataBuilder;
+import org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
+import org.apache.distributedlog.LogSegmentMetadata.TruncationStatus;
+import org.apache.distributedlog.exceptions.UnsupportedMetadataVersionException;
 
-import com.twitter.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.FutureUtils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.proto.BookkeeperInternalCallbacks;
 import org.apache.zookeeper.KeeperException;

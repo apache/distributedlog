@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.util;
+package org.apache.distributedlog.util;
 
 import java.util.zip.CRC32;
 
-import com.twitter.distributedlog.DLSN;
+import org.apache.distributedlog.DLSN;
 
 import static com.google.common.base.Charsets.UTF_8;
 

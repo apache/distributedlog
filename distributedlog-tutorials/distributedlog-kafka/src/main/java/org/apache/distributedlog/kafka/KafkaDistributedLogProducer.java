@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.kafka;
+package org.apache.distributedlog.kafka;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.messaging.PartitionedMultiWriter;
-import com.twitter.distributedlog.messaging.Partitioner;
-import com.twitter.distributedlog.messaging.RRMultiWriter;
-import com.twitter.distributedlog.service.DistributedLogClient;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.messaging.PartitionedMultiWriter;
+import org.apache.distributedlog.messaging.Partitioner;
+import org.apache.distributedlog.messaging.RRMultiWriter;
+import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;

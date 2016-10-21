@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.logsegment;
+package org.apache.distributedlog.logsegment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.twitter.distributedlog.DLMTestUtil;
-import com.twitter.distributedlog.LogSegmentMetadata;
-import com.twitter.distributedlog.exceptions.UnexpectedException;
+import org.apache.distributedlog.DLMTestUtil;
+import org.apache.distributedlog.LogSegmentMetadata;
+import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 

@@ -15,17 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.feature;
+package org.apache.distributedlog.feature;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.config.ConcurrentBaseConfiguration;
-import com.twitter.distributedlog.config.ConfigurationListener;
-import com.twitter.distributedlog.config.ConfigurationSubscription;
-import com.twitter.distributedlog.config.FileConfigurationBuilder;
-import com.twitter.distributedlog.config.PropertiesConfigurationBuilder;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.config.ConcurrentBaseConfiguration;
+import org.apache.distributedlog.config.ConfigurationListener;
+import org.apache.distributedlog.config.ConfigurationSubscription;
+import org.apache.distributedlog.config.FileConfigurationBuilder;
+import org.apache.distributedlog.config.PropertiesConfigurationBuilder;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.feature.SettableFeature;

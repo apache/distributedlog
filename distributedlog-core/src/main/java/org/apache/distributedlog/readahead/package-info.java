@@ -18,4 +18,4 @@
 /**
  * ReadAhead Mechanism for distributedlog streaming reads
  */
-package com.twitter.distributedlog.readahead;
+package org.apache.distributedlog.readahead;

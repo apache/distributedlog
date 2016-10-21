@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.stats;
+package org.apache.distributedlog.stats;
 
 import org.apache.bookkeeper.client.BKException.Code;
 import org.apache.bookkeeper.stats.Counter;

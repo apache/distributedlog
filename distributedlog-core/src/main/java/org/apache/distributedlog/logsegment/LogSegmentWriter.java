@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.logsegment;
+package org.apache.distributedlog.logsegment;
 
 import com.google.common.annotations.Beta;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.LogRecord;
-import com.twitter.distributedlog.exceptions.BKTransmitException;
-import com.twitter.distributedlog.exceptions.LockingException;
-import com.twitter.distributedlog.io.AsyncAbortable;
-import com.twitter.distributedlog.io.AsyncCloseable;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.LogRecord;
+import org.apache.distributedlog.exceptions.BKTransmitException;
+import org.apache.distributedlog.exceptions.LockingException;
+import org.apache.distributedlog.io.AsyncAbortable;
+import org.apache.distributedlog.io.AsyncCloseable;
 import com.twitter.util.Future;
 
 import java.io.IOException;
@@ -47,11 +47,11 @@ public interface LogSegmentWriter extends AsyncCloseable, AsyncAbortable {
      * @param record single log record
      * @return a future representing write result. A {@link DLSN} is returned if write succeeds,
      *         otherwise, exceptions are returned.
-     * @throws com.twitter.distributedlog.exceptions.LogRecordTooLongException if log record is too long
-     * @throws com.twitter.distributedlog.exceptions.InvalidEnvelopedEntryException on invalid enveloped entry
+     * @throws org.apache.distributedlog.exceptions.LogRecordTooLongException if log record is too long
+     * @throws org.apache.distributedlog.exceptions.InvalidEnvelopedEntryException on invalid enveloped entry
      * @throws LockingException if failed to acquire lock for the writer
      * @throws BKTransmitException if failed to transmit data to bk
-     * @throws com.twitter.distributedlog.exceptions.WriteException if failed to write to bk
+     * @throws org.apache.distributedlog.exceptions.WriteException if failed to write to bk
      */
     public Future<DLSN> asyncWrite(LogRecord record);
 

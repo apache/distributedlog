@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service;
+package org.apache.distributedlog.service;
 
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.LocalDLMEmulator;
-import com.twitter.distributedlog.metadata.BKDLConfig;
-import com.twitter.distributedlog.metadata.DLMetadata;
-import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.LocalDLMEmulator;
+import org.apache.distributedlog.metadata.BKDLConfig;
+import org.apache.distributedlog.metadata.DLMetadata;
+import org.apache.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.finagle.builder.Server;
 import org.apache.bookkeeper.conf.ServerConfiguration;
 import org.apache.bookkeeper.shims.zk.ZooKeeperServerShim;
@@ -198,8 +198,8 @@ public class DistributedLogCluster {
             Pair<DistributedLogServiceImpl, Server> serverPair = null;
             while (!success) {
                 try {
-                    com.twitter.distributedlog.service.config.ServerConfiguration serverConf =
-                            new com.twitter.distributedlog.service.config.ServerConfiguration();
+                    org.apache.distributedlog.service.config.ServerConfiguration serverConf =
+                            new org.apache.distributedlog.service.config.ServerConfiguration();
                     serverConf.loadConf(dlConf);
                     serverConf.setServerShardId(proxyPort);
                     serverPair = DistributedLogServer.runServer(

@@ -18,4 +18,4 @@
 /**
  * DistributedLog Namespace
  */
-package com.twitter.distributedlog.namespace;
+package org.apache.distributedlog.namespace;

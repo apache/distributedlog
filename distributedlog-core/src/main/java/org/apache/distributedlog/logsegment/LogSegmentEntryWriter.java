@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.logsegment;
+package org.apache.distributedlog.logsegment;
 
 import com.google.common.annotations.Beta;
-import com.twitter.distributedlog.Entry;
-import com.twitter.distributedlog.util.Sizable;
+import org.apache.distributedlog.Entry;
+import org.apache.distributedlog.util.Sizable;
 import org.apache.bookkeeper.client.AsyncCallback;
 
 /**

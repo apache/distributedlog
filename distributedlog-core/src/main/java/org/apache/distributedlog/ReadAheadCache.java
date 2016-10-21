@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -25,9 +25,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Ticker;
-import com.twitter.distributedlog.callback.ReadAheadCallback;
-import com.twitter.distributedlog.exceptions.InvalidEnvelopedEntryException;
-import com.twitter.distributedlog.exceptions.LogReadException;
+import org.apache.distributedlog.callback.ReadAheadCallback;
+import org.apache.distributedlog.exceptions.InvalidEnvelopedEntryException;
+import org.apache.distributedlog.exceptions.LogReadException;
 import org.apache.bookkeeper.client.LedgerEntry;
 import org.apache.bookkeeper.stats.AlertStatsLogger;
 import org.apache.bookkeeper.stats.OpStatsLogger;

@@ -15,25 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.auditor;
+package org.apache.distributedlog.auditor;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.SettableFuture;
-import com.twitter.distributedlog.BKDistributedLogNamespace;
-import com.twitter.distributedlog.BookKeeperClient;
-import com.twitter.distributedlog.BookKeeperClientBuilder;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.DistributedLogManager;
-import com.twitter.distributedlog.LogSegmentMetadata;
-import com.twitter.distributedlog.namespace.DistributedLogNamespace;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.ZooKeeperClientBuilder;
-import com.twitter.distributedlog.exceptions.DLInterruptedException;
-import com.twitter.distributedlog.exceptions.ZKException;
-import com.twitter.distributedlog.metadata.BKDLConfig;
-import com.twitter.distributedlog.util.DLUtils;
+import org.apache.distributedlog.BKDistributedLogNamespace;
+import org.apache.distributedlog.BookKeeperClient;
+import org.apache.distributedlog.BookKeeperClientBuilder;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.LogSegmentMetadata;
+import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.exceptions.DLInterruptedException;
+import org.apache.distributedlog.exceptions.ZKException;
+import org.apache.distributedlog.metadata.BKDLConfig;
+import org.apache.distributedlog.util.DLUtils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeperAccessor;
@@ -83,13 +83,13 @@ public class DLAuditor {
         this.conf = conf;
     }
 
-    private ZooKeeperClient getZooKeeperClient(com.twitter.distributedlog.DistributedLogManagerFactory factory) {
+    private ZooKeeperClient getZooKeeperClient(org.apache.distributedlog.DistributedLogManagerFactory factory) {
         DistributedLogNamespace namespace = factory.getNamespace();
         assert(namespace instanceof BKDistributedLogNamespace);
         return ((BKDistributedLogNamespace) namespace).getSharedWriterZKCForDL();
     }
 
-    private BookKeeperClient getBookKeeperClient(com.twitter.distributedlog.DistributedLogManagerFactory factory) {
+    private BookKeeperClient getBookKeeperClient(org.apache.distributedlog.DistributedLogManagerFactory factory) {
         DistributedLogNamespace namespace = factory.getNamespace();
         assert(namespace instanceof BKDistributedLogNamespace);
         return ((BKDistributedLogNamespace) namespace).getReaderBKC();
@@ -224,19 +224,19 @@ public class DLAuditor {
     private Set<Long> collectLedgersFromDL(List<URI> uris, List<List<String>> allocationPaths)
             throws IOException {
         final Set<Long> ledgers = new TreeSet<Long>();
-        List<com.twitter.distributedlog.DistributedLogManagerFactory> factories =
-                new ArrayList<com.twitter.distributedlog.DistributedLogManagerFactory>(uris.size());
+        List<org.apache.distributedlog.DistributedLogManagerFactory> factories =
+                new ArrayList<org.apache.distributedlog.DistributedLogManagerFactory>(uris.size());
         try {
             for (URI uri : uris) {
-                factories.add(new com.twitter.distributedlog.DistributedLogManagerFactory(conf, uri));
+                factories.add(new org.apache.distributedlog.DistributedLogManagerFactory(conf, uri));
             }
             final CountDownLatch doneLatch = new CountDownLatch(uris.size());
             final AtomicInteger numFailures = new AtomicInteger(0);
             ExecutorService executor = Executors.newFixedThreadPool(uris.size());
             try {
                 int i = 0;
-                for (com.twitter.distributedlog.DistributedLogManagerFactory factory : factories) {
-                    final com.twitter.distributedlog.DistributedLogManagerFactory dlFactory = factory;
+                for (org.apache.distributedlog.DistributedLogManagerFactory factory : factories) {
+                    final org.apache.distributedlog.DistributedLogManagerFactory dlFactory = factory;
                     final URI uri = uris.get(i);
                     final List<String> aps = allocationPaths.get(i);
                     i++;
@@ -273,7 +273,7 @@ public class DLAuditor {
                 executor.shutdown();
             }
         } finally {
-            for (com.twitter.distributedlog.DistributedLogManagerFactory factory : factories) {
+            for (org.apache.distributedlog.DistributedLogManagerFactory factory : factories) {
                 factory.close();
             }
         }
@@ -281,7 +281,7 @@ public class DLAuditor {
     }
 
     private void collectLedgersFromAllocator(final URI uri,
-                                             final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+                                             final org.apache.distributedlog.DistributedLogManagerFactory factory,
                                              final List<String> allocationPaths,
                                              final Set<Long> ledgers) throws IOException {
         final LinkedBlockingQueue<String> poolQueue =
@@ -341,7 +341,7 @@ public class DLAuditor {
     }
 
     private void collectLedgersFromDL(final URI uri,
-                                      final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+                                      final org.apache.distributedlog.DistributedLogManagerFactory factory,
                                       final Set<Long> ledgers) throws IOException {
         logger.info("Enumerating {} to collect streams.", uri);
         Collection<String> streams = factory.enumerateAllLogsInNamespace();
@@ -359,12 +359,12 @@ public class DLAuditor {
         });
     }
 
-    private List<Long> collectLedgersFromStream(com.twitter.distributedlog.DistributedLogManagerFactory factory,
+    private List<Long> collectLedgersFromStream(org.apache.distributedlog.DistributedLogManagerFactory factory,
                                                 String stream,
                                                 Set<Long> ledgers)
             throws IOException {
         DistributedLogManager dlm = factory.createDistributedLogManager(stream,
-                com.twitter.distributedlog.DistributedLogManagerFactory.ClientSharingOption.SharedClients);
+                org.apache.distributedlog.DistributedLogManagerFactory.ClientSharingOption.SharedClients);
         try {
             List<LogSegmentMetadata> segments = dlm.getLogSegments();
             List<Long> sLedgers = new ArrayList<Long>();
@@ -388,8 +388,8 @@ public class DLAuditor {
      */
     public Map<String, Long> calculateStreamSpaceUsage(final URI uri) throws IOException {
         logger.info("Collecting stream space usage for {}.", uri);
-        com.twitter.distributedlog.DistributedLogManagerFactory factory =
-                new com.twitter.distributedlog.DistributedLogManagerFactory(conf, uri);
+        org.apache.distributedlog.DistributedLogManagerFactory factory =
+                new org.apache.distributedlog.DistributedLogManagerFactory(conf, uri);
         try {
             return calculateStreamSpaceUsage(uri, factory);
         } finally {
@@ -398,7 +398,7 @@ public class DLAuditor {
     }
 
     private Map<String, Long> calculateStreamSpaceUsage(
-            final URI uri, final com.twitter.distributedlog.DistributedLogManagerFactory factory)
+            final URI uri, final org.apache.distributedlog.DistributedLogManagerFactory factory)
         throws IOException {
         Collection<String> streams = factory.enumerateAllLogsInNamespace();
         final LinkedBlockingQueue<String> streamQueue = new LinkedBlockingQueue<String>();
@@ -422,10 +422,10 @@ public class DLAuditor {
         return streamSpaceUsageMap;
     }
 
-    private long calculateStreamSpaceUsage(final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+    private long calculateStreamSpaceUsage(final org.apache.distributedlog.DistributedLogManagerFactory factory,
                                            final String stream) throws IOException {
         DistributedLogManager dlm = factory.createDistributedLogManager(stream,
-                com.twitter.distributedlog.DistributedLogManagerFactory.ClientSharingOption.SharedClients);
+                org.apache.distributedlog.DistributedLogManagerFactory.ClientSharingOption.SharedClients);
         long totalBytes = 0;
         try {
             List<LogSegmentMetadata> segments = dlm.getLogSegments();

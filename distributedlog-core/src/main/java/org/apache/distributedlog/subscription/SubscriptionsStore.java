@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.subscription;
+package org.apache.distributedlog.subscription;
 
-import com.twitter.distributedlog.DLSN;
+import org.apache.distributedlog.DLSN;
 import com.twitter.util.Future;
 import scala.runtime.BoxedUnit;
 

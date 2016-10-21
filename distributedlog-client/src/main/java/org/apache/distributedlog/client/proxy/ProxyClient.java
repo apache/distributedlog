@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.proxy;
+package org.apache.distributedlog.client.proxy;
 
-import com.twitter.distributedlog.client.ClientConfig;
-import com.twitter.distributedlog.client.stats.ClientStats;
-import com.twitter.distributedlog.thrift.service.DistributedLogService;
+import org.apache.distributedlog.client.ClientConfig;
+import org.apache.distributedlog.client.stats.ClientStats;
+import org.apache.distributedlog.thrift.service.DistributedLogService;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.ThriftMux;
 import com.twitter.finagle.builder.ClientBuilder;

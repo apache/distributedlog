@@ -15,16 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.impl;
+package org.apache.distributedlog.impl;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.callback.NamespaceListener;
-import com.twitter.distributedlog.exceptions.ZKException;
-import com.twitter.distributedlog.metadata.LogMetadataStore;
-import com.twitter.distributedlog.util.OrderedScheduler;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.callback.NamespaceListener;
+import org.apache.distributedlog.exceptions.ZKException;
+import org.apache.distributedlog.metadata.LogMetadataStore;
+import org.apache.distributedlog.util.OrderedScheduler;
 import com.twitter.util.Future;
 import com.twitter.util.Promise;
 import org.apache.zookeeper.AsyncCallback;
@@ -36,7 +36,7 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.twitter.distributedlog.impl.BKDLUtils.*;
+import static org.apache.distributedlog.impl.BKDLUtils.*;
 
 /**
  * ZooKeeper based log metadata store

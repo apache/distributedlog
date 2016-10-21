@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
-import com.twitter.distributedlog.util.DLUtils;
+import org.apache.distributedlog.util.DLUtils;
 import org.apache.bookkeeper.versioning.Versioned;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;

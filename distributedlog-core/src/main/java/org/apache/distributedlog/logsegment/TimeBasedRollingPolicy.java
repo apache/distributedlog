@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.logsegment;
+package org.apache.distributedlog.logsegment;
 
-import com.twitter.distributedlog.util.Sizable;
-import com.twitter.distributedlog.util.Utils;
+import org.apache.distributedlog.util.Sizable;
+import org.apache.distributedlog.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

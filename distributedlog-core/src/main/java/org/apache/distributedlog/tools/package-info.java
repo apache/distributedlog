@@ -18,4 +18,4 @@
 /**
  * Tools for distributedlog
  */
-package com.twitter.distributedlog.tools;
+package org.apache.distributedlog.tools;

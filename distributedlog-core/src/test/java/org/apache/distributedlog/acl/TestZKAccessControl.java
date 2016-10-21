@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.acl;
+package org.apache.distributedlog.acl;
 
-import com.twitter.distributedlog.TestZooKeeperClientBuilder;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.ZooKeeperClusterTestCase;
-import com.twitter.distributedlog.thrift.AccessControlEntry;
+import org.apache.distributedlog.TestZooKeeperClientBuilder;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.ZooKeeperClusterTestCase;
+import org.apache.distributedlog.thrift.AccessControlEntry;
 import com.twitter.util.Await;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;

@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.basic;
+package org.apache.distributedlog.basic;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.service.DistributedLogClient;
-import com.twitter.distributedlog.service.DistributedLogClientBuilder;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.service.DistributedLogClient;
+import org.apache.distributedlog.service.DistributedLogClientBuilder;
 import com.twitter.finagle.thrift.ClientId;
 import com.twitter.util.FutureEventListener;
 

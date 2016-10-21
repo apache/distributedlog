@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.zk;
+package org.apache.distributedlog.zk;
 
 import com.google.common.collect.Lists;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.distributedlog.util.Transaction;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.Transaction;
 import com.twitter.util.Future;
 import com.twitter.util.Promise;
 import org.apache.zookeeper.AsyncCallback;

@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.util;
+package org.apache.distributedlog.util;
 
-import com.twitter.distributedlog.io.AsyncCloseable;
-import com.twitter.distributedlog.io.AsyncDeleteable;
-import com.twitter.distributedlog.util.Transaction.OpListener;
+import org.apache.distributedlog.io.AsyncCloseable;
+import org.apache.distributedlog.io.AsyncDeleteable;
+import org.apache.distributedlog.util.Transaction.OpListener;
 import com.twitter.util.Future;
 
 import java.io.IOException;

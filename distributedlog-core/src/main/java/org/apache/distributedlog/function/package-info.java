@@ -18,4 +18,4 @@
 /**
  * Common Functions for DistributedLog
  */
-package com.twitter.distributedlog.function;
+package org.apache.distributedlog.function;

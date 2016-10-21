@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.injector;
+package org.apache.distributedlog.injector;
 
-import com.twitter.distributedlog.util.Utils;
+import org.apache.distributedlog.util.Utils;
 
 import java.util.Random;
 

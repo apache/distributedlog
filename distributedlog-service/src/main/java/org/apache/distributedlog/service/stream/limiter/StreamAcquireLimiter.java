@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.stream.limiter;
+package org.apache.distributedlog.service.stream.limiter;
 
-import com.twitter.distributedlog.exceptions.OverCapacityException;
-import com.twitter.distributedlog.exceptions.TooManyStreamsException;
-import com.twitter.distributedlog.limiter.RequestLimiter;
-import com.twitter.distributedlog.service.stream.StreamManager;
-import com.twitter.distributedlog.service.stream.StreamOp;
-import com.twitter.distributedlog.rate.MovingAverageRate;
+import org.apache.distributedlog.exceptions.OverCapacityException;
+import org.apache.distributedlog.exceptions.TooManyStreamsException;
+import org.apache.distributedlog.limiter.RequestLimiter;
+import org.apache.distributedlog.service.stream.StreamManager;
+import org.apache.distributedlog.service.stream.StreamOp;
+import org.apache.distributedlog.rate.MovingAverageRate;
 
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;

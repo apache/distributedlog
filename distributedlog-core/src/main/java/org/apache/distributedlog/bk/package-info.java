@@ -21,4 +21,4 @@
  * <h2>Ledger Allocator</h2>
  *
  */
-package com.twitter.distributedlog.bk;
+package org.apache.distributedlog.bk;

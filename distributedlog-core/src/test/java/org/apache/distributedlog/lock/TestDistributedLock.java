@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.lock;
+package org.apache.distributedlog.lock;
 
-import com.twitter.distributedlog.exceptions.UnexpectedException;
-import com.twitter.distributedlog.util.FailpointUtils;
-import com.twitter.distributedlog.exceptions.LockingException;
-import com.twitter.distributedlog.TestDistributedLogBase;
-import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.distributedlog.util.OrderedScheduler;
-import com.twitter.distributedlog.util.Utils;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.ZooKeeperClientBuilder;
-import com.twitter.distributedlog.ZooKeeperClientUtils;
-import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
+import org.apache.distributedlog.exceptions.UnexpectedException;
+import org.apache.distributedlog.util.FailpointUtils;
+import org.apache.distributedlog.exceptions.LockingException;
+import org.apache.distributedlog.TestDistributedLogBase;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.OrderedScheduler;
+import org.apache.distributedlog.util.Utils;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.ZooKeeperClientUtils;
+import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
@@ -57,7 +57,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static com.twitter.distributedlog.lock.ZKSessionLock.asyncParseClientID;
+import static org.apache.distributedlog.lock.ZKSessionLock.asyncParseClientID;
 
 /**
  * Distributed Lock Tests

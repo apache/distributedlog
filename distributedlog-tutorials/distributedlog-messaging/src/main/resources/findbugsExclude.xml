@@ -22,12 +22,12 @@
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.messaging.PartitionedMultiWriter" />
+    <Class name="org.apache.distributedlog.messaging.PartitionedMultiWriter" />
     <Bug pattern="EI_EXPOSE_REP2" />
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.messaging.RRMultiWriter" />
+    <Class name="org.apache.distributedlog.messaging.RRMultiWriter" />
     <Bug pattern="EI_EXPOSE_REP2" />
   </Match>
 </FindBugsFilter>

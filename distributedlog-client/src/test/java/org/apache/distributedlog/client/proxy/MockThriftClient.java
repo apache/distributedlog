@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.proxy;
+package org.apache.distributedlog.client.proxy;
 
 import com.twitter.finagle.Service;
 import com.twitter.finagle.thrift.ThriftClientRequest;

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service;
+package org.apache.distributedlog.service;
 
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.finagle.builder.ClientBuilder;
@@ -25,7 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test Case of {@link com.twitter.distributedlog.service.DistributedLogClientBuilder}
+ * Test Case of {@link org.apache.distributedlog.service.DistributedLogClientBuilder}
  */
 public class TestDistributedLogClientBuilder {
 

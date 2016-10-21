@@ -15,21 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.lock;
+package org.apache.distributedlog.lock;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
-import com.twitter.distributedlog.DistributedLogConstants;
-import com.twitter.distributedlog.util.FailpointUtils;
-import com.twitter.distributedlog.exceptions.LockingException;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.exceptions.DLInterruptedException;
-import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
-import com.twitter.distributedlog.exceptions.UnexpectedException;
-import com.twitter.distributedlog.exceptions.ZKException;
-import com.twitter.distributedlog.stats.OpStatsListener;
-import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.distributedlog.util.OrderedScheduler;
+import org.apache.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.util.FailpointUtils;
+import org.apache.distributedlog.exceptions.LockingException;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.exceptions.DLInterruptedException;
+import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
+import org.apache.distributedlog.exceptions.UnexpectedException;
+import org.apache.distributedlog.exceptions.ZKException;
+import org.apache.distributedlog.stats.OpStatsListener;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.OrderedScheduler;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Function0;
@@ -78,7 +78,7 @@ import static com.google.common.base.Charsets.UTF_8;
  *
  * <p>
  * 0. if it is an immediate lock, it would get lock waiters first. if the lock is already held
- *    by someone. it would fail immediately with {@link com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException}
+ *    by someone. it would fail immediately with {@link org.apache.distributedlog.exceptions.OwnershipAcquireFailedException}
  *    with current owner. if there is no lock waiters, it would start locking procedure from 1.
  * 1. prepare: create a sequential znode to identify the lock.
  * 2. check lock waiters: get all lock waiters to check after prepare. if it is the first waiter,

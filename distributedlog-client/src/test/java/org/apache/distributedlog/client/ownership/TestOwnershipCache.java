@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.ownership;
+package org.apache.distributedlog.client.ownership;
 
-import com.twitter.distributedlog.client.ClientConfig;
+import org.apache.distributedlog.client.ClientConfig;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import org.junit.Rule;
 import org.junit.Test;

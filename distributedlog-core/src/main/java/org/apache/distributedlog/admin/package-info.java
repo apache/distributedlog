@@ -18,4 +18,4 @@
 /**
  * Admin Tools for DistributedLog
  */
-package com.twitter.distributedlog.admin;
+package org.apache.distributedlog.admin;

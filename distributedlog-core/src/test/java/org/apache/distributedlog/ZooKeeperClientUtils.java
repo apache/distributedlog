@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.base.Stopwatch;
 
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 /**
- * Utilities of {@link com.twitter.distributedlog.ZooKeeperClient}
+ * Utilities of {@link org.apache.distributedlog.ZooKeeperClient}
  */
 public class ZooKeeperClientUtils {
 

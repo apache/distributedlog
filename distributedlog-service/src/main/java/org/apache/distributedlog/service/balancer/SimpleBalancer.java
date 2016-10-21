@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.balancer;
+package org.apache.distributedlog.service.balancer;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
-import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
-import com.twitter.distributedlog.service.DistributedLogClient;
+import org.apache.distributedlog.client.monitor.MonitorServiceClient;
+import org.apache.distributedlog.service.DistributedLogClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

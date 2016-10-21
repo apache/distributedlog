@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.config;
+package org.apache.distributedlog.config;
 
-import com.twitter.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogConfiguration;
 
-import com.twitter.distributedlog.bk.QuorumConfig;
+import org.apache.distributedlog.bk.QuorumConfig;
 import org.junit.Test;
 
-import static com.twitter.distributedlog.DistributedLogConfiguration.*;
+import static org.apache.distributedlog.DistributedLogConfiguration.*;
 import static org.junit.Assert.*;
 
 public class TestDynamicDistributedLogConfiguration {

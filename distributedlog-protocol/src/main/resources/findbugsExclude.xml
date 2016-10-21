@@ -22,18 +22,18 @@
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.LogRecord" />
+    <Class name="org.apache.distributedlog.LogRecord" />
     <Bug pattern="EI_EXPOSE_REP2" />
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.LogRecord" />
+    <Class name="org.apache.distributedlog.LogRecord" />
     <Method name="getPayload" />
     <Bug pattern="EI_EXPOSE_REP" />
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.io.Buffer" />
+    <Class name="org.apache.distributedlog.io.Buffer" />
     <Method name="getData" />
     <Bug pattern="EI_EXPOSE_REP" />
   </Match>

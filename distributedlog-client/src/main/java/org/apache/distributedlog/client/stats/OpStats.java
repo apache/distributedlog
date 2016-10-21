@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.stats;
+package org.apache.distributedlog.client.stats;
 
-import com.twitter.distributedlog.client.resolver.RegionResolver;
+import org.apache.distributedlog.client.resolver.RegionResolver;
 import com.twitter.finagle.stats.StatsReceiver;
 
 import java.net.SocketAddress;

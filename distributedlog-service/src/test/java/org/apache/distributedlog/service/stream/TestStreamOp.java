@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.stream;
+package org.apache.distributedlog.service.stream;
 
-import com.twitter.distributedlog.AsyncLogWriter;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.LogRecord;
-import com.twitter.distributedlog.acl.DefaultAccessControlManager;
-import com.twitter.distributedlog.exceptions.InternalServerException;
-import com.twitter.distributedlog.service.ResponseUtils;
-import com.twitter.distributedlog.service.config.ServerConfiguration;
-import com.twitter.distributedlog.service.stream.WriteOp;
-import com.twitter.distributedlog.thrift.service.StatusCode;
-import com.twitter.distributedlog.thrift.service.WriteResponse;
-import com.twitter.distributedlog.util.Sequencer;
+import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.LogRecord;
+import org.apache.distributedlog.acl.DefaultAccessControlManager;
+import org.apache.distributedlog.exceptions.InternalServerException;
+import org.apache.distributedlog.service.ResponseUtils;
+import org.apache.distributedlog.service.config.ServerConfiguration;
+import org.apache.distributedlog.service.stream.WriteOp;
+import org.apache.distributedlog.thrift.service.StatusCode;
+import org.apache.distributedlog.thrift.service.WriteResponse;
+import org.apache.distributedlog.util.Sequencer;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
 import org.apache.bookkeeper.feature.SettableFeature;

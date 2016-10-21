@@ -18,4 +18,4 @@
 /**
  * Feature & FeatureProvider for distributedlog
  */
-package com.twitter.distributedlog.feature;
+package org.apache.distributedlog.feature;

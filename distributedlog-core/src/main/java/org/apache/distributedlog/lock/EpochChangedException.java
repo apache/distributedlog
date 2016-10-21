@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.lock;
+package org.apache.distributedlog.lock;
 
-import com.twitter.distributedlog.exceptions.LockingException;
+import org.apache.distributedlog.exceptions.LockingException;
 
 /**
  * Exception indicates that epoch already changed when executing a given

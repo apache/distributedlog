@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.lock;
+package org.apache.distributedlog.lock;
 
 import org.apache.commons.lang3.tuple.Pair;
 

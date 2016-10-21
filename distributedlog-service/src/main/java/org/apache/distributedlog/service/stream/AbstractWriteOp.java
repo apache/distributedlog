@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.stream;
+package org.apache.distributedlog.service.stream;
 
-import com.twitter.distributedlog.util.ProtocolUtils;
-import com.twitter.distributedlog.service.ResponseUtils;
-import com.twitter.distributedlog.thrift.service.WriteResponse;
-import com.twitter.distributedlog.thrift.service.ResponseHeader;
+import org.apache.distributedlog.util.ProtocolUtils;
+import org.apache.distributedlog.service.ResponseUtils;
+import org.apache.distributedlog.thrift.service.WriteResponse;
+import org.apache.distributedlog.thrift.service.ResponseHeader;
 import com.twitter.util.Future;
 
 import org.apache.bookkeeper.feature.Feature;

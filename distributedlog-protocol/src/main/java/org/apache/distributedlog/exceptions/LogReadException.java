@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.exceptions;
+package org.apache.distributedlog.exceptions;
 
-import com.twitter.distributedlog.exceptions.DLException;
-import com.twitter.distributedlog.thrift.service.StatusCode;
+import org.apache.distributedlog.exceptions.DLException;
+import org.apache.distributedlog.thrift.service.StatusCode;
 
 /**
  * Thrown when there's a failure to read an edit log op from disk when loading

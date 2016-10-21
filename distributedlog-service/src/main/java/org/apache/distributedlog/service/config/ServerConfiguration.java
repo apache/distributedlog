@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.config;
+package org.apache.distributedlog.service.config;
 
 import com.google.common.base.Preconditions;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.DistributedLogConstants;
-import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
-import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.service.streamset.IdentityStreamPartitionConverter;
+import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
 import org.apache.bookkeeper.util.ReflectionUtils;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -159,7 +159,7 @@ public class ServerConfiguration extends CompositeConfiguration {
 
     /**
      * Get the region id used to instantiate
-     * {@link com.twitter.distributedlog.namespace.DistributedLogNamespace}
+     * {@link org.apache.distributedlog.namespace.DistributedLogNamespace}
      *
      * @return region id used to instantiate DistributedLogNamespace
      */

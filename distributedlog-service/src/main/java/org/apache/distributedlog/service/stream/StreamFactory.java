@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.stream;
+package org.apache.distributedlog.service.stream;
 
-import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
+import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 
 public interface StreamFactory {
 

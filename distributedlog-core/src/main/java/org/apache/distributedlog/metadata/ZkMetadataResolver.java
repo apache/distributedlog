@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.metadata;
+package org.apache.distributedlog.metadata;
 
-import com.twitter.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.common.PathUtils;

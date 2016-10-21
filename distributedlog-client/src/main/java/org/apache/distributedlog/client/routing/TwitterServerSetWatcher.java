@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.routing;
+package org.apache.distributedlog.client.routing;
 
 import com.google.common.collect.ImmutableSet;
 
 import com.google.common.collect.Sets;
 import com.twitter.common.net.pool.DynamicHostSet;
 import com.twitter.common.zookeeper.ServerSet;
-import com.twitter.distributedlog.service.DLSocketAddress;
+import org.apache.distributedlog.service.DLSocketAddress;
 import com.twitter.thrift.Endpoint;
 import com.twitter.thrift.ServiceInstance;
 

@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
-import com.twitter.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.FutureUtils;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;

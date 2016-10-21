@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.metadata;
+package org.apache.distributedlog.metadata;
 
-import com.twitter.distributedlog.LocalDLMEmulator;
-import com.twitter.distributedlog.ZooKeeperClusterTestCase;
+import org.apache.distributedlog.LocalDLMEmulator;
+import org.apache.distributedlog.ZooKeeperClusterTestCase;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.junit.After;

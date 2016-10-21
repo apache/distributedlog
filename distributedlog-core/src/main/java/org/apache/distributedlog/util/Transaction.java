@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.util;
+package org.apache.distributedlog.util;
 
 import com.google.common.annotations.Beta;
 import com.twitter.util.Future;
@@ -44,7 +44,7 @@ public interface Transaction<OpResult> {
     }
 
     /**
-     * Listener on the result of an {@link com.twitter.distributedlog.util.Transaction.Op}.
+     * Listener on the result of an {@link org.apache.distributedlog.util.Transaction.Op}.
      *
      * @param <OpResult>
      */
@@ -77,7 +77,7 @@ public interface Transaction<OpResult> {
 
     /**
      * Execute the current transaction. If the transaction succeed, all operations will be
-     * committed (via {@link com.twitter.distributedlog.util.Transaction.Op#commit(Object)}.
+     * committed (via {@link org.apache.distributedlog.util.Transaction.Op#commit(Object)}.
      * Otherwise, all operations will be aborted (via {@link Op#abort(Throwable, Object)}).
      *
      * @return future representing the result of transaction execution.

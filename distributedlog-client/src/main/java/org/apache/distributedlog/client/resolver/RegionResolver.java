@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.resolver;
+package org.apache.distributedlog.client.resolver;
 
 import java.net.SocketAddress;
 

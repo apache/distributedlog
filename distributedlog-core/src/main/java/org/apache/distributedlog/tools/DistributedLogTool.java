@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.tools;
+package org.apache.distributedlog.tools;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,11 +53,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.twitter.distributedlog.BKDistributedLogNamespace;
-import com.twitter.distributedlog.Entry;
-import com.twitter.distributedlog.logsegment.LogSegmentMetadataStore;
-import com.twitter.distributedlog.namespace.DistributedLogNamespace;
-import com.twitter.distributedlog.util.Utils;
+import org.apache.distributedlog.BKDistributedLogNamespace;
+import org.apache.distributedlog.Entry;
+import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
+import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeperAccessor;
@@ -81,28 +81,28 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.RateLimiter;
-import com.twitter.distributedlog.AsyncLogReader;
-import com.twitter.distributedlog.AsyncLogWriter;
-import com.twitter.distributedlog.BookKeeperClient;
-import com.twitter.distributedlog.BookKeeperClientBuilder;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.DistributedLogConstants;
-import com.twitter.distributedlog.DistributedLogManager;
-import com.twitter.distributedlog.exceptions.LogNotFoundException;
-import com.twitter.distributedlog.LogReader;
-import com.twitter.distributedlog.LogRecord;
-import com.twitter.distributedlog.LogRecordWithDLSN;
-import com.twitter.distributedlog.LogSegmentMetadata;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.ZooKeeperClientBuilder;
-import com.twitter.distributedlog.auditor.DLAuditor;
-import com.twitter.distributedlog.bk.LedgerAllocator;
-import com.twitter.distributedlog.bk.LedgerAllocatorUtils;
-import com.twitter.distributedlog.metadata.BKDLConfig;
-import com.twitter.distributedlog.metadata.MetadataUpdater;
-import com.twitter.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
-import com.twitter.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.AsyncLogReader;
+import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.BookKeeperClient;
+import org.apache.distributedlog.BookKeeperClientBuilder;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.exceptions.LogNotFoundException;
+import org.apache.distributedlog.LogReader;
+import org.apache.distributedlog.LogRecord;
+import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.LogSegmentMetadata;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.auditor.DLAuditor;
+import org.apache.distributedlog.bk.LedgerAllocator;
+import org.apache.distributedlog.bk.LedgerAllocatorUtils;
+import org.apache.distributedlog.metadata.BKDLConfig;
+import org.apache.distributedlog.metadata.MetadataUpdater;
+import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
+import org.apache.distributedlog.util.SchedulerUtils;
 import com.twitter.util.Await;
 
 import static com.google.common.base.Charsets.UTF_8;
@@ -158,7 +158,7 @@ public class DistributedLogTool extends Tool {
         protected URI uri;
         protected String zkAclId = null;
         protected boolean force = false;
-        protected com.twitter.distributedlog.DistributedLogManagerFactory factory = null;
+        protected org.apache.distributedlog.DistributedLogManagerFactory factory = null;
 
         protected PerDLCommand(String name, String description) {
             super(name, description);
@@ -249,9 +249,9 @@ public class DistributedLogTool extends Tool {
             this.force = force;
         }
 
-        protected synchronized com.twitter.distributedlog.DistributedLogManagerFactory getFactory() throws IOException {
+        protected synchronized org.apache.distributedlog.DistributedLogManagerFactory getFactory() throws IOException {
             if (null == this.factory) {
-                this.factory = new com.twitter.distributedlog.DistributedLogManagerFactory(getConf(), getUri());
+                this.factory = new org.apache.distributedlog.DistributedLogManagerFactory(getConf(), getUri());
                 logger.info("Construct DLM : uri = {}", getUri());
             }
             return this.factory;
@@ -454,7 +454,7 @@ public class DistributedLogTool extends Tool {
             return 0;
         }
 
-        protected void printStreamsWithMetadata(com.twitter.distributedlog.DistributedLogManagerFactory factory)
+        protected void printStreamsWithMetadata(org.apache.distributedlog.DistributedLogManagerFactory factory)
                 throws Exception {
             Map<String, byte[]> streams = factory.enumerateLogsWithMetadataInNamespace();
             System.out.println("Streams under " + getUri() + " : ");
@@ -474,7 +474,7 @@ public class DistributedLogTool extends Tool {
             System.out.println("--------------------------------");
         }
 
-        protected void printStreams(com.twitter.distributedlog.DistributedLogManagerFactory factory) throws Exception {
+        protected void printStreams(org.apache.distributedlog.DistributedLogManagerFactory factory) throws Exception {
             Collection<String> streams = factory.enumerateAllLogsInNamespace();
             System.out.println("Streams under " + getUri() + " : ");
             System.out.println("--------------------------------");
@@ -727,7 +727,7 @@ public class DistributedLogTool extends Tool {
             return truncateStreams(getFactory());
         }
 
-        private int truncateStreams(final com.twitter.distributedlog.DistributedLogManagerFactory factory) throws Exception {
+        private int truncateStreams(final org.apache.distributedlog.DistributedLogManagerFactory factory) throws Exception {
             Collection<String> streamCollection = factory.enumerateAllLogsInNamespace();
             final List<String> streams = new ArrayList<String>();
             if (null != streamPrefix) {
@@ -770,7 +770,7 @@ public class DistributedLogTool extends Tool {
             return 0;
         }
 
-        private void truncateStreams(com.twitter.distributedlog.DistributedLogManagerFactory factory, List<String> streams,
+        private void truncateStreams(org.apache.distributedlog.DistributedLogManagerFactory factory, List<String> streams,
                                      int tid, int numStreamsPerThreads) throws IOException {
             int startIdx = tid * numStreamsPerThreads;
             int endIdx = Math.min(streams.size(), (tid + 1) * numStreamsPerThreads);
@@ -2549,7 +2549,7 @@ public class DistributedLogTool extends Tool {
             return truncateStream(getFactory(), getStreamName(), dlsn);
         }
 
-        private int truncateStream(final com.twitter.distributedlog.DistributedLogManagerFactory factory, String streamName, DLSN dlsn) throws Exception {
+        private int truncateStream(final org.apache.distributedlog.DistributedLogManagerFactory factory, String streamName, DLSN dlsn) throws Exception {
             DistributedLogManager dlm = factory.createDistributedLogManagerWithSharedClients(streamName);
             try {
                 long totalRecords = dlm.getLogRecordCount();

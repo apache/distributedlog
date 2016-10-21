@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.readahead;
+package org.apache.distributedlog.readahead;
 
-import com.twitter.distributedlog.ReadAheadCache;
+import org.apache.distributedlog.ReadAheadCache;
 import org.apache.bookkeeper.stats.Gauge;
 import org.apache.bookkeeper.stats.StatsLogger;
 

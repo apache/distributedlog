@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.stream;
+package org.apache.distributedlog.service.stream;
 
 import com.google.common.base.Stopwatch;
-import com.twitter.distributedlog.AsyncLogWriter;
-import com.twitter.distributedlog.exceptions.DLException;
-import com.twitter.distributedlog.thrift.service.ResponseHeader;
-import com.twitter.distributedlog.util.Sequencer;
+import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.exceptions.DLException;
+import org.apache.distributedlog.thrift.service.ResponseHeader;
+import org.apache.distributedlog.util.Sequencer;
 import com.twitter.util.Future;
 
 import java.nio.ByteBuffer;

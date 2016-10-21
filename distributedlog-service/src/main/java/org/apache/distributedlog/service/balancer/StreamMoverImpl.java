@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.balancer;
+package org.apache.distributedlog.service.balancer;
 
-import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
-import com.twitter.distributedlog.service.DistributedLogClient;
+import org.apache.distributedlog.client.monitor.MonitorServiceClient;
+import org.apache.distributedlog.service.DistributedLogClient;
 import com.twitter.util.Await;
 import com.twitter.util.Function;
 import com.twitter.util.Future;

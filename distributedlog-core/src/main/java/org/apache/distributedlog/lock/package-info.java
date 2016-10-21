@@ -18,4 +18,4 @@
 /**
  * Distributed locking mechanism in distributedlog
  */
-package com.twitter.distributedlog.lock;
+package org.apache.distributedlog.lock;

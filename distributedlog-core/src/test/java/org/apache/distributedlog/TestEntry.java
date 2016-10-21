@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.twitter.distributedlog.Entry.Reader;
-import com.twitter.distributedlog.Entry.Writer;
-import com.twitter.distributedlog.exceptions.LogRecordTooLongException;
-import com.twitter.distributedlog.io.Buffer;
-import com.twitter.distributedlog.io.CompressionCodec;
+import org.apache.distributedlog.Entry.Reader;
+import org.apache.distributedlog.Entry.Writer;
+import org.apache.distributedlog.exceptions.LogRecordTooLongException;
+import org.apache.distributedlog.io.Buffer;
+import org.apache.distributedlog.io.CompressionCodec;
 import com.twitter.io.Buf;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
@@ -37,7 +37,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 import static com.google.common.base.Charsets.UTF_8;
-import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
+import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
 import static org.junit.Assert.*;
 
 /**

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.routing;
+package org.apache.distributedlog.client.routing;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -26,7 +26,7 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.common.zookeeper.ServerSet;
-import com.twitter.distributedlog.service.DLSocketAddress;
+import org.apache.distributedlog.service.DLSocketAddress;
 import com.twitter.finagle.ChannelException;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.Counter;

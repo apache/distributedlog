@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.benchmark;
+package org.apache.distributedlog.benchmark;
 
-import com.twitter.distributedlog.benchmark.thrift.Message;
+import org.apache.distributedlog.benchmark.thrift.Message;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.config;
+package org.apache.distributedlog.service.config;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

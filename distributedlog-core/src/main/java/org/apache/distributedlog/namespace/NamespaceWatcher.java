@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.namespace;
+package org.apache.distributedlog.namespace;
 
-import com.twitter.distributedlog.callback.NamespaceListener;
+import org.apache.distributedlog.callback.NamespaceListener;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 

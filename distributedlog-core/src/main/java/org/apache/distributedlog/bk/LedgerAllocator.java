@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.bk;
+package org.apache.distributedlog.bk;
 
-import com.twitter.distributedlog.util.Allocator;
+import org.apache.distributedlog.util.Allocator;
 import org.apache.bookkeeper.client.LedgerHandle;
 
 import java.io.IOException;

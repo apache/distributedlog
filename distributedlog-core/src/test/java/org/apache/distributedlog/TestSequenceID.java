@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
-import com.twitter.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
+import org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
 import com.twitter.util.Await;
 import com.twitter.util.FutureEventListener;
 import org.junit.Test;

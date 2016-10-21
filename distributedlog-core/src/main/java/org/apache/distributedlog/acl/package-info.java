@@ -18,4 +18,4 @@
 /**
  * Access Control for distributedlog streams.
  */
-package com.twitter.distributedlog.acl;
+package org.apache.distributedlog.acl;

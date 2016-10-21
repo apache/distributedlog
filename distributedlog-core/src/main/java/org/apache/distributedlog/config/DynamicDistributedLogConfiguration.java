@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.config;
+package org.apache.distributedlog.config;
 
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.bk.QuorumConfig;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.bk.QuorumConfig;
 
-import static com.twitter.distributedlog.DistributedLogConfiguration.*;
+import static org.apache.distributedlog.DistributedLogConfiguration.*;
 
 /**
  * Whitelist dynamic configuration by adding an accessor to this class.
@@ -237,7 +237,7 @@ public class DynamicDistributedLogConfiguration extends ConcurrentBaseConfigurat
     }
 
     /**
-     * Get the maximum number of {@link com.twitter.distributedlog.LogRecord } that readahead worker will cache.
+     * Get the maximum number of {@link org.apache.distributedlog.LogRecord } that readahead worker will cache.
      *
      * @return the maximum number
      */

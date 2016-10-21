@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service;
+package org.apache.distributedlog.service;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.twitter.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogConfiguration;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
 import org.apache.bookkeeper.stats.NullStatsProvider;
@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
-import static com.twitter.distributedlog.util.CommandLineUtils.*;
+import static org.apache.distributedlog.util.CommandLineUtils.*;
 
 public class DistributedLogServerApp {
 

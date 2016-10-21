@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.impl.metadata;
+package org.apache.distributedlog.impl.metadata;
 
 import com.google.common.collect.Lists;
-import com.twitter.distributedlog.DLMTestUtil;
-import com.twitter.distributedlog.exceptions.UnexpectedException;
-import com.twitter.distributedlog.util.DLUtils;
+import org.apache.distributedlog.DLMTestUtil;
+import org.apache.distributedlog.exceptions.UnexpectedException;
+import org.apache.distributedlog.util.DLUtils;
 import org.apache.bookkeeper.meta.ZkVersion;
 import org.apache.bookkeeper.versioning.Versioned;
 import org.junit.Test;

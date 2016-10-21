@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.benchmark.stream;
+package org.apache.distributedlog.benchmark.stream;
 
 public enum ReadMode {
     OLDEST,

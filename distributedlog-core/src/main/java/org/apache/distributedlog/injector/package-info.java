@@ -18,4 +18,4 @@
 /**
  * DistributedLog Failure Injection
  */
-package com.twitter.distributedlog.injector;
+package org.apache.distributedlog.injector;

@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.messaging;
+package org.apache.distributedlog.messaging;
 
 import com.google.common.collect.Sets;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.service.DistributedLogClient;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.service.DistributedLogClient;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.ServiceFactory;

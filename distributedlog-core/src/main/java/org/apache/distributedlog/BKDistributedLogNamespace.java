@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -23,40 +23,40 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.twitter.distributedlog.DistributedLogManagerFactory.ClientSharingOption;
-import com.twitter.distributedlog.acl.AccessControlManager;
-import com.twitter.distributedlog.acl.DefaultAccessControlManager;
-import com.twitter.distributedlog.acl.ZKAccessControlManager;
-import com.twitter.distributedlog.bk.LedgerAllocator;
-import com.twitter.distributedlog.bk.LedgerAllocatorUtils;
-import com.twitter.distributedlog.callback.NamespaceListener;
-import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
-import com.twitter.distributedlog.exceptions.DLInterruptedException;
-import com.twitter.distributedlog.exceptions.InvalidStreamNameException;
-import com.twitter.distributedlog.exceptions.LogNotFoundException;
-import com.twitter.distributedlog.exceptions.ZKException;
-import com.twitter.distributedlog.feature.CoreFeatureKeys;
-import com.twitter.distributedlog.impl.ZKLogMetadataStore;
-import com.twitter.distributedlog.impl.ZKLogSegmentMetadataStore;
-import com.twitter.distributedlog.impl.federated.FederatedZKLogMetadataStore;
-import com.twitter.distributedlog.lock.SessionLockFactory;
-import com.twitter.distributedlog.lock.ZKSessionLockFactory;
-import com.twitter.distributedlog.logsegment.LogSegmentMetadataStore;
-import com.twitter.distributedlog.metadata.BKDLConfig;
-import com.twitter.distributedlog.metadata.LogMetadataStore;
-import com.twitter.distributedlog.namespace.DistributedLogNamespace;
-import com.twitter.distributedlog.stats.ReadAheadExceptionsLogger;
-import com.twitter.distributedlog.util.ConfUtils;
-import com.twitter.distributedlog.util.DLUtils;
-import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.distributedlog.util.LimitedPermitManager;
-import com.twitter.distributedlog.util.MonitoredScheduledThreadPoolExecutor;
-import com.twitter.distributedlog.util.OrderedScheduler;
-import com.twitter.distributedlog.util.PermitLimiter;
-import com.twitter.distributedlog.util.PermitManager;
-import com.twitter.distributedlog.util.SchedulerUtils;
-import com.twitter.distributedlog.util.SimplePermitLimiter;
-import com.twitter.distributedlog.util.Utils;
+import org.apache.distributedlog.DistributedLogManagerFactory.ClientSharingOption;
+import org.apache.distributedlog.acl.AccessControlManager;
+import org.apache.distributedlog.acl.DefaultAccessControlManager;
+import org.apache.distributedlog.acl.ZKAccessControlManager;
+import org.apache.distributedlog.bk.LedgerAllocator;
+import org.apache.distributedlog.bk.LedgerAllocatorUtils;
+import org.apache.distributedlog.callback.NamespaceListener;
+import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
+import org.apache.distributedlog.exceptions.DLInterruptedException;
+import org.apache.distributedlog.exceptions.InvalidStreamNameException;
+import org.apache.distributedlog.exceptions.LogNotFoundException;
+import org.apache.distributedlog.exceptions.ZKException;
+import org.apache.distributedlog.feature.CoreFeatureKeys;
+import org.apache.distributedlog.impl.ZKLogMetadataStore;
+import org.apache.distributedlog.impl.ZKLogSegmentMetadataStore;
+import org.apache.distributedlog.impl.federated.FederatedZKLogMetadataStore;
+import org.apache.distributedlog.lock.SessionLockFactory;
+import org.apache.distributedlog.lock.ZKSessionLockFactory;
+import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
+import org.apache.distributedlog.metadata.BKDLConfig;
+import org.apache.distributedlog.metadata.LogMetadataStore;
+import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.stats.ReadAheadExceptionsLogger;
+import org.apache.distributedlog.util.ConfUtils;
+import org.apache.distributedlog.util.DLUtils;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.LimitedPermitManager;
+import org.apache.distributedlog.util.MonitoredScheduledThreadPoolExecutor;
+import org.apache.distributedlog.util.OrderedScheduler;
+import org.apache.distributedlog.util.PermitLimiter;
+import org.apache.distributedlog.util.PermitManager;
+import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.util.SimplePermitLimiter;
+import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.SettableFeatureProvider;
@@ -84,7 +84,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static com.twitter.distributedlog.impl.BKDLUtils.*;
+import static org.apache.distributedlog.impl.BKDLUtils.*;
 
 /**
  * BKDistributedLogNamespace is the default implementation of {@link DistributedLogNamespace}. It uses
@@ -264,7 +264,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     private final HashedWheelTimer requestTimer;
     // zookeeper clients
     // NOTE: The actual zookeeper client is initialized lazily when it is referenced by
-    //       {@link com.twitter.distributedlog.ZooKeeperClient#get()}. So it is safe to
+    //       {@link org.apache.distributedlog.ZooKeeperClient#get()}. So it is safe to
     //       keep builders and their client wrappers here, as they will be used when
     //       instantiating readers or writers.
     private final ZooKeeperClientBuilder sharedWriterZKCBuilderForDL;
@@ -276,7 +276,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     private ZooKeeperClientBuilder sharedReaderZKCBuilderForBK = null;
     private ZooKeeperClient sharedReaderZKCForBK = null;
     // NOTE: The actual bookkeeper client is initialized lazily when it is referenced by
-    //       {@link com.twitter.distributedlog.BookKeeperClient#get()}. So it is safe to
+    //       {@link org.apache.distributedlog.BookKeeperClient#get()}. So it is safe to
     //       keep builders and their client wrappers here, as they will be used when
     //       instantiating readers or writers.
     private final BookKeeperClientBuilder sharedWriterBKCBuilder;
@@ -702,7 +702,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
      * @param nameOfLogStream
      *          name of log stream
      * @return distributedlog manager
-     * @throws com.twitter.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
+     * @throws org.apache.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
      * @throws IOException
      */
     public DistributedLogManager createDistributedLogManagerWithSharedClients(String nameOfLogStream)
@@ -718,7 +718,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
      * @param clientSharingOption
      *          specifies if the ZK/BK clients are shared
      * @return distributedlog manager instance.
-     * @throws com.twitter.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
+     * @throws org.apache.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
      * @throws IOException
      */
     public DistributedLogManager createDistributedLogManager(
@@ -749,7 +749,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
      * @param dynamicLogConfiguration
      *          dynamic stream configuration overrides.
      * @return distributedlog manager instance.
-     * @throws com.twitter.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
+     * @throws org.apache.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
      * @throws IOException
      */
     public DistributedLogManager createDistributedLogManager(

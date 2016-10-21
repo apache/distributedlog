@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -64,7 +64,7 @@ import org.slf4j.LoggerFactory;
  *
  * <code>EoS</code>(EndOfStream) is a special control record that would be written by a writer
  * to seal a log. After a <i>EoS</i> record is written to a log, no writers could append any record
- * after that and readers will get {@link com.twitter.distributedlog.exceptions.EndOfStreamException}
+ * after that and readers will get {@link org.apache.distributedlog.exceptions.EndOfStreamException}
  * when they reach EoS.
  * <p>TransactionID of EoS is <code>Long.MAX_VALUE</code>.
  *
@@ -322,7 +322,7 @@ public class LogRecord {
      * <p><code>EoS</code> mark is a special record that writer would
      * add to seal a log. after <code>Eos</code> mark is written,
      * writers can't write any more records and readers will get
-     * {@link com.twitter.distributedlog.exceptions.EndOfStreamException}
+     * {@link org.apache.distributedlog.exceptions.EndOfStreamException}
      * when they reach <code>EoS</code>.
      *
      * @return true

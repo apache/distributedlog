@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.selector;
+package org.apache.distributedlog.selector;
 
-import com.twitter.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.LogRecordWithDLSN;
 
 /**
  * Visitor interface to process a set of records, and return some result.

@@ -15,31 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.admin;
+package org.apache.distributedlog.admin;
 
 import com.google.common.base.Preconditions;
-import com.twitter.distributedlog.BookKeeperClient;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.DistributedLogManager;
-import com.twitter.distributedlog.LedgerHandleCache;
-import com.twitter.distributedlog.LogRecordWithDLSN;
-import com.twitter.distributedlog.LogSegmentMetadata;
-import com.twitter.distributedlog.ReadUtils;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.ZooKeeperClientBuilder;
-import com.twitter.distributedlog.acl.ZKAccessControl;
-import com.twitter.distributedlog.exceptions.DLIllegalStateException;
-import com.twitter.distributedlog.impl.federated.FederatedZKLogMetadataStore;
-import com.twitter.distributedlog.metadata.BKDLConfig;
-import com.twitter.distributedlog.metadata.DLMetadata;
-import com.twitter.distributedlog.metadata.DryrunLogSegmentMetadataStoreUpdater;
-import com.twitter.distributedlog.metadata.MetadataUpdater;
-import com.twitter.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
-import com.twitter.distributedlog.thrift.AccessControlEntry;
-import com.twitter.distributedlog.tools.DistributedLogTool;
-import com.twitter.distributedlog.util.DLUtils;
-import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.BookKeeperClient;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.LedgerHandleCache;
+import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.LogSegmentMetadata;
+import org.apache.distributedlog.ReadUtils;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.acl.ZKAccessControl;
+import org.apache.distributedlog.exceptions.DLIllegalStateException;
+import org.apache.distributedlog.impl.federated.FederatedZKLogMetadataStore;
+import org.apache.distributedlog.metadata.BKDLConfig;
+import org.apache.distributedlog.metadata.DLMetadata;
+import org.apache.distributedlog.metadata.DryrunLogSegmentMetadataStoreUpdater;
+import org.apache.distributedlog.metadata.MetadataUpdater;
+import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
+import org.apache.distributedlog.thrift.AccessControlEntry;
+import org.apache.distributedlog.tools.DistributedLogTool;
+import org.apache.distributedlog.util.DLUtils;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.SchedulerUtils;
 import com.twitter.util.Await;
 import com.twitter.util.Function;
 import com.twitter.util.Future;
@@ -94,7 +94,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
      *          is confirmation needed before executing actual action.
      * @throws IOException
      */
-    public static void fixInprogressSegmentWithLowerSequenceNumber(final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+    public static void fixInprogressSegmentWithLowerSequenceNumber(final org.apache.distributedlog.DistributedLogManagerFactory factory,
                                                                    final MetadataUpdater metadataUpdater,
                                                                    final String streamName,
                                                                    final boolean verbose,
@@ -192,7 +192,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     public static void checkAndRepairDLNamespace(final URI uri,
-                                                 final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+                                                 final org.apache.distributedlog.DistributedLogManagerFactory factory,
                                                  final MetadataUpdater metadataUpdater,
                                                  final ExecutorService executorService,
                                                  final BookKeeperClient bkc,
@@ -203,7 +203,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     public static void checkAndRepairDLNamespace(final URI uri,
-                                                 final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+                                                 final org.apache.distributedlog.DistributedLogManagerFactory factory,
                                                  final MetadataUpdater metadataUpdater,
                                                  final ExecutorService executorService,
                                                  final BookKeeperClient bkc,
@@ -246,7 +246,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     private static Map<String, StreamCandidate> checkStreams(
-            final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+            final org.apache.distributedlog.DistributedLogManagerFactory factory,
             final Collection<String> streams,
             final ExecutorService executorService,
             final BookKeeperClient bkc,
@@ -314,7 +314,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     private static StreamCandidate checkStream(
-            final com.twitter.distributedlog.DistributedLogManagerFactory factory,
+            final org.apache.distributedlog.DistributedLogManagerFactory factory,
             final String streamName,
             final ExecutorService executorService,
             final BookKeeperClient bkc,

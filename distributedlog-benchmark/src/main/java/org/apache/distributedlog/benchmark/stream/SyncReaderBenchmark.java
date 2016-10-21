@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.benchmark.stream;
+package org.apache.distributedlog.benchmark.stream;
 
 import com.google.common.base.Stopwatch;
-import com.twitter.distributedlog.DistributedLogManager;
-import com.twitter.distributedlog.LogReader;
-import com.twitter.distributedlog.LogRecord;
-import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.LogReader;
+import org.apache.distributedlog.LogRecord;
+import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Benchmark on {@link com.twitter.distributedlog.LogReader} reading from a stream
+ * Benchmark on {@link org.apache.distributedlog.LogReader} reading from a stream
  */
 public class SyncReaderBenchmark extends AbstractReaderBenchmark {
 

@@ -18,4 +18,4 @@
 /**
  * The BookKeeper Based DistributedLog Implementation.
  */
-package com.twitter.distributedlog.impl;
+package org.apache.distributedlog.impl;

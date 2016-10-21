@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.announcer;
+package org.apache.distributedlog.service.announcer;
 
 import java.io.IOException;
 

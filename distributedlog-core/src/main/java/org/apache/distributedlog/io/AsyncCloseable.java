@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.io;
+package org.apache.distributedlog.io;
 
-import com.twitter.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.FutureUtils;
 import com.twitter.util.Function;
 import com.twitter.util.Future;
 

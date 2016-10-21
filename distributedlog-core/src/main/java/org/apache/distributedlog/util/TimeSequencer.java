@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.util;
+package org.apache.distributedlog.util;
 
-import com.twitter.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.DistributedLogConstants;
 
 /**
  * Time based sequencer. It generated non-decreasing transaction id using milliseconds.

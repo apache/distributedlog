@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
-import com.twitter.distributedlog.exceptions.BKTransmitException;
-import com.twitter.distributedlog.io.Abortables;
-import com.twitter.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.exceptions.BKTransmitException;
+import org.apache.distributedlog.io.Abortables;
+import org.apache.distributedlog.util.FutureUtils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.proto.BookieServer;
 import org.apache.commons.logging.Log;

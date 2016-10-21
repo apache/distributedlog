@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.selector;
+package org.apache.distributedlog.selector;
 
-import com.twitter.distributedlog.DLMTestUtil;
-import com.twitter.distributedlog.DLSN;
+import org.apache.distributedlog.DLMTestUtil;
+import org.apache.distributedlog.DLSN;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

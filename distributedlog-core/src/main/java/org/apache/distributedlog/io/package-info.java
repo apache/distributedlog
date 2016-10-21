@@ -18,4 +18,4 @@
 /**
  * IO Utils for distributedlog
  */
-package com.twitter.distributedlog.io;
+package org.apache.distributedlog.io;

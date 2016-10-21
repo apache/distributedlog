@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service;
+package org.apache.distributedlog.service;
 
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.LogRecordSetBuffer;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.LogRecordSetBuffer;
 import com.twitter.util.Future;
 
 import java.nio.ByteBuffer;
@@ -38,7 +38,7 @@ public interface DistributedLogClient {
 
     /**
      * Write record set to a given <i>stream</i>.
-     * <p>The record set is built from {@link com.twitter.distributedlog.LogRecordSet.Writer}
+     * <p>The record set is built from {@link org.apache.distributedlog.LogRecordSet.Writer}
      *
      * @param stream stream to write to
      * @param recordSet record set

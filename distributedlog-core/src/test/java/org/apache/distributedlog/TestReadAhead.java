@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
-import com.twitter.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
-import com.twitter.distributedlog.util.Utils;
-import com.twitter.distributedlog.readahead.ReadAheadWorker;
+import org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
+import org.apache.distributedlog.util.Utils;
+import org.apache.distributedlog.readahead.ReadAheadWorker;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Future;

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.benchmark.utils;
+package org.apache.distributedlog.benchmark.utils;
 
 import com.google.common.util.concurrent.RateLimiter;
 

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.function;
+package org.apache.distributedlog.function;
 
 import scala.runtime.AbstractFunction1;
 

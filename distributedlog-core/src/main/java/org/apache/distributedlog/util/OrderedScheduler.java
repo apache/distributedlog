@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.util;
+package org.apache.distributedlog.util;
 
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.twitter.distributedlog.stats.BroadCastStatsLogger;
+import org.apache.distributedlog.stats.BroadCastStatsLogger;
 import com.twitter.util.ExecutorServiceFuturePool;
 import com.twitter.util.FuturePool;
 import com.twitter.util.Time;

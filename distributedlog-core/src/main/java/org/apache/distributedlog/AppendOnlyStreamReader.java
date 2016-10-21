@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.base.Preconditions;
 
@@ -143,7 +143,7 @@ public class AppendOnlyStreamReader extends InputStream {
      * Position the reader at the given offset. If we fail to skip to the desired position
      * and don't hit end of stream, return false.
      *
-     * @throws com.twitter.distributedlog.exceptions.EndOfStreamException if we attempt to
+     * @throws org.apache.distributedlog.exceptions.EndOfStreamException if we attempt to
      *         skip past the end of the stream.
      */
     public boolean skipTo(long position) throws IOException {

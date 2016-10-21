@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.stats;
+package org.apache.distributedlog.stats;
 
 import org.apache.bookkeeper.stats.StatsLogger;
 
@@ -23,11 +23,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Stats logger to log exceptions happened in {@link com.twitter.distributedlog.readahead.ReadAheadWorker}.
+ * Stats logger to log exceptions happened in {@link org.apache.distributedlog.readahead.ReadAheadWorker}.
  * They are counters of exceptions happened on each read ahead phase:
  * <code>`scope`/exceptions/`phase`/`code`</code>. `scope` is the current scope of
  * stats logger, `phase` is the read ahead phase, while `code` is the exception code. Check
- * {@link com.twitter.distributedlog.readahead.ReadAheadPhase} for details about phases and
+ * {@link org.apache.distributedlog.readahead.ReadAheadPhase} for details about phases and
  * {@link BKExceptionStatsLogger} for details about `code`.
  */
 public class ReadAheadExceptionsLogger {

@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.metadata;
+package org.apache.distributedlog.metadata;
 
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.logsegment.LogSegmentMetadataStore;
-import com.twitter.distributedlog.util.Transaction;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
+import org.apache.distributedlog.util.Transaction;
 import com.twitter.util.Future;
 
 public class DryrunLogSegmentMetadataStoreUpdater extends LogSegmentMetadataStoreUpdater {

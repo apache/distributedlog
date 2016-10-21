@@ -15,16 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import com.twitter.distributedlog.bk.QuorumConfig;
-import com.twitter.distributedlog.feature.DefaultFeatureProvider;
-import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import com.twitter.distributedlog.net.DNSResolverForRacks;
-import com.twitter.distributedlog.net.DNSResolverForRows;
+import org.apache.distributedlog.bk.QuorumConfig;
+import org.apache.distributedlog.feature.DefaultFeatureProvider;
+import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.net.DNSResolverForRacks;
+import org.apache.distributedlog.net.DNSResolverForRows;
 import org.apache.bookkeeper.conf.ClientConfiguration;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.net.DNSToSwitchMapping;
@@ -405,7 +405,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
     public static final String BKDL_DYNAMIC_CONFIG_RELOAD_INTERVAL_SEC = "dynamicConfigReloadIntervalSec";
     public static final int BKDL_DYNAMIC_CONFIG_RELOAD_INTERVAL_SEC_DEFAULT = 60;
     public static final String BKDL_STREAM_CONFIG_ROUTER_CLASS = "streamConfigRouterClass";
-    public static final String BKDL_STREAM_CONFIG_ROUTER_CLASS_DEFAULT = "com.twitter.distributedlog.service.config.IdentityConfigRouter";
+    public static final String BKDL_STREAM_CONFIG_ROUTER_CLASS_DEFAULT = "org.apache.distributedlog.service.config.IdentityConfigRouter";
 
     // Settings for RateLimit (used by distributedlog-service)
 
@@ -1331,7 +1331,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * <p>
      * The setting is only applied for v2 implementation.
      *
-     * @see com.twitter.distributedlog.util.MonitoredScheduledThreadPoolExecutor
+     * @see org.apache.distributedlog.util.MonitoredScheduledThreadPoolExecutor
      * @return number of resource release threads used by distributedlog namespace.
      */
     public int getNumResourceReleaseThreads() {
@@ -1405,7 +1405,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * Get DL ledger metadata output layout version.
      *
      * @return layout version
-     * @see com.twitter.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion
+     * @see org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion
      */
     public int getDLLedgerMetadataLayoutVersion() {
         return this.getInt(BKDL_LEDGER_METADATA_LAYOUT_VERSION,
@@ -1437,7 +1437,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * By default it is false.
      *
      * @return whether we should enforce the min ledger metadata version check
-     * @see com.twitter.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion
+     * @see org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion
      */
     public boolean getDLLedgerMetadataSkipMinVersionCheck() {
         return this.getBoolean(BKDL_LEDGER_METADATA_SKIP_MIN_VERSION_CHECK,
@@ -1538,7 +1538,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
     /**
      * Whether sanity check txn id on starting log segments.
      * <p>If it is enabled, DL writer would throw
-     * {@link com.twitter.distributedlog.exceptions.TransactionIdOutOfOrderException}
+     * {@link org.apache.distributedlog.exceptions.TransactionIdOutOfOrderException}
      * when it received a smaller transaction id than current maximum transaction id.
      *
      * @return true if should check txn id with max txn id, otherwise false.
@@ -1692,7 +1692,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * The compression type to use while sending data to bookkeeper.
      *
      * @return compression type to use
-     * @see com.twitter.distributedlog.io.CompressionCodec
+     * @see org.apache.distributedlog.io.CompressionCodec
      */
     public String getCompressionType() {
         return getString(BKDL_COMPRESSION_TYPE, BKDL_COMPRESSION_TYPE_DEFAULT);
@@ -1928,7 +1928,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * <p>It is disabled by default.
      *
      * @return whether truncation managed explicitly by the application
-     * @see com.twitter.distributedlog.LogSegmentMetadata.TruncationStatus
+     * @see org.apache.distributedlog.LogSegmentMetadata.TruncationStatus
      */
     public boolean getExplicitTruncationByApplication() {
         return getBoolean(BKDL_EXPLICIT_TRUNCATION_BY_APPLICATION,

@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.util;
+package org.apache.distributedlog.util;
 
 import com.google.common.collect.Lists;
-import com.twitter.distributedlog.DLMTestUtil;
-import com.twitter.distributedlog.LogSegmentMetadata;
-import com.twitter.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
-import com.twitter.distributedlog.exceptions.UnexpectedException;
+import org.apache.distributedlog.DLMTestUtil;
+import org.apache.distributedlog.LogSegmentMetadata;
+import org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
+import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.junit.Test;
 
 import java.util.List;

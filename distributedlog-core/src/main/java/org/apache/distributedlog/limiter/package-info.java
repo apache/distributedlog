@@ -18,4 +18,4 @@
 /**
  * Rate limiting for distributedlog
  */
-package com.twitter.distributedlog.limiter;
+package org.apache.distributedlog.limiter;

@@ -15,16 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.namespace;
+package org.apache.distributedlog.namespace;
 
-import com.twitter.distributedlog.BKDistributedLogNamespace;
-import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.TestDistributedLogBase;
+import org.apache.distributedlog.BKDistributedLogNamespace;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.TestDistributedLogBase;
 import org.junit.Test;
 
 import java.net.URI;
 
-import static com.twitter.distributedlog.LocalDLMEmulator.DLOG_NAMESPACE;
+import static org.apache.distributedlog.LocalDLMEmulator.DLOG_NAMESPACE;
 import static org.junit.Assert.assertTrue;
 
 /**

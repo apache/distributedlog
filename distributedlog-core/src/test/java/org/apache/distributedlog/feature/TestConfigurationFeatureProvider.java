@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.feature;
+package org.apache.distributedlog.feature;
 
-import com.twitter.distributedlog.config.ConcurrentBaseConfiguration;
+import org.apache.distributedlog.config.ConcurrentBaseConfiguration;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.SettableFeature;
 import org.junit.Test;

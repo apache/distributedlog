@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.config;
+package org.apache.distributedlog.service.config;
 
 import com.google.common.base.Optional;
 
-import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
+import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

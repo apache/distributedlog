@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.injector;
+package org.apache.distributedlog.injector;
 
 /**
  * Failure Injector that works in asynchronous way

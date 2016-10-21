@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
-import com.twitter.distributedlog.ZooKeeperClient.Credentials;
-import com.twitter.distributedlog.ZooKeeperClient.DigestCredentials;
-import com.twitter.distributedlog.annotations.DistributedLogAnnotations;
+import org.apache.distributedlog.ZooKeeperClient.Credentials;
+import org.apache.distributedlog.ZooKeeperClient.DigestCredentials;
+import org.apache.distributedlog.annotations.DistributedLogAnnotations;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.zookeeper.BoundExponentialBackoffRetryPolicy;
 import org.apache.zookeeper.CreateMode;
@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 /**
- * Test Cases for {@link com.twitter.distributedlog.ZooKeeperClient}
+ * Test Cases for {@link org.apache.distributedlog.ZooKeeperClient}
  */
 public class TestZooKeeperClient extends ZooKeeperClusterTestCase {
     static final Logger LOG = LoggerFactory.getLogger(TestZooKeeperClient.class);

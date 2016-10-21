@@ -26,8 +26,8 @@
  * <p>
  * Available dns resolvers:
  * <ul>
- * <li>{@link com.twitter.distributedlog.net.DNSResolverForRacks}
- * <li>{@link com.twitter.distributedlog.net.DNSResolverForRows}
+ * <li>{@link org.apache.distributedlog.net.DNSResolverForRacks}
+ * <li>{@link org.apache.distributedlog.net.DNSResolverForRows}
  * </ul>
  */
-package com.twitter.distributedlog.net;
+package org.apache.distributedlog.net;

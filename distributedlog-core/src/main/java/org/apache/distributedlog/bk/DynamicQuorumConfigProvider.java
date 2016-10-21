@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.bk;
+package org.apache.distributedlog.bk;
 
-import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
+import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 
 /**
  * Provider returns quorum configs based on dynamic configuration.

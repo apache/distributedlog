@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service;
+package org.apache.distributedlog.service;
 
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.twitter.distributedlog.util.CommandLineUtils.*;
+import static org.apache.distributedlog.util.CommandLineUtils.*;
 
 public class MonitorServiceApp {
 

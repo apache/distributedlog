@@ -171,8 +171,8 @@ Tailing the stream using `TailReader` to wait for new records.
 ::
 
         // Tailing Stream `basic-stream-1`
-        // runner run com.twitter.distributedlog.basic.TailReader ${distributedlog-uri} ${stream}
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.TailReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
+        // runner run org.apache.distributedlog.basic.TailReader ${distributedlog-uri} ${stream}
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.TailReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
 
 
 Write records
@@ -183,8 +183,8 @@ Run the example to write records to the stream in a console.
 ::
 
         // Write Records into Stream `basic-stream-1`
-        // runner run com.twitter.distributedlog.basic.ConsoleWriter ${distributedlog-uri} ${stream}
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.ConsoleWriter distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
+        // runner run org.apache.distributedlog.basic.ConsoleWriter ${distributedlog-uri} ${stream}
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.ConsoleWriter distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
 
 
 Check the results
@@ -218,9 +218,9 @@ Open another terminal to run `ConsoleWriter`. It would fail with `OwnershipAcqui
 ::
 
         Opening log stream basic-stream-1
-        Exception in thread "main" com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException: LockPath - /messaging/distributedlog/basic-stream-1/<default>/lock: Lock acquisition failed, the current owner is console-writer
-            at com.twitter.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:570)
-            at com.twitter.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:567)
+        Exception in thread "main" org.apache.distributedlog.exceptions.OwnershipAcquireFailedException: LockPath - /messaging/distributedlog/basic-stream-1/<default>/lock: Lock acquisition failed, the current owner is console-writer
+            at org.apache.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:570)
+            at org.apache.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:567)
             at com.twitter.util.Future$$anonfun$map$1$$anonfun$apply$8.apply(Future.scala:1041)
             at com.twitter.util.Try$.apply(Try.scala:13)
             at com.twitter.util.Future$.apply(Future.scala:132)
@@ -239,7 +239,7 @@ Open another terminal to run `ConsoleWriter`. It would fail with `OwnershipAcqui
             at com.twitter.util.Promise.updateIfEmpty(Promise.scala:716)
             at com.twitter.util.Promise.update(Promise.scala:694)
             at com.twitter.util.Promise.setValue(Promise.scala:670)
-            at com.twitter.distributedlog.lock.ZKSessionLock$9.safeRun(ZKSessionLock.java:622)
+            at org.apache.distributedlog.lock.ZKSessionLock$9.safeRun(ZKSessionLock.java:622)
             at org.apache.bookkeeper.util.SafeRunnable.run(SafeRunnable.java:31)
             at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
             at java.util.concurrent.FutureTask.run(FutureTask.java:262)

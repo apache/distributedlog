@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 
-import com.twitter.distributedlog.exceptions.BKTransmitException;
+import org.apache.distributedlog.exceptions.BKTransmitException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-import com.twitter.distributedlog.exceptions.EndOfStreamException;
-import com.twitter.distributedlog.exceptions.WriteException;
-import com.twitter.distributedlog.util.FailpointUtils;
+import org.apache.distributedlog.exceptions.EndOfStreamException;
+import org.apache.distributedlog.exceptions.WriteException;
+import org.apache.distributedlog.util.FailpointUtils;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Future;

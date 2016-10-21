@@ -15,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.lock;
+package org.apache.distributedlog.lock;
 
-import com.twitter.distributedlog.DLMTestUtil;
-import com.twitter.distributedlog.exceptions.LockingException;
-import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.ZooKeeperClientBuilder;
-import com.twitter.distributedlog.ZooKeeperClientUtils;
-import com.twitter.distributedlog.ZooKeeperClusterTestCase;
-import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
-import com.twitter.distributedlog.lock.ZKSessionLock.State;
-import com.twitter.distributedlog.util.FailpointUtils;
-import com.twitter.distributedlog.util.OrderedScheduler;
+import org.apache.distributedlog.DLMTestUtil;
+import org.apache.distributedlog.exceptions.LockingException;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.ZooKeeperClientUtils;
+import org.apache.distributedlog.ZooKeeperClusterTestCase;
+import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
+import org.apache.distributedlog.lock.ZKSessionLock.State;
+import org.apache.distributedlog.util.FailpointUtils;
+import org.apache.distributedlog.util.OrderedScheduler;
 import com.twitter.util.Await;
 import com.twitter.util.Promise;
 import org.apache.bookkeeper.stats.NullStatsLogger;
@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.twitter.distributedlog.lock.ZKSessionLock.*;
+import static org.apache.distributedlog.lock.ZKSessionLock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

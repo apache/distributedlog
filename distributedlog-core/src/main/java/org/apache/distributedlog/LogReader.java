@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
-import com.twitter.distributedlog.io.AsyncCloseable;
+import org.apache.distributedlog.io.AsyncCloseable;
 
 import java.io.Closeable;
 import java.io.IOException;

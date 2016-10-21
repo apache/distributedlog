@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client;
+package org.apache.distributedlog.client;
 
 import com.google.common.base.Preconditions;
 

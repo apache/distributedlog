@@ -18,4 +18,4 @@
 /**
  * Callbacks for distributedlog operations.
  */
-package com.twitter.distributedlog.callback;
+package org.apache.distributedlog.callback;

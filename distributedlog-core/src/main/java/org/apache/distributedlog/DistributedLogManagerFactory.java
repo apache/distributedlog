@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import com.google.common.base.Optional;
-import com.twitter.distributedlog.acl.AccessControlManager;
-import com.twitter.distributedlog.callback.NamespaceListener;
-import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
-import com.twitter.distributedlog.exceptions.InvalidStreamNameException;
-import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.acl.AccessControlManager;
+import org.apache.distributedlog.callback.NamespaceListener;
+import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
+import org.apache.distributedlog.exceptions.InvalidStreamNameException;
+import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -93,7 +93,7 @@ public class DistributedLogManagerFactory {
      * @param nameOfLogStream
      *          name of log stream
      * @return distributedlog manager
-     * @throws com.twitter.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
+     * @throws org.apache.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
      * @throws IOException
      */
     public DistributedLogManager createDistributedLogManagerWithSharedClients(String nameOfLogStream)
@@ -109,7 +109,7 @@ public class DistributedLogManagerFactory {
      * @param clientSharingOption
      *          specifies if the ZK/BK clients are shared
      * @return distributedlog manager instance.
-     * @throws com.twitter.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
+     * @throws org.apache.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
      * @throws IOException
      */
     public DistributedLogManager createDistributedLogManager(
@@ -140,7 +140,7 @@ public class DistributedLogManagerFactory {
      * @param dynamicStreamConfiguration
      *          dynamic stream configuration overrides.
      * @return distributedlog manager instance.
-     * @throws com.twitter.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
+     * @throws org.apache.distributedlog.exceptions.InvalidStreamNameException if stream name is invalid
      * @throws IOException
      */
     public DistributedLogManager createDistributedLogManager(

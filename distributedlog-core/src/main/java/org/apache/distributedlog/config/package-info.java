@@ -18,4 +18,4 @@
 /**
  * DistributedLog Configuration
  */
-package com.twitter.distributedlog.config;
+package org.apache.distributedlog.config;

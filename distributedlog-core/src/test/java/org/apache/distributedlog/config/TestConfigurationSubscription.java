@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.config;
+package org.apache.distributedlog.config;
 
 import com.google.common.collect.Lists;
-import com.twitter.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.jmock.lib.concurrent.DeterministicScheduler;
@@ -63,7 +63,7 @@ public class TestConfigurationSubscription {
         ConfigurationSubscription confSub =
                 new ConfigurationSubscription(conf, fileConfigBuilders, executorService, 100, TimeUnit.MILLISECONDS);
         final AtomicReference<ConcurrentBaseConfiguration> confHolder = new AtomicReference<>();
-        confSub.registerListener(new com.twitter.distributedlog.config.ConfigurationListener() {
+        confSub.registerListener(new org.apache.distributedlog.config.ConfigurationListener() {
             @Override
             public void onReload(ConcurrentBaseConfiguration conf) {
                 confHolder.set(conf);

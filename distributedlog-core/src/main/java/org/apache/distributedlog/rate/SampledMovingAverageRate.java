@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.rate;
+package org.apache.distributedlog.rate;
 
 import com.twitter.common.stats.Rate;
 import com.twitter.util.TimerTask;

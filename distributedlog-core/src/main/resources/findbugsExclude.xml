@@ -22,18 +22,18 @@
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.Entry$Builder" />
+    <Class name="org.apache.distributedlog.Entry$Builder" />
     <Method name="setData" />
     <Bug pattern="EI_EXPOSE_REP2" />
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
-    <Class name="com.twitter.distributedlog.Entry" />
+    <Class name="org.apache.distributedlog.Entry" />
     <Method name="getRawData" />
     <Bug pattern="EI_EXPOSE_REP" />
   </Match>
   <Match>
-    <Class name="com.twitter.distributedlog.BKAsyncLogReaderDLSN" />
+    <Class name="org.apache.distributedlog.BKAsyncLogReaderDLSN" />
     <Method name="run" />
     <Bug pattern="JLM_JSR166_UTILCONCURRENT_MONITORENTER" />
   </Match>

@@ -18,4 +18,4 @@
 /**
  * Metadata management for distributedlog.
  */
-package com.twitter.distributedlog.metadata;
+package org.apache.distributedlog.metadata;

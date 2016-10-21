@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.mapreduce;
+package org.apache.distributedlog.mapreduce;
 
 import com.google.common.collect.Sets;
-import com.twitter.distributedlog.LogSegmentMetadata;
+import org.apache.distributedlog.LogSegmentMetadata;
 import org.apache.bookkeeper.client.LedgerMetadata;
 import org.apache.bookkeeper.net.BookieSocketAddress;
 import org.apache.bookkeeper.versioning.Version;

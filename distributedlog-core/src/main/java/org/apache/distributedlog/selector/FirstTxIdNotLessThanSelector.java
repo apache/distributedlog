@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.selector;
+package org.apache.distributedlog.selector;
 
-import com.twitter.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.LogRecordWithDLSN;
 
 /**
  * Save the first record with transaction id not less than the provided transaction id.

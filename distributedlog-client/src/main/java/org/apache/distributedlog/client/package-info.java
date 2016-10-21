@@ -18,4 +18,4 @@
 /**
  * DistributedLog Client
  */
-package com.twitter.distributedlog.client;
+package org.apache.distributedlog.client;

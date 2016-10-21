@@ -18,4 +18,4 @@
 /**
  * Log Segment Management
  */
-package com.twitter.distributedlog.logsegment;
+package org.apache.distributedlog.logsegment;

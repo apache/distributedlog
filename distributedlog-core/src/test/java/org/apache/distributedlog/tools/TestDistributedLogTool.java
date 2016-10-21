@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.tools;
+package org.apache.distributedlog.tools;
 
 import java.net.URI;
 
-import com.twitter.distributedlog.DLMTestUtil;
-import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.DistributedLogManager;
-import com.twitter.distributedlog.TestDistributedLogBase;
-import com.twitter.distributedlog.LocalDLMEmulator;
-import com.twitter.distributedlog.LogRecordWithDLSN;
-import com.twitter.distributedlog.LogReader;
-import com.twitter.distributedlog.exceptions.ZKException;
-import com.twitter.distributedlog.tools.DistributedLogTool.*;
+import org.apache.distributedlog.DLMTestUtil;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.TestDistributedLogBase;
+import org.apache.distributedlog.LocalDLMEmulator;
+import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.LogReader;
+import org.apache.distributedlog.exceptions.ZKException;
+import org.apache.distributedlog.tools.DistributedLogTool.*;
 import org.apache.bookkeeper.client.BKException.BKNoSuchLedgerExistsException;
 import org.apache.bookkeeper.util.ReflectionUtils;
 import org.apache.zookeeper.KeeperException;
@@ -48,7 +48,7 @@ public class TestDistributedLogTool extends TestDistributedLogBase {
     static final String defaultPrivilegedZkAclId = "NathanielP";
     static URI defaultUri = null;
 
-    static final String ADMIN_TOOL = com.twitter.distributedlog.admin.DistributedLogAdmin.class.getName();
+    static final String ADMIN_TOOL = org.apache.distributedlog.admin.DistributedLogAdmin.class.getName();
 
     @BeforeClass
     public static void setupDefaults() throws Exception {

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.messaging;
+package org.apache.distributedlog.messaging;
 
 public class IdenticalTransformer<T> implements Transformer<T, T> {
     @Override

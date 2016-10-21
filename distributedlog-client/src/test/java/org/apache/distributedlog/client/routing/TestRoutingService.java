@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.routing;
+package org.apache.distributedlog.client.routing;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
+import org.apache.distributedlog.client.resolver.DefaultRegionResolver;
 import com.twitter.finagle.Address;
 import com.twitter.finagle.Addresses;
 import com.twitter.finagle.addr.WeightedAddress;

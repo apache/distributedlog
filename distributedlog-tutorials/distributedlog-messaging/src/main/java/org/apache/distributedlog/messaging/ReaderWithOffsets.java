@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.messaging;
+package org.apache.distributedlog.messaging;
 
-import com.twitter.distributedlog.*;
-import com.twitter.distributedlog.namespace.DistributedLogNamespace;
-import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import com.twitter.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.*;
+import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.util.FutureUtils;
 import com.twitter.util.Duration;
 import com.twitter.util.FutureEventListener;
 import org.iq80.leveldb.DB;

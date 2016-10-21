@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.impl.metadata;
+package org.apache.distributedlog.impl.metadata;
 
-import com.twitter.distributedlog.DLMTestUtil;
+import org.apache.distributedlog.DLMTestUtil;
 import org.junit.Test;
 
 import java.net.URI;
 
-import static com.twitter.distributedlog.impl.metadata.ZKLogMetadata.*;
+import static org.apache.distributedlog.impl.metadata.ZKLogMetadata.*;
 import static org.junit.Assert.*;
 
 public class TestZKLogMetadata {

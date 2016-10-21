@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
+package org.apache.distributedlog;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -25,7 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-import com.twitter.distributedlog.exceptions.EndOfStreamException;
+import org.apache.distributedlog.exceptions.EndOfStreamException;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 
