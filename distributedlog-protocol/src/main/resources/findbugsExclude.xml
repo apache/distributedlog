@@ -18,7 +18,7 @@
 <FindBugsFilter>
   <Match>
     <!-- generated code, we can't be held responsible for findbugs in it //-->
-    <Class name="~com\.twitter\.distributedlog\.thrift.*" />
+    <Class name="~org\.apache\.distributedlog\.thrift.*" />
   </Match>
   <Match>
     <!-- it is safe to store external bytes reference here. //-->
