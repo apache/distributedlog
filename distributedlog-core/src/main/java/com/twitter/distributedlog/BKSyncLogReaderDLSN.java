@@ -51,7 +51,7 @@ class BKSyncLogReaderDLSN implements LogReader, Runnable, FutureEventListener<Lo
     private Promise<Void> closeFuture;
     private final Optional<Long> startTransactionId;
     private final DLSN startDLSN;
-    private DLSN lastSeenDLSN = DLSN.InvalidDLSN;
+    private volatile DLSN lastSeenDLSN = DLSN.InvalidDLSN;
     // lock on variables that would be accessed by both background threads and foreground threads
     private final Object sharedLock = new Object();
 
@@ -101,12 +101,6 @@ class BKSyncLogReaderDLSN implements LogReader, Runnable, FutureEventListener<Lo
         }
     }
 
-    private synchronized void setLastSeenDLSN(DLSN dlsn) {
-        synchronized (sharedLock) {
-            this.lastSeenDLSN = dlsn;
-        }
-    }
-
     // Background Read Future Listener
 
     @Override
@@ -116,7 +110,7 @@ class BKSyncLogReaderDLSN implements LogReader, Runnable, FutureEventListener<Lo
 
     @Override
     public void onSuccess(LogRecordWithDLSN record) {
-        setLastSeenDLSN(record.getDlsn());
+        this.lastSeenDLSN = record.getDlsn();
         if (!startTransactionId.isPresent() || record.getTransactionId() >= startTransactionId.get()) {
             readAheadRecords.add(record);
         }
