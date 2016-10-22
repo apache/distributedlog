@@ -20,14 +20,8 @@ matrix:
     - os: linux
       jdk: oraclejdk8
       env: SCALA_VERSION="2.10"
-    - os: osx
-      osx_image: xcode8
-      env: SCALA_VERSION="2.10"
     - os: linux
       jdk: oraclejdk8
-      env: SCALA_VERSION="2.11"
-    - os: osx
-      osx_image: xcode8
       env: SCALA_VERSION="2.11"
 
 before_install:
@@ -39,7 +33,7 @@ install:
 script:
   - travis_retry ./scripts/change-scala-version.sh $SCALA_VERSION
   - travis_retry mvn clean apache-rat:check
-  - travis_wait 60 mvn package
+  - travis_wait 60 mvn package findbugs:check
 
 cache:
   directories:
