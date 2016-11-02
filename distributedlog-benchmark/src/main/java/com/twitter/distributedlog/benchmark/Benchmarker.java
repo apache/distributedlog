@@ -79,6 +79,8 @@ public class Benchmarker {
     int sendBufferSize = 1024 * 1024;
     int recvBufferSize = 1024 * 1024;
     boolean enableBatching = false;
+    int batchBufferSize = 256 * 1024;
+    int batchFlushIntervalMicros = 2000;
 
     final DistributedLogConfiguration conf = new DistributedLogConfiguration();
     final StatsReceiver statsReceiver = new OstrichStatsReceiver();
@@ -116,7 +118,9 @@ public class Benchmarker {
         options.addOption("rfh", "read-from-head", false, "Read from head of the stream");
         options.addOption("sb", "send-buffer", true, "Channel send buffer size, in bytes");
         options.addOption("rb", "recv-buffer", true, "Channel recv buffer size, in bytes");
-        options.addOption("bt", "enable-batch", true, "Enable batching on writers");
+        options.addOption("bt", "enable-batch", false, "Enable batching on writers");
+        options.addOption("bbs", "batch-buffer-size", true, "The batch buffer size in bytes");
+        options.addOption("bfi", "batch-flush-interval", true, "The batch buffer flush interval in micros");
         options.addOption("h", "help", false, "Print usage.");
     }
 
@@ -217,6 +221,12 @@ public class Benchmarker {
         handshakeWithClientInfo = cmdline.hasOption("hsci");
         readFromHead = cmdline.hasOption("rfh");
         enableBatching = cmdline.hasOption("bt");
+        if (cmdline.hasOption("bbs")) {
+            batchBufferSize = Integer.parseInt(cmdline.getOptionValue("bbs"));
+        }
+        if (cmdline.hasOption("bfi")) {
+            batchFlushIntervalMicros = Integer.parseInt(cmdline.getOptionValue("bfi"));
+        }
 
         Preconditions.checkArgument(shardId >= 0, "shardId must be >= 0");
         Preconditions.checkArgument(numStreams > 0, "numStreams must be > 0");
@@ -265,8 +275,8 @@ public class Benchmarker {
     }
 
     Worker runWriter() {
-        Preconditions.checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty(),
-                "either serverset paths or finagle-names required");
+        Preconditions.checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty() || null != dlUri,
+                "either serverset paths, finagle-names or uri required");
         Preconditions.checkArgument(msgSize > 0, "messagesize must be greater than 0");
         Preconditions.checkArgument(rate > 0, "rate must be greater than 0");
         Preconditions.checkArgument(maxRate >= rate, "max rate must be greater than rate");
@@ -278,6 +288,7 @@ public class Benchmarker {
                 new ShiftableRateLimiter(rate, maxRate, changeRate, changeRateSeconds, TimeUnit.SECONDS);
         return createWriteWorker(
                 streamPrefix,
+                dlUri,
                 null == startStreamId ? shardId * numStreams : startStreamId,
                 null == endStreamId ? (shardId + 1) * numStreams : endStreamId,
                 rateLimiter,
@@ -294,11 +305,14 @@ public class Benchmarker {
                 handshakeWithClientInfo,
                 sendBufferSize,
                 recvBufferSize,
-                enableBatching);
+                enableBatching,
+                batchBufferSize,
+                batchFlushIntervalMicros);
     }
 
     protected WriterWorker createWriteWorker(
             String streamPrefix,
+            URI uri,
             int startStreamId,
             int endStreamId,
             ShiftableRateLimiter rateLimiter,
@@ -315,9 +329,12 @@ public class Benchmarker {
             boolean handshakeWithClientInfo,
             int sendBufferSize,
             int recvBufferSize,
-            boolean enableBatching) {
+            boolean enableBatching,
+            int batchBufferSize,
+            int batchFlushIntervalMicros) {
         return new WriterWorker(
                 streamPrefix,
+                uri,
                 startStreamId,
                 endStreamId,
                 rateLimiter,
@@ -334,7 +351,9 @@ public class Benchmarker {
                 handshakeWithClientInfo,
                 sendBufferSize,
                 recvBufferSize,
-                enableBatching);
+                enableBatching,
+                batchBufferSize,
+                batchFlushIntervalMicros);
     }
 
     Worker runDLWriter() throws IOException {
@@ -360,8 +379,8 @@ public class Benchmarker {
     }
 
     Worker runReader() throws IOException {
-        Preconditions.checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty(),
-                "either serverset paths or finagle-names required");
+        Preconditions.checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty() || null != dlUri,
+                "either serverset paths, finagle-names or dlUri required");
         Preconditions.checkArgument(concurrency > 0, "concurrency must be greater than 0");
         Preconditions.checkArgument(truncationInterval > 0, "truncation interval should be greater than 0");
         return runReaderInternal(serversetPaths, finagleNames, truncationInterval);

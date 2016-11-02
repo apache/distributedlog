@@ -21,11 +21,14 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 import com.twitter.distributedlog.DistributedLogConfiguration;
+import com.twitter.distributedlog.TestZooKeeperClientBuilder;
+import com.twitter.distributedlog.annotations.DistributedLogAnnotations;
 import com.twitter.distributedlog.util.Utils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +41,6 @@ import com.twitter.distributedlog.LogRecord;
 import com.twitter.distributedlog.LogRecordWithDLSN;
 import com.twitter.distributedlog.TestDistributedLogBase;
 import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.ZooKeeperClientBuilder;
 import com.twitter.distributedlog.metadata.DryrunLogSegmentMetadataStoreUpdater;
 import com.twitter.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
 import com.twitter.util.Await;
@@ -56,11 +58,9 @@ public class TestDistributedLogAdmin extends TestDistributedLogBase {
 
     @Before
     public void setup() throws Exception {
-        zooKeeperClient = ZooKeeperClientBuilder
+        zooKeeperClient = TestZooKeeperClientBuilder
             .newBuilder()
             .uri(createDLMURI("/"))
-            .sessionTimeoutMs(10000)
-            .zkAclId(null)
             .build();
         conf.setTraceReadAheadMetadataChanges(true);
     }
@@ -70,7 +70,11 @@ public class TestDistributedLogAdmin extends TestDistributedLogBase {
         zooKeeperClient.close();
     }
 
-
+    /**
+     * {@link https://issues.apache.org/jira/browse/DL-44}
+     */
+    @DistributedLogAnnotations.FlakyTest
+    @Ignore
     @Test(timeout = 60000)
     @SuppressWarnings("deprecation")
     public void testChangeSequenceNumber() throws Exception {
