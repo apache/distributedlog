@@ -139,7 +139,7 @@ def clean_up():
     print('Restoring head pointer to {0}'.format(original_head))
     run_cmd(['git', 'checkout', original_head])
 
-  branches = run_cmd(['git', 'branch']).rstrip().split('\n')
+  branches = run_cmd(['git', 'branch']).strip().split('\n')
 
   for branch in filter(lambda x: x.startswith(TEMP_BRANCH_PREFIX), branches):
     print('Deleting local branch {0}'.format(branch))
@@ -431,7 +431,19 @@ def get_reviewers(pr_num):
   reviewers_emails = []
   for reviewer_id in reviewers_ids:
     user = get_json('{0}/users/{1}'.format(GITHUB_API_URL, reviewer_id))
-    reviewers_emails += ['{0} <{1}>'.format(user['name'].strip(), user['email'].strip())]
+    username = None
+    useremail = None
+    if user['email'] is not None:
+        useremail = user['email'].strip()
+    else:
+        useremail = None
+    if user['name'] is not None:
+        username = user['name'].strip()
+    else:
+        username = useremail
+    if username is None:
+        continue
+    reviewers_emails += ['{0} <{1}>'.format(username, useremail)]
   return ', '.join(reviewers_emails)
 
 
@@ -494,7 +506,7 @@ def main():
   if modified_title != commit_title:
     print 'I\'ve re-written the title as follows to match the standard format:'
     print 'Original: {0}'.format(commit_title)
-    print 'Modified: {1}'.format(modified_title)
+    print 'Modified: {0}'.format(modified_title)
     result = raw_input('Would you like to use the modified title? (y/n): ')
     if result.lower() == 'y':
       commit_title = modified_title

@@ -17,20 +17,16 @@ language: java
 
 matrix:
   include:
-    - os: linux
-      jdk: oraclejdk8
     - os: osx
       osx_image: xcode8
 
 before_install:
   - echo "MAVEN_OPTS='-Xmx3072m -XX:MaxPermSize=512m'" > ~/.mavenrc
 
-install:
-  - travis_retry mvn -B install clean -U -DskipTests=true
-
 script:
   - travis_retry mvn clean apache-rat:check
-  - travis_wait 60 mvn package
+  - travis_retry mvn clean install findbugs:check -DskipTests=true
+  - travis_wait 60 mvn package cobertura:cobertura coveralls:report
 
 cache:
   directories:

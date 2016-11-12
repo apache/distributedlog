@@ -81,7 +81,6 @@
     <module>distributedlog-client</module>
     <module>distributedlog-service</module>
     <module>distributedlog-benchmark</module>
-    <module>distributedlog-example</module>
     <module>distributedlog-tutorials</module>
   </modules>
   <properties>
@@ -132,7 +131,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>2.5.2</version>
+        <version>3.0.3</version>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -174,6 +173,7 @@
         <configuration>
           <excludes>
             <exclude>docs/**/*</exclude>
+            <exclude>website/**/*</exclude>
             <exclude>.git/**/*</exclude>
             <exclude>.gitignore</exclude>
             <exclude>.idea/**/*</exclude>
@@ -188,6 +188,12 @@
             <exclude>**/**.md</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <!-- Report jacoco coverage to coveralls.io -->
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <version>4.1.0</version>
       </plugin>
     </plugins>
   </build>

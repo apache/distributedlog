@@ -26,4 +26,10 @@
     <Method name="onFailure" />
     <Bug pattern="BC_UNCONFIRMED_CAST" />
   </Match>
+  <Match>
+    <!-- it is safe to cast exception here. //-->
+    <Class name="com.twitter.distributedlog.service.stream.BulkWriteOp" />
+    <Method name="isDefiniteFailure" />
+    <Bug pattern="BC_IMPOSSIBLE_INSTANCEOF" />
+  </Match>
 </FindBugsFilter>
