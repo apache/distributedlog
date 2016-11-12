@@ -28,7 +28,6 @@ struct BKDLConfigFormat {
     8: optional string aclRootPath
     9: optional i64 firstLogSegmentSeqNo
     10: optional bool federatedNamespace
-    11: optional string namespaceResolverClassName
 }
 
 struct AccessControlEntry {

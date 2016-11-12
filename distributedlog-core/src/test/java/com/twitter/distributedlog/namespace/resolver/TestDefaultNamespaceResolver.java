@@ -34,9 +34,29 @@ public class TestDefaultNamespaceResolver {
     }
 
     @Test(timeout = 10000, expected = InvalidStreamNameException.class)
-    public void testValidateBadStreamName() throws Exception {
-        String streamName = "/test-bad-stream-name";
+    public void testValidateBadStreamName0() throws Exception {
+        String streamName = "  test-bad-stream-name";
         DefaultNamespaceResolver.INSTANCE.validateStreamName(streamName);
+    }
+
+    @Test(timeout = 10000, expected = InvalidStreamNameException.class)
+    public void testValidateBadStreamName1() throws Exception {
+        String streamName = "test-bad-stream-name/";
+        DefaultNamespaceResolver.INSTANCE.validateStreamName(streamName);
+    }
+
+    @Test(timeout = 10000, expected = InvalidStreamNameException.class)
+    public void testValidateBadStreamName2() throws Exception {
+        String streamName = "../test-bad-stream-name/";
+        DefaultNamespaceResolver.INSTANCE.validateStreamName(streamName);
+    }
+
+    @Test(timeout = 10000)
+    public void testResolveSameStreamPath() {
+        String streamName1 = "/test-resolve-stream";
+        String streamName2 = "test-resolve-stream";
+        assertEquals(streamName2, DefaultNamespaceResolver.INSTANCE.resolveStreamPath(streamName1));
+        assertEquals(streamName2, DefaultNamespaceResolver.INSTANCE.resolveStreamPath(streamName2));
     }
 
 }

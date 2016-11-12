@@ -336,9 +336,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         this.bkdlConfig = bkdlConfig;
 
         // Build the namespace resolver
-        this.nsResolver = ReflectionUtils.newInstance(
-                bkdlConfig.getNamespaceResolverClass().or(DefaultNamespaceResolver.class.getName()),
-                NamespaceResolver.class);
+        this.nsResolver = new DefaultNamespaceResolver();
 
         // Build resources
         StatsLogger schedulerStatsLogger = statsLogger.scope("factory").scope("thread_pool");
