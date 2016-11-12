@@ -19,6 +19,10 @@ package com.twitter.distributedlog.config;
 
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.bk.QuorumConfig;
+import com.twitter.distributedlog.util.Sequencer;
+import com.twitter.distributedlog.util.TimeSequencer;
+import org.apache.bookkeeper.util.ReflectionUtils;
+import org.apache.commons.configuration.ConfigurationException;
 
 import static com.twitter.distributedlog.DistributedLogConfiguration.*;
 
@@ -26,6 +30,15 @@ import static com.twitter.distributedlog.DistributedLogConfiguration.*;
  * Whitelist dynamic configuration by adding an accessor to this class.
  */
 public class DynamicDistributedLogConfiguration extends ConcurrentBaseConfiguration {
+
+    private static ClassLoader defaultLoader;
+
+    static {
+        defaultLoader = Thread.currentThread().getContextClassLoader();
+        if (null == defaultLoader) {
+            defaultLoader = DistributedLogConfiguration.class.getClassLoader();
+        }
+    }
 
     private final ConcurrentBaseConfiguration defaultConfig;
 
@@ -351,6 +364,26 @@ public class DynamicDistributedLogConfiguration extends ConcurrentBaseConfigurat
                 defaultConfig.getBoolean(
                         BKDL_DESERIALIZE_RECORDSET_ON_READS,
                         BKDL_DESERIALIZE_RECORDSET_ON_READS_DEFAULT));
+    }
+
+    /**
+     * Get the class name of the sequencer for generating transaction id
+     *
+     * @return class name of the sequencer for generating transaction id
+     * @throws ConfigurationException
+     */
+    public Class<? extends Sequencer> getStreamSequencerClass() throws ConfigurationException {
+        return ReflectionUtils.getClass(
+                this,
+                BKDL_STREAM_SEQUENCER_CLASS,
+                ReflectionUtils.getClass(
+                        defaultConfig,
+                        BKDL_STREAM_SEQUENCER_CLASS,
+                        TimeSequencer.class,
+                        Sequencer.class,
+                        defaultLoader),
+                Sequencer.class,
+                defaultLoader);
     }
 
 }

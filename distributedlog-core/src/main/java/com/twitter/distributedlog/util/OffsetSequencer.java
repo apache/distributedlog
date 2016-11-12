@@ -17,30 +17,35 @@
  */
 package com.twitter.distributedlog.util;
 
-import com.twitter.distributedlog.DistributedLogConstants;
 import com.twitter.distributedlog.LogRecord;
 
 /**
- * Time based sequencer. It generated non-decreasing transaction id using milliseconds.
+ * Offset based sequencer. It generated non-decreasing transaction id using offsets.
  * It isn't thread-safe. The caller takes the responsibility on synchronization.
  */
-public class TimeSequencer implements Sequencer {
+public class OffsetSequencer implements Sequencer {
 
-    private long lastId = DistributedLogConstants.INVALID_TXID;
+    private long lastOffset = -1L;
 
     @Override
     public void setLastId(long lastId) {
-        this.lastId = lastId;
+        // NOTE: it is a bit tricky here. when a log stream is recovered, we can only get the last transaction id,
+        //       but not the length of last record. so we don't know how many `bytes` to advance. so just to advance
+        //       one here.
+        this.lastOffset = lastId + 1;
     }
 
     @Override
     public long nextId() {
-        lastId = Math.max(lastId, System.currentTimeMillis());
-        return lastId;
+        return lastOffset;
     }
 
     @Override
     public void advance(LogRecord record) {
-        // no-op
+        // skip the control records (they are invisible to the users)
+        if (record.isControl()) {
+            return;
+        }
+        this.lastOffset += record.getPayload().length;
     }
 }

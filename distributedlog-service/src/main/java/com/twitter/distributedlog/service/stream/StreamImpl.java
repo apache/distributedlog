@@ -20,18 +20,11 @@ package com.twitter.distributedlog.service.stream;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
-import com.twitter.distributedlog.exceptions.AlreadyClosedException;
+import com.twitter.distributedlog.exceptions.*;
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
-import com.twitter.distributedlog.exceptions.DLException;
-import com.twitter.distributedlog.exceptions.InvalidStreamNameException;
-import com.twitter.distributedlog.exceptions.OverCapacityException;
-import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
-import com.twitter.distributedlog.exceptions.StreamNotReadyException;
-import com.twitter.distributedlog.exceptions.StreamUnavailableException;
-import com.twitter.distributedlog.exceptions.UnexpectedException;
 import com.twitter.distributedlog.io.Abortables;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.service.FatalErrorHandler;
@@ -41,10 +34,7 @@ import com.twitter.distributedlog.service.config.StreamConfigProvider;
 import com.twitter.distributedlog.service.stream.limiter.StreamRequestLimiter;
 import com.twitter.distributedlog.service.streamset.Partition;
 import com.twitter.distributedlog.stats.BroadCastStatsLogger;
-import com.twitter.distributedlog.util.FutureUtils;
-import com.twitter.distributedlog.util.OrderedScheduler;
-import com.twitter.distributedlog.util.TimeSequencer;
-import com.twitter.distributedlog.util.Utils;
+import com.twitter.distributedlog.util.*;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
@@ -55,6 +45,8 @@ import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.Gauge;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.bookkeeper.util.ReflectionUtils;
+import org.apache.commons.configuration.ConfigurationException;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timeout;
 import org.jboss.netty.util.TimerTask;
@@ -121,7 +113,7 @@ public class StreamImpl implements Stream {
 
     private final Promise<Void> closePromise = new Promise<Void>();
     private final Object txnLock = new Object();
-    private final TimeSequencer sequencer = new TimeSequencer();
+    private Sequencer sequencer;
     // last acquire time
     private final Stopwatch lastAcquireWatch = Stopwatch.createUnstarted();
     // last acquire failure time
@@ -239,6 +231,12 @@ public class StreamImpl implements Stream {
     // Expensive initialization, only called once per stream.
     @Override
     public void initialize() throws IOException {
+        try {
+            sequencer = ReflectionUtils.newInstance(dynConf.getStreamSequencerClass());
+        } catch (ConfigurationException e) {
+            throw new DLIllegalStateException("Failed to initialize the stream sequencer", e);
+        }
+
         manager = openLog(name);
 
         // Better to avoid registering the gauge multiple times, so do this in init

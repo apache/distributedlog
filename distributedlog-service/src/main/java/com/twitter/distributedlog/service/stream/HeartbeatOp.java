@@ -76,7 +76,9 @@ public class HeartbeatOp extends AbstractWriteOp {
             Future<DLSN> writeResult;
             synchronized (txnLock) {
                 txnId = sequencer.nextId();
-                writeResult = ((BKAsyncLogWriter) writer).writeControlRecord(new LogRecord(txnId, HEARTBEAT_DATA));
+                LogRecord record = new LogRecord(txnId, HEARTBEAT_DATA);
+                writeResult = ((BKAsyncLogWriter) writer).writeControlRecord(record);
+                sequencer.advance(record);
             }
             return writeResult.map(new AbstractFunction1<DLSN, WriteResponse>() {
                 @Override
