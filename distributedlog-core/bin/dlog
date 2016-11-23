@@ -20,8 +20,8 @@
 
 set -e
 
-DISTRIBUTEDLOG_ROOT=$(git rev-parse --show-toplevel)
-DLOG_HOME="${DISTRIBUTEDLOG_ROOT}"
+DLOG_ROOT=$(git rev-parse --show-toplevel)
+DLOG_HOME="${DLOG_ROOT}"
 
 usage() {
   cat <<EOF
@@ -46,7 +46,7 @@ These variable can also be set in conf/dlogenv.sh
 EOF
 }
 
-cd "${DISTRIBUTEDLOG_ROOT}"
+cd "${DLOG_ROOT}"
 source ./scripts/common.sh
 
 # get arguments
