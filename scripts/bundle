@@ -27,9 +27,9 @@ if [[ -z "${COMPONENT}" ]]; then
   exit 1
 fi
 
-DISTRIBUTEDLOG_ROOT=$(git rev-parse --show-toplevel)
+DLOG_ROOT=$(git rev-parse --show-toplevel)
 
-cd "${DISTRIBUTEDLOG_ROOT}"
+cd "${DLOG_ROOT}"
 rm -rf "distributedlog-${COMPONENT}/lib"
 rm -rf "dist/distributedlog-${COMPONENT}*"
 mkdir -p "dist/distributedlog-${COMPONENT}"/{conf,lib}
