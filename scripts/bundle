@@ -23,15 +23,15 @@ shopt -s dotglob
 
 COMPONENT=$1
 if [[ -z "${COMPONENT}" ]]; then
-  echo "You need to specify the component"
+  echo "You need to specify the component" 2>&1
   exit 1
 fi
 
-DLOG_ROOT=$(git rev-parse --show-toplevel)
-
 cd "${DLOG_ROOT}"
+
 rm -rf "distributedlog-${COMPONENT}/lib"
 rm -rf "dist/distributedlog-${COMPONENT}*"
+
 mkdir -p "dist/distributedlog-${COMPONENT}"/{conf,lib}
 
 mvn install -Ptwitter-ostrich-provider -pl "distributedlog-${COMPONENT}" -am -DskipTests

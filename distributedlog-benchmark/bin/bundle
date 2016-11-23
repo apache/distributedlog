@@ -20,6 +20,6 @@
 
 set -e
 
-DISTRIBUTEDLOG_ROOT=$(git rev-parse --show-toplevel)
+DLOG_ROOT=$(git rev-parse --show-toplevel)
 
-bash "${DISTRIBUTEDLOG_ROOT}"/scripts/bundle benchmark
+bash "${DLOG_ROOT}"/scripts/bundle benchmark
