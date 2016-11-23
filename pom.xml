@@ -104,7 +104,7 @@
           <groups>
             <group>
               <title>DistributedLog</title>
-              <packages>com.twitter.distributedlog.*</packages>
+              <packages>org.apache.distributedlog.*</packages>
             </group>
           </groups>
         </configuration>

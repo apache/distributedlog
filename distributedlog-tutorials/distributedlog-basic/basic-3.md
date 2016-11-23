@@ -107,7 +107,7 @@ Run the example in the following steps:
 2.  Start the write proxy, listening on port 8000.
     ```
         // DistributedLogServerApp -p ${service-port} --shard-id ${shard-id} -sp ${stats-port} -u {distributedlog-uri} -mx -c ${conf-file}
-        ./distributedlog-service/bin/dlog com.twitter.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
+        ./distributedlog-service/bin/dlog org.apache.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
     ```
 
 3.  Create multi streams under the distributedlog uri.
@@ -121,15 +121,15 @@ Run the example in the following steps:
 4.  Tailing multi streams using `MultiReader` to wait for new records.
     ```
         // Tailing Stream `basic-stream-{3-7}`
-        // runner run com.twitter.distributedlog.basic.MultiReader ${distributedlog-uri} ${stream}[,${stream}]
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.MultiReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-3,basic-stream-4,basic-stream-5,basic-stream-6,basic-stream-7
+        // runner run org.apache.distributedlog.basic.MultiReader ${distributedlog-uri} ${stream}[,${stream}]
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.MultiReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-3,basic-stream-4,basic-stream-5,basic-stream-6,basic-stream-7
     ```
 
 6.  Run the example to write records to the multi streams in a console.
     ```
         // Write Records into Stream `basic-stream-{3-7}`
-        // runner run com.twitter.distributedlog.basic.ConsoleProxyMultiWriter ${distributedlog-uri} ${stream}[,${stream}]
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.ConsoleProxyMultiWriter 'inet!127.0.0.1:8000' basic-stream-3,basic-stream-4,basic-stream-5,basic-stream-6,basic-stream-7
+        // runner run org.apache.distributedlog.basic.ConsoleProxyMultiWriter ${distributedlog-uri} ${stream}[,${stream}]
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.ConsoleProxyMultiWriter 'inet!127.0.0.1:8000' basic-stream-3,basic-stream-4,basic-stream-5,basic-stream-6,basic-stream-7
     ```
 
 7.  Example output from `ConsoleProxyMultiWriter` and `MultiReader`.

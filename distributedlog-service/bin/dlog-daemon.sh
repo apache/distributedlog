@@ -78,7 +78,7 @@ case $service in
         DLOG_ROOT_LOGGER=${BK_ROOT_LOGGER:-'INFO,R'}
         ;;
     (writeproxy)
-        service_class="com.twitter.distributedlog.service.DistributedLogServerApp"
+        service_class="org.apache.distributedlog.service.DistributedLogServerApp"
         DLOG_ROOT_LOGGER=${WP_ROOT_LOGGER:-'INFO,R'}
         WP_CONF_FILE=${WP_CONF_FILE:-"$DL_HOME/conf/write_proxy.conf"}
         WP_SERVICE_PORT=${WP_SERVICE_PORT:-'4181'}
