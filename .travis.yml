@@ -37,7 +37,7 @@ script:
 
 # we build the report only after a successful build on master
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "sijie/fix_travis_build" ]; then travis_wait 60 mvn --batch-mode clean cobertura:cobertura coveralls:report; fi
+  - if [ "$TRAVIS_BRANCH" == "sijie:sijie/fix_travis_build" ]; then travis_wait 60 mvn --batch-mode clean cobertura:cobertura coveralls:report; elif echo "skip branch $TRAVIS_BRANCH"; fi
 
 cache:
   directories:
