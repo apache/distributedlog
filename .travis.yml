@@ -33,11 +33,7 @@ before_install:
 
 script:
   - travis_retry mvn --batch-mode clean apache-rat:check
-  - travis_retry mvn --batch-mode clean install findbugs:check -DskipTests=true
-
-# we build the report only after a successful build on master
-after_success:
-  - if [ "$TRAVIS_BRANCH" == "sijie:sijie/fix_travis_build" ]; then travis_wait 60 mvn --batch-mode clean cobertura:cobertura coveralls:report; else echo "skip branch $TRAVIS_BRANCH"; fi
+  - travis_wait 60 mvn --batch-mode clean package findbugs:check
 
 cache:
   directories:
