@@ -28,6 +28,7 @@ import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
 import com.twitter.distributedlog.client.resolver.RegionResolver;
 import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
+import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.RegionUnavailableException;
 import com.twitter.distributedlog.exceptions.ServiceUnavailableException;
 import com.twitter.distributedlog.exceptions.StreamUnavailableException;
@@ -38,8 +39,8 @@ import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.config.StreamConfigProvider;
 import com.twitter.distributedlog.service.stream.BulkWriteOp;
-import com.twitter.distributedlog.service.stream.CreateOp;
 import com.twitter.distributedlog.service.stream.DeleteOp;
+import com.twitter.distributedlog.service.stream.admin.CreateOp;
 import com.twitter.distributedlog.service.stream.HeartbeatOp;
 import com.twitter.distributedlog.service.stream.ReleaseOp;
 import com.twitter.distributedlog.service.stream.Stream;
@@ -50,8 +51,9 @@ import com.twitter.distributedlog.service.stream.StreamManagerImpl;
 import com.twitter.distributedlog.service.stream.StreamOp;
 import com.twitter.distributedlog.service.stream.StreamOpStats;
 import com.twitter.distributedlog.service.stream.TruncateOp;
-import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
 import com.twitter.distributedlog.service.stream.WriteOp;
+import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
+import com.twitter.distributedlog.service.stream.admin.StreamAdminOp;
 import com.twitter.distributedlog.service.stream.limiter.ServiceRequestLimiter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.distributedlog.service.utils.ServerUtils;
@@ -485,8 +487,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     @Override
     public Future<WriteResponse> create(String stream, WriteContext ctx) {
         CreateOp op = new CreateOp(stream, statsLogger, streamManager, getChecksum(ctx), featureChecksumDisabled);
-        executeStreamOp(op);
-        return op.result();
+        return executeStreamAdminOp(op);
     }
 
     //
@@ -572,6 +573,15 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
     private Long getChecksum(WriteContext ctx) {
         return ctx.isSetCrc32() ? ctx.getCrc32() : null;
+    }
+
+    private Future<WriteResponse> executeStreamAdminOp(final StreamAdminOp op) {
+        try {
+            op.preExecute();
+        } catch (DLException dle) {
+            return Future.exception(dle);
+        }
+        return op.execute();
     }
 
     private void executeStreamOp(final StreamOp op) {
