@@ -48,6 +48,7 @@ else
   echo "JMX disabled by user request" >&2
 fi
 
+echo "DLOG_HOME => ${DLOG_HOME}"
 DEFAULT_LOG_CONF="${DLOG_HOME}/conf/log4j.properties"
 
 [ -f "${DLOG_HOME}/conf/dlogenv.sh" ] && source "${DLOG_HOME}/conf/dlogenv.sh"
@@ -93,9 +94,8 @@ else
   add_maven_deps_to_classpath
 fi
 
-# if no args specified, show usage
+# if no args specified, exit
 if [ $# = 0 ]; then
-  usage
   exit 1
 fi
 

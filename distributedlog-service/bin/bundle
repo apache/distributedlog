@@ -20,6 +20,7 @@
 
 set -e
 
-DLOG_ROOT=$(git rev-parse --show-toplevel)
+BASEDIR=$(dirname "$0")
+DLOG_ROOT="${BASEDIR}/.."
 
 bash "${DLOG_ROOT}"/scripts/bundle service
