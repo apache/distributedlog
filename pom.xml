@@ -76,6 +76,7 @@
     </developer>
   </developers>
   <modules>
+    <module>distributedlog-build-tools</module>
     <module>distributedlog-protocol</module>
     <module>distributedlog-core</module>
     <module>distributedlog-client</module>
