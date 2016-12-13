@@ -17,8 +17,32 @@
  */
 package com.twitter.distributedlog.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import scala.Option;
+import scala.Tuple2;
+
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import org.apache.bookkeeper.stats.NullStatsLogger;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.bookkeeper.stats.StatsProvider;
+import org.apache.bookkeeper.util.ReflectionUtils;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.config.DynamicConfigurationFactory;
@@ -31,6 +55,8 @@ import com.twitter.distributedlog.service.config.NullStreamConfigProvider;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.config.ServiceStreamConfigProvider;
 import com.twitter.distributedlog.service.config.StreamConfigProvider;
+import com.twitter.distributedlog.service.placement.EqualLoadAppraiser;
+import com.twitter.distributedlog.service.placement.LoadAppraiser;
 import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.distributedlog.thrift.service.DistributedLogService;
@@ -46,31 +72,11 @@ import com.twitter.finagle.thrift.ClientIdRequiredFilter;
 import com.twitter.finagle.thrift.ThriftServerFramedCodec;
 import com.twitter.finagle.transport.Transport;
 import com.twitter.util.Duration;
-import org.apache.bookkeeper.stats.NullStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.bookkeeper.stats.StatsProvider;
-import org.apache.bookkeeper.util.ReflectionUtils;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import scala.Option;
-import scala.Tuple2;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class DistributedLogServer {
 
     static final Logger logger = LoggerFactory.getLogger(DistributedLogServer.class);
+    private static final String DEFAULT_LOAD_APPRIASER = EqualLoadAppraiser.class.getCanonicalName();
 
     private DistributedLogServiceImpl dlService = null;
     private Server server = null;
@@ -89,6 +95,7 @@ public class DistributedLogServer {
     private final Optional<Integer> statsPort;
     private final Optional<Integer> shardId;
     private final Optional<Boolean> announceServerSet;
+    private final Optional<String> loadAppraiserClassStr;
     private final Optional<Boolean> thriftmux;
 
     DistributedLogServer(Optional<String> uri,
@@ -98,6 +105,7 @@ public class DistributedLogServer {
                          Optional<Integer> statsPort,
                          Optional<Integer> shardId,
                          Optional<Boolean> announceServerSet,
+                         Optional<String> loadAppraiserClass,
                          Optional<Boolean> thriftmux,
                          RoutingService routingService,
                          StatsReceiver statsReceiver,
@@ -113,9 +121,10 @@ public class DistributedLogServer {
         this.routingService = routingService;
         this.statsReceiver = statsReceiver;
         this.statsProvider = statsProvider;
+        this.loadAppraiserClassStr = loadAppraiserClass;
     }
 
-    public void runServer() throws ConfigurationException, IllegalArgumentException, IOException {
+    public void runServer() throws ConfigurationException, IllegalArgumentException, IOException, ClassNotFoundException {
         if (!uri.isPresent()) {
             throw new IllegalArgumentException("No distributedlog uri provided.");
         }
@@ -174,6 +183,9 @@ public class DistributedLogServer {
                     IdentityStreamPartitionConverter.class.getName());
             converter = new IdentityStreamPartitionConverter();
         }
+        Class loadAppraiserClass = Class.forName(loadAppraiserClassStr.or(DEFAULT_LOAD_APPRIASER));
+        LoadAppraiser loadAppraiser = (LoadAppraiser) ReflectionUtils.newInstance(loadAppraiserClass);
+        logger.info("Supplied load appraiser class is " + loadAppraiserClassStr.get() + " Instantiated " + loadAppraiser.getClass().getCanonicalName());
 
         StreamConfigProvider streamConfProvider =
                 getStreamConfigProvider(dlConf, converter);
@@ -193,7 +205,8 @@ public class DistributedLogServer {
                 keepAliveLatch,
                 statsReceiver,
                 thriftmux.isPresent(),
-                streamConfProvider);
+                streamConfProvider,
+                loadAppraiser);
 
         this.dlService = serverPair.getLeft();
         this.server = serverPair.getRight();
@@ -203,6 +216,8 @@ public class DistributedLogServer {
         // start the routing service after announced
         routingService.startService();
         logger.info("Started the routing service.");
+        dlService.startPlacementPolicy();
+        logger.info("Started the placement policy.");
     }
 
     protected void preRun(DistributedLogConfiguration conf, ServerConfiguration serverConf) {
@@ -256,7 +271,8 @@ public class DistributedLogServer {
             RoutingService routingService,
             StatsProvider provider,
             int port,
-            boolean thriftmux) throws IOException {
+            boolean thriftmux,
+            LoadAppraiser loadAppraiser) throws IOException {
 
         return runServer(serverConf,
                 dlConf,
@@ -269,7 +285,8 @@ public class DistributedLogServer {
                 new CountDownLatch(0),
                 new NullStatsReceiver(),
                 thriftmux,
-                new NullStreamConfigProvider());
+                new NullStreamConfigProvider(),
+                loadAppraiser);
     }
 
     static Pair<DistributedLogServiceImpl, Server> runServer(
@@ -284,7 +301,8 @@ public class DistributedLogServer {
             CountDownLatch keepAliveLatch,
             StatsReceiver statsReceiver,
             boolean thriftmux,
-            StreamConfigProvider streamConfProvider) throws IOException {
+            StreamConfigProvider streamConfProvider,
+            LoadAppraiser loadAppraiser) throws IOException {
         logger.info("Running server @ uri {}.", dlUri);
 
         boolean perStreamStatsEnabled = serverConf.isPerStreamStatEnabled();
@@ -297,16 +315,17 @@ public class DistributedLogServer {
 
         // dl service
         DistributedLogServiceImpl dlService = new DistributedLogServiceImpl(
-                serverConf,
-                dlConf,
-                dynDlConf,
-                streamConfProvider,
-                dlUri,
-                partitionConverter,
-                routingService,
-                provider.getStatsLogger(""),
-                perStreamStatsLogger,
-                keepAliveLatch);
+            serverConf,
+            dlConf,
+            dynDlConf,
+            streamConfProvider,
+            dlUri,
+            partitionConverter,
+            routingService,
+            provider.getStatsLogger(""),
+            perStreamStatsLogger,
+            keepAliveLatch,
+            loadAppraiser);
 
         StatsReceiver serviceStatsReceiver = statsReceiver.scope("service");
         StatsLogger serviceStatsLogger = provider.getStatsLogger("service");
@@ -400,6 +419,7 @@ public class DistributedLogServer {
      * @throws ConfigurationException
      * @throws IllegalArgumentException
      * @throws IOException
+     * @throws ClassNotFoundException
      */
     public static DistributedLogServer runServer(
                Optional<String> uri,
@@ -409,11 +429,12 @@ public class DistributedLogServer {
                Optional<Integer> statsPort,
                Optional<Integer> shardId,
                Optional<Boolean> announceServerSet,
+               Optional<String> loadAppraiserClass,
                Optional<Boolean> thriftmux,
                RoutingService routingService,
                StatsReceiver statsReceiver,
                StatsProvider statsProvider)
-            throws ConfigurationException, IllegalArgumentException, IOException {
+        throws ConfigurationException, IllegalArgumentException, IOException, ClassNotFoundException {
 
         final DistributedLogServer server = new DistributedLogServer(
                 uri,
@@ -423,6 +444,7 @@ public class DistributedLogServer {
                 statsPort,
                 shardId,
                 announceServerSet,
+                loadAppraiserClass,
                 thriftmux,
                 routingService,
                 statsReceiver,

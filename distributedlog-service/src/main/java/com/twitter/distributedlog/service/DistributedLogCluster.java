@@ -22,6 +22,7 @@ import com.twitter.distributedlog.LocalDLMEmulator;
 import com.twitter.distributedlog.client.routing.SingleHostRoutingService;
 import com.twitter.distributedlog.metadata.BKDLConfig;
 import com.twitter.distributedlog.metadata.DLMetadata;
+import com.twitter.distributedlog.service.placement.EqualLoadAppraiser;
 import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.finagle.builder.Server;
 import org.apache.bookkeeper.conf.ServerConfiguration;
@@ -228,9 +229,11 @@ public class DistributedLogCluster {
                             routingService,
                             new NullStatsProvider(),
                             proxyPort,
-                            thriftmux);
+                            thriftmux,
+                            new EqualLoadAppraiser());
                     routingService.setAddress(DLSocketAddress.getSocketAddress(proxyPort));
                     routingService.startService();
+                    serverPair.getLeft().startPlacementPolicy();
                     success = true;
                 } catch (BindException be) {
                     retries++;
@@ -244,7 +247,7 @@ public class DistributedLogCluster {
                 }
             }
 
-            LOG.info("Runnning DL on port {}", proxyPort);
+            LOG.info("Running DL on port {}", proxyPort);
 
             dlServer = serverPair;
             address = DLSocketAddress.getSocketAddress(proxyPort);

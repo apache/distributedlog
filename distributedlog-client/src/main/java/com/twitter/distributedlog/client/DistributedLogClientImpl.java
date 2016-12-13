@@ -73,6 +73,7 @@ import com.twitter.util.Promise;
 import com.twitter.util.Return;
 import com.twitter.util.Throw;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -852,18 +853,18 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
     }
 
-    private void retryGetOwnerFromRoutingServer(final StreamOp op,
+    private void retryGetOwnerFromResourcePlacementServer(final StreamOp op,
                                                 final Promise<SocketAddress> getOwnerPromise,
                                                 final Throwable cause) {
         if (op.shouldTimeout()) {
             op.fail(null, cause);
             return;
         }
-        getOwnerFromRoutingServer(op, getOwnerPromise);
+        getOwnerFromResourcePlacementServer(op, getOwnerPromise);
     }
 
-    private void getOwnerFromRoutingServer(final StreamOp op,
-                                           final Promise<SocketAddress> getOwnerPromise) {
+    private void getOwnerFromResourcePlacementServer(final StreamOp op,
+                                                     final Promise<SocketAddress> getOwnerPromise) {
         clusterClient.get().getService().getOwner(op.stream, op.ctx)
             .addEventListener(new FutureEventListener<WriteResponse>() {
                 @Override
@@ -875,18 +876,20 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                 public void onSuccess(WriteResponse value) {
                     if (StatusCode.FOUND == value.getHeader().getCode()
                           && null != value.getHeader().getLocation()) {
-                        SocketAddress addr;
                         try {
-                             addr = DLSocketAddress.deserialize(value.getHeader().getLocation()).getSocketAddress();
+                            InetSocketAddress addr = DLSocketAddress.deserialize(
+                                value.getHeader().getLocation()
+                            ).getSocketAddress();
+                            getOwnerPromise.updateIfEmpty(new Return<SocketAddress>(addr));
                         } catch (IOException e) {
                             // retry from the routing server again
-                            retryGetOwnerFromRoutingServer(op, getOwnerPromise, e);
+                            logger.error("ERROR in getOwner", e);
+                            retryGetOwnerFromResourcePlacementServer(op, getOwnerPromise, e);
                             return;
                         }
-                        getOwnerPromise.updateIfEmpty(new Return<SocketAddress>(addr));
                     } else {
                         // retry from the routing server again
-                        retryGetOwnerFromRoutingServer(op, getOwnerPromise,
+                        retryGetOwnerFromResourcePlacementServer(op, getOwnerPromise,
                                 new StreamUnavailableException("Stream " + op.stream + "'s owner is unknown"));
                     }
                 }
@@ -896,7 +899,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
     private Future<SocketAddress> getOwner(final StreamOp op) {
         if (clusterClient.isPresent()) {
             final Promise<SocketAddress> getOwnerPromise = new Promise<SocketAddress>();
-            getOwnerFromRoutingServer(op, getOwnerPromise);
+            getOwnerFromResourcePlacementServer(op, getOwnerPromise);
             return getOwnerPromise;
         }
         // pickup host by hashing
@@ -1190,7 +1193,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             ownershipCache.updateOwner(stream, ownerAddr);
         } catch (IOException e) {
             logger.warn("Invalid ownership {} found for stream {} : ",
-                        new Object[] { location, stream, e });
+                new Object[] { location, stream, e });
         }
     }
 

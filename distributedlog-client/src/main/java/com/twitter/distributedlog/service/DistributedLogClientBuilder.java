@@ -96,6 +96,7 @@ public final class DistributedLogClientBuilder {
         newBuilder.statsReceiver = builder.statsReceiver;
         newBuilder.streamStatsReceiver = builder.streamStatsReceiver;
         newBuilder.enableRegionStats = builder.enableRegionStats;
+        newBuilder.serverRoutingServiceFinagleName = builder.serverRoutingServiceFinagleName;
         newBuilder.clientConfig = ClientConfig.newConfig(builder.clientConfig);
         return newBuilder;
     }

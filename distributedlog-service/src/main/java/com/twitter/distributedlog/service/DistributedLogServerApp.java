@@ -68,6 +68,7 @@ public class DistributedLogServerApp {
         options.addOption("pd", "stats-provider", true, "DistributedLog Stats Provider");
         options.addOption("si", "shard-id", true, "DistributedLog Shard ID");
         options.addOption("a", "announce", false, "ServerSet Path to Announce");
+        options.addOption("la", "load-appraiser", true, "LoadAppraiser Implementation to Use");
         options.addOption("mx", "thriftmux", false, "Is thriftmux enabled");
     }
 
@@ -97,10 +98,13 @@ public class DistributedLogServerApp {
         } catch (IOException ie) {
             logger.error("Failed to start distributedlog server : ", ie);
             Runtime.getRuntime().exit(-1);
+        } catch (ClassNotFoundException cnf) {
+          logger.error("Failed to start distributedlog server : ", cnf);
+          Runtime.getRuntime().exit(-1);
         }
     }
 
-    private void runCmd(CommandLine cmdline) throws IllegalArgumentException, IOException, ConfigurationException {
+    private void runCmd(CommandLine cmdline) throws IllegalArgumentException, IOException, ConfigurationException, ClassNotFoundException {
         final StatsReceiver statsReceiver = NullStatsReceiver.get();
         Optional<String> confOptional = getOptionalStringArg(cmdline, "c");
         DistributedLogConfiguration dlConf = new DistributedLogConfiguration();
@@ -142,6 +146,7 @@ public class DistributedLogServerApp {
                 getOptionalIntegerArg(cmdline, "sp"),
                 getOptionalIntegerArg(cmdline, "si"),
                 getOptionalBooleanArg(cmdline, "a"),
+                getOptionalStringArg(cmdline, "la"),
                 getOptionalBooleanArg(cmdline, "mx"),
                 routingService,
                 statsReceiver,

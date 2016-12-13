@@ -21,6 +21,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.twitter.common.net.InetSocketAddressHelper;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.acl.AccessControlManager;
@@ -36,8 +37,14 @@ import com.twitter.distributedlog.exceptions.TooManyStreamsException;
 import com.twitter.distributedlog.feature.AbstractFeatureProvider;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import com.twitter.distributedlog.rate.MovingAverageRate;
+import com.twitter.distributedlog.rate.MovingAverageRateFactory;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.config.StreamConfigProvider;
+import com.twitter.distributedlog.service.placement.LeastLoadPlacementPolicy;
+import com.twitter.distributedlog.service.placement.LoadAppraiser;
+import com.twitter.distributedlog.service.placement.PlacementPolicy;
+import com.twitter.distributedlog.service.placement.ZKPlacementStateManager;
 import com.twitter.distributedlog.service.stream.BulkWriteOp;
 import com.twitter.distributedlog.service.stream.DeleteOp;
 import com.twitter.distributedlog.service.stream.admin.CreateOp;
@@ -67,32 +74,19 @@ import com.twitter.distributedlog.thrift.service.ServerStatus;
 import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.distributedlog.thrift.service.WriteContext;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
-import com.twitter.distributedlog.rate.MovingAverageRateFactory;
-import com.twitter.distributedlog.rate.MovingAverageRate;
 import com.twitter.distributedlog.util.ConfUtils;
 import com.twitter.distributedlog.util.OrderedScheduler;
 import com.twitter.distributedlog.util.SchedulerUtils;
-import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
+import com.twitter.util.Function;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
-import com.twitter.util.Timer;
 import com.twitter.util.ScheduledThreadPoolTimer;
-import org.apache.bookkeeper.feature.Feature;
-import org.apache.bookkeeper.feature.FeatureProvider;
-import org.apache.bookkeeper.stats.Counter;
-import org.apache.bookkeeper.stats.Gauge;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.jboss.netty.util.HashedWheelTimer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import scala.runtime.BoxedUnit;
+import com.twitter.util.Timer;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -101,6 +95,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.feature.FeatureProvider;
+import org.apache.bookkeeper.stats.Counter;
+import org.apache.bookkeeper.stats.Gauge;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.jboss.netty.util.HashedWheelTimer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import scala.runtime.BoxedUnit;
 
 public class DistributedLogServiceImpl implements DistributedLogService.ServiceIface,
                                                   FatalErrorHandler {
@@ -113,6 +118,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     private final DistributedLogConfiguration dlConfig;
     private final DistributedLogNamespace dlNamespace;
     private final int serverRegionId;
+    private final PlacementPolicy placementPolicy;
     private ServerStatus serverStatus = ServerStatus.WRITE_AND_ACCEPT;
     private final ReentrantReadWriteLock closeLock =
             new ReentrantReadWriteLock();
@@ -157,6 +163,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     private final Gauge<Number> movingAvgBpsGauge;
     private final Gauge<Number> streamAcquiredGauge;
     private final Gauge<Number> streamCachedGauge;
+    private final int shard;
 
     DistributedLogServiceImpl(ServerConfiguration serverConf,
                               DistributedLogConfiguration dlConf,
@@ -167,7 +174,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                               RoutingService routingService,
                               StatsLogger statsLogger,
                               StatsLogger perStreamStatsLogger,
-                              CountDownLatch keepAliveLatch)
+                              CountDownLatch keepAliveLatch,
+                              LoadAppraiser loadAppraiser)
             throws IOException {
         // Configuration.
         this.serverConfig = serverConf;
@@ -177,7 +185,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         this.serverRegionId = serverConf.getRegionId();
         this.streamPartitionConverter = converter;
         int serverPort = serverConf.getServerPort();
-        int shard = serverConf.getServerShardId();
+        this.shard = serverConf.getServerShardId();
         int numThreads = serverConf.getServerThreads();
         this.clientId = DLSocketAddress.toLockId(DLSocketAddress.getSocketAddress(serverPort), shard);
         String allocatorPoolName = ServerUtils.getLedgerAllocatorPoolName(
@@ -263,6 +271,15 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                 windowedBps,
                 streamManager,
                 limiterDisabledFeature);
+
+        this.placementPolicy = new LeastLoadPlacementPolicy(
+            loadAppraiser,
+            routingService,
+            dlNamespace,
+            new ZKPlacementStateManager(uri, dlConf, statsLogger),
+            Duration.fromSeconds(serverConf.getResourcePlacementRefreshInterval()),
+            statsLogger);
+        logger.info("placement started");
 
         // Stats
         this.statsLogger = statsLogger;
@@ -501,35 +518,13 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             return Future.value(new WriteResponse(ResponseUtils.ownerToHeader(clientId)));
         }
 
-        Stream stream = streamManager.getStream(streamName);
-        String owner;
-        if (null != stream && null != (owner = stream.getOwner())) {
-            return Future.value(new WriteResponse(ResponseUtils.ownerToHeader(owner)));
-        }
-
-        RoutingService.RoutingContext routingContext = RoutingService.RoutingContext.of(regionResolver);
-
-        if (ctx.isSetTriedHosts()) {
-            for (String triedHost : ctx.getTriedHosts()) {
-                routingContext.addTriedHost(
-                        DLSocketAddress.parseSocketAddress(triedHost), StatusCode.STREAM_UNAVAILABLE);
+        return placementPolicy.placeStream(streamName).map(new Function<String, WriteResponse>() {
+            @Override
+            public WriteResponse apply(String server) {
+                String host = DLSocketAddress.toLockId(InetSocketAddressHelper.parse(server), -1);
+                return new WriteResponse(ResponseUtils.ownerToHeader(host));
             }
-        }
-
-        try {
-            SocketAddress host = routingService.getHost(streamName, routingContext);
-            if (host instanceof InetSocketAddress) {
-                // use shard id '-1' as the shard id here won't be used for redirection
-                return Future.value(new WriteResponse(
-                        ResponseUtils.ownerToHeader(DLSocketAddress.toLockId((InetSocketAddress) host, -1))));
-            } else {
-                return Future.value(new WriteResponse(
-                        ResponseUtils.streamUnavailableHeader()));
-            }
-        } catch (NoBrokersAvailableException e) {
-            return Future.value(new WriteResponse(
-                    ResponseUtils.streamUnavailableHeader()));
-        }
+        });
     }
 
 
@@ -689,6 +684,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
             // Stop the timer.
             timer.stop();
+            placementPolicy.close();
 
             // clean up gauge
             unregisterGauge();
@@ -702,6 +698,10 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             keepAliveLatch.countDown();
             logger.info("Finished shutting down distributedlog service.");
         }
+    }
+
+    protected void startPlacementPolicy() {
+        this.placementPolicy.start(shard == 0);
     }
 
     @Override

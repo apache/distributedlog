@@ -28,6 +28,7 @@ import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
 import com.twitter.distributedlog.exceptions.StreamUnavailableException;
 import com.twitter.distributedlog.service.config.NullStreamConfigProvider;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
+import com.twitter.distributedlog.service.placement.EqualLoadAppraiser;
 import com.twitter.distributedlog.service.stream.WriteOp;
 import com.twitter.distributedlog.service.stream.StreamImpl.StreamStatus;
 import com.twitter.distributedlog.service.stream.StreamImpl;
@@ -140,16 +141,17 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             converter = new IdentityStreamPartitionConverter();
         }
         return new DistributedLogServiceImpl(
-                serverConf,
-                dlConf,
-                ConfUtils.getConstDynConf(dlConf),
-                new NullStreamConfigProvider(),
-                uri,
-                converter,
-                new LocalRoutingService(),
-                NullStatsLogger.INSTANCE,
-                NullStatsLogger.INSTANCE,
-                latch);
+            serverConf,
+            dlConf,
+            ConfUtils.getConstDynConf(dlConf),
+            new NullStreamConfigProvider(),
+            uri,
+            converter,
+            new LocalRoutingService(),
+            NullStatsLogger.INSTANCE,
+            NullStatsLogger.INSTANCE,
+            latch,
+            new EqualLoadAppraiser());
     }
 
     private StreamImpl createUnstartedStream(DistributedLogServiceImpl service,
@@ -777,21 +779,21 @@ public class TestDistributedLogService extends TestDistributedLogBase {
                 .addHost("stream-0", service.getServiceAddress().getSocketAddress())
                 .setAllowRetrySameHost(false);
 
-        // routing service doesn't know 'stream-1'
+        service.startPlacementPolicy();
+
         WriteResponse response = FutureUtils.result(service.getOwner("stream-1", new WriteContext()));
-        assertEquals(StatusCode.STREAM_UNAVAILABLE, response.getHeader().getCode());
+        assertEquals(StatusCode.FOUND, response.getHeader().getCode());
+        assertEquals(service.getServiceAddress().toString(),
+                response.getHeader().getLocation());
 
-        // service cache "stream-2" but not acquire
+        // service cache "stream-2"
         StreamImpl stream = (StreamImpl) service.getStreamManager().getOrCreateStream("stream-2", false);
-        response = FutureUtils.result(service.getOwner("stream-2", new WriteContext()));
-        assertEquals(StatusCode.STREAM_UNAVAILABLE, response.getHeader().getCode());
-
         // create write ops to stream-2 to make service acquire the stream
         WriteOp op = createWriteOp(service, "stream-2", 0L);
         stream.submit(op);
         stream.start();
         WriteResponse wr = Await.result(op.result());
-        assertEquals("Op  should succeed",
+        assertEquals("Op should succeed",
                 StatusCode.SUCCESS, wr.getHeader().getCode());
         assertEquals("Service should acquire stream",
                 StreamStatus.INITIALIZED, stream.getStatus());
@@ -804,18 +806,6 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         assertEquals(StatusCode.FOUND, response.getHeader().getCode());
         assertEquals(service.getServiceAddress().toString(),
                 response.getHeader().getLocation());
-
-        // find the stream from the routing service
-        response = FutureUtils.result(service.getOwner("stream-0", new WriteContext()));
-        assertEquals(StatusCode.FOUND, response.getHeader().getCode());
-        assertEquals(service.getServiceAddress().toString(),
-                response.getHeader().getLocation());
-
-        // add the tried host
-        WriteContext ctx = new WriteContext();
-        ctx.addToTriedHosts(DLSocketAddress.toString(service.getServiceAddress().getSocketAddress()));
-        response = FutureUtils.result(service.getOwner("stream-0", ctx));
-        assertEquals(StatusCode.STREAM_UNAVAILABLE, response.getHeader().getCode());
     }
 
 }
