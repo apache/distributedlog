@@ -56,7 +56,6 @@ import scala.runtime.AbstractFunction0;
 import scala.runtime.BoxedUnit;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -274,12 +273,7 @@ public abstract class BKLogHandler implements Watcher, AsyncCloseable, AsyncAbor
         LOG.debug("Using ZK Path {}", logMetadata.getLogRootPath());
         this.bookKeeperClient = bkcBuilder.build();
         this.metadataStore = metadataStore;
-
-        if (lockClientId.equals(DistributedLogConstants.UNKNOWN_CLIENT_ID)) {
-            this.lockClientId = getHostIpLockClientId();
-        } else {
-            this.lockClientId = lockClientId;
-        }
+        this.lockClientId = lockClientId;
 
         this.getChildrenWatcher = this.zooKeeperClient.getWatcherManager()
                 .registerChildWatcher(logMetadata.getLogSegmentsPath(), this);
@@ -314,14 +308,6 @@ public abstract class BKLogHandler implements Watcher, AsyncCloseable, AsyncAbor
 
     public String getLockClientId() {
         return lockClientId;
-    }
-
-    private String getHostIpLockClientId() {
-        try {
-            return InetAddress.getLocalHost().toString();
-        } catch(Exception ex) {
-            return DistributedLogConstants.UNKNOWN_CLIENT_ID;
-        }
     }
 
     protected void registerListener(LogSegmentListener listener) {

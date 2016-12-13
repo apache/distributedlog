@@ -75,6 +75,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
@@ -252,6 +253,14 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         }
     }
 
+    private static String getHostIpLockClientId() {
+        try {
+            return InetAddress.getLocalHost().toString();
+        } catch(Exception ex) {
+            return DistributedLogConstants.UNKNOWN_CLIENT_ID;
+        }
+    }
+
     private final String clientId;
     private final int regionId;
     private final DistributedLogConfiguration conf;
@@ -326,9 +335,13 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         this.featureProvider = featureProvider;
         this.statsLogger = statsLogger;
         this.perLogStatsLogger = perLogStatsLogger;
-        this.clientId = clientId;
         this.regionId = regionId;
         this.bkdlConfig = bkdlConfig;
+        if (clientId.equals(DistributedLogConstants.UNKNOWN_CLIENT_ID)) {
+            this.clientId = getHostIpLockClientId();
+        } else {
+            this.clientId = clientId;
+        }
 
         // Build resources
         StatsLogger schedulerStatsLogger = statsLogger.scope("factory").scope("thread_pool");
