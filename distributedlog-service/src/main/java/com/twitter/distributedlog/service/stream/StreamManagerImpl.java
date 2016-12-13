@@ -33,15 +33,14 @@ import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.distributedlog.util.ConfUtils;
 import com.twitter.util.Future;
 import com.twitter.util.Promise;
-import java.io.IOException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
@@ -233,7 +232,7 @@ public class StreamManagerImpl implements StreamManager {
     }
 
     @Override
-    public Stream getOrCreateStream(String streamName) throws IOException {
+    public Stream getOrCreateStream(String streamName, boolean start) throws IOException {
         Stream stream = streams.get(streamName);
         if (null == stream) {
             closeLock.readLock().lock();
@@ -261,7 +260,9 @@ public class StreamManagerImpl implements StreamManager {
                     numCached.getAndIncrement();
                     logger.info("Inserted mapping stream name {} -> stream {}", streamName, stream);
                     stream.initialize();
-                    stream.start();
+                    if (start) {
+                        stream.start();
+                    }
                 }
             } finally {
                 closeLock.readLock().unlock();
@@ -283,8 +284,10 @@ public class StreamManagerImpl implements StreamManager {
 
     @Override
     public void scheduleRemoval(final Stream stream, long delayMs) {
-        logger.info("Scheduling removal of stream {} from cache after {} sec.",
-            stream.getStreamName(), delayMs);
+        if (delayMs > 0) {
+            logger.info("Scheduling removal of stream {} from cache after {} sec.",
+                    stream.getStreamName(), delayMs);
+        }
         schedule(new Runnable() {
             @Override
             public void run() {
