@@ -33,6 +33,8 @@ import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
 import com.twitter.distributedlog.exceptions.RequestDeniedException;
 import com.twitter.distributedlog.service.ResponseUtils;
+import com.twitter.distributedlog.service.streamset.Partition;
+import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
 import com.twitter.distributedlog.thrift.service.ResponseHeader;
 import com.twitter.distributedlog.thrift.service.StatusCode;
@@ -88,6 +90,7 @@ public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements 
                        List<ByteBuffer> buffers,
                        StatsLogger statsLogger,
                        StatsLogger perStreamStatsLogger,
+                       StreamPartitionConverter streamPartitionConverter,
                        Long checksum,
                        Feature checksumDisabledFeature,
                        AccessControlManager accessControlManager) {
@@ -100,6 +103,7 @@ public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements 
         }
         this.payloadSize = total;
 
+        final Partition partition = streamPartitionConverter.convert(stream);
         // Write record stats
         StreamOpStats streamOpStats = new StreamOpStats(statsLogger, perStreamStatsLogger);
         this.deniedBulkWriteCounter = streamOpStats.requestDeniedCounter("bulkWrite");
@@ -107,8 +111,8 @@ public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements 
         this.failureRecordCounter = streamOpStats.recordsCounter("failure");
         this.redirectRecordCounter = streamOpStats.recordsCounter("redirect");
         this.bulkWriteBytes = streamOpStats.scopedRequestCounter("bulkWrite", "bytes");
-        this.latencyStat = streamOpStats.streamRequestLatencyStat(stream, "bulkWrite");
-        this.bytes = streamOpStats.streamRequestCounter(stream, "bulkWrite", "bytes");
+        this.latencyStat = streamOpStats.streamRequestLatencyStat(partition, "bulkWrite");
+        this.bytes = streamOpStats.streamRequestCounter(partition, "bulkWrite", "bytes");
 
         this.accessControlManager = accessControlManager;
 

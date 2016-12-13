@@ -194,12 +194,12 @@ public class StreamImpl implements Stream {
         this.dynConf = streamConf;
         StatsLogger limiterStatsLogger = BroadCastStatsLogger.two(
             streamOpStats.baseScope("stream_limiter"),
-            streamOpStats.streamRequestScope(name, "limiter"));
+            streamOpStats.streamRequestScope(partition, "limiter"));
         this.limiter = new StreamRequestLimiter(name, dynConf, limiterStatsLogger, featureRateLimitDisabled);
         this.requestTimer = requestTimer;
 
         // Stats
-        this.streamLogger = streamOpStats.streamRequestStatsLogger(name);
+        this.streamLogger = streamOpStats.streamRequestStatsLogger(partition);
         this.limiterStatLogger = streamOpStats.baseScope("request_limiter");
         this.streamExceptionStatLogger = streamLogger.scope("exceptions");
         this.serviceTimeout = streamOpStats.baseCounter("serviceTimeout");

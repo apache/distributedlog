@@ -106,9 +106,9 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
         int numRead = 0;
         LogRecord r = reader.readNext(false);
         while (null != r) {
-            int i = Integer.parseInt(new String(r.getPayload()));
-            assertEquals(numRead + 1, i);
             ++numRead;
+            int i = Integer.parseInt(new String(r.getPayload()));
+            assertEquals(numRead, i);
             r = reader.readNext(false);
         }
         assertEquals(10, numRead);
@@ -121,7 +121,7 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
      */
     @Test(timeout = 60000)
     public void testChecksumFlag() throws Exception {
-        String name = "dlserver-basic-write";
+        String name = "testChecksumFlag";
         LocalRoutingService routingService = LocalRoutingService.newBuilder().build();
         routingService.addHost(name, dlServer.getAddress());
         DistributedLogClientBuilder dlClientBuilder = DistributedLogClientBuilder.newBuilder()
@@ -134,7 +134,7 @@ public class TestDistributedLogServer extends DistributedLogServerTestCase {
                 .connectionTimeout(Duration.fromSeconds(1))
                 .requestTimeout(Duration.fromSeconds(60)))
             .checksum(false);
-        DistributedLogClient dlClient = (DistributedLogClientImpl) dlClientBuilder.build();
+        DistributedLogClient dlClient = dlClientBuilder.build();
         Await.result(dlClient.write(name, ByteBuffer.wrap(("1").getBytes())));
         dlClient.close();
 

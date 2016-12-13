@@ -132,6 +132,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     // Stats
     private final StatsLogger statsLogger;
     private final StatsLogger perStreamStatsLogger;
+    private final StreamPartitionConverter streamPartitionConverter;
     private final StreamOpStats streamOpStats;
     private final Counter bulkWritePendingStat;
     private final Counter writePendingStat;
@@ -158,6 +159,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         this.perStreamStatsLogger = perStreamStatsLogger;
         this.dlsnVersion = serverConf.getDlsnVersion();
         this.serverRegionId = serverConf.getRegionId();
+        this.streamPartitionConverter = converter;
         int serverPort = serverConf.getServerPort();
         int shard = serverConf.getServerShardId();
         int numThreads = serverConf.getServerThreads();
@@ -396,8 +398,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     public Future<BulkWriteResponse> writeBulkWithContext(final String stream, List<ByteBuffer> data, WriteContext ctx) {
         bulkWritePendingStat.inc();
         receivedRecordCounter.add(data.size());
-        BulkWriteOp op = new BulkWriteOp(stream, data, statsLogger, perStreamStatsLogger, getChecksum(ctx),
-            featureChecksumDisabled, accessControlManager);
+        BulkWriteOp op = new BulkWriteOp(stream, data, statsLogger, perStreamStatsLogger, streamPartitionConverter,
+            getChecksum(ctx), featureChecksumDisabled, accessControlManager);
         executeStreamOp(op);
         return op.result().ensure(new Function0<BoxedUnit>() {
             public BoxedUnit apply() {
@@ -675,8 +677,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                        ByteBuffer data,
                        Long checksum,
                        boolean isRecordSet) {
-        return new WriteOp(stream, data, statsLogger, perStreamStatsLogger, serverConfig, dlsnVersion,
-            checksum, isRecordSet, featureChecksumDisabled, accessControlManager);
+        return new WriteOp(stream, data, statsLogger, perStreamStatsLogger, streamPartitionConverter,
+            serverConfig, dlsnVersion, checksum, isRecordSet, featureChecksumDisabled,
+            accessControlManager);
     }
 
     @VisibleForTesting
