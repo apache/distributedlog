@@ -21,6 +21,8 @@
 set -e
 
 BASEDIR=$(dirname "$0")
-DLOG_ROOT="${BASEDIR}/.."
+DLOG_ROOT="${BASEDIR}/../.."
 
-bash "${DLOG_ROOT}"/scripts/bundle benchmark
+cd "${DLOG_ROOT}"
+
+bash scripts/bundle benchmark
