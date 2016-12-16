@@ -29,6 +29,7 @@ if [ "$2" == "" ]; then
 else
   DEST_DIR=$2
 fi
+rm -rf ${DEST_DIR}/content
 
 if [ ! -d "${DLOG_HOME}/website/docs" ]; then
   mkdir ${DLOG_HOME}/website/docs
