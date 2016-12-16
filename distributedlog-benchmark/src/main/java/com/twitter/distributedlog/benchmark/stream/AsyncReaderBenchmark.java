@@ -44,6 +44,8 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
     @Override
     protected void benchmark(DistributedLogNamespace namespace, String logName, StatsLogger statsLogger) {
         DistributedLogManager dlm = null;
+        Integer zkSessionTimeoutMilliseconds = conf.getZKSessionTimeoutMilliseconds();
+
         while (null == dlm) {
             try {
                 dlm = namespace.openLog(streamName);
@@ -52,8 +54,10 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
             }
             if (null == dlm) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
+                    TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
                 } catch (InterruptedException e) {
+                    logger.warn("Failed to create dlm for stream {} after {} ms timeout : ",
+                        new Object[] { streamName, zkSessionTimeoutMilliseconds, e });
                 }
             }
         }
@@ -118,8 +122,10 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
             }
             if (null == reader) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
+                    TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
                 } catch (InterruptedException e) {
+                    logger.warn("Failed to create reader for stream {} after {} ms timeout : ",
+                        new Object[] { streamName, zkSessionTimeoutMilliseconds, e });
                 }
                 continue;
             }
@@ -145,8 +151,10 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 }
             }
             try {
-                TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
+                TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
             } catch (InterruptedException e) {
+                logger.warn("Reader stream {} interrupted after {} ms timeout : ",
+                    new Object[] { streamName, zkSessionTimeoutMilliseconds, e });
             }
         }
     }
