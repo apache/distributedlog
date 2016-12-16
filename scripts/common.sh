@@ -60,7 +60,7 @@ if [ $? == 0 ]; then
 fi
 
 # exclude tests jar
-BUILT_JAR=$(ls "${DLOG_HOME}/target/distributedlog-*.jar" 2> /dev/null | egrep -v 'tests|javadoc|sources' | tail -1)
+BUILT_JAR=$(ls "${DLOG_HOME}"/target/distributedlog-*.jar 2> /dev/null | egrep -v 'tests|javadoc|sources' | tail -1)
 
 if [ -e "${BUILD_JAR}" ] && [ -e "${DLOG_JAR}" ]; then
   echo "\nCouldn't find dlog jar.";
