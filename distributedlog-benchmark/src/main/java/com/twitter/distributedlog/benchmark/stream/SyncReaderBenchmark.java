@@ -49,6 +49,8 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep while creating dlm for stream {} : ",
+                        streamName, e);
                 }
             }
         }
@@ -103,6 +105,8 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep after reader was reassigned null for stream {} : ",
+                        streamName, e);
                 }
                 continue;
             }
@@ -140,6 +144,8 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
             try {
                 TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
             } catch (InterruptedException e) {
+                logger.warn("Interrupted from sleep while creating reader for stream {} : ",
+                    streamName, e);
             }
         }
     }

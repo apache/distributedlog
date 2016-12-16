@@ -44,8 +44,6 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
     @Override
     protected void benchmark(DistributedLogNamespace namespace, String logName, StatsLogger statsLogger) {
         DistributedLogManager dlm = null;
-        Integer zkSessionTimeoutMilliseconds = conf.getZKSessionTimeoutMilliseconds();
-
         while (null == dlm) {
             try {
                 dlm = namespace.openLog(streamName);
@@ -54,7 +52,7 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
             }
             if (null == dlm) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
+                    TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
                     logger.warn("Interrupted from sleep while creating dlm for stream {} : ",
                         streamName, e);
@@ -122,7 +120,7 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
             }
             if (null == reader) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
+                    TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
                     logger.warn("Interrupted from sleep after reader was reassigned null for stream {} : ",
                         streamName, e);
@@ -151,7 +149,7 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 }
             }
             try {
-                TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
+                TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
             } catch (InterruptedException e) {
                 logger.warn("Interrupted from sleep while creating reader for stream {} : ",
                     streamName, e);
