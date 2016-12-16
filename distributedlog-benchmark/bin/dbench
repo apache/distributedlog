@@ -20,7 +20,8 @@
 
 set -e
 
-DLOG_ROOT=$(git rev-parse --show-toplevel)
+BASEDIR=$(dirname "$0")
+DLOG_ROOT="${BASEDIR}/../.."
 
 DLOG_HOME="${DLOG_ROOT}/distributedlog-benchmark"
 
@@ -43,8 +44,7 @@ These variable can also be set in conf/dlogenv.sh
 EOF
 }
 
-cd "${DLOG_ROOT}"
-source ./scripts/common.sh
+source ${DLOG_ROOT}/scripts/common.sh
 
 # get arguments
 COMMAND=$1
@@ -64,7 +64,7 @@ BENCH_ARGS="""
 """
 
 #Change to DLOG_HOME to support relative paths
-cd "$DLOG_HOME"
+#cd "$DLOG_HOME"
 
 case "${COMMAND}" in
   bkwrite)
@@ -73,7 +73,7 @@ case "${COMMAND}" in
     --rate ${INITIAL_RATE} \\
     --max-rate ${MAX_RATE} \\
     --change-rate ${CHANGE_RATE} \\
-    --change-interval ${CHANGE_RATE_INTERVAL}
+    --change-interval ${CHANGE_RATE_INTERVAL} \\
     """
     BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_WRITE_ARGS} \\ --mode dlwrite \\"
     exec java $OPTS $JMX_ARGS com.twitter.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
@@ -85,6 +85,7 @@ case "${COMMAND}" in
     --max-rate ${MAX_RATE} \\
     --change-rate ${CHANGE_RATE} \\
     --change-interval ${CHANGE_RATE_INTERVAL} \\
+    --finagle-name inet!localhost:8000 \\
     """
     BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_WRITE_ARGS} \\ --mode write \\"
     exec java $OPTS $JMX_ARGS com.twitter.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
@@ -94,6 +95,7 @@ case "${COMMAND}" in
     --readers-per-stream ${NUM_READERS_PER_STREAM} \\
     --max-stream-id ${MAX_STREAM_ID} \\
     --truncation-interval ${TRUNCATION_INTERVAL} \\
+    --finagle-name inet!localhost:8000 \\
     """
     BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_READ_ARGS} \\ --mode read \\"
     exec java $OPTS $JMX_ARGS com.twitter.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
@@ -102,7 +104,8 @@ case "${COMMAND}" in
     usage
     ;;
   *)
-    exec java $OPTS $COMMAND $@
+    set -x
+    echo java $OPTS $COMMAND $@
     ;;
 esac
 

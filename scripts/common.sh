@@ -48,6 +48,7 @@ else
   echo "JMX disabled by user request" >&2
 fi
 
+echo "DLOG_HOME => ${DLOG_HOME}"
 DEFAULT_LOG_CONF="${DLOG_HOME}/conf/log4j.properties"
 
 [ -f "${DLOG_HOME}/conf/dlogenv.sh" ] && source "${DLOG_HOME}/conf/dlogenv.sh"
@@ -59,7 +60,7 @@ if [ $? == 0 ]; then
 fi
 
 # exclude tests jar
-BUILT_JAR=$(ls "${DLOG_HOME}/target/distributedlog-*.jar" 2> /dev/null | egrep -v 'tests|javadoc|sources' | tail -1)
+BUILT_JAR=$(ls "${DLOG_HOME}"/target/distributedlog-*.jar 2> /dev/null | egrep -v 'tests|javadoc|sources' | tail -1)
 
 if [ -e "${BUILD_JAR}" ] && [ -e "${DLOG_JAR}" ]; then
   echo "\nCouldn't find dlog jar.";
@@ -93,9 +94,8 @@ else
   add_maven_deps_to_classpath
 fi
 
-# if no args specified, show usage
+# if no args specified, exit
 if [ $# = 0 ]; then
-  usage
   exit 1
 fi
 

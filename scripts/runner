@@ -22,7 +22,8 @@
 
 set -e
 
-DLOG_ROOT=$(git rev-parse --show-toplevel)
+BASEDIR=$(dirname "$0")
+DLOG_ROOT="${BASEDIR}/.."
 
 DLOG_HOME="${DLOG_ROOT}/distributedlog-service"
 
