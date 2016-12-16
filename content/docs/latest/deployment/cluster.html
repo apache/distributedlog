@@ -15,8 +15,8 @@
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="/docs/latest/js/bootstrap.min.js"></script>
-  <link rel="canonical" href="/docs/latest/deployment/cluster.html" data-proofer-ignore>
-  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="/docs/latest/feed.xml">
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">
   <!-- Font Awesome -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
   <!-- Google Analytics -->
@@ -113,6 +113,12 @@
             </li>
             
             <li>
+              <a href="/docs/latest/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
               <a href="/docs/latest/deployment/docker.html">
                 Docker
               </a>
@@ -198,6 +204,12 @@
             <li>
               <a href="/docs/latest/admin_guide/performance.html">
                 Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/loadtest.html">
+                Load Test
               </a>
             </li>
             
@@ -358,8 +370,32 @@ under the License.
             
               
               <li>
+                <a href="/docs/latest/deployment/global-cluster.html" class="">
+                  Global Cluster Setup
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
                 <a href="/docs/latest/admin_guide/performance.html" class="">
                   Performance Tuning
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/loadtest.html" class="">
+                  Load Test
                 </a>
                 
                 <ul>
@@ -493,8 +529,9 @@ To run a cluster with DistributedLog, you need a Zookeeper cluster and a Bookkee
 </span></code></pre></td></tr></table></div></figure><p>Or run <cite>./scripts/snapshot</cite> to build the release packages from current source. The released
 packages contain the binaries for running <cite>distributedlog-service</cite>, <cite>distributedlog-benchmark</cite>
 and <cite>distributedlog-tutorials</cite>.</p>
-<p>NOTE: we run following instructions from distributedlog source code after running <cite>mvn clean install</cite>.
-And assume <cite>DL_HOME</cite> is the directory of distributedlog source.</p>
+<p>NOTE: we run the following instructions from distributedlog source code after
+running <cite>mvn clean install</cite>.  And assume <cite>DL_HOME</cite> is the directory of
+distributedlog source.</p>
 </div>
 <div class="section" id="zookeeper">
 <h3><a class="toc-backref" href="#id3">Zookeeper</a></h3>
