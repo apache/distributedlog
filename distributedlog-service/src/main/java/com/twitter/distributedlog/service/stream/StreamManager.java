@@ -43,10 +43,11 @@ public interface StreamManager {
 
     /**
      * Get a cached stream and create a new one if it doesnt exist.
-     * @param stream name
+     * @param streamName stream name
+     * @param start whether to start the stream after it is created.
      * @return future satisfied once close complete
      */
-    Stream getOrCreateStream(String stream) throws IOException;
+    Stream getOrCreateStream(String streamName, boolean start) throws IOException;
 
     /**
      * Asynchronously create a new stream.

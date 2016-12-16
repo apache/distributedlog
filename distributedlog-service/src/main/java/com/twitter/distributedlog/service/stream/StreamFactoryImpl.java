@@ -25,6 +25,7 @@ import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.config.StreamConfigProvider;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.distributedlog.util.OrderedScheduler;
+import com.twitter.util.Timer;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.jboss.netty.util.HashedWheelTimer;
 
@@ -40,6 +41,7 @@ public class StreamFactoryImpl implements StreamFactory {
     private final OrderedScheduler scheduler;
     private final FatalErrorHandler fatalErrorHandler;
     private final HashedWheelTimer requestTimer;
+    private final Timer futureTimer;
 
     public StreamFactoryImpl(String clientId,
         StreamOpStats streamOpStats,
@@ -64,6 +66,7 @@ public class StreamFactoryImpl implements StreamFactory {
         this.scheduler = scheduler;
         this.fatalErrorHandler = fatalErrorHandler;
         this.requestTimer = requestTimer;
+        this.futureTimer = new com.twitter.finagle.util.HashedWheelTimer(requestTimer);
     }
 
     @Override
@@ -83,6 +86,7 @@ public class StreamFactoryImpl implements StreamFactory {
             dlNamespace,
             scheduler,
             fatalErrorHandler,
-            requestTimer);
+            requestTimer,
+            futureTimer);
     }
 }
