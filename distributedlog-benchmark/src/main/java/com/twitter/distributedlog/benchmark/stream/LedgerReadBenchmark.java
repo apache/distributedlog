@@ -50,6 +50,8 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
     @Override
     protected void benchmark(DistributedLogNamespace namespace, String logName, StatsLogger statsLogger) {
         DistributedLogManager dlm = null;
+        Integer zkSessionTimeoutMilliseconds = conf.getZKSessionTimeoutMilliseconds();
+
         while (null == dlm) {
             try {
                 dlm = namespace.openLog(streamName);
@@ -58,8 +60,10 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
             }
             if (null == dlm) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
+                    TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep while creating dlm for stream {} : ",
+                        streamName, e);
                 }
             }
         }
@@ -74,8 +78,10 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
             }
             if (null == segments) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
+                    TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep while geting log segments for stream {} : ",
+                        streamName, e);
                 }
             }
         }

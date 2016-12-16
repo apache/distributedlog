@@ -56,8 +56,8 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
                 } catch (InterruptedException e) {
-                    logger.warn("Failed to create dlm for stream {} after {} ms timeout : ",
-                        new Object[] { streamName, zkSessionTimeoutMilliseconds, e });
+                    logger.warn("Interrupted from sleep while creating dlm for stream {} : ",
+                        streamName, e);
                 }
             }
         }
@@ -124,8 +124,8 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
                 } catch (InterruptedException e) {
-                    logger.warn("Failed to create reader for stream {} after {} ms timeout : ",
-                        new Object[] { streamName, zkSessionTimeoutMilliseconds, e });
+                    logger.warn("Interrupted from sleep after reader was reassigned null for stream {} : ",
+                        streamName, e);
                 }
                 continue;
             }
@@ -153,8 +153,8 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
             try {
                 TimeUnit.MILLISECONDS.sleep(zkSessionTimeoutMilliseconds);
             } catch (InterruptedException e) {
-                logger.warn("Reader stream {} interrupted after {} ms timeout : ",
-                    new Object[] { streamName, zkSessionTimeoutMilliseconds, e });
+                logger.warn("Interrupted from sleep while creating reader for stream {} : ",
+                    streamName, e);
             }
         }
     }
