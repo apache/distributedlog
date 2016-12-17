@@ -34,7 +34,6 @@ if File.exists?(local_config_file) then
   eval(File.read(local_config_file), binding, "Vagrantfile.local")
 end
 
-# TODO(ksweeney): RAM requirements are not empirical and can probably be significantly lowered.
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.hostmanager.enabled = enable_hostmanager
   config.hostmanager.manage_host = enable_dns
@@ -92,7 +91,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   }
 
   (1..num_hosts).each { |i|
-    name = "node" + i.to_s
+    name = "bk" + i.to_s
     config.vm.define name do |broker|
       name_node(broker, name)
       ip_address = "192.168.50." + (50 + i).to_s
@@ -106,6 +105,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       broker.vm.provision "shell", path: "vagrant/bk.sh", :args => [i.to_s, enable_dns ? name : ip_address, zookeeper_connect]
     end
   }
-
-
 end
