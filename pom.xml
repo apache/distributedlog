@@ -52,18 +52,25 @@
   </issueManagement>
   <mailingLists>
     <mailingList>
+      <name>DistributedLog User</name>
+      <subscribe>user-subscribe@distributedlog.incubator.apache.org</subscribe>
+      <unsubscribe>user-unsubscribe@distributedlog.incubator.apache.org</unsubscribe>
+      <post>user@distributedlog.incubator.apache.org</post>
+      <archive>http://www.mail-archive.com/user@distributedlog.incubator.apache.org</archive>
+    </mailingList>
+    <mailingList>
       <name>DistributedLog Dev</name>
       <subscribe>dev-subscribe@distributedlog.incubator.apache.org</subscribe>
       <unsubscribe>dev-unsubscribe@distributedlog.incubator.apache.org</unsubscribe>
       <post>dev@distributedlog.incubator.apache.org</post>
-      <archive>http://www.mail-archive.com/dev%distributedlog.incubator.apache.org</archive>
+      <archive>http://www.mail-archive.com/dev@distributedlog.incubator.apache.org</archive>
     </mailingList>
     <mailingList>
       <name>DistributedLog Commits</name>
       <subscribe>commits-subscribe@distributedlog.incubator.apache.org</subscribe>
       <unsubscribe>commits-unsubscribe@distributedlog.incubator.apache.org</unsubscribe>
       <post>commits@distributedlog.incubator.apache.org</post>
-      <archive>http://www.mail-archive.com/commits%distributedlog.incubator.apache.org</archive>
+      <archive>http://www.mail-archive.com/commits@distributedlog.incubator.apache.org</archive>
     </mailingList>
   </mailingLists>
   <developers>
