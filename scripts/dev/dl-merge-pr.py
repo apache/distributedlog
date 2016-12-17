@@ -86,7 +86,7 @@ RELEASE_BRANCH_PREFIX = ''
 DEV_BRANCH_NAME = 'master'
 DEFAULT_FIX_VERSION = os.environ.get("DEFAULT_FIX_VERSION", "0.4.0")
 
-def get_json(url):
+def get_json(url, preview_api = False):
   """
   Returns parsed JSON from an API call to the GitHub API.
   """
@@ -94,6 +94,8 @@ def get_json(url):
     request = urllib2.Request(url)
     if GITHUB_OAUTH_KEY:
       request.add_header('Authorization', 'token {0}'.format(GITHUB_OAUTH_KEY))
+    if preview_api:
+      request.add_header('Accept', 'application/vnd.github.black-cat-preview+json')
     return json.load(urllib2.urlopen(request))
   except urllib2.HTTPError as e:
     if 'X-RateLimit-Remaining' in e.headers and e.headers['X-RateLimit-Remaining'] == '0':
@@ -421,15 +423,24 @@ def get_reviewers(pr_num):
   """
   Gets a candidate list of reviewers that have commented on the PR with '+1' or 'LGTM'
   """
-  approval_msgs = ['+1', 'lgtm']
-
-  pr_comments = get_json('{0}/issues/{1}/comments'.format(GITHUB_API_BASE, pr_num))
-
   reviewers_ids = set()
+
+  approval_msgs = ['+1', 'lgtm']
+  pr_comments = get_json('{0}/issues/{1}/comments'.format(GITHUB_API_BASE, pr_num))
   for comment in pr_comments:
     for approval_msg in approval_msgs:
       if approval_msg in comment['body'].lower():
         reviewers_ids.add(comment['user']['login'])
+
+  approval_review_states = ['approved']
+  pr_reviews = get_json('{0}/pulls/{1}/reviews'.format(GITHUB_API_BASE, pr_num), True)
+  for review in pr_reviews:
+    for approval_state in approval_review_states:
+      if approval_state in review['state'].lower():
+        reviewers_ids.add(review['user']['login'])
+
+  if len(reviewers_ids) == 0:
+    fail("No approvals found in this pull request")
 
   reviewers_emails = []
   for reviewer_id in reviewers_ids:
