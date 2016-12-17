@@ -38,8 +38,9 @@ Or run `./scripts/snapshot` to build the release packages from current source. T
 packages contain the binaries for running `distributedlog-service`, `distributedlog-benchmark`
 and `distributedlog-tutorials`.
 
-NOTE: we run following instructions from distributedlog source code after running `mvn clean install`.
-And assume `DL_HOME` is the directory of distributedlog source.
+NOTE: we run the following instructions from distributedlog source code after
+running `mvn clean install`.  And assume `DL_HOME` is the directory of
+distributedlog source.
 
 Zookeeper
 ---------
@@ -118,8 +119,9 @@ First of all, choose the zookeeper cluster that the bookies will use and set `zk
 the configuration files.
 
 ::
-    
+
     zkServers=localhost:2181
+
 
 Choose the zookeeper path to store bookkeeper metadata and set `zkLedgersRootPath` in the configuration
 files. Let's use `/messaging/bookkeeper/ledgers` in this instruction.
@@ -159,7 +161,7 @@ So using `zkshell` to create the `zkLedgersRootPath`.
 If the `zkLedgersRootPath`, run `metaformat` to format the bookkeeper metadata.
 
 ::
-    
+
     $ BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-1.conf ./distributedlog-service/bin/dlog bkshell metaformat
     Are you sure to format bookkeeper metadata ? (Y or N) Y
 
@@ -176,7 +178,7 @@ Configure the ports that used by bookies.
 bookie-1:
 
 ::
-   
+
     # Port that bookie server listen on
     bookiePort=3181
     # Exporting codahale stats
@@ -185,7 +187,7 @@ bookie-1:
 bookie-2:
 
 ::
-   
+
     # Port that bookie server listen on
     bookiePort=3182
     # Exporting codahale stats
@@ -194,7 +196,7 @@ bookie-2:
 bookie-3:
 
 ::
-   
+
     # Port that bookie server listen on
     bookiePort=3183
     # Exporting codahale stats
@@ -206,7 +208,7 @@ Configure Disk Layout
 Configure the disk directories used by a bookie server by setting following options.
 
 ::
-    
+
     # Directory Bookkeeper outputs its write ahead log
     journalDirectory=/tmp/data/bk/journal
     # Directory Bookkeeper outputs ledger snapshots
@@ -219,7 +221,7 @@ As we are configuring a 3-nodes bookkeeper cluster, we modify the following sett
 bookie-1:
 
 ::
-    
+
     # Directory Bookkeeper outputs its write ahead log
     journalDirectory=/tmp/data/bk-1/journal
     # Directory Bookkeeper outputs ledger snapshots
@@ -230,7 +232,7 @@ bookie-1:
 bookie-2:
 
 ::
-    
+
     # Directory Bookkeeper outputs its write ahead log
     journalDirectory=/tmp/data/bk-2/journal
     # Directory Bookkeeper outputs ledger snapshots
@@ -241,7 +243,7 @@ bookie-2:
 bookie-3:
 
 ::
-    
+
     # Directory Bookkeeper outputs its write ahead log
     journalDirectory=/tmp/data/bk-3/journal
     # Directory Bookkeeper outputs ledger snapshots
@@ -256,7 +258,7 @@ Once the disk directories are configured correctly in the configuration file, us
 `bkshell bookieformat` to format the bookie.
 
 ::
-    
+
     BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-1.conf ./distributedlog-service/bin/dlog bkshell bookieformat
     BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-2.conf ./distributedlog-service/bin/dlog bkshell bookieformat
     BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-3.conf ./distributedlog-service/bin/dlog bkshell bookieformat
@@ -268,16 +270,16 @@ Start bookie
 Start the bookie using `dlog-daemon.sh`.
 
 ::
-    
+
     SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-1.conf
     SERVICE_PORT=3182 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-2.conf
     SERVICE_PORT=3183 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-3.conf
-    
+
 Verify whether the bookie is setup correctly. You could simply check whether the bookie is showed up in
 zookeeper `zkLedgersRootPath`/available znode.
 
 ::
-    
+
     $ ./distributedlog-service/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
@@ -294,7 +296,7 @@ zookeeper `zkLedgersRootPath`/available znode.
 Or check if the bookie is exposing the stats at port `codahaleStatsHttpPort`.
 
 ::
-    
+
     // ping the service
     $ curl localhost:9001/ping
     pong
@@ -307,7 +309,7 @@ Stop bookie
 Stop the bookie using `dlog-daemon.sh`.
 
 ::
-    
+
     $ ./distributedlog-service/bin/dlog-daemon.sh stop bookie
     // Example:
     $ SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh stop bookie
@@ -322,13 +324,13 @@ Turn bookie to readonly
 Start the bookie in `readonly` mode.
 
 ::
-    
+
     $ SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-1.conf --readonly
 
 Verify if the bookie is running in `readonly` mode.
 
 ::
-    
+
     $ ./distributedlog-service/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
@@ -376,7 +378,7 @@ Create namespace binding using `dlog tool`. For example, we create a namespace
 bookkeeper cluster we just created above.
 
 ::
-    
+
     $ distributedlog-service/bin/dlog admin bind \\
         -dlzr 127.0.0.1:2181 \\
         -dlzw 127.0.0.1:2181 \\
@@ -425,7 +427,7 @@ Run write proxy
 A write proxy could be started using `dlog-daemon.sh` script under `distributedlog-service`.
 
 ::
-    
+
     WP_SHARD_ID=${WP_SHARD_ID} WP_SERVICE_PORT=${WP_SERVICE_PORT} WP_STATS_PORT=${WP_STATS_PORT} ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
 
 - `WP_SHARD_ID`: A non-negative integer. You don't need to guarantee uniqueness of shard id, as it is just an
@@ -442,7 +444,7 @@ Please check `distributedlog-service/conf/dlogenv.sh` for more environment varia
 For example, we start 3 write proxies locally and point to the namespace created above.
 
 ::
-    
+
     $ WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=20001 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
     $ WP_SHARD_ID=2 WP_SERVICE_PORT=4182 WP_STATS_PORT=20002 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
     $ WP_SHARD_ID=3 WP_SERVICE_PORT=4183 WP_STATS_PORT=20003 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
@@ -452,7 +454,7 @@ The write proxy will announce itself to the zookeeper path `.write_proxy` under 
 We could verify that the write proxy is running correctly by checking the zookeeper path or checking its stats port.
 
 ::
-    
+
     $ ./distributedlog-service/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
@@ -466,7 +468,7 @@ We could verify that the write proxy is running correctly by checking the zookee
 
 
 ::
-    
+
     $ curl localhost:20001/ping
     pong
 
@@ -477,7 +479,7 @@ Add and Remove Write Proxies
 Removing a write proxy is pretty straightforward by just killing the process.
 
 ::
-    
+
     WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=10001 ./distributedlog-service/bin/dlog-daemon.sh stop writeproxy
 
 
@@ -506,14 +508,14 @@ Create 10 streams.
 Tail read from the 10 streams.
 
 ::
-    
+
     $ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.MultiReader distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace stream-0,stream-1,stream-2,stream-3,stream-4,stream-5,stream-6,stream-7,stream-8,stream-9,stream-10
 
 
 Run record generator over some streams
 
 ::
-    
+
     $ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-0 100
     $ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-1 100
 
@@ -521,7 +523,7 @@ Run record generator over some streams
 Check the terminal running `MultiReader`. You will see similar output as below:
 
 ::
-    
+
     """
     Received record DLSN{logSegmentSequenceNo=1, entryId=21044, slotId=0} from stream stream-0
     """
