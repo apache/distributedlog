@@ -44,7 +44,7 @@ STREAM_NAME_PREFIX=distributedlog-smoketest
 # Benchmark Run Duration in minutes
 BENCHMARK_DURATION=60
 # DL Namespace
-DL_NAMESPACE=distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace
+DL_NAMESPACE=distributedlog://127.0.0.1:2181/messaging/my_namespace
 # Benchmark SHARD id
 BENCHMARK_SHARD_ID=0
 

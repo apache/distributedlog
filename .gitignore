@@ -23,3 +23,7 @@ lib/
 *.#*
 dist/
 logs/
+*.pid
+
+# vagrant
+.vagrant

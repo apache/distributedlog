@@ -24,7 +24,7 @@ Steps
     ./scripts/snapshot
 
 
-2. Create your own docker image using 
+2. Create your own docker image using
 
 .. code-block:: bash
 

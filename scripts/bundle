@@ -27,8 +27,6 @@ if [[ -z "${COMPONENT}" ]]; then
   exit 1
 fi
 
-cd "${DLOG_ROOT}"
-
 rm -rf "distributedlog-${COMPONENT}/lib"
 rm -rf "dist/distributedlog-${COMPONENT}*"
 

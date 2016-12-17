@@ -220,7 +220,7 @@ public class ConsistentHashRoutingService extends ServerSetRoutingService {
 
         synchronized void dumpHashRing() {
             for (Map.Entry<Long, SocketAddress> entry : circle.entrySet()) {
-                System.out.println(entry.getKey() + " : " + entry.getValue());
+                logger.info(entry.getKey() + " : " + entry.getValue());
             }
         }
 
