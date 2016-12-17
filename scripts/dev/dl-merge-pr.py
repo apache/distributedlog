@@ -442,11 +442,21 @@ def get_reviewers(pr_num):
   if len(reviewers_ids) == 0:
     fail("No approvals found in this pull request")
 
+  dir_path = os.path.dirname(os.path.realpath(__file__))
+  with open('{0}/reviewers'.format(dir_path)) as reviewers_data:
+    reviewers = json.load(reviewers_data)
+
   reviewers_emails = []
   for reviewer_id in reviewers_ids:
-    user = get_json('{0}/users/{1}'.format(GITHUB_API_URL, reviewer_id))
     username = None
     useremail = None
+    if hasattr(reviewers, reviewer_id):
+      reviewer = reviewers[reviewer_id]
+      username = reviewer['name']
+      useremail = reviewer['email']
+      reviewers_emails += ['{0} <{1}>'.format(username, useremail)]
+      continue
+    user = get_json('{0}/users/{1}'.format(GITHUB_API_URL, reviewer_id))
     if user['email'] is not None:
         useremail = user['email'].strip()
     else:
