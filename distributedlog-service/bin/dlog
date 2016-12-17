@@ -20,8 +20,8 @@
 
 set -e
 
-DLOG_ROOT=$(git rev-parse --show-toplevel)
-
+BASEDIR=$(dirname "$0")
+DLOG_ROOT="${BASEDIR}/.."
 DLOG_HOME="${DLOG_ROOT}"
 
 usage() {
@@ -49,15 +49,11 @@ These variable can also be set in conf/dlogenv.sh
 EOF
 }
 
-cd "${DLOG_ROOT}"
-source ./scripts/common.sh
+source "${DLOG_ROOT}"/../scripts/common.sh
 
 # get arguments
 COMMAND=$1
 shift
-
-#Change to DLOG_HOME to support relative paths
-cd "$DLOG_HOME"
 
 case "${COMMAND}" in
   local)
