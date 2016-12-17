@@ -84,6 +84,7 @@ TEMP_BRANCH_PREFIX = 'PR_TOOL'
 RELEASE_BRANCH_PREFIX = ''
 
 DEV_BRANCH_NAME = 'master'
+DEFAULT_FIX_VERSION = os.environ.get("DEFAULT_FIX_VERSION", "0.4.0")
 
 def get_json(url):
   """
@@ -139,7 +140,7 @@ def clean_up():
     print('Restoring head pointer to {0}'.format(original_head))
     run_cmd(['git', 'checkout', original_head])
 
-  branches = run_cmd(['git', 'branch']).strip().split('\n')
+  branches = run_cmd(['git', 'branch']).replace(" ", "").split('\n')
 
   for branch in filter(lambda x: x.startswith(TEMP_BRANCH_PREFIX), branches):
     print('Deleting local branch {0}'.format(branch))
@@ -290,6 +291,7 @@ def cherry_pick(pr_num, merge_hash, default_branch):
 def fix_version_from_branch(branch, versions):
   # Note: Assumes this is a sorted (newest->oldest) list of un-released versions
   if branch == DEV_BRANCH_NAME:
+    versions = filter(lambda x: x == DEFAULT_FIX_VERSION, versions)
     if len(versions) > 0:
       return versions[0]
     else:
@@ -328,9 +330,10 @@ def resolve_jira_issue(merge_branches, comment, jira_id):
 
   if cur_status == 'Resolved' or cur_status == 'Closed':
     fail('JIRA issue {0} already has status \'{1}\''.format(jira_id, cur_status))
-    print ('=== JIRA {0} ==='.format(jira_id))
-    print ('summary\t\t{0}\nassignee\t{1}\nstatus\t\t{2}\nurl\t\t{3}/{4}\n'.format(
-      cur_summary, cur_assignee, cur_status, JIRA_BASE, jira_id))
+
+  print ('=== JIRA {0} ==='.format(jira_id))
+  print ('summary\t\t{0}\nassignee\t{1}\nstatus\t\t{2}\nurl\t\t{3}/{4}\n'.format(
+    cur_summary, cur_assignee, cur_status, JIRA_BASE, jira_id))
 
   versions = asf_jira.project_versions(CAPITALIZED_PROJECT_NAME)
   versions = sorted(versions, key=lambda x: x.name, reverse=True)
