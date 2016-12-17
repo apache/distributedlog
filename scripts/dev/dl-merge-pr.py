@@ -450,7 +450,7 @@ def get_reviewers(pr_num):
   for reviewer_id in reviewers_ids:
     username = None
     useremail = None
-    if hasattr(reviewers, reviewer_id):
+    if reviewers[reviewer_id] is not None:
       reviewer = reviewers[reviewer_id]
       username = reviewer['name']
       useremail = reviewer['email']
