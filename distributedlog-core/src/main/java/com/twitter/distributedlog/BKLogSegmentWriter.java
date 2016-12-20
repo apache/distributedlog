@@ -17,27 +17,18 @@
  */
 package com.twitter.distributedlog;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.ReentrantLock;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.exceptions.BKTransmitException;
 import com.twitter.distributedlog.exceptions.EndOfStreamException;
 import com.twitter.distributedlog.exceptions.FlushException;
+import com.twitter.distributedlog.exceptions.InvalidEnvelopedEntryException;
 import com.twitter.distributedlog.exceptions.LockingException;
 import com.twitter.distributedlog.exceptions.LogRecordTooLongException;
 import com.twitter.distributedlog.exceptions.TransactionIdOutOfOrderException;
 import com.twitter.distributedlog.exceptions.WriteCancelledException;
 import com.twitter.distributedlog.exceptions.WriteException;
-import com.twitter.distributedlog.exceptions.InvalidEnvelopedEntryException;
 import com.twitter.distributedlog.feature.CoreFeatureKeys;
 import com.twitter.distributedlog.injector.FailureInjector;
 import com.twitter.distributedlog.injector.RandomDelayFailureInjector;
@@ -78,9 +69,18 @@ import org.slf4j.LoggerFactory;
 import scala.runtime.AbstractFunction1;
 import scala.runtime.BoxedUnit;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
+
 import static com.google.common.base.Charsets.UTF_8;
-import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
 import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORDSET_SIZE;
+import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
 
 /**
  * BookKeeper Based Log Segment Writer.
@@ -1109,7 +1109,7 @@ class BKLogSegmentWriter implements LogSegmentWriter, AddCallback, Runnable, Siz
 
                 BKTransmitPacket packet = new BKTransmitPacket(recordSetToTransmit);
                 packetPrevious = packet;
-                entryWriter.asyncAddEntry(toSend.getData(), 0, toSend.size(),
+                entryWriter.asyncAddEntry(toSend.getData(),
                                           this, packet);
 
                 if (recordSetToTransmit.hasUserRecords()) {

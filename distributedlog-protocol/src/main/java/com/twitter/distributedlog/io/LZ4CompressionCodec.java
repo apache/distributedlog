@@ -17,18 +17,17 @@
  */
 package com.twitter.distributedlog.io;
 
-import java.util.concurrent.TimeUnit;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
-
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Exception;
 import net.jpountz.lz4.LZ4Factory;
 import net.jpountz.lz4.LZ4FastDecompressor;
 import net.jpountz.lz4.LZ4SafeDecompressor;
-
 import org.apache.bookkeeper.stats.OpStatsLogger;
+
+import java.nio.ByteBuffer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * All functions are thread safe.
@@ -49,22 +48,22 @@ public class LZ4CompressionCodec implements CompressionCodec {
     }
 
     @Override
-    public byte[] compress(byte[] data, int offset, int length, OpStatsLogger compressionStat) {
+    public ByteBuffer compress(ByteBuffer data, int offset, int length, OpStatsLogger compressionStat) {
         Preconditions.checkNotNull(data);
-        Preconditions.checkArgument(offset >= 0 && offset < data.length);
+        Preconditions.checkArgument(offset >= 0 && offset < data.limit());
         Preconditions.checkArgument(length >= 0);
         Preconditions.checkNotNull(compressionStat);
 
         Stopwatch watch = Stopwatch.createStarted();
-        byte[] compressed = compressor.compress(data, offset, length);
+        byte[] compressed = compressor.compress(data.array(), offset, length);
         compressionStat.registerSuccessfulEvent(watch.elapsed(TimeUnit.MICROSECONDS));
-        return compressed;
+        return ByteBuffer.wrap(compressed);
     }
 
     @Override
-    public byte[] decompress(byte[] data, int offset, int length, OpStatsLogger decompressionStat) {
+    public ByteBuffer decompress(ByteBuffer data, int offset, int length, OpStatsLogger decompressionStat) {
         Preconditions.checkNotNull(data);
-        Preconditions.checkArgument(offset >= 0 && offset < data.length);
+        Preconditions.checkArgument(offset >= 0 && offset < data.limit());
         Preconditions.checkArgument(length >= 0);
         Preconditions.checkNotNull(decompressionStat);
 
@@ -73,9 +72,9 @@ public class LZ4CompressionCodec implements CompressionCodec {
         int outLength = length * 3;
         while (true) {
             try {
-                byte[] decompressed = safeDecompressor.decompress(data, offset, length, outLength);
+                byte[] decompressed = safeDecompressor.decompress(data.array(), offset, length, outLength);
                 decompressionStat.registerSuccessfulEvent(watch.elapsed(TimeUnit.MICROSECONDS));
-                return decompressed;
+                return ByteBuffer.wrap(decompressed);
             } catch (LZ4Exception e) {
                 outLength *= 2;
             }
@@ -84,17 +83,17 @@ public class LZ4CompressionCodec implements CompressionCodec {
 
     @Override
     // length parameter is ignored here because of the way the fastDecompressor works.
-    public byte[] decompress(byte[] data, int offset, int length, int decompressedSize,
+    public ByteBuffer decompress(ByteBuffer data, int offset, int length, int decompressedSize,
                              OpStatsLogger decompressionStat) {
         Preconditions.checkNotNull(data);
-        Preconditions.checkArgument(offset >= 0 && offset < data.length);
+        Preconditions.checkArgument(offset >= 0 && offset < data.limit());
         Preconditions.checkArgument(length >= 0);
         Preconditions.checkArgument(decompressedSize >= 0);
         Preconditions.checkNotNull(decompressionStat);
 
         Stopwatch watch = Stopwatch.createStarted();
-        byte[] decompressed = fastDecompressor.decompress(data, offset, decompressedSize);
+        byte[] decompressed = fastDecompressor.decompress(data.array(), offset, decompressedSize);
         decompressionStat.registerSuccessfulEvent(watch.elapsed(TimeUnit.MICROSECONDS));
-        return decompressed;
+        return ByteBuffer.wrap(decompressed);
     }
 }

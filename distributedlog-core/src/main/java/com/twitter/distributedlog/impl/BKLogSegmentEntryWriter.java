@@ -21,6 +21,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.twitter.distributedlog.logsegment.LogSegmentEntryWriter;
 import org.apache.bookkeeper.client.AsyncCallback;
 import org.apache.bookkeeper.client.LedgerHandle;
+import java.nio.ByteBuffer;
 
 /**
  * Ledger based log segment entry writer.
@@ -49,9 +50,9 @@ public class BKLogSegmentEntryWriter implements LogSegmentEntryWriter {
     }
 
     @Override
-    public void asyncAddEntry(byte[] data, int offset, int length,
+    public void asyncAddEntry(ByteBuffer data,
                               AsyncCallback.AddCallback callback, Object ctx) {
-        lh.asyncAddEntry(data, offset, length, callback, ctx);
+        lh.asyncAddEntry(data, callback, ctx);
     }
 
     @Override

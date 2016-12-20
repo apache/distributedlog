@@ -18,16 +18,48 @@
 package com.twitter.distributedlog.io;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * {@link ByteArrayOutputStream} based buffer.
  */
-public class Buffer extends ByteArrayOutputStream {
+public class Buffer extends OutputStream {
+    ByteBuffer buf;
     public Buffer(int initialCapacity) {
-        super(initialCapacity);
+        buf = ByteBuffer.allocate(initialCapacity);
     }
 
-    public byte[] getData() {
+    public ByteBuffer getData() {
         return buf;
+    }
+
+    /**
+     * Writes the specified byte to this output stream. The general
+     * contract for <code>write</code> is that one byte is written
+     * to the output stream. The byte to be written is the eight
+     * low-order bits of the argument <code>b</code>. The 24
+     * high-order bits of <code>b</code> are ignored.
+     * <p>
+     * Subclasses of <code>OutputStream</code> must provide an
+     * implementation for this method.
+     *
+     * @param b the <code>byte</code>.
+     * @throws IOException if an I/O error occurs. In particular,
+     *                     an <code>IOException</code> may be thrown if the
+     *                     output stream has been closed.
+     */
+    @Override
+    public void write(int b) throws IOException {
+        buf.put((byte)b);
+    }
+
+    public int size() {
+        return buf.position();
+    }
+
+    //TODO: Implement this
+    public void reset() {
     }
 }

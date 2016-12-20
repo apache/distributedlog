@@ -21,6 +21,7 @@ import com.google.common.annotations.Beta;
 import com.twitter.distributedlog.Entry;
 import com.twitter.distributedlog.util.Sizable;
 import org.apache.bookkeeper.client.AsyncCallback;
+import java.nio.ByteBuffer;
 
 /**
  * An interface class to write the enveloped entry (serialized bytes of
@@ -56,10 +57,6 @@ public interface LogSegmentEntryWriter extends Sizable {
      *
      * @param data
      *          data to add
-     * @param offset
-     *          offset in the data
-     * @param length
-     *          length of the data
      * @param callback
      *          callback
      * @param ctx
@@ -67,6 +64,6 @@ public interface LogSegmentEntryWriter extends Sizable {
      * @see org.apache.bookkeeper.client.LedgerHandle#asyncAddEntry(
      * byte[], int, int, AsyncCallback.AddCallback, Object)
      */
-    void asyncAddEntry(byte[] data, int offset, int length,
+    void asyncAddEntry(ByteBuffer data,
                        AsyncCallback.AddCallback callback, Object ctx);
 }

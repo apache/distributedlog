@@ -19,6 +19,8 @@ package com.twitter.distributedlog.io;
 
 import org.apache.bookkeeper.stats.OpStatsLogger;
 
+import java.nio.ByteBuffer;
+
 /**
  * Common interface for compression/decompression operations using different
  * compression codecs.
@@ -45,7 +47,7 @@ public interface CompressionCodec {
      *          The compressed data
      *          The returned byte array is sized to the length of the compressed data
      */
-    byte[] compress(byte[] data, int offset, int length, OpStatsLogger compressionStat);
+    ByteBuffer compress(ByteBuffer data, int offset, int length, OpStatsLogger compressionStat);
 
     /**
      * Return the decompressed data as a byte array.
@@ -60,7 +62,7 @@ public interface CompressionCodec {
      * @return
      *          The decompressed data
      */
-    byte[] decompress(byte[] data, int offset, int length, OpStatsLogger decompressionStat);
+    ByteBuffer decompress(ByteBuffer data, int offset, int length, OpStatsLogger decompressionStat);
 
     /**
      * Return the decompressed data as a byte array.
@@ -77,5 +79,5 @@ public interface CompressionCodec {
      * @return
      *          The decompressed data
      */
-    byte[] decompress(byte[] data, int offset, int length, int decompressedSize, OpStatsLogger decompressionStat);
+    ByteBuffer decompress(ByteBuffer data, int offset, int length, int decompressedSize, OpStatsLogger decompressionStat);
 }
