@@ -79,6 +79,10 @@ public class ServerConfiguration extends CompositeConfiguration {
     public static final String SERVER_SERVICE_TIMEOUT_MS_OLD = "serviceTimeoutMs";
     public static final long SERVER_SERVICE_TIMEOUT_MS_DEFAULT = 0;
 
+    // Server close writer timeout
+    public static final String SERVER_WRITER_CLOSE_TIMEOUT_MS = "server_writer_close_timeout_ms";
+    public static final long SERVER_WRITER_CLOSE_TIMEOUT_MS_DEFAULT = 1000;
+
     // Server stream probation timeout
     public static final String SERVER_STREAM_PROBATION_TIMEOUT_MS = "server_stream_probation_timeout_ms";
     public static final String SERVER_STREAM_PROBATION_TIMEOUT_MS_OLD = "streamProbationTimeoutMs";
@@ -292,6 +296,27 @@ public class ServerConfiguration extends CompositeConfiguration {
      */
     public ServerConfiguration setServiceTimeoutMs(long timeoutMs) {
         setProperty(SERVER_SERVICE_TIMEOUT_MS, timeoutMs);
+        return this;
+    }
+
+    /**
+     * Get timeout for closing writer in proxy layer. 0 disables timeout.
+     *
+     * @return timeout for closing writer in proxy layer.
+     */
+    public long getWriterCloseTimeoutMs() {
+        return getLong(SERVER_WRITER_CLOSE_TIMEOUT_MS, SERVER_WRITER_CLOSE_TIMEOUT_MS_DEFAULT);
+    }
+
+    /**
+     * Set timeout for closing writer in proxy layer. 0 disables timeout.
+     *
+     * @param timeoutMs
+     *          timeout for closing writer in proxy layer.
+     * @return dl configuration.
+     */
+    public ServerConfiguration setWriterCloseTimeoutMs(long timeoutMs) {
+        setProperty(SERVER_WRITER_CLOSE_TIMEOUT_MS, timeoutMs);
         return this;
     }
 

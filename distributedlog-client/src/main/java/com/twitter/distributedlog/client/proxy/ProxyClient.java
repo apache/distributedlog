@@ -75,30 +75,36 @@ public class ProxyClient {
             this.clientId = clientId;
             this.clientStats = clientStats;
             // client builder
-            ClientBuilder builder = setDefaultSettings(null == clientBuilder ? getDefaultClientBuilder() : clientBuilder);
-            if (clientConfig.getThriftMux()) {
-                builder = enableThriftMux(builder, clientId);
-            }
-            this.clientBuilder = builder;
+            ClientBuilder builder = setDefaultSettings(
+                    null == clientBuilder ? getDefaultClientBuilder(clientConfig) : clientBuilder);
+            this.clientBuilder = configureThriftMux(builder, clientId, clientConfig);
         }
 
         @SuppressWarnings("unchecked")
-        private ClientBuilder enableThriftMux(ClientBuilder builder, ClientId clientId) {
-            return builder.stack(ThriftMux.client().withClientId(clientId));
+        private ClientBuilder configureThriftMux(ClientBuilder builder,
+                                                 ClientId clientId,
+                                                 ClientConfig clientConfig) {
+            if (clientConfig.getThriftMux()) {
+                return builder.stack(ThriftMux.client().withClientId(clientId));
+            } else {
+                return builder.codec(ThriftClientFramedCodec.apply(Option.apply(clientId)));
+            }
         }
 
-        private ClientBuilder getDefaultClientBuilder() {
-            return ClientBuilder.get()
-                .hostConnectionLimit(1)
+        private ClientBuilder getDefaultClientBuilder(ClientConfig clientConfig) {
+            ClientBuilder builder = ClientBuilder.get()
                 .tcpConnectTimeout(Duration.fromMilliseconds(200))
                 .connectTimeout(Duration.fromMilliseconds(200))
                 .requestTimeout(Duration.fromSeconds(1));
+            if (!clientConfig.getThriftMux()) {
+                builder = builder.hostConnectionLimit(1);
+            }
+            return builder;
         }
 
         @SuppressWarnings("unchecked")
         private ClientBuilder setDefaultSettings(ClientBuilder builder) {
             return builder.name(clientName)
-                   .codec(ThriftClientFramedCodec.apply(Option.apply(clientId)))
                    .failFast(false)
                    .noFailureAccrual()
                    // disable retries on finagle client builder, as there is only one host per finagle client

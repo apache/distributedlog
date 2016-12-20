@@ -24,7 +24,7 @@ import com.twitter.distributedlog.acl.DefaultAccessControlManager;
 import com.twitter.distributedlog.exceptions.InternalServerException;
 import com.twitter.distributedlog.service.ResponseUtils;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
-import com.twitter.distributedlog.service.stream.WriteOp;
+import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.util.Sequencer;
@@ -67,6 +67,7 @@ public class TestStreamOp {
             ByteBuffer.wrap("test".getBytes()),
             new NullStatsLogger(),
             new NullStatsLogger(),
+            new IdentityStreamPartitionConverter(),
             new ServerConfiguration(),
             (byte)0,
             null,

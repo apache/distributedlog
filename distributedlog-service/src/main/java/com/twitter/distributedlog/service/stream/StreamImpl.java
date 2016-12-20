@@ -45,10 +45,13 @@ import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.distributedlog.util.OrderedScheduler;
 import com.twitter.distributedlog.util.TimeSequencer;
 import com.twitter.distributedlog.util.Utils;
+import com.twitter.util.Duration;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
+import com.twitter.util.TimeoutException;
+import com.twitter.util.Timer;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.stats.Counter;
@@ -141,9 +144,11 @@ public class StreamImpl implements Stream {
     private final StreamConfigProvider streamConfigProvider;
     private final FatalErrorHandler fatalErrorHandler;
     private final long streamProbationTimeoutMs;
-    private long serviceTimeoutMs;
+    private final long serviceTimeoutMs;
+    private final long writerCloseTimeoutMs;
     private final boolean failFastOnStreamNotReady;
     private final HashedWheelTimer requestTimer;
+    private final Timer futureTimer;
 
     // Stats
     private final StatsLogger streamLogger;
@@ -151,8 +156,10 @@ public class StreamImpl implements Stream {
     private final StatsLogger limiterStatLogger;
     private final Counter serviceTimeout;
     private final OpStatsLogger streamAcquireStat;
+    private final OpStatsLogger writerCloseStatLogger;
     private final Counter pendingOpsCounter;
     private final Counter unexpectedExceptions;
+    private final Counter writerCloseTimeoutCounter;
     private final StatsLogger exceptionStatLogger;
     private final ConcurrentHashMap<String, Counter> exceptionCounters =
         new ConcurrentHashMap<String, Counter>();
@@ -173,7 +180,8 @@ public class StreamImpl implements Stream {
                DistributedLogNamespace dlNamespace,
                OrderedScheduler scheduler,
                FatalErrorHandler fatalErrorHandler,
-               HashedWheelTimer requestTimer) {
+               HashedWheelTimer requestTimer,
+               Timer futureTimer) {
         this.clientId = clientId;
         this.dlConfig = dlConfig;
         this.streamManager = streamManager;
@@ -189,17 +197,19 @@ public class StreamImpl implements Stream {
         this.scheduler = scheduler;
         this.serviceTimeoutMs = serverConfig.getServiceTimeoutMs();
         this.streamProbationTimeoutMs = serverConfig.getStreamProbationTimeoutMs();
+        this.writerCloseTimeoutMs = serverConfig.getWriterCloseTimeoutMs();
         this.failFastOnStreamNotReady = dlConfig.getFailFastOnStreamNotReady();
         this.fatalErrorHandler = fatalErrorHandler;
         this.dynConf = streamConf;
         StatsLogger limiterStatsLogger = BroadCastStatsLogger.two(
             streamOpStats.baseScope("stream_limiter"),
-            streamOpStats.streamRequestScope(name, "limiter"));
+            streamOpStats.streamRequestScope(partition, "limiter"));
         this.limiter = new StreamRequestLimiter(name, dynConf, limiterStatsLogger, featureRateLimitDisabled);
         this.requestTimer = requestTimer;
+        this.futureTimer = futureTimer;
 
         // Stats
-        this.streamLogger = streamOpStats.streamRequestStatsLogger(name);
+        this.streamLogger = streamOpStats.streamRequestStatsLogger(partition);
         this.limiterStatLogger = streamOpStats.baseScope("request_limiter");
         this.streamExceptionStatLogger = streamLogger.scope("exceptions");
         this.serviceTimeout = streamOpStats.baseCounter("serviceTimeout");
@@ -208,6 +218,8 @@ public class StreamImpl implements Stream {
         this.pendingOpsCounter = streamOpStats.baseCounter("pending_ops");
         this.unexpectedExceptions = streamOpStats.baseCounter("unexpected_exceptions");
         this.exceptionStatLogger = streamOpStats.requestScope("exceptions");
+        this.writerCloseStatLogger = streamsStatsLogger.getOpStatsLogger("writer_close");
+        this.writerCloseTimeoutCounter = streamsStatsLogger.getCounter("writer_close_timeouts");
     }
 
     @Override
@@ -953,7 +965,18 @@ public class StreamImpl implements Stream {
             closeWriterFuture = Utils.asyncClose(writer, true);
         }
         // close the manager and error out pending requests after close writer
-        closeWriterFuture.addEventListener(FutureUtils.OrderedFutureEventListener.of(
+        Duration closeWaitDuration;
+        if (writerCloseTimeoutMs <= 0) {
+            closeWaitDuration = Duration.Top();
+        } else {
+            closeWaitDuration = Duration.fromMilliseconds(writerCloseTimeoutMs);
+        }
+        FutureUtils.stats(
+                closeWriterFuture,
+                writerCloseStatLogger,
+                Stopwatch.createStarted()
+        ).masked().within(futureTimer, closeWaitDuration)
+                .addEventListener(FutureUtils.OrderedFutureEventListener.of(
                 new FutureEventListener<Void>() {
                     @Override
                     public void onSuccess(Void value) {
@@ -962,6 +985,9 @@ public class StreamImpl implements Stream {
                     }
                     @Override
                     public void onFailure(Throwable cause) {
+                        if (cause instanceof TimeoutException) {
+                            writerCloseTimeoutCounter.inc();
+                        }
                         closeManagerAndErrorOutPendingRequests();
                         FutureUtils.setValue(closePromise, null);
                     }

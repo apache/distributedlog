@@ -17,6 +17,8 @@
  */
 package com.twitter.distributedlog.service.stream;
 
+import com.twitter.distributedlog.stats.BroadCastStatsLogger;
+import com.twitter.distributedlog.service.streamset.Partition;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
@@ -81,19 +83,22 @@ public class StreamOpStats {
         return recordsStatsLogger.getCounter(counterName);
     }
 
-    public StatsLogger streamRequestStatsLogger(String streamName) {
-        return streamStatsLogger.scope(streamName);
+    public StatsLogger streamRequestStatsLogger(Partition partition) {
+        return BroadCastStatsLogger.masterslave(
+            streamStatsLogger.scope(partition.getStream()).scope("partition")
+                .scope(partition.getPaddedId()), streamStatsLogger.scope(partition.getStream())
+                .scope("aggregate"));
     }
 
-    public StatsLogger streamRequestScope(String streamName, String scopeName) {
-        return streamRequestStatsLogger(streamName).scope(scopeName);
+    public StatsLogger streamRequestScope(Partition partition, String scopeName) {
+        return streamRequestStatsLogger(partition).scope(scopeName);
     }
 
-    public OpStatsLogger streamRequestLatencyStat(String streamName, String opName) {
-        return streamRequestStatsLogger(streamName).getOpStatsLogger(opName);
+    public OpStatsLogger streamRequestLatencyStat(Partition partition, String opName) {
+        return streamRequestStatsLogger(partition).getOpStatsLogger(opName);
     }
 
-    public Counter streamRequestCounter(String streamName, String opName, String counterName) {
-        return streamRequestScope(streamName, opName).getCounter(counterName);
+    public Counter streamRequestCounter(Partition partition, String opName, String counterName) {
+        return streamRequestScope(partition, opName).getCounter(counterName);
     }
 }
