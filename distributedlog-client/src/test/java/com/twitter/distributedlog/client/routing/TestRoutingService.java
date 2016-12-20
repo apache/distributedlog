@@ -17,6 +17,8 @@
  */
 package com.twitter.distributedlog.client.routing;
 
+import static org.junit.Assert.assertEquals;
+
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -124,7 +126,7 @@ public class TestRoutingService {
             }
         }
 
-        assert(mapping.size() == addresses.size());
+        assertEquals(mapping.size(), addresses.size());
 
         if (null != executorService) {
             executorService.shutdown();
