@@ -521,6 +521,7 @@ public class BKAsyncLogWriter extends BKAbstractLogWriter implements AsyncLogWri
 
     @Override
     public Future<Void> asyncAbort() {
+        Future<Void> result = super.asyncAbort();
         synchronized (this) {
             if (pendingRequests != null) {
                 for (PendingLogRecord pendingLogRecord : pendingRequests) {
@@ -529,7 +530,7 @@ public class BKAsyncLogWriter extends BKAbstractLogWriter implements AsyncLogWri
                 }
             }
         }
-        return super.asyncAbort();
+        return result;
     }
 
     @Override
