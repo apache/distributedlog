@@ -19,6 +19,9 @@ package com.twitter.distributedlog.exceptions;
 
 import com.twitter.distributedlog.thrift.service.StatusCode;
 
+/**
+ * Exception is thrown when a method is not implemented yet.
+ */
 public class NotYetImplementedException extends DLException {
 
     private static final long serialVersionUID = -6002036746792556106L;

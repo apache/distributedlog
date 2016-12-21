@@ -249,6 +249,8 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
     public static final boolean BKDL_ENABLE_IMMEDIATE_FLUSH_DEFAULT = false;
     public static final String BKDL_MINIMUM_DELAY_BETWEEN_IMMEDIATE_FLUSH_MILLISECONDS = "minimumDelayBetweenImmediateFlushMilliSeconds";
     public static final int BKDL_MINIMUM_DELAY_BETWEEN_IMMEDIATE_FLUSH_MILLISECONDS_DEFAULT = 0;
+    public static final String BKDL_PERIODIC_KEEP_ALIVE_MILLISECONDS = "periodicKeepAliveMilliSeconds";
+    public static final int BKDL_PERIODIC_KEEP_ALIVE_MILLISECONDS_DEFAULT = 0;
 
     // Retention/Truncation Settings
     public static final String BKDL_RETENTION_PERIOD_IN_HOURS = "logSegmentRetentionHours";
@@ -807,12 +809,16 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * Get num of retries for zookeeper client that used by bookkeeper client.
      * <p>Retries only happen on retryable failures like session expired,
      * session moved. for permanent failures, the request will fail immediately.
-     * The default value is 3.
+     * The default value is 3. Setting it to zero or negative will retry infinitely.
      *
      * @return num of retries of zookeeper client used by bookkeeper client.
      */
     public int getBKClientZKNumRetries() {
-        return this.getInt(BKDL_BKCLIENT_ZK_NUM_RETRIES, BKDL_BKCLIENT_ZK_NUM_RETRIES_DEFAULT);
+        int zkNumRetries = this.getInt(BKDL_BKCLIENT_ZK_NUM_RETRIES, BKDL_BKCLIENT_ZK_NUM_RETRIES_DEFAULT);
+        if (zkNumRetries <= 0) {
+            return Integer.MAX_VALUE;
+        }
+        return zkNumRetries;
     }
 
     /**
@@ -1890,6 +1896,29 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      */
     public DistributedLogConfiguration setMinDelayBetweenImmediateFlushMs(int minDelayMs) {
         setProperty(BKDL_MINIMUM_DELAY_BETWEEN_IMMEDIATE_FLUSH_MILLISECONDS, minDelayMs);
+        return this;
+    }
+
+    /**
+     * Get Periodic Keep Alive Frequency in milliseconds.
+     * <p>If the setting is set with a positive value, it would periodically write a control record
+     * to keep the stream active. The default value is 0.
+     *
+     * @return periodic keep alive frequency in milliseconds.
+     */
+    public int getPeriodicKeepAliveMilliSeconds() {
+        return this.getInt(BKDL_PERIODIC_KEEP_ALIVE_MILLISECONDS, BKDL_PERIODIC_KEEP_ALIVE_MILLISECONDS_DEFAULT);
+    }
+
+    /**
+     * Set Periodic Keep Alive Frequency in milliseconds.
+     *
+     * @param keepAliveMs keep alive frequency in milliseconds.
+     * @return distributedlog configuration
+     * @see #getPeriodicKeepAliveMilliSeconds()
+     */
+    public DistributedLogConfiguration setPeriodicKeepAliveMilliSeconds(int keepAliveMs) {
+        setProperty(BKDL_PERIODIC_KEEP_ALIVE_MILLISECONDS, keepAliveMs);
         return this;
     }
 

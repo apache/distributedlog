@@ -3,7 +3,8 @@ layout: post
 title:  'A Technical Review of Kafka and DistributedLog'
 date:   2016-09-19 10:00:00
 categories: technical-review
-permalink: /technical-review/2015/09/19/kafka-vs-distributedlog
+redirect_from:
+- /technical-review/2015/09/19/kafka-vs-distributedlog
 authors:
 - sijie
 ---
