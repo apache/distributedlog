@@ -64,4 +64,4 @@ echo "Built the website into ${BUILT_DIR}."
 git checkout ${SITE_BRANCH}
 
 # cp the built content
-cp -r ${BUILT_DIR}/content ${DLOG_ROOT}/content
+cp -r ${BUILT_DIR}/content/* ${DLOG_ROOT}/content/
