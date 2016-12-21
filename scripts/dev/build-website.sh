@@ -42,14 +42,15 @@ rm -rf ${BUILT_DIR}
 TEMP_BRANCH_PREFIX="PR_WEBSITE_"
 
 # BRANCHES
-SRC_BRANCH="master"
-SITE_BRANCH="asf-site"
+# SRC_BRANCH="apache/master"
+SRC_BRANCH="sijie/merge_website_script"
+SITE_BRANCH="apache/asf-site"
 
 # fetch apache/master
-git fetch apache ${SRC_BRANCH}
+git fetch apache
 
 # checkout apache/master
-git checkout "apache/master"
+git checkout ${SRC_BRANCH}
 
 # build the websiste
 echo "Building the website to ${BUILT_DIR} ..."
@@ -60,9 +61,7 @@ ${DLOG_ROOT}/website/build.sh ${DLOG_ENV} ${BUILT_DIR}
 echo "Built the website into ${BUILT_DIR}."
 
 # checkout asf-site
-git checkout "apache/asf-site"
+git checkout ${SITE_BRANCH}
 
 # cp the built content
 cp -r ${BUILT_DIR}/content ${DLOG_ROOT}/content
-
-
