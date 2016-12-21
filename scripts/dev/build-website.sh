@@ -54,6 +54,7 @@ git checkout "apache/master"
 # build the websiste
 echo "Building the website to ${BUILT_DIR} ..."
 
+echo ${DLOG_ROOT}/website/build.sh ${DLOG_ENV} ${BUILT_DIR}
 ${DLOG_ROOT}/website/build.sh ${DLOG_ENV} ${BUILT_DIR}
 
 echo "Built the website into ${BUILT_DIR}."
