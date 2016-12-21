@@ -165,14 +165,17 @@ struct ClientInfo {
 
 service DistributedLogService {
 
+    // Deprecated
     ServerInfo handshake();
 
     ServerInfo handshakeWithClientInfo(ClientInfo clientInfo);
 
+    // Deprecated
     WriteResponse heartbeat(string stream, WriteContext ctx);
 
     WriteResponse heartbeatWithOptions(string stream, WriteContext ctx, HeartbeatOptions options);
 
+    // Deprecated
     WriteResponse write(string stream, binary data);
 
     WriteResponse writeWithContext(string stream, binary data, WriteContext ctx);

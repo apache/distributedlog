@@ -26,9 +26,8 @@ import java.net.SocketAddress;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-class SingleHostRoutingService implements RoutingService {
+public class SingleHostRoutingService implements RoutingService {
 
-    @Deprecated
     public static SingleHostRoutingService of(SocketAddress address) {
         return new SingleHostRoutingService(address);
     }
@@ -60,11 +59,15 @@ class SingleHostRoutingService implements RoutingService {
         }
     }
 
-    private final SocketAddress address;
+    private SocketAddress address;
     private final CopyOnWriteArraySet<RoutingListener> listeners =
             new CopyOnWriteArraySet<RoutingListener>();
 
     SingleHostRoutingService(SocketAddress address) {
+        this.address = address;
+    }
+
+    public void setAddress(SocketAddress address) {
         this.address = address;
     }
 

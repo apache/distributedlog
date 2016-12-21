@@ -23,6 +23,7 @@ import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.TestDistributedLogBase;
 import com.twitter.distributedlog.acl.DefaultAccessControlManager;
+import com.twitter.distributedlog.client.routing.LocalRoutingService;
 import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
 import com.twitter.distributedlog.exceptions.StreamUnavailableException;
 import com.twitter.distributedlog.service.config.NullStreamConfigProvider;
@@ -145,6 +146,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
                 new NullStreamConfigProvider(),
                 uri,
                 converter,
+                new LocalRoutingService(),
                 NullStatsLogger.INSTANCE,
                 NullStatsLogger.INSTANCE,
                 latch);
@@ -767,6 +769,53 @@ public class TestDistributedLogService extends TestDistributedLogBase {
                 streamManager.getCachedStreams().isEmpty());
         assertTrue("There should be no streams acquired after shutdown",
                 streamManager.getAcquiredStreams().isEmpty());
+    }
+
+    @Test(timeout = 60000)
+    public void testGetOwner() throws Exception {
+        ((LocalRoutingService) service.getRoutingService())
+                .addHost("stream-0", service.getServiceAddress().getSocketAddress())
+                .setAllowRetrySameHost(false);
+
+        // routing service doesn't know 'stream-1'
+        WriteResponse response = FutureUtils.result(service.getOwner("stream-1", new WriteContext()));
+        assertEquals(StatusCode.STREAM_UNAVAILABLE, response.getHeader().getCode());
+
+        // service cache "stream-2" but not acquire
+        StreamImpl stream = (StreamImpl) service.getStreamManager().getOrCreateStream("stream-2", false);
+        response = FutureUtils.result(service.getOwner("stream-2", new WriteContext()));
+        assertEquals(StatusCode.STREAM_UNAVAILABLE, response.getHeader().getCode());
+
+        // create write ops to stream-2 to make service acquire the stream
+        WriteOp op = createWriteOp(service, "stream-2", 0L);
+        stream.submit(op);
+        stream.start();
+        WriteResponse wr = Await.result(op.result());
+        assertEquals("Op  should succeed",
+                StatusCode.SUCCESS, wr.getHeader().getCode());
+        assertEquals("Service should acquire stream",
+                StreamStatus.INITIALIZED, stream.getStatus());
+        assertNotNull(stream.getManager());
+        assertNotNull(stream.getWriter());
+        assertNull(stream.getLastException());
+
+        // the stream is acquired
+        response = FutureUtils.result(service.getOwner("stream-2", new WriteContext()));
+        assertEquals(StatusCode.FOUND, response.getHeader().getCode());
+        assertEquals(service.getServiceAddress().toString(),
+                response.getHeader().getLocation());
+
+        // find the stream from the routing service
+        response = FutureUtils.result(service.getOwner("stream-0", new WriteContext()));
+        assertEquals(StatusCode.FOUND, response.getHeader().getCode());
+        assertEquals(service.getServiceAddress().toString(),
+                response.getHeader().getLocation());
+
+        // add the tried host
+        WriteContext ctx = new WriteContext();
+        ctx.addToTriedHosts(DLSocketAddress.toString(service.getServiceAddress().getSocketAddress()));
+        response = FutureUtils.result(service.getOwner("stream-0", ctx));
+        assertEquals(StatusCode.STREAM_UNAVAILABLE, response.getHeader().getCode());
     }
 
 }

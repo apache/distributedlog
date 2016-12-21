@@ -128,6 +128,7 @@ public class DistributedLogServerApp {
                 getOptionalIntegerArg(cmdline, "si"),
                 getOptionalBooleanArg(cmdline, "a"),
                 getOptionalBooleanArg(cmdline, "mx"),
+                routingService,
                 statsReceiver,
                 statsProvider);
 
