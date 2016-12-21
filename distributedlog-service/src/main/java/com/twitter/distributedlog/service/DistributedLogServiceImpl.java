@@ -90,7 +90,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -378,7 +377,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                     // if it is closed, we would not acquire stream again.
                     return null;
                 }
-                writer = streamManager.getOrCreateStream(stream);
+                writer = streamManager.getOrCreateStream(stream, true);
             } finally {
                 closeLock.readLock().unlock();
             }
@@ -631,26 +630,6 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         logger.info("Released KeepAlive Latch. Main thread will shut the service down.");
     }
 
-    @VisibleForTesting
-    java.util.concurrent.Future<?> schedule(Runnable runnable, long delayMs) {
-        closeLock.readLock().lock();
-        try {
-            if (serverStatus != ServerStatus.WRITE_AND_ACCEPT) {
-                return null;
-            } else if (delayMs > 0) {
-                return scheduler.schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
-            } else {
-                return scheduler.submit(runnable);
-            }
-        } catch (RejectedExecutionException ree) {
-            logger.error("Failed to schedule task {} in {} ms : ",
-                    new Object[] { runnable, delayMs, ree });
-            return null;
-        } finally {
-            closeLock.readLock().unlock();
-        }
-    }
-
     // Test methods.
 
     private DynamicDistributedLogConfiguration getDynConf(String streamName) {
@@ -664,8 +643,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     }
 
     @VisibleForTesting
-    Stream newStream(String name) {
-        return streamFactory.create(name, getDynConf(name), streamManager);
+    Stream newStream(String name) throws IOException {
+        return streamManager.getOrCreateStream(name, false);
     }
 
     @VisibleForTesting
