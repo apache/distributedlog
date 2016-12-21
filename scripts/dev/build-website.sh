@@ -20,13 +20,23 @@
 # * limitations under the License.
 # */
 
+DLOG_ENV=$1
+
 set -e
 
 PROJECT_NAME="incubator-distributedlog"
 CAPITALIZED_PROJECT_NAME="DL"
+
+BASEDIR=$(dirname "$0")
+DLOG_ROOT="${BASEDIR}/../.."
+DLOG_ROOT=`cd $DLOG_ROOT > /dev/null;pwd`
 # Location of the local git repository
-REPO_HOME=${DL_HOME:-"$PWD"}
+REPO_HOME=${DL_HOME:-"$DLOG_ROOT"}
 SITE_REMOTE="https://git-wip-us.apache.org/repos/asf/${PROJECT_NAME}.git"
+BUILT_DIR=${DLOG_ROOT}/build/website
+
+# remove the built content first
+rm -r ${BUILT_DIR}
 
 # Prefix added to temporary branches
 TEMP_BRANCH_PREFIX="PR_WEBSITE_"
@@ -38,6 +48,20 @@ SITE_BRANCH="asf-site"
 # fetch apache/master
 git fetch apache ${SRC_BRANCH}
 
-# create a temp branch to build the website
-SITE_MERGE_BRANCH="#{TEMP_BRANCH_PREFIX}_MERGE_${RANDOM}"
-git checkout -b ${SITE_MERGE_BRANCH}
+# checkout apache/master
+git checkout "apache/master"
+
+# build the websiste
+echo "Building the website to ${BUILT_DIR} ..."
+
+${DLOG_ROOT}/website/build.sh ${DLOG_ENV} ${BUILT_DIR}
+
+echo "Built the website into ${BUILT_DIR}."
+
+# checkout asf-site
+git checkout "apache/asf-site"
+
+# cp the built content
+cp -r ${BUILT_DIR}/content ${DLOG_ROOT}/content
+
+

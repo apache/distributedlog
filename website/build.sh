@@ -17,12 +17,23 @@
 # limitations under the License.
 ################################################################################
 
+if [ $# -lt 1 ]; then
+  echo "Usage: build <env>."
+  exit 1
+fi
+
 DLOG_ENV=$1
 
 OVERRIDED_CONFIG=_config-${DLOG_ENV}.yml
 
 BINDIR=`dirname "$0"`
 DLOG_HOME=`cd $BINDIR/.. > /dev/null;pwd`
+
+if [ $# -gt 1 ]; then
+  DEST_DIR=$2
+else
+  DEST_DIR=${DLOG_HOME}
+fi
 
 if [ ! -d "${DLOG_HOME}/website/docs" ]; then
   mkdir ${DLOG_HOME}/website/docs
@@ -38,7 +49,7 @@ mkdir -p ${DLOG_HOME}/content/docs/latest
 
 cd ${DLOG_HOME}/website
 
-bundle exec jekyll build --destination ${DLOG_HOME}/content --config _config.yml,${OVERRIDED_CONFIG}
+bundle exec jekyll build --destination ${DEST_DIR}/content --config _config.yml,${OVERRIDED_CONFIG}
 
 # build the documents
 
@@ -46,4 +57,4 @@ DOC_HOME="${DLOG_HOME}/website/docs/latest"
 
 cd ${DOC_HOME}
 
-bundle exec jekyll build --destination ${DLOG_HOME}/content/docs/latest --config _config.yml,${OVERRIDED_CONFIG}
+bundle exec jekyll build --destination ${DEST_DIR}/content/docs/latest --config _config.yml,${OVERRIDED_CONFIG}
