@@ -36,7 +36,7 @@ SITE_REMOTE="https://git-wip-us.apache.org/repos/asf/${PROJECT_NAME}.git"
 BUILT_DIR=${DLOG_ROOT}/build/website
 
 # remove the built content first
-rm -r ${BUILT_DIR}
+rm -rf ${BUILT_DIR}
 
 # Prefix added to temporary branches
 TEMP_BRANCH_PREFIX="PR_WEBSITE_"
