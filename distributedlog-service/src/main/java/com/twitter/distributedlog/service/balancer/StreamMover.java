@@ -17,10 +17,13 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
+/**
+ * A stream mover to move streams between proxies.
+ */
 public interface StreamMover {
 
     /**
-     * Move given stream <i>streamName</i>
+     * Move given stream <i>streamName</i>.
      *
      * @param streamName
      *          stream name to move

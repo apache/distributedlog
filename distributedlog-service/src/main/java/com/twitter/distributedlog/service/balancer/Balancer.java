@@ -20,6 +20,11 @@ package com.twitter.distributedlog.service.balancer;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
 
+/**
+ * Balancer Interface.
+ *
+ * <p>A balancer is used for balance the streams across the proxy cluster.
+ */
 public interface Balancer {
 
     /**

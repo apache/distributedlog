@@ -32,6 +32,8 @@ import com.twitter.distributedlog.exceptions.TooManyStreamsException;
 import com.twitter.distributedlog.feature.AbstractFeatureProvider;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import com.twitter.distributedlog.rate.MovingAverageRate;
+import com.twitter.distributedlog.rate.MovingAverageRateFactory;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.config.StreamConfigProvider;
 import com.twitter.distributedlog.service.stream.BulkWriteOp;
@@ -47,8 +49,8 @@ import com.twitter.distributedlog.service.stream.StreamManagerImpl;
 import com.twitter.distributedlog.service.stream.StreamOp;
 import com.twitter.distributedlog.service.stream.StreamOpStats;
 import com.twitter.distributedlog.service.stream.TruncateOp;
-import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
 import com.twitter.distributedlog.service.stream.WriteOp;
+import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
 import com.twitter.distributedlog.service.stream.limiter.ServiceRequestLimiter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
@@ -61,8 +63,6 @@ import com.twitter.distributedlog.thrift.service.ServerStatus;
 import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.distributedlog.thrift.service.WriteContext;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
-import com.twitter.distributedlog.rate.MovingAverageRateFactory;
-import com.twitter.distributedlog.rate.MovingAverageRate;
 import com.twitter.distributedlog.util.ConfUtils;
 import com.twitter.distributedlog.util.OrderedScheduler;
 import com.twitter.distributedlog.util.SchedulerUtils;
@@ -71,8 +71,17 @@ import com.twitter.util.Duration;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
-import com.twitter.util.Timer;
 import com.twitter.util.ScheduledThreadPoolTimer;
+import com.twitter.util.Timer;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.stats.Counter;
@@ -83,22 +92,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.runtime.BoxedUnit;
 
-import java.io.IOException;
-import java.net.URI;
-import java.nio.ByteBuffer;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+/**
+ * Implementation of distributedlog thrift service.
+ */
 public class DistributedLogServiceImpl implements DistributedLogService.ServiceIface,
                                                   FatalErrorHandler {
 
-    static final Logger logger = LoggerFactory.getLogger(DistributedLogServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DistributedLogServiceImpl.class);
 
-    private final int MOVING_AVERAGE_WINDOW_SECS = 60;
+    private static final int MOVING_AVERAGE_WINDOW_SECS = 60;
 
     private final ServerConfiguration serverConfig;
     private final DistributedLogConfiguration dlConfig;
@@ -255,8 +257,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
             @Override
             public Number getSample() {
-                return ServerStatus.DOWN == serverStatus ? -1 : (featureRegionStopAcceptNewStream.isAvailable() ?
-                        3 : (ServerStatus.WRITE_AND_ACCEPT == serverStatus ? 1 : 2));
+                return ServerStatus.DOWN == serverStatus ? -1 : (featureRegionStopAcceptNewStream.isAvailable()
+                    ? 3 : (ServerStatus.WRITE_AND_ACCEPT == serverStatus ? 1 : 2));
             }
         });
         // Global moving average rps
@@ -318,8 +320,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         });
 
         // Setup complete
-        logger.info("Running distributedlog server : client id {}, allocator pool {}, perstream stat {}, dlsn version {}.",
-                new Object[] { clientId, allocatorPoolName, serverConf.isPerStreamStatEnabled(), dlsnVersion });
+        logger.info("Running distributedlog server : client id {}, allocator pool {}, perstream stat {},"
+            + " dlsn version {}.",
+            new Object[] { clientId, allocatorPoolName, serverConf.isPerStreamStatEnabled(), dlsnVersion });
     }
 
     private void countStatusCode(StatusCode code) {
@@ -394,7 +397,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     }
 
     @Override
-    public Future<BulkWriteResponse> writeBulkWithContext(final String stream, List<ByteBuffer> data, WriteContext ctx) {
+    public Future<BulkWriteResponse> writeBulkWithContext(final String stream,
+                                                          List<ByteBuffer> data,
+                                                          WriteContext ctx) {
         bulkWritePendingStat.inc();
         receivedRecordCounter.add(data.size());
         BulkWriteOp op = new BulkWriteOp(stream, data, statsLogger, perStreamStatsLogger, streamPartitionConverter,
@@ -434,8 +439,14 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
     @Override
     public Future<WriteResponse> truncate(String stream, String dlsn, WriteContext ctx) {
-        TruncateOp op = new TruncateOp(stream, DLSN.deserialize(dlsn), statsLogger, perStreamStatsLogger, getChecksum(ctx),
-            featureChecksumDisabled, accessControlManager);
+        TruncateOp op = new TruncateOp(
+            stream,
+            DLSN.deserialize(dlsn),
+            statsLogger,
+            perStreamStatsLogger,
+            getChecksum(ctx),
+            featureChecksumDisabled,
+            accessControlManager);
         executeStreamOp(op);
         return op.result();
     }

@@ -15,24 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.service.stream;
-
-import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
-
 /**
- * Factory to create a stream with provided stream configuration {@code streamConf}.
+ * Announcers to announce servers to server set.
  */
-public interface StreamFactory {
-
-    /**
-     * Create a stream object.
-     *
-     * @param name stream name
-     * @param streamConf stream configuration
-     * @param streamManager manager of streams
-     * @return stream object
-     */
-    Stream create(String name,
-                  DynamicDistributedLogConfiguration streamConf,
-                  StreamManager streamManager);
-}
+package com.twitter.distributedlog.service.announcer;

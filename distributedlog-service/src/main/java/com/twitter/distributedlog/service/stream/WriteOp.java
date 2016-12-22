@@ -20,35 +20,36 @@ package com.twitter.distributedlog.service.stream;
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.LogRecord;
-import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.acl.AccessControlManager;
-import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.RequestDeniedException;
 import com.twitter.distributedlog.service.ResponseUtils;
+import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.streamset.Partition;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
-import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.thrift.service.ResponseHeader;
 import com.twitter.distributedlog.thrift.service.StatusCode;
+import com.twitter.distributedlog.thrift.service.WriteResponse;
+import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.util.Sequencer;
-import com.twitter.util.FutureEventListener;
 import com.twitter.util.Future;
-
+import com.twitter.util.FutureEventListener;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.runtime.AbstractFunction1;
 
+/**
+ * Operation to write a single record to a log stream.
+ */
 public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
-    static final Logger logger = LoggerFactory.getLogger(WriteOp.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(WriteOp.class);
 
     private final byte[] payload;
     private final boolean isRecordSet;

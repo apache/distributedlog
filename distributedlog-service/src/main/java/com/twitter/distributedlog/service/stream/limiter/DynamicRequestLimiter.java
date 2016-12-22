@@ -20,32 +20,31 @@ package com.twitter.distributedlog.service.stream.limiter;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.exceptions.OverCapacityException;
 import com.twitter.distributedlog.limiter.RequestLimiter;
-
 import java.io.Closeable;
-
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Dynamically rebuild a rate limiter when the supplied dynamic config changes. Subclasses
- * implement build() to build the limiter. DynamicRequestLimiter must be closed to deregister
+ * Dynamically rebuild a rate limiter when the supplied dynamic config changes.
+ *
+ * <p>Subclasses implement build() to build the limiter. DynamicRequestLimiter must be closed to deregister
  * the config listener.
  */
-public abstract class DynamicRequestLimiter<Request> implements RequestLimiter<Request>, Closeable {
-    static final Logger LOG = LoggerFactory.getLogger(DynamicRequestLimiter.class);
+public abstract class DynamicRequestLimiter<Req> implements RequestLimiter<Req>, Closeable {
+    private static final Logger LOG = LoggerFactory.getLogger(DynamicRequestLimiter.class);
 
     private final ConfigurationListener listener;
     private final Feature rateLimitDisabledFeature;
-    volatile RequestLimiter<Request> limiter;
+    volatile RequestLimiter<Req> limiter;
     final DynamicDistributedLogConfiguration dynConf;
 
     public DynamicRequestLimiter(DynamicDistributedLogConfiguration dynConf,
-                                 StatsLogger statsLogger, Feature rateLimitDisabledFeature) {
+                                 StatsLogger statsLogger,
+                                 Feature rateLimitDisabledFeature) {
         final StatsLogger limiterStatsLogger = statsLogger.scope("dynamic");
         this.dynConf = dynConf;
         this.rateLimitDisabledFeature = rateLimitDisabledFeature;
@@ -74,7 +73,7 @@ public abstract class DynamicRequestLimiter<Request> implements RequestLimiter<R
     }
 
     @Override
-    public void apply(Request request) throws OverCapacityException {
+    public void apply(Req request) throws OverCapacityException {
         if (rateLimitDisabledFeature.isAvailable()) {
             return;
         }
@@ -91,5 +90,5 @@ public abstract class DynamicRequestLimiter<Request> implements RequestLimiter<R
     * Build the underlying limiter. Called when DynamicRequestLimiter detects config has changed.
     * This may be called multiple times so the method should be cheap.
     */
-    protected abstract RequestLimiter<Request> build();
+    protected abstract RequestLimiter<Req> build();
 }

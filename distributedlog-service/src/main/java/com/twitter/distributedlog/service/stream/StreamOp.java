@@ -24,8 +24,6 @@ import com.twitter.distributedlog.thrift.service.ResponseHeader;
 import com.twitter.distributedlog.util.Sequencer;
 import com.twitter.util.Future;
 
-import java.nio.ByteBuffer;
-
 /**
  * An operation applied to a stream.
  */

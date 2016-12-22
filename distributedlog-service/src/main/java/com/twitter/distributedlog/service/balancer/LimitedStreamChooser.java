@@ -17,8 +17,18 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
+/**
+ * A stream chooser that can only choose limited number of streams.
+ */
 public class LimitedStreamChooser implements StreamChooser {
 
+  /**
+   * Create a limited stream chooser by {@code limit}.
+   *
+   * @param underlying the underlying stream chooser.
+   * @param limit the limit of number of streams to choose.
+   * @return the limited stream chooser.
+   */
     public static LimitedStreamChooser of(StreamChooser underlying, int limit) {
         return new LimitedStreamChooser(underlying, limit);
     }

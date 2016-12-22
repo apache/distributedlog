@@ -30,6 +30,10 @@ import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -37,18 +41,16 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Tools to interact with proxies.
  */
 public class ProxyTool extends Tool {
 
-    static final Logger logger = LoggerFactory.getLogger(ProxyTool.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProxyTool.class);
 
+    /**
+     * Abstract Cluster level command.
+     */
     protected abstract static class ClusterCommand extends OptsCommand {
 
         protected Options options = new Options();
@@ -59,8 +61,8 @@ public class ProxyTool extends Tool {
             super(name, description);
             options.addOption("u", "uri", true, "DistributedLog URI");
             options.addOption("r", "prefix", true, "Prefix of stream name. E.g. 'QuantumLeapTest-'.");
-            options.addOption("e", "expression", true, "Expression to generate stream suffix. " +
-                    "Currently we support range '0-9', list '1,2,3' and name '143'");
+            options.addOption("e", "expression", true, "Expression to generate stream suffix. "
+                + "Currently we support range '0-9', list '1,2,3' and name '143'");
         }
 
         @Override
@@ -157,6 +159,9 @@ public class ProxyTool extends Tool {
         }
     }
 
+    /**
+     * Command to release ownership of a log stream.
+     */
     static class ReleaseCommand extends ClusterCommand {
 
         double rate = 100f;
@@ -196,6 +201,9 @@ public class ProxyTool extends Tool {
         }
     }
 
+    /**
+     * Command to truncate a log stream.
+     */
     static class TruncateCommand extends ClusterCommand {
 
         DLSN dlsn = DLSN.InitialDLSN;
@@ -234,6 +242,9 @@ public class ProxyTool extends Tool {
         }
     }
 
+    /**
+     * Abstract command to operate on a single proxy server.
+     */
     protected abstract static class ProxyCommand extends OptsCommand {
 
         protected Options options = new Options();
@@ -291,6 +302,9 @@ public class ProxyTool extends Tool {
         protected abstract int runCmd(Pair<DistributedLogClient, MonitorServiceClient> client) throws Exception;
     }
 
+    /**
+     * Command to enable/disable accepting new streams.
+     */
     static class AcceptNewStreamCommand extends ProxyCommand {
 
         boolean enabled = false;

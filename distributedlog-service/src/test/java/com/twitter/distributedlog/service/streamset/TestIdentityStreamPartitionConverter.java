@@ -17,10 +17,14 @@
  */
 package com.twitter.distributedlog.service.streamset;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link IdentityStreamPartitionConverter}.
+ */
 public class TestIdentityStreamPartitionConverter {
 
     @Test(timeout = 20000)

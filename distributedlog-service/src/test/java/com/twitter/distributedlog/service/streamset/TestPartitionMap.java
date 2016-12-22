@@ -17,12 +17,13 @@
  */
 package com.twitter.distributedlog.service.streamset;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
- * Test {@link PartitionMap}
+ * Test {@link PartitionMap}.
  */
 public class TestPartitionMap {
 

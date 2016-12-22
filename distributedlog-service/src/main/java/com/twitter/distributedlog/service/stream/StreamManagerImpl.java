@@ -55,13 +55,14 @@ import org.slf4j.LoggerFactory;
  * StreamManagerImpl is the default implementation responsible for creating, destroying, and keeping track
  * of Streams.
  *
- * StreamFactory, supplied to StreamManagerImpl in the constructor below, is reposible simply for creating
+ * <p>StreamFactory, supplied to StreamManagerImpl in the constructor below, is reposible simply for creating
  * a stream object in isolation from the rest of the system. We pass a StreamFactory in instead of simply
  * creating StreamImpl's ourselves in order to inject dependencies without bloating the StreamManagerImpl
  * constructor.
  */
 public class StreamManagerImpl implements StreamManager {
-    static final Logger logger = LoggerFactory.getLogger(StreamManagerImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(StreamManagerImpl.class);
 
     private final ConcurrentHashMap<String, Stream> streams =
         new ConcurrentHashMap<String, Stream>();

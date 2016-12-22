@@ -17,12 +17,12 @@
  */
 package com.twitter.distributedlog.service.streamset;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
- * Test Cases for {@link DelimiterStreamPartitionConverter}
+ * Test Cases for {@link DelimiterStreamPartitionConverter}.
  */
 public class TestDelimiterStreamPartitionConverter {
 

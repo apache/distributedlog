@@ -17,7 +17,8 @@
  */
 package com.twitter.distributedlog.service.config;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.DistributedLogConstants;
@@ -29,7 +30,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.SystemConfiguration;
 
 /**
- * Configuration for DistributedLog Server
+ * Configuration for DistributedLog Server.
  */
 public class ServerConfiguration extends CompositeConfiguration {
 
@@ -43,36 +44,36 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     // Server DLSN version
-    protected final static String SERVER_DLSN_VERSION = "server_dlsn_version";
-    protected final static byte SERVER_DLSN_VERSION_DEFAULT = DLSN.VERSION1;
+    protected static final String SERVER_DLSN_VERSION = "server_dlsn_version";
+    protected static final byte SERVER_DLSN_VERSION_DEFAULT = DLSN.VERSION1;
 
     // Server Durable Write Enable/Disable Flag
-    protected final static String SERVER_DURABLE_WRITE_ENABLED = "server_durable_write_enabled";
-    protected final static boolean SERVER_DURABLE_WRITE_ENABLED_DEFAULT = true;
+    protected static final String SERVER_DURABLE_WRITE_ENABLED = "server_durable_write_enabled";
+    protected static final boolean SERVER_DURABLE_WRITE_ENABLED_DEFAULT = true;
 
     // Server Region Id
-    protected final static String SERVER_REGION_ID = "server_region_id";
-    protected final static int SERVER_REGION_ID_DEFAULT = DistributedLogConstants.LOCAL_REGION_ID;
+    protected static final String SERVER_REGION_ID = "server_region_id";
+    protected static final int SERVER_REGION_ID_DEFAULT = DistributedLogConstants.LOCAL_REGION_ID;
 
     // Server Port
-    protected final static String SERVER_PORT = "server_port";
-    protected final static int SERVER_PORT_DEFAULT = 0;
+    protected static final String SERVER_PORT = "server_port";
+    protected static final int SERVER_PORT_DEFAULT = 0;
 
     // Server Shard Id
-    protected final static String SERVER_SHARD_ID = "server_shard";
-    protected final static int SERVER_SHARD_ID_DEFAULT = -1;
+    protected static final String SERVER_SHARD_ID = "server_shard";
+    protected static final int SERVER_SHARD_ID_DEFAULT = -1;
 
     // Server Threads
-    protected final static String SERVER_NUM_THREADS = "server_threads";
-    protected final static int SERVER_NUM_THREADS_DEFAULT = Runtime.getRuntime().availableProcessors();
+    protected static final String SERVER_NUM_THREADS = "server_threads";
+    protected static final int SERVER_NUM_THREADS_DEFAULT = Runtime.getRuntime().availableProcessors();
 
     // Server enable per stream stat
-    protected final static String SERVER_ENABLE_PERSTREAM_STAT = "server_enable_perstream_stat";
-    protected final static boolean SERVER_ENABLE_PERSTREAM_STAT_DEFAULT = true;
+    protected static final String SERVER_ENABLE_PERSTREAM_STAT = "server_enable_perstream_stat";
+    protected static final boolean SERVER_ENABLE_PERSTREAM_STAT_DEFAULT = true;
 
     // Server graceful shutdown period (in millis)
-    protected final static String SERVER_GRACEFUL_SHUTDOWN_PERIOD_MS = "server_graceful_shutdown_period_ms";
-    protected final static long SERVER_GRACEFUL_SHUTDOWN_PERIOD_MS_DEFAULT = 0L;
+    protected static final String SERVER_GRACEFUL_SHUTDOWN_PERIOD_MS = "server_graceful_shutdown_period_ms";
+    protected static final long SERVER_GRACEFUL_SHUTDOWN_PERIOD_MS_DEFAULT = 0L;
 
     // Server service timeout
     public static final String SERVER_SERVICE_TIMEOUT_MS = "server_service_timeout_ms";
@@ -86,10 +87,10 @@ public class ServerConfiguration extends CompositeConfiguration {
     // Server stream probation timeout
     public static final String SERVER_STREAM_PROBATION_TIMEOUT_MS = "server_stream_probation_timeout_ms";
     public static final String SERVER_STREAM_PROBATION_TIMEOUT_MS_OLD = "streamProbationTimeoutMs";
-    public static final long SERVER_STREAM_PROBATION_TIMEOUT_MS_DEFAULT = 60*1000*5;
+    public static final long SERVER_STREAM_PROBATION_TIMEOUT_MS_DEFAULT = 60 * 1000 * 5;
 
     // Server stream to partition converter
-    protected final static String SERVER_STREAM_PARTITION_CONVERTER_CLASS = "stream_partition_converter_class";
+    protected static final String SERVER_STREAM_PARTITION_CONVERTER_CLASS = "stream_partition_converter_class";
 
     public ServerConfiguration() {
         super();
@@ -97,7 +98,7 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Load configurations from {@link DistributedLogConfiguration}
+     * Load configurations from {@link DistributedLogConfiguration}.
      *
      * @param dlConf
      *          distributedlog configuration
@@ -129,7 +130,7 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Set the flag to enable/disable durable write
+     * Set the flag to enable/disable durable write.
      *
      * @param enabled
      *          flag to enable/disable durable write
@@ -141,7 +142,7 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Is durable write enabled?
+     * Is durable write enabled.
      *
      * @return true if waiting writes to be durable. otherwise false.
      */
@@ -150,7 +151,7 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Set the region id used to instantiate DistributedLogNamespace
+     * Set the region id used to instantiate DistributedLogNamespace.
      *
      * @param regionId
      *          region id
@@ -162,8 +163,7 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Get the region id used to instantiate
-     * {@link com.twitter.distributedlog.namespace.DistributedLogNamespace}
+     * Get the region id used to instantiate {@link com.twitter.distributedlog.namespace.DistributedLogNamespace}.
      *
      * @return region id used to instantiate DistributedLogNamespace
      */
@@ -205,8 +205,9 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Get the shard id of this server. It would be used to instantiate the client id
-     * used for DistributedLogNamespace.
+     * Get the shard id of this server.
+     *
+     * <p>It would be used to instantiate the client id used for DistributedLogNamespace.
      *
      * @return shard id of this server.
      */
@@ -278,7 +279,9 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Get timeout for stream op execution in proxy layer. 0 disables timeout.
+     * Get timeout for stream op execution in proxy layer.
+     *
+     * <p>0 disables timeout.
      *
      * @return timeout for stream operation in proxy layer.
      */
@@ -288,7 +291,9 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Set timeout for stream op execution in proxy layer. 0 disables timeout.
+     * Set timeout for stream op execution in proxy layer.
+     *
+     * <p>0 disables timeout.
      *
      * @param timeoutMs
      *          timeout for stream operation in proxy layer.
@@ -300,7 +305,9 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Get timeout for closing writer in proxy layer. 0 disables timeout.
+     * Get timeout for closing writer in proxy layer.
+     *
+     * <p>0 disables timeout.
      *
      * @return timeout for closing writer in proxy layer.
      */
@@ -309,7 +316,9 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Set timeout for closing writer in proxy layer. 0 disables timeout.
+     * Set timeout for closing writer in proxy layer.
+     *
+     * <p>0 disables timeout.
      *
      * @param timeoutMs
      *          timeout for closing writer in proxy layer.
@@ -321,8 +330,9 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * After service timeout, how long should stream be kept in cache in probationary state in order
-     * to prevent reacquire. In millisec.
+     * How long should stream be kept in cache in probationary state after service timeout.
+     *
+     * <p>The setting is to prevent reacquire. The unit of this setting is milliseconds.
      *
      * @return stream probation timeout in ms.
      */
@@ -332,10 +342,12 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * After service timeout, how long should stream be kept in cache in probationary state in order
-     * to prevent reacquire. In millisec.
+     * How long should stream be kept in cache in probationary state after service timeout.
+     *
+     * <p>The setting is to prevent reacquire. The unit of this setting is milliseconds.
      *
      * @param timeoutMs probation timeout in ms.
+     * @return server configuration
      */
     public ServerConfiguration setStreamProbationTimeoutMs(long timeoutMs) {
         setProperty(SERVER_STREAM_PROBATION_TIMEOUT_MS, timeoutMs);
@@ -349,7 +361,8 @@ public class ServerConfiguration extends CompositeConfiguration {
      *          stream partition converter class
      * @return server configuration
      */
-    public ServerConfiguration setStreamPartitionConverterClass(Class<? extends StreamPartitionConverter> converterClass) {
+    public ServerConfiguration setStreamPartitionConverterClass(
+        Class<? extends StreamPartitionConverter> converterClass) {
         setProperty(SERVER_STREAM_PARTITION_CONVERTER_CLASS, converterClass.getName());
         return this;
     }
@@ -371,15 +384,17 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Validate the configuration
+     * Validate the configuration.
+     *
+     * @throws IllegalStateException when there are any invalid settings.
      */
     public void validate() {
         byte dlsnVersion = getDlsnVersion();
-        Preconditions.checkArgument(dlsnVersion >= DLSN.VERSION0 && dlsnVersion <= DLSN.VERSION1,
+        checkArgument(dlsnVersion >= DLSN.VERSION0 && dlsnVersion <= DLSN.VERSION1,
                 "Unknown dlsn version " + dlsnVersion);
-        Preconditions.checkArgument(getServerThreads() > 0,
+        checkArgument(getServerThreads() > 0,
                 "Invalid number of server threads : " + getServerThreads());
-        Preconditions.checkArgument(getServerShardId() >= 0,
+        checkArgument(getServerShardId() >= 0,
                 "Invalid server shard id : " + getServerShardId());
     }
 

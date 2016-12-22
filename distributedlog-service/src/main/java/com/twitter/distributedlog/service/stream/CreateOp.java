@@ -26,6 +26,9 @@ import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.StatsLogger;
 import scala.runtime.AbstractFunction1;
 
+/**
+ * Operation to create log stream.
+ */
 public class CreateOp extends AbstractWriteOp {
   private final StreamManager streamManager;
 

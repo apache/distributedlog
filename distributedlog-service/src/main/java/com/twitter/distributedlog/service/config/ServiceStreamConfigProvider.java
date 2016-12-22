@@ -21,26 +21,27 @@ import com.google.common.base.Optional;
 import com.twitter.distributedlog.config.DynamicConfigurationFactory;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
-import org.apache.commons.configuration.ConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.configuration.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provide per stream configuration to DistributedLog service layer.
  */
 public class ServiceStreamConfigProvider implements StreamConfigProvider {
-    static final Logger LOG = LoggerFactory.getLogger(ServiceStreamConfigProvider.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceStreamConfigProvider.class);
+
+    private static final String CONFIG_EXTENSION = "conf";
 
     private final File configBaseDir;
     private final File defaultConfigFile;
     private final StreamPartitionConverter partitionConverter;
     private final DynamicConfigurationFactory configFactory;
     private final DynamicDistributedLogConfiguration defaultDynConf;
-    private final static String CONFIG_EXTENSION = "conf";
 
     public ServiceStreamConfigProvider(String configPath,
                                        String defaultConfigPath,
@@ -51,11 +52,13 @@ public class ServiceStreamConfigProvider implements StreamConfigProvider {
                                        throws ConfigurationException {
         this.configBaseDir = new File(configPath);
         if (!configBaseDir.exists()) {
-            throw new ConfigurationException("Stream configuration base directory " + configPath + " does not exist");
+            throw new ConfigurationException("Stream configuration base directory "
+                + configPath + " does not exist");
         }
         this.defaultConfigFile = new File(configPath);
         if (!defaultConfigFile.exists()) {
-            throw new ConfigurationException("Stream configuration default config " + defaultConfigPath + " does not exist");
+            throw new ConfigurationException("Stream configuration default config "
+                + defaultConfigPath + " does not exist");
         }
 
         // Construct reloading default configuration

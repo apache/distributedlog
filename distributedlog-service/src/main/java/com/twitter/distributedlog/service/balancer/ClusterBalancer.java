@@ -28,10 +28,6 @@ import com.twitter.util.Await;
 import com.twitter.util.Function;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
-import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -42,13 +38,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * A balancer balances ownerships with a cluster of targets
+ * A balancer balances ownerships with a cluster of targets.
  */
 public class ClusterBalancer implements Balancer {
 
-    static final Logger logger = LoggerFactory.getLogger(ClusterBalancer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClusterBalancer.class);
 
     /**
      * Represent a single host. Ordered by number of streams in desc order.
@@ -205,7 +204,8 @@ public class ClusterBalancer implements Balancer {
             }
 
             int moveFromLowWaterMark;
-            int moveToHighWaterMark = Math.max(1, (int) (averageLoad + averageLoad * rebalanceTolerancePercentage / 100.0f));
+            int moveToHighWaterMark =
+                Math.max(1, (int) (averageLoad + averageLoad * rebalanceTolerancePercentage / 100.0f));
 
             if (hostIdxMoveFrom >= 0) {
                 moveFromLowWaterMark = Math.max(0, rebalanceWaterMark);
@@ -220,7 +220,8 @@ public class ClusterBalancer implements Balancer {
                 AtomicInteger moveFrom = new AtomicInteger(0);
                 AtomicInteger moveTo = new AtomicInteger(hosts.size() - 1);
                 while (moveFrom.get() < moveTo.get()) {
-                    moveStreams(hosts, moveFrom, moveFromLowWaterMark, moveTo, moveToHighWaterMark, rebalanceRateLimiter);
+                    moveStreams(hosts, moveFrom, moveFromLowWaterMark,
+                        moveTo, moveToHighWaterMark, rebalanceRateLimiter);
                     moveFrom.incrementAndGet();
                 }
             }
@@ -244,8 +245,14 @@ public class ClusterBalancer implements Balancer {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Moving streams : hosts = {}, from = {}, to = {} : from_low_water_mark = {}, to_high_water_mark = {}",
-                         new Object[] { hosts, hostIdxMoveFrom.get(), hostIdxMoveTo.get(), moveFromLowWaterMark, moveToHighWaterMark });
+            logger.debug("Moving streams : hosts = {}, from = {}, to = {} :"
+                + " from_low_water_mark = {}, to_high_water_mark = {}",
+                new Object[] {
+                    hosts,
+                    hostIdxMoveFrom.get(),
+                    hostIdxMoveTo.get(),
+                    moveFromLowWaterMark,
+                    moveToHighWaterMark });
         }
 
         Host hostMoveFrom = hosts.get(hostIdxMoveFrom.get());

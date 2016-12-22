@@ -17,18 +17,19 @@
  */
 package com.twitter.distributedlog.service;
 
+import static org.junit.Assert.assertEquals;
+
 import com.twitter.finagle.Service;
 import com.twitter.finagle.service.ConstantService;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
-
-import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.bookkeeper.stats.NullStatsLogger;
-
+import org.apache.bookkeeper.stats.StatsLogger;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link StatsFilter}.
+ */
 public class TestStatsFilter {
 
     class RuntimeExService<Req, Rep> extends Service<Req, Rep> {

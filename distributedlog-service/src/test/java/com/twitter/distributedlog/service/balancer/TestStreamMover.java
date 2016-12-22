@@ -17,19 +17,21 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static org.junit.Assert.assertTrue;
+
 import com.twitter.distributedlog.service.DistributedLogClient;
 import com.twitter.distributedlog.service.DistributedLogCluster.DLServer;
 import com.twitter.distributedlog.service.DistributedLogServerTestCase;
 import com.twitter.util.Await;
+import java.nio.ByteBuffer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.ByteBuffer;
-
-import static com.google.common.base.Charsets.UTF_8;
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link StreamMover}.
+ */
 public class TestStreamMover extends DistributedLogServerTestCase {
 
     DLClient targetClient;

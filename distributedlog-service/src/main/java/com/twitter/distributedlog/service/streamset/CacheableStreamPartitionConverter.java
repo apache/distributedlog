@@ -20,6 +20,9 @@ package com.twitter.distributedlog.service.streamset;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * A stream-to-partition converter that caches the mapping between stream and partitions.
+ */
 public abstract class CacheableStreamPartitionConverter implements StreamPartitionConverter {
 
     private final ConcurrentMap<String, Partition> partitions;

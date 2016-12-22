@@ -20,6 +20,12 @@ package com.twitter.distributedlog.service;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.feature.DefaultFeatureProvider;
 import com.twitter.distributedlog.service.DistributedLogCluster.DLServer;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.feature.SettableFeature;
@@ -28,18 +34,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link com.twitter.distributedlog.exceptions.RegionUnavailableException}.
+ */
 public class TestRegionUnavailable extends DistributedLogServerTestCase {
 
+    /**
+     * A feature provider for testing.
+     */
     public static class TestFeatureProvider extends DefaultFeatureProvider {
 
         public TestFeatureProvider(String rootScope,

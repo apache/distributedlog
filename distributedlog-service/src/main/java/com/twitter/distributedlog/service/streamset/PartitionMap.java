@@ -22,6 +22,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A mapping between a logical stream and a set of physical partitions.
+ */
 public class PartitionMap {
 
     private final Map<String, Set<Partition>> partitionMap;

@@ -19,13 +19,16 @@ package com.twitter.distributedlog.service.stream.limiter;
 
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.exceptions.OverCapacityException;
-import com.twitter.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
 import com.twitter.distributedlog.limiter.ChainedRequestLimiter;
+import com.twitter.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
 import com.twitter.distributedlog.limiter.RequestLimiter;
 import com.twitter.distributedlog.service.stream.StreamOp;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.StatsLogger;
 
+/**
+ * A dynamic request limiter on limiting stream operations.
+ */
 public class StreamRequestLimiter extends DynamicRequestLimiter<StreamOp> {
     private final DynamicDistributedLogConfiguration dynConf;
     private final StatsLogger limiterStatLogger;

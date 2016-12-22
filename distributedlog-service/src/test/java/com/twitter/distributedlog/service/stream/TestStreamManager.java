@@ -17,8 +17,13 @@
  */
 package com.twitter.distributedlog.service.stream;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
@@ -27,12 +32,11 @@ import com.twitter.distributedlog.service.config.StreamConfigProvider;
 import com.twitter.distributedlog.service.streamset.Partition;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
 import com.twitter.util.Await;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Test Case for StreamManager.
@@ -53,9 +57,9 @@ public class TestStreamManager {
         StreamPartitionConverter mockPartitionConverter = mock(StreamPartitionConverter.class);
         StreamConfigProvider mockStreamConfigProvider = mock(StreamConfigProvider.class);
         when(mockStreamFactory.create(
-                (String)any(),
+                (String) any(),
                 (DynamicDistributedLogConfiguration) any(),
-                (StreamManager)any())).thenReturn(mockStream);
+                (StreamManager) any())).thenReturn(mockStream);
         StreamManager streamManager = new StreamManagerImpl(
                 "",
                 new DistributedLogConfiguration(),
@@ -108,7 +112,11 @@ public class TestStreamManager {
         StreamFactory mockStreamFactory = mock(StreamFactory.class);
         StreamPartitionConverter mockPartitionConverter = mock(StreamPartitionConverter.class);
         StreamConfigProvider mockStreamConfigProvider = mock(StreamConfigProvider.class);
-        when(mockStreamFactory.create((String)any(), (DynamicDistributedLogConfiguration)any(), (StreamManager)any())).thenReturn(mockStream);
+        when(mockStreamFactory.create(
+            (String) any(),
+            (DynamicDistributedLogConfiguration) any(),
+            (StreamManager) any())
+        ).thenReturn(mockStream);
         DistributedLogNamespace dlNamespace = mock(DistributedLogNamespace.class);
         ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
 

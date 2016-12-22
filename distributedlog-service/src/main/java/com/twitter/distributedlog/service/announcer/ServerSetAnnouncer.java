@@ -20,9 +20,6 @@ package com.twitter.distributedlog.service.announcer;
 import com.twitter.common.zookeeper.Group;
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.client.serverset.DLZkServerSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -30,10 +27,15 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * ServerSet based announcer.
+ */
 public class ServerSetAnnouncer implements Announcer {
 
-    static final Logger logger = LoggerFactory.getLogger(ServerSetAnnouncer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServerSetAnnouncer.class);
 
     final String localAddr;
     final InetSocketAddress serviceEndpoint;

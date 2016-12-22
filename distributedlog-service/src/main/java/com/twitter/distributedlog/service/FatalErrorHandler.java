@@ -17,13 +17,6 @@
  */
 package com.twitter.distributedlog.service;
 
-import com.google.common.base.Optional;
-import com.twitter.util.Future;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * Implement handling for an unrecoverable error.
  */

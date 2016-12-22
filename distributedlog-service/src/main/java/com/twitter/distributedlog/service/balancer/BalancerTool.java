@@ -17,8 +17,9 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
@@ -33,6 +34,8 @@ import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
+import java.net.InetSocketAddress;
+import java.net.URI;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -40,15 +43,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-import java.net.URI;
-
 /**
- * Tool to rebalance cluster
+ * Tool to rebalance cluster.
  */
 public class BalancerTool extends Tool {
 
-    static final Logger logger = LoggerFactory.getLogger(BalancerTool.class);
+    private static final Logger logger = LoggerFactory.getLogger(BalancerTool.class);
 
     static DistributedLogClientBuilder createDistributedLogClientBuilder(ServerSet serverSet) {
         return DistributedLogClientBuilder.newBuilder()
@@ -66,6 +66,9 @@ public class BalancerTool extends Tool {
                                 .failFast(false));
     }
 
+    /**
+     * Base Command to run balancer.
+     */
     protected abstract static class BalancerCommand extends OptsCommand {
 
         protected Options options = new Options();
@@ -78,7 +81,8 @@ public class BalancerTool extends Tool {
         BalancerCommand(String name, String description) {
             super(name, description);
             options.addOption("rwm", "rebalance-water-mark", true, "Rebalance water mark per proxy");
-            options.addOption("rtp", "rebalance-tolerance-percentage", true, "Rebalance tolerance percentage per proxy");
+            options.addOption("rtp", "rebalance-tolerance-percentage", true,
+                "Rebalance tolerance percentage per proxy");
             options.addOption("rc", "rebalance-concurrency", true, "Concurrency to rebalance stream distribution");
             options.addOption("r", "rate", true, "Rebalance rate");
         }
@@ -105,11 +109,11 @@ public class BalancerTool extends Tool {
             if (cmdline.hasOption("r")) {
                 this.rate = Double.parseDouble(cmdline.getOptionValue("r"));
             }
-            Preconditions.checkArgument(rebalanceWaterMark >= 0,
+            checkArgument(rebalanceWaterMark >= 0,
                     "Rebalance Water Mark should be a non-negative number");
-            Preconditions.checkArgument(rebalanceTolerancePercentage >= 0.0f,
+            checkArgument(rebalanceTolerancePercentage >= 0.0f,
                     "Rebalance Tolerance Percentage should be a non-negative number");
-            Preconditions.checkArgument(rebalanceConcurrency > 0,
+            checkArgument(rebalanceConcurrency > 0,
                     "Rebalance Concurrency should be a positive number");
             if (null == rate || rate <= 0.0f) {
                 rateLimiter = Optional.absent();
@@ -133,6 +137,9 @@ public class BalancerTool extends Tool {
         protected abstract int executeCommand(CommandLine cmdline) throws Exception;
     }
 
+    /**
+     * Command to balance streams within a cluster.
+     */
     protected static class ClusterBalancerCommand extends BalancerCommand {
 
         protected URI uri;
@@ -188,7 +195,11 @@ public class BalancerTool extends Tool {
                                   ClusterBalancer balancer)
                 throws Exception {
             if (null == source) {
-                balancer.balance(rebalanceWaterMark, rebalanceTolerancePercentage, rebalanceConcurrency, getRateLimiter());
+                balancer.balance(
+                    rebalanceWaterMark,
+                    rebalanceTolerancePercentage,
+                    rebalanceConcurrency,
+                    getRateLimiter());
             } else {
                 balanceFromSource(clientBuilder, balancer, source, getRateLimiter());
             }
@@ -217,6 +228,9 @@ public class BalancerTool extends Tool {
         }
     }
 
+    /**
+     * Command to balance streams between regions.
+     */
     protected static class RegionBalancerCommand extends BalancerCommand {
 
         protected URI region1;
@@ -288,7 +302,11 @@ public class BalancerTool extends Tool {
 
         protected int runBalancer(SimpleBalancer balancer) throws Exception {
             if (null == source) {
-                balancer.balance(rebalanceWaterMark, rebalanceTolerancePercentage, rebalanceConcurrency, getRateLimiter());
+                balancer.balance(
+                    rebalanceWaterMark,
+                    rebalanceTolerancePercentage,
+                    rebalanceConcurrency,
+                    getRateLimiter());
             } else {
                 balancer.balanceAll(source, rebalanceConcurrency, getRateLimiter());
             }

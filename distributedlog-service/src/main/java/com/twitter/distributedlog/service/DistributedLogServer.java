@@ -45,6 +45,15 @@ import com.twitter.finagle.thrift.ClientIdRequiredFilter;
 import com.twitter.finagle.thrift.ThriftServerFramedCodec;
 import com.twitter.finagle.transport.Transport;
 import com.twitter.util.Duration;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.bookkeeper.stats.StatsProvider;
@@ -57,19 +66,12 @@ import org.slf4j.LoggerFactory;
 import scala.Option;
 import scala.Tuple2;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+/**
+ * Running the distributedlog proxy server.
+ */
 public class DistributedLogServer {
 
-    static final Logger logger = LoggerFactory.getLogger(DistributedLogServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DistributedLogServer.class);
 
     private DistributedLogServiceImpl dlService = null;
     private Server server = null;
@@ -122,7 +124,8 @@ public class DistributedLogServer {
             try {
                 dlConf.loadConf(new File(configFile).toURI().toURL());
             } catch (ConfigurationException e) {
-                throw new IllegalArgumentException("Failed to load distributedlog configuration from " + configFile + ".");
+                throw new IllegalArgumentException("Failed to load distributedlog configuration from "
+                    + configFile + ".");
             } catch (MalformedURLException e) {
                 throw new IllegalArgumentException("Failed to load distributedlog configuration from malformed "
                         + configFile + ".");
@@ -204,7 +207,8 @@ public class DistributedLogServer {
         }
     }
 
-    private DynamicDistributedLogConfiguration getServiceDynConf(DistributedLogConfiguration dlConf) throws ConfigurationException {
+    private DynamicDistributedLogConfiguration getServiceDynConf(DistributedLogConfiguration dlConf)
+        throws ConfigurationException {
         Optional<DynamicDistributedLogConfiguration> dynConf = Optional.absent();
         if (conf.isPresent()) {
             DynamicConfigurationFactory configFactory = new DynamicConfigurationFactory(
@@ -309,7 +313,8 @@ public class DistributedLogServer {
             logger.info("Using thriftmux.");
             Tuple2<Transport.Liveness, Stack.Param<Transport.Liveness>> livenessParam = new Transport.Liveness(
                     Duration.Top(), Duration.Top(), Option.apply((Object) Boolean.valueOf(true))).mk();
-            serverBuilder = serverBuilder.stack(ThriftMuxServer$.MODULE$.configured(livenessParam._1(), livenessParam._2()));
+            serverBuilder = serverBuilder.stack(
+                ThriftMuxServer$.MODULE$.configured(livenessParam._1(), livenessParam._2()));
         }
 
         logger.info("DistributedLogServer running with the following configuration : \n{}", dlConf.getPropsAsString());

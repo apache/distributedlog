@@ -21,9 +21,6 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
 import com.twitter.distributedlog.service.DistributedLogClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +28,15 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A balancer balances ownerships between two targets.
  */
 public class SimpleBalancer implements Balancer {
 
-    static final Logger logger = LoggerFactory.getLogger(SimpleBalancer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleBalancer.class);
 
     protected final String target1;
     protected final String target2;
@@ -120,8 +119,8 @@ public class SimpleBalancer implements Balancer {
         loadDistribution.put(target, targetStreamCount);
 
         // Calculate how many streams to be rebalanced from src region to target region
-        int numStreamsToRebalance =
-                BalancerUtils.calculateNumStreamsToRebalance(source, loadDistribution, rebalanceWaterMark, rebalanceTolerancePercentage);
+        int numStreamsToRebalance = BalancerUtils.calculateNumStreamsToRebalance(
+            source, loadDistribution, rebalanceWaterMark, rebalanceTolerancePercentage);
 
         if (numStreamsToRebalance <= 0) {
             logger.info("No streams need to be rebalanced from '{}' to '{}'.", source, target);
@@ -130,7 +129,8 @@ public class SimpleBalancer implements Balancer {
 
         StreamChooser streamChooser =
                 LimitedStreamChooser.of(new CountBasedStreamChooser(srcDistribution), numStreamsToRebalance);
-        StreamMover streamMover = new StreamMoverImpl(source, srcClient, srcMonitor, target, targetClient, targetMonitor);
+        StreamMover streamMover =
+            new StreamMoverImpl(source, srcClient, srcMonitor, target, targetClient, targetMonitor);
 
         moveStreams(streamChooser, streamMover, rebalanceConcurrency, rebalanceRateLimiter);
     }
@@ -166,7 +166,8 @@ public class SimpleBalancer implements Balancer {
         }
 
         StreamChooser streamChooser = new CountBasedStreamChooser(distribution);
-        StreamMover streamMover = new StreamMoverImpl(source, sourceClient, sourceMonitor, target, targetClient, targetMonitor);
+        StreamMover streamMover =
+            new StreamMoverImpl(source, sourceClient, sourceMonitor, target, targetClient, targetMonitor);
 
         moveStreams(streamChooser, streamMover, rebalanceConcurrency, rebalanceRateLimiter);
     }
