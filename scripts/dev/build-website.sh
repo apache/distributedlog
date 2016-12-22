@@ -38,19 +38,28 @@ BUILT_DIR=${DLOG_ROOT}/build/website
 # remove the built content first
 rm -rf ${BUILT_DIR}
 
-# Prefix added to temporary branches
-TEMP_BRANCH_PREFIX="PR_WEBSITE_"
-
 # BRANCHES
-# SRC_BRANCH="apache/master"
-SRC_BRANCH="sijie/merge_website_script"
-SITE_BRANCH="apache/asf-site"
+# SRC_REMOTE_NAME="apache"
+SRC_REMOTE_NAME="origin"
+SRC_BRANCH="master"
+# SITE_REMOTE_NAME="apache"
+SITE_REMOTE_NAME="sijie"
+SITE_BRANCH="asf-site"
+
+# Temp Branch to merge
+TEMP_SITE_BRANCH="SITE_MERGE_BRANCH_${RANDOM}"
+
+# Origin Branch
+ORIGIN_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # fetch apache/master
-git fetch apache
+git fetch ${SRC_REMOTE_NAME}
+git fetch ${SITE_REMOTE_NAME}
 
 # checkout apache/master
-git checkout ${SRC_BRANCH}
+git checkout ${SRC_REMOTE_NAME}/${SRC_BRANCH}
+
+SRC_GITSHA=`git rev-parse HEAD`
 
 # build the websiste
 echo "Building the website to ${BUILT_DIR} ..."
@@ -61,7 +70,30 @@ ${DLOG_ROOT}/website/build.sh ${DLOG_ENV} ${BUILT_DIR}
 echo "Built the website into ${BUILT_DIR}."
 
 # checkout asf-site
-git checkout ${SITE_BRANCH}
+git checkout ${SITE_REMOTE_NAME}/${SITE_BRANCH}
+
+# checkout the temp branch
+git checkout -b ${TEMP_SITE_BRANCH}
 
 # cp the built content
 cp -r ${BUILT_DIR}/content/* ${DLOG_ROOT}/content/
+
+# add the content
+git add ${DLOG_ROOT}/content
+
+# commit the add
+git commit -m "Built website from gitsha '${SRC_GITSHA}'."
+
+# push the branch
+git push ${SITE_REMOTE_NAME} ${SITE_BRANCH}
+
+echo "Push the new website to ${SITE_REMOTE_NAME}/${SITE_BRANCH}."
+
+# clean up
+echo "Restoring head pointer to ${ORIGIN_BRANCH}."
+
+git checkout ${ORIGIN_BRANCH}
+
+echo "Deleting site merge branch ${TEMP_SITE_BRANCH}..."
+
+git branch -D ${TEMP_SITE_BRANCH}
