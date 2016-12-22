@@ -21,7 +21,7 @@ import com.twitter.finagle.stats.Stat;
 import com.twitter.finagle.stats.StatsReceiver;
 
 /**
- * Stats Logger per operation type
+ * Stats Logger per operation type.
  */
 public class OpStatsLogger {
 

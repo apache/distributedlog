@@ -21,12 +21,12 @@ import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.finagle.stats.Counter;
 import com.twitter.finagle.stats.Stat;
 import com.twitter.finagle.stats.StatsReceiver;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Stats Logger to collect client stats.
  */
 public class ClientStatsLogger {
 

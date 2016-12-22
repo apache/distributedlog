@@ -18,13 +18,12 @@
 package com.twitter.distributedlog.client.proxy;
 
 import com.twitter.distributedlog.thrift.service.DistributedLogService;
-
 import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Mock Proxy Client Builder
+ * Mock Proxy Client Builder.
  */
 class MockProxyClientBuilder implements ProxyClient.Builder {
 
