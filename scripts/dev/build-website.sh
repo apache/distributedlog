@@ -40,7 +40,7 @@ rm -rf ${BUILT_DIR}
 
 # BRANCHES
 # SRC_REMOTE_NAME="apache"
-SRC_REMOTE_NAME="origin"
+SRC_REMOTE_NAME="sijie"
 # SRC_BRANCH="master"
 SRC_BRANCH="sijie/merge_website_script"
 # SITE_REMOTE_NAME="apache"
