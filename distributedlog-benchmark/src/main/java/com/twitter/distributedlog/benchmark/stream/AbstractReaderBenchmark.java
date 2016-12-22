@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 abstract class AbstractReaderBenchmark extends StreamBenchmark {
 
-    protected static final Logger logger = LoggerFactory.getLogger(SyncReaderBenchmark.class);
+    private static final Logger logger = LoggerFactory.getLogger(SyncReaderBenchmark.class);
 
     protected ReadMode readMode = ReadMode.LATEST;
     protected long fromTxId = DistributedLogConstants.INVALID_TXID;
@@ -32,9 +32,12 @@ abstract class AbstractReaderBenchmark extends StreamBenchmark {
     protected int batchSize = 1;
 
     protected AbstractReaderBenchmark() {
-        options.addOption("t", "tx-id", true, "Transaction ID to start read from when reading in mode 'position'");
-        options.addOption("r", "rewind", true, "Time to rewind back to read from when reading in mode 'rewind' (in milliseconds)");
-        options.addOption("m", "mode", true, "Read Mode : [oldest, latest, rewind, position]");
+        options.addOption("t", "tx-id", true,
+            "Transaction ID to start read from when reading in mode 'position'");
+        options.addOption("r", "rewind", true,
+            "Time to rewind back to read from when reading in mode 'rewind' (in milliseconds)");
+        options.addOption("m", "mode", true,
+            "Read Mode : [oldest, latest, rewind, position]");
         options.addOption("b", "batch-size", true, "Read batch size");
     }
 

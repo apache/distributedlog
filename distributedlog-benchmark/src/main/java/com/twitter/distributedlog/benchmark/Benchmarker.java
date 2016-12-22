@@ -17,11 +17,20 @@
  */
 package com.twitter.distributedlog.benchmark;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.benchmark.utils.ShiftableRateLimiter;
 import com.twitter.finagle.stats.OstrichStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.NullStatsProvider;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.bookkeeper.stats.StatsProvider;
@@ -34,19 +43,14 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+/**
+ * The launcher for benchmarks.
+ */
 public class Benchmarker {
 
-    static final Logger logger = LoggerFactory.getLogger(Benchmarker.class);
+    private static final Logger logger = LoggerFactory.getLogger(Benchmarker.class);
 
-    final static String USAGE = "Benchmarker [-u <uri>] [-c <conf>] [-s serverset] [-m (read|write|dlwrite)]";
+    static final String USAGE = "Benchmarker [-u <uri>] [-c <conf>] [-s serverset] [-m (read|write|dlwrite)]";
 
     final String[] args;
     final Options options = new Options();
@@ -184,7 +188,7 @@ public class Benchmarker {
         }
         if (cmdline.hasOption("bs")) {
             batchSize = Integer.parseInt(cmdline.getOptionValue("bs"));
-            Preconditions.checkArgument("write" != mode, "batchSize supported only for mode=write");
+            checkArgument("write" != mode, "batchSize supported only for mode=write");
         }
         if (cmdline.hasOption("c")) {
             String configFile = cmdline.getOptionValue("c");
@@ -228,12 +232,12 @@ public class Benchmarker {
             batchFlushIntervalMicros = Integer.parseInt(cmdline.getOptionValue("bfi"));
         }
 
-        Preconditions.checkArgument(shardId >= 0, "shardId must be >= 0");
-        Preconditions.checkArgument(numStreams > 0, "numStreams must be > 0");
-        Preconditions.checkArgument(durationMins > 0, "durationMins must be > 0");
-        Preconditions.checkArgument(streamPrefix != null, "streamPrefix must be defined");
-        Preconditions.checkArgument(hostConnectionCoreSize > 0, "host connection core size must be > 0");
-        Preconditions.checkArgument(hostConnectionLimit > 0, "host connection limit must be > 0");
+        checkArgument(shardId >= 0, "shardId must be >= 0");
+        checkArgument(numStreams > 0, "numStreams must be > 0");
+        checkArgument(durationMins > 0, "durationMins must be > 0");
+        checkArgument(streamPrefix != null, "streamPrefix must be defined");
+        checkArgument(hostConnectionCoreSize > 0, "host connection core size must be > 0");
+        checkArgument(hostConnectionLimit > 0, "host connection limit must be > 0");
 
         if (cmdline.hasOption("p")) {
             statsProvider = ReflectionUtils.newInstance(cmdline.getOptionValue("p"), StatsProvider.class);
@@ -275,14 +279,14 @@ public class Benchmarker {
     }
 
     Worker runWriter() {
-        Preconditions.checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty() || null != dlUri,
+        checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty() || null != dlUri,
                 "either serverset paths, finagle-names or uri required");
-        Preconditions.checkArgument(msgSize > 0, "messagesize must be greater than 0");
-        Preconditions.checkArgument(rate > 0, "rate must be greater than 0");
-        Preconditions.checkArgument(maxRate >= rate, "max rate must be greater than rate");
-        Preconditions.checkArgument(changeRate >= 0, "change rate must be positive");
-        Preconditions.checkArgument(changeRateSeconds >= 0, "change rate must be positive");
-        Preconditions.checkArgument(concurrency > 0, "concurrency must be greater than 0");
+        checkArgument(msgSize > 0, "messagesize must be greater than 0");
+        checkArgument(rate > 0, "rate must be greater than 0");
+        checkArgument(maxRate >= rate, "max rate must be greater than rate");
+        checkArgument(changeRate >= 0, "change rate must be positive");
+        checkArgument(changeRateSeconds >= 0, "change rate must be positive");
+        checkArgument(concurrency > 0, "concurrency must be greater than 0");
 
         ShiftableRateLimiter rateLimiter =
                 new ShiftableRateLimiter(rate, maxRate, changeRate, changeRateSeconds, TimeUnit.SECONDS);
@@ -357,12 +361,12 @@ public class Benchmarker {
     }
 
     Worker runDLWriter() throws IOException {
-        Preconditions.checkNotNull(dlUri, "dlUri must be defined");
-        Preconditions.checkArgument(rate > 0, "rate must be greater than 0");
-        Preconditions.checkArgument(maxRate >= rate, "max rate must be greater than rate");
-        Preconditions.checkArgument(changeRate >= 0, "change rate must be positive");
-        Preconditions.checkArgument(changeRateSeconds >= 0, "change rate must be positive");
-        Preconditions.checkArgument(concurrency > 0, "concurrency must be greater than 0");
+        checkNotNull(dlUri, "dlUri must be defined");
+        checkArgument(rate > 0, "rate must be greater than 0");
+        checkArgument(maxRate >= rate, "max rate must be greater than rate");
+        checkArgument(changeRate >= 0, "change rate must be positive");
+        checkArgument(changeRateSeconds >= 0, "change rate must be positive");
+        checkArgument(concurrency > 0, "concurrency must be greater than 0");
 
         ShiftableRateLimiter rateLimiter =
                 new ShiftableRateLimiter(rate, maxRate, changeRate, changeRateSeconds, TimeUnit.SECONDS);
@@ -379,10 +383,10 @@ public class Benchmarker {
     }
 
     Worker runReader() throws IOException {
-        Preconditions.checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty() || null != dlUri,
+        checkArgument(!finagleNames.isEmpty() || !serversetPaths.isEmpty() || null != dlUri,
                 "either serverset paths, finagle-names or dlUri required");
-        Preconditions.checkArgument(concurrency > 0, "concurrency must be greater than 0");
-        Preconditions.checkArgument(truncationInterval > 0, "truncation interval should be greater than 0");
+        checkArgument(concurrency > 0, "concurrency must be greater than 0");
+        checkArgument(truncationInterval > 0, "truncation interval should be greater than 0");
         return runReaderInternal(serversetPaths, finagleNames, truncationInterval);
     }
 
@@ -393,7 +397,7 @@ public class Benchmarker {
     private Worker runReaderInternal(List<String> serversetPaths,
                                      List<String> finagleNames,
                                      int truncationInterval) throws IOException {
-        Preconditions.checkNotNull(dlUri);
+        checkNotNull(dlUri);
 
         int ssid = null == startStreamId ? shardId * numStreams : startStreamId;
         int esid = null == endStreamId ? (shardId + readersPerStream) * numStreams : endStreamId;
