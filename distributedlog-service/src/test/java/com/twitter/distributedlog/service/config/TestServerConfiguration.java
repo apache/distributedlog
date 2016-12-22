@@ -51,4 +51,12 @@ public class TestServerConfiguration {
         conf.validate();
     }
 
+    @Test(timeout = 60000)
+    public void testUseHostnameAsAllocatorPoolName() {
+        ServerConfiguration conf = new ServerConfiguration();
+        assertFalse("Should not use hostname by default", conf.isUseHostnameAsAllocatorPoolName());
+        conf.setUseHostnameAsAllocatorPoolName(true);
+        assertTrue("Should use hostname now", conf.isUseHostnameAsAllocatorPoolName());
+    }
+
 }
