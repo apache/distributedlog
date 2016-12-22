@@ -86,15 +86,15 @@ git add ${DLOG_ROOT}/content
 git commit -m "Built website from gitsha '${SRC_GITSHA}'."
 
 # push the branch
-git push ${SITE_REMOTE_NAME} ${SITE_BRANCH}
+git push ${SITE_REMOTE_NAME} ${TEMP_SITE_BRANCH}:${SITE_BRANCH}
 
 echo "Push the new website to ${SITE_REMOTE_NAME}/${SITE_BRANCH}."
 
 # clean up
-#echo "Restoring head pointer to ${ORIGIN_BRANCH}."
-#
-#git checkout ${ORIGIN_BRANCH}
-#
-#echo "Deleting site merge branch ${TEMP_SITE_BRANCH}..."
-#
-#git branch -D ${TEMP_SITE_BRANCH}
+echo "Restoring head pointer to ${ORIGIN_BRANCH}."
+
+git checkout ${ORIGIN_BRANCH}
+
+echo "Deleting site merge branch ${TEMP_SITE_BRANCH}..."
+
+git branch -D ${TEMP_SITE_BRANCH}
