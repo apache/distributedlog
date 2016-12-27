@@ -100,6 +100,11 @@ public class MockDistributedLogServices {
         }
 
         @Override
+        public Future<WriteResponse> getOwner(String stream, WriteContext ctx) {
+            return Future.value(new WriteResponse());
+        }
+
+        @Override
         public Future<Void> setAcceptNewStream(boolean enabled) {
             return Future.value(null);
         }
