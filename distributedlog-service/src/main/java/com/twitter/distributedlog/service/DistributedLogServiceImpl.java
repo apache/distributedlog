@@ -51,6 +51,7 @@ import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
 import com.twitter.distributedlog.service.stream.WriteOp;
 import com.twitter.distributedlog.service.stream.limiter.ServiceRequestLimiter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
+import com.twitter.distributedlog.service.utils.ServerUtils;
 import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
 import com.twitter.distributedlog.thrift.service.ClientInfo;
 import com.twitter.distributedlog.thrift.service.DistributedLogService;
@@ -163,7 +164,10 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         int shard = serverConf.getServerShardId();
         int numThreads = serverConf.getServerThreads();
         this.clientId = DLSocketAddress.toLockId(DLSocketAddress.getSocketAddress(serverPort), shard);
-        String allocatorPoolName = String.format("allocator_%04d_%010d", serverRegionId, shard);
+        String allocatorPoolName = ServerUtils.getLedgerAllocatorPoolName(
+            serverRegionId,
+            shard,
+            serverConf.isUseHostnameAsAllocatorPoolName());
         dlConf.setLedgerAllocatorPoolName(allocatorPoolName);
         this.featureProvider = AbstractFeatureProvider.getFeatureProvider("", dlConf, statsLogger.scope("features"));
         if (this.featureProvider instanceof AbstractFeatureProvider) {
