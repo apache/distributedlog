@@ -105,7 +105,7 @@ case "${COMMAND}" in
     ;;
   *)
     set -x
-    echo java $OPTS $COMMAND $@
+    exec java $OPTS $COMMAND $@
     ;;
 esac
 
