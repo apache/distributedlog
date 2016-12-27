@@ -25,12 +25,17 @@ import com.twitter.distributedlog.thrift.service.ServerInfo;
 import com.twitter.distributedlog.thrift.service.WriteContext;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.util.Future;
-
 import java.nio.ByteBuffer;
 import java.util.List;
 
+/**
+ * Mock DistributedLog Related Services.
+ */
 public class MockDistributedLogServices {
 
+    /**
+     * Mock basic service.
+     */
     static class MockBasicService implements DistributedLogService.ServiceIface {
 
         @Override
@@ -105,6 +110,9 @@ public class MockDistributedLogServices {
         }
     }
 
+    /**
+     * Mock server info service.
+     */
     public static class MockServerInfoService extends MockBasicService {
 
         protected ServerInfo serverInfo;

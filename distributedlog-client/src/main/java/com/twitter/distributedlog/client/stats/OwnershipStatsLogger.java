@@ -19,15 +19,17 @@ package com.twitter.distributedlog.client.stats;
 
 import com.twitter.finagle.stats.Counter;
 import com.twitter.finagle.stats.StatsReceiver;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Stats Logger for ownerships
+ * Stats Logger for ownerships.
  */
 public class OwnershipStatsLogger {
 
+    /**
+     * Ownership related stats.
+     */
     public static class OwnershipStat {
         private final Counter hits;
         private final Counter misses;

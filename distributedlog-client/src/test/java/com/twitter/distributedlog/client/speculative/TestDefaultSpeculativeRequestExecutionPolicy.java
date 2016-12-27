@@ -17,22 +17,21 @@
  */
 package com.twitter.distributedlog.client.speculative;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+
 import com.twitter.util.CountDownLatch;
 import com.twitter.util.Future;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
 /**
- * Test {@link TestDefaultSpeculativeRequestExecutionPolicy}
+ * Test {@link TestDefaultSpeculativeRequestExecutionPolicy}.
  */
 public class TestDefaultSpeculativeRequestExecutionPolicy {
 

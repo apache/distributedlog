@@ -15,20 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.client.speculative;
-
-import java.util.concurrent.ScheduledExecutorService;
-
 /**
- * Speculative request execution policy.
+ * Routing Mechanisms to route the traffic to the owner of streams.
  */
-public interface SpeculativeRequestExecutionPolicy {
-    /**
-     * Initialize the speculative request execution policy and initiate requests.
-     *
-     * @param scheduler The scheduler service to issue the speculative request
-     * @param requestExecutor The executor is used to issue the actual speculative requests
-     */
-    void initiateSpeculativeRequest(ScheduledExecutorService scheduler,
-                                    SpeculativeRequestExecutor requestExecutor);
-}
+package com.twitter.distributedlog.client.routing;

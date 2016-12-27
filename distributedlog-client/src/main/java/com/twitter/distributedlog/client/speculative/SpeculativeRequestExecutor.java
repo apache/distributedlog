@@ -19,13 +19,15 @@ package com.twitter.distributedlog.client.speculative;
 
 import com.twitter.util.Future;
 
+/**
+ * Executor to execute speculative requests.
+ */
 public interface SpeculativeRequestExecutor {
 
     /**
-     * Issues a speculative request and indicates if more speculative
-     * requests should be issued
+     * Issues a speculative request and indicates if more speculative requests should be issued.
      *
-     * @return whether more speculative requests should be issued
+     * @return whether more speculative requests should be issued.
      */
     Future<Boolean> issueSpeculativeRequest();
 }

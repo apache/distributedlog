@@ -18,18 +18,17 @@
 package com.twitter.distributedlog.client.routing;
 
 import com.twitter.common.zookeeper.ServerSet;
-
 import java.net.SocketAddress;
 
 /**
- * Utils for routing services
+ * Utils for routing services.
  */
 public class RoutingUtils {
 
     private static final int NUM_CONSISTENT_HASH_REPLICAS = 997;
 
     /**
-     * Building routing service from <code>finagleNameStr</code>
+     * Building routing service from <code>finagleNameStr</code>.
      *
      * @param finagleNameStr
      *          finagle name str of a service
