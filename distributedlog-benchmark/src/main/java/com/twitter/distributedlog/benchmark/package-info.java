@@ -15,14 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog.benchmark.stream;
-
 /**
- * The read mode for streaming read benchmark.
+ * Benchmarks for distributedlog.
  */
-public enum ReadMode {
-    OLDEST,
-    LATEST,
-    REWIND,
-    POSITION
-}
+package com.twitter.distributedlog.benchmark;

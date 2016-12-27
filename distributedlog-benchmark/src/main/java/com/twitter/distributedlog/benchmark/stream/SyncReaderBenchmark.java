@@ -22,17 +22,20 @@ import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.LogReader;
 import com.twitter.distributedlog.LogRecord;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Benchmark on {@link com.twitter.distributedlog.LogReader} reading from a stream
+ * Benchmark on {@link com.twitter.distributedlog.LogReader} reading from a stream.
  */
 public class SyncReaderBenchmark extends AbstractReaderBenchmark {
+
+    private static final Logger logger = LoggerFactory.getLogger(SyncReaderBenchmark.class);
 
     public SyncReaderBenchmark() {}
 
