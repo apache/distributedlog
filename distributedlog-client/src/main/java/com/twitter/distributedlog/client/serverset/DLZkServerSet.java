@@ -24,13 +24,12 @@ import com.twitter.common.quantity.Time;
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.common.zookeeper.ServerSets;
 import com.twitter.common.zookeeper.ZooKeeperClient;
+import java.net.InetSocketAddress;
+import java.net.URI;
 import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.ZooDefs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.InetSocketAddress;
-import java.net.URI;
 
 /**
  * A wrapper over zookeeper client and its server set.

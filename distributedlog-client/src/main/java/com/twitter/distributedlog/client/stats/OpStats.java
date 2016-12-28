@@ -19,13 +19,12 @@ package com.twitter.distributedlog.client.stats;
 
 import com.twitter.distributedlog.client.resolver.RegionResolver;
 import com.twitter.finagle.stats.StatsReceiver;
-
 import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Op Stats
+ * Op Stats.
  */
 public class OpStats {
 

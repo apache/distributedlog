@@ -21,7 +21,6 @@ import com.twitter.distributedlog.client.resolver.RegionResolver;
 import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.StatsReceiver;
-
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,10 +32,13 @@ import java.util.Set;
  */
 public interface RoutingService {
 
-    public static interface Builder {
+    /**
+     * Builder to build routing service.
+     */
+    interface Builder {
 
         /**
-         * Build routing service with stats receiver
+         * Build routing service with stats receiver.
          *
          * @param statsReceiver
          *          stats receiver
@@ -45,6 +47,8 @@ public interface RoutingService {
         Builder statsReceiver(StatsReceiver statsReceiver);
 
         /**
+         * Build the routing service.
+         *
          * @return built routing service
          */
         RoutingService build();
@@ -52,9 +56,9 @@ public interface RoutingService {
     }
 
     /**
-     * Listener for server changes on routing service
+     * Listener for server changes on routing service.
      */
-    public static interface RoutingListener {
+    interface RoutingListener {
         /**
          * Trigger when server left.
          *
@@ -73,7 +77,7 @@ public interface RoutingService {
     /**
      * Routing Context of a request.
      */
-    public static class RoutingContext {
+    class RoutingContext {
 
         public static RoutingContext of(RegionResolver resolver) {
             return new RoutingContext(resolver);

@@ -97,14 +97,14 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
     private int lastPosition = 0;
     private final boolean positionGapDetectionEnabled;
     private final int idleErrorThresholdMillis;
-    private final ScheduledFuture<?> idleReaderTimeoutTask;
+    final ScheduledFuture<?> idleReaderTimeoutTask;
     private ScheduledFuture<?> backgroundScheduleTask = null;
 
     protected Promise<Void> closeFuture = null;
 
     private boolean lockStream = false;
 
-    private boolean disableReadAheadZKNotification = false;
+    private boolean disableReadAheadLogSegmentsNotification = false;
 
     private final boolean returnEndOfStreamRecord;
 
@@ -117,6 +117,10 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
             scheduleBackgroundRead();
         }
     };
+
+    // State
+    private Entry.Reader currentEntry = null;
+    private LogRecordWithDLSN nextRecord = null;
 
     // Failure Injector
     private final AsyncFailureInjector failureInjector;
@@ -281,8 +285,14 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
                     //     that means notification was missed between readahead and reader.
                     //   - cache is empty and readahead is idle (no records added for a long time)
                     idleReaderCheckIdleReadAheadCount.inc();
-                    if (cache.getNumCachedRecords() <= 0
-                            && !cache.isReadAheadIdle(idleErrorThresholdMillis, TimeUnit.MILLISECONDS)) {
+                    try {
+                        if (!hasMoreRecords(cache)
+                                && !cache.isReadAheadIdle(idleErrorThresholdMillis, TimeUnit.MILLISECONDS)) {
+                            return;
+                        }
+                    } catch (IOException e) {
+                        // we encountered exceptions on checking more records
+                        setLastException(e);
                         return;
                     }
 
@@ -300,6 +310,17 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
         }
 
         return null;
+    }
+
+    void cancelIdleReaderTask() {
+        // Do this after we have checked that the reader was not previously closed
+        try {
+            if (null != idleReaderTimeoutTask) {
+                idleReaderTimeoutTask.cancel(true);
+            }
+        } catch (Exception exc) {
+            LOG.info("{}: Failed to cancel the background idle reader timeout task", bkLedgerManager.getFullyQualifiedName());
+        }
     }
 
     protected synchronized void setStartDLSN(DLSN fromDLSN) throws UnexpectedException {
@@ -400,23 +421,17 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
                         bkLedgerManager.startReadAhead(
                                 new LedgerReadPosition(getStartDLSN()),
                                 failureInjector);
-                        if (disableReadAheadZKNotification) {
-                            bkLedgerManager.disableReadAheadZKNotification();
+                        if (disableReadAheadLogSegmentsNotification) {
+                            bkLedgerManager.disableReadAheadLogSegmentsNotification();
                         }
                     } catch (Exception exc) {
-                        setLastException(new IOException(exc));
-                        notifyOnError();
+                        notifyOnError(exc);
                     }
                 }
 
                 @Override
                 public void onFailure(Throwable cause) {
-                    if (cause instanceof IOException) {
-                        setLastException((IOException)cause);
-                    } else {
-                        setLastException(new IOException(cause));
-                    }
-                    notifyOnError();
+                    notifyOnError(cause);
                 }
             });
             readAheadStarted = true;
@@ -467,13 +482,7 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
         }
 
         // Do this after we have checked that the reader was not previously closed
-        try {
-            if (null != idleReaderTimeoutTask) {
-                idleReaderTimeoutTask.cancel(true);
-            }
-        } catch (Exception exc) {
-            LOG.info("{}: Failed to cancel the background idle reader timeout task", bkLedgerManager.getFullyQualifiedName());
-        }
+        cancelIdleReaderTask();
 
         synchronized (scheduleLock) {
             if (null != backgroundScheduleTask) {
@@ -492,6 +501,46 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
             promise.setException(throwExc);
         }
         pendingRequests.clear();
+    }
+
+    boolean hasMoreRecords() throws IOException {
+        return hasMoreRecords(bkLedgerManager.readAheadCache);
+    }
+
+    private synchronized boolean hasMoreRecords(ReadAheadCache cache) throws IOException {
+        if (cache.getNumCachedEntries() > 0 || null != nextRecord) {
+            return true;
+        } else if (null != currentEntry) {
+            nextRecord = currentEntry.nextRecord();
+            return null != nextRecord;
+        } else {
+            return false;
+        }
+    }
+
+    private synchronized LogRecordWithDLSN readNextRecord() throws IOException {
+        if (null == currentEntry) {
+            currentEntry = bkLedgerManager.getNextReadAheadEntry();
+            // no current entry after reading from read head then return null
+            if (null == currentEntry) {
+                return null;
+            }
+        }
+
+        LogRecordWithDLSN recordToReturn;
+        if (null == nextRecord) {
+            nextRecord = currentEntry.nextRecord();
+            // no more records in current entry
+            if (null == nextRecord) {
+                currentEntry = null;
+                return readNextRecord();
+            }
+        }
+
+        // found a record to return and prefetch the next one
+        recordToReturn = nextRecord;
+        nextRecord = currentEntry.nextRecord();
+        return recordToReturn;
     }
 
     @Override
@@ -555,7 +604,7 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
                     while (!nextRequest.hasReadEnoughRecords()) {
                         // read single record
                         do {
-                            record = bkLedgerManager.getNextReadAheadRecord();
+                            record = readNextRecord();
                         } while (null != record && (record.isControl() || (record.getDlsn().compareTo(getStartDLSN()) < 0)));
                         if (null == record) {
                             break;
@@ -643,7 +692,12 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
      * Triggered when the background activity encounters an exception
      */
     @Override
-    public void notifyOnError() {
+    public void notifyOnError(Throwable cause) {
+        if (cause instanceof IOException) {
+            setLastException((IOException) cause);
+        } else {
+            setLastException(new IOException(cause));
+        }
         scheduleBackgroundRead();
     }
 
@@ -661,9 +715,9 @@ class BKAsyncLogReaderDLSN implements AsyncLogReader, Runnable, AsyncNotificatio
     }
 
     @VisibleForTesting
-    synchronized void disableReadAheadZKNotification() {
-        disableReadAheadZKNotification = true;
-        bkLedgerManager.disableReadAheadZKNotification();
+    synchronized void disableReadAheadLogSegmentsNotification() {
+        disableReadAheadLogSegmentsNotification = true;
+        bkLedgerManager.disableReadAheadLogSegmentsNotification();
     }
 
     @VisibleForTesting

@@ -20,6 +20,7 @@ package com.twitter.distributedlog;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Ticker;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -31,6 +32,7 @@ import com.twitter.distributedlog.bk.LedgerAllocator;
 import com.twitter.distributedlog.bk.LedgerAllocatorUtils;
 import com.twitter.distributedlog.callback.NamespaceListener;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
+import com.twitter.distributedlog.exceptions.AlreadyClosedException;
 import com.twitter.distributedlog.exceptions.DLInterruptedException;
 import com.twitter.distributedlog.exceptions.InvalidStreamNameException;
 import com.twitter.distributedlog.exceptions.LogNotFoundException;
@@ -41,6 +43,7 @@ import com.twitter.distributedlog.impl.ZKLogSegmentMetadataStore;
 import com.twitter.distributedlog.impl.federated.FederatedZKLogMetadataStore;
 import com.twitter.distributedlog.lock.SessionLockFactory;
 import com.twitter.distributedlog.lock.ZKSessionLockFactory;
+import com.twitter.distributedlog.logsegment.LogSegmentMetadataCache;
 import com.twitter.distributedlog.logsegment.LogSegmentMetadataStore;
 import com.twitter.distributedlog.metadata.BKDLConfig;
 import com.twitter.distributedlog.metadata.LogMetadataStore;
@@ -84,6 +87,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.twitter.distributedlog.impl.BKDLUtils.*;
 
@@ -301,6 +305,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     // log metadata store
     private final LogMetadataStore metadataStore;
     // log segment metadata store
+    private final LogSegmentMetadataCache logSegmentMetadataCache;
     private final LogSegmentMetadataStore writerSegmentMetadataStore;
     private final LogSegmentMetadataStore readerSegmentMetadataStore;
     // lock factory
@@ -314,7 +319,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     private final StatsLogger perLogStatsLogger;
     private final ReadAheadExceptionsLogger readAheadExceptionsLogger;
 
-    protected boolean closed = false;
+    protected AtomicBoolean closed = new AtomicBoolean(false);
 
     private final PermitLimiter writeLimiter;
 
@@ -478,6 +483,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
                 new ZKLogSegmentMetadataStore(conf, sharedWriterZKCForDL, scheduler);
         this.readerSegmentMetadataStore =
                 new ZKLogSegmentMetadataStore(conf, sharedReaderZKCForDL, scheduler);
+        this.logSegmentMetadataCache = new LogSegmentMetadataCache(conf, Ticker.systemTicker());
 
         LOG.info("Constructed BK DistributedLogNamespace : clientId = {}, regionId = {}, federated = {}.",
                 new Object[] { clientId, regionId, bkdlConfig.isFederatedNamespace() });
@@ -490,6 +496,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     @Override
     public void createLog(String logName)
             throws InvalidStreamNameException, IOException {
+        checkState();
         validateName(logName);
         URI uri = FutureUtils.result(metadataStore.createLog(logName));
         createUnpartitionedStreams(conf, uri, Lists.newArrayList(logName));
@@ -498,6 +505,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     @Override
     public void deleteLog(String logName)
             throws InvalidStreamNameException, LogNotFoundException, IOException {
+        checkState();
         validateName(logName);
         Optional<URI> uri = FutureUtils.result(metadataStore.getLogLocation(logName));
         if (!uri.isPresent()) {
@@ -508,7 +516,8 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
                 logName,
                 ClientSharingOption.SharedClients,
                 Optional.<DistributedLogConfiguration>absent(),
-                Optional.<DynamicDistributedLogConfiguration>absent());
+                Optional.<DynamicDistributedLogConfiguration>absent(),
+                Optional.<StatsLogger>absent());
         dlm.delete();
     }
 
@@ -517,14 +526,17 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             throws InvalidStreamNameException, IOException {
         return openLog(logName,
                 Optional.<DistributedLogConfiguration>absent(),
-                Optional.<DynamicDistributedLogConfiguration>absent());
+                Optional.<DynamicDistributedLogConfiguration>absent(),
+                Optional.<StatsLogger>absent());
     }
 
     @Override
     public DistributedLogManager openLog(String logName,
                                          Optional<DistributedLogConfiguration> logConf,
-                                         Optional<DynamicDistributedLogConfiguration> dynamicLogConf)
+                                         Optional<DynamicDistributedLogConfiguration> dynamicLogConf,
+                                         Optional<StatsLogger> perStreamStatsLogger)
             throws InvalidStreamNameException, IOException {
+        checkState();
         validateName(logName);
         Optional<URI> uri = FutureUtils.result(metadataStore.getLogLocation(logName));
         if (!uri.isPresent()) {
@@ -535,18 +547,21 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
                 logName,
                 ClientSharingOption.SharedClients,
                 logConf,
-                dynamicLogConf);
+                dynamicLogConf,
+                perStreamStatsLogger);
     }
 
     @Override
     public boolean logExists(String logName)
         throws IOException, IllegalArgumentException {
+        checkState();
         Optional<URI> uri = FutureUtils.result(metadataStore.getLogLocation(logName));
         return uri.isPresent() && checkIfLogExists(conf, uri.get(), logName);
     }
 
     @Override
     public Iterator<String> getLogs() throws IOException {
+        checkState();
         return FutureUtils.result(metadataStore.getLogs());
     }
 
@@ -557,6 +572,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
 
     @Override
     public synchronized AccessControlManager createAccessControlManager() throws IOException {
+        checkState();
         if (null == accessControlManager) {
             String aclRootPath = bkdlConfig.getACLRootPath();
             // Build the access control manager
@@ -606,9 +622,9 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     }
 
     private static ZooKeeperClientBuilder createDLZKClientBuilder(String zkcName,
-                                                                DistributedLogConfiguration conf,
-                                                                String zkServers,
-                                                                StatsLogger statsLogger) {
+                                                                  DistributedLogConfiguration conf,
+                                                                  String zkServers,
+                                                                  StatsLogger statsLogger) {
         RetryPolicy retryPolicy = null;
         if (conf.getZKNumRetries() > 0) {
             retryPolicy = new BoundExponentialBackoffRetryPolicy(
@@ -625,7 +641,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             .statsLogger(statsLogger)
             .zkAclId(conf.getZkAclId());
         LOG.info("Created shared zooKeeper client builder {}: zkServers = {}, numRetries = {}, sessionTimeout = {}, retryBackoff = {},"
-                 + " maxRetryBackoff = {}, zkAclId = {}.", new Object[] { zkcName, zkServers, conf.getZKNumRetries(),
+                + " maxRetryBackoff = {}, zkAclId = {}.", new Object[] { zkcName, zkServers, conf.getZKNumRetries(),
                 conf.getZKSessionTimeoutMilliseconds(), conf.getZKRetryBackoffStartMillis(),
                 conf.getZKRetryBackoffMaxMillis(), conf.getZkAclId() });
         return builder;
@@ -670,7 +686,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
                 .featureProvider(featureProviderOptional)
                 .statsLogger(statsLogger);
         LOG.info("Created shared client builder {} : zkServers = {}, ledgersPath = {}, numIOThreads = {}",
-                 new Object[] { bkcName, zkServers, ledgersPath, conf.getBKClientNumberIOThreads() });
+                new Object[] { bkcName, zkServers, ledgersPath, conf.getBKClientNumberIOThreads() });
         return builder;
     }
 
@@ -703,6 +719,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
      * @throws IOException
      */
     private <T> T withZooKeeperClient(ZooKeeperClientHandler<T> handler) throws IOException {
+        checkState();
         return handler.handle(sharedWriterZKCForDL);
     }
 
@@ -776,7 +793,8 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
                 nameOfLogStream,
                 clientSharingOption,
                 logConfiguration,
-                dynamicLogConfiguration
+                dynamicLogConfiguration,
+                Optional.<StatsLogger>absent()
         );
     }
 
@@ -802,9 +820,11 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             String nameOfLogStream,
             ClientSharingOption clientSharingOption,
             Optional<DistributedLogConfiguration> logConfiguration,
-            Optional<DynamicDistributedLogConfiguration> dynamicLogConfiguration)
+            Optional<DynamicDistributedLogConfiguration> dynamicLogConfiguration,
+            Optional<StatsLogger> perStreamStatsLogger)
         throws InvalidStreamNameException, IOException {
         // Make sure the name is well formed
+        checkState();
         validateName(nameOfLogStream);
 
         DistributedLogConfiguration mergedConfiguration = new DistributedLogConfiguration();
@@ -868,6 +888,8 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             dlmLedgerAlloctor = this.allocator;
             dlmLogSegmentRollingPermitManager = this.logSegmentRollingPermitManager;
         }
+        // if there's a specified perStreamStatsLogger, user it, otherwise use the default one.
+        StatsLogger perLogStatsLogger = perStreamStatsLogger.or(this.perLogStatsLogger);
 
         return new BKDistributedLogManager(
                 nameOfLogStream,                    /* Log Name */
@@ -883,6 +905,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
                 lockFactory,                        /* Lock Factory */
                 writerSegmentMetadataStore,         /* Log Segment Metadata Store for DL Writers */
                 readerSegmentMetadataStore,         /* Log Segment Metadata Store for DL Readers */
+                logSegmentMetadataCache,            /* Log Segment Metadata Cache */
                 scheduler,                          /* DL scheduler */
                 readAheadExecutor,                  /* Read Aheader Executor */
                 lockStateExecutor,                  /* Lock State Executor */
@@ -905,6 +928,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         if (bkdlConfig.isFederatedNamespace()) {
             throw new UnsupportedOperationException("Use DistributedLogNamespace methods for federated namespace");
         }
+        checkState();
         validateName(nameOfMetadataNode);
         return new ZKMetadataAccessor(nameOfMetadataNode, conf, namespace,
                 sharedWriterZKCBuilderForDL, sharedReaderZKCBuilderForDL, statsLogger);
@@ -1022,6 +1046,13 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         }, conf, uri);
     }
 
+    private void checkState() throws IOException {
+        if (closed.get()) {
+            LOG.error("BKDistributedLogNamespace {} is already closed", namespace);
+            throw new AlreadyClosedException("Namespace " + namespace + " is already closed");
+        }
+    }
+
     /**
      * Close the distributed log manager factory, freeing any resources it may hold.
      */
@@ -1030,16 +1061,13 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         ZooKeeperClient writerZKC;
         ZooKeeperClient readerZKC;
         AccessControlManager acm;
-        synchronized (this) {
-            if (closed) {
-                return;
-            }
-            closed = true;
+        if (closed.compareAndSet(false, true)) {
             writerZKC = sharedWriterZKCForBK;
             readerZKC = sharedReaderZKCForBK;
             acm = accessControlManager;
+        } else {
+            return;
         }
-
         if (null != acm) {
             acm.close();
             LOG.info("Access Control Manager Stopped.");
@@ -1051,17 +1079,21 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             LOG.info("Ledger Allocator stopped.");
         }
 
+        // Unregister gauge to avoid GC spiral
+        this.logSegmentRollingPermitManager.close();
+        this.writeLimiter.close();
+
         // Shutdown log segment metadata stores
         Utils.close(writerSegmentMetadataStore);
         Utils.close(readerSegmentMetadataStore);
 
         // Shutdown the schedulers
         SchedulerUtils.shutdownScheduler(scheduler, conf.getSchedulerShutdownTimeoutMs(),
-                TimeUnit.MILLISECONDS);
+            TimeUnit.MILLISECONDS);
         LOG.info("Executor Service Stopped.");
         if (scheduler != readAheadExecutor) {
             SchedulerUtils.shutdownScheduler(readAheadExecutor, conf.getSchedulerShutdownTimeoutMs(),
-                    TimeUnit.MILLISECONDS);
+                TimeUnit.MILLISECONDS);
             LOG.info("ReadAhead Executor Service Stopped.");
         }
 

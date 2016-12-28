@@ -17,21 +17,23 @@
  */
 package com.twitter.distributedlog.client.ownership;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.twitter.distributedlog.client.ClientConfig;
 import com.twitter.finagle.stats.NullStatsReceiver;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 import java.util.Set;
-
-import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestName;
 
 /**
- * Test Case for Ownership Cache
+ * Test Case for Ownership Cache.
  */
 public class TestOwnershipCache {
 

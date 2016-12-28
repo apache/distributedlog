@@ -17,12 +17,14 @@
  */
 package com.twitter.distributedlog.client.routing;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.collect.Sets;
 import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
 import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.finagle.NoBrokersAvailableException;
-import org.junit.Test;
-
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.HashMap;
@@ -31,9 +33,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link RegionsRoutingService}.
+ */
 public class TestRegionsRoutingService {
 
     @Test(timeout = 60000)

@@ -150,6 +150,7 @@ public class StreamImpl implements Stream {
     private final StatsLogger exceptionStatLogger;
     private final ConcurrentHashMap<String, Counter> exceptionCounters =
         new ConcurrentHashMap<String, Counter>();
+    private final Gauge<Number> streamStatusGauge;
 
     // Since we may create and discard streams at initialization if there's a race,
     // must not do any expensive initialization here (particularly any locking or
@@ -206,6 +207,17 @@ public class StreamImpl implements Stream {
         this.exceptionStatLogger = streamOpStats.requestScope("exceptions");
         this.writerCloseStatLogger = streamsStatsLogger.getOpStatsLogger("writer_close");
         this.writerCloseTimeoutCounter = streamsStatsLogger.getCounter("writer_close_timeouts");
+        // Gauges
+        this.streamStatusGauge = new Gauge<Number>() {
+            @Override
+            public Number getDefaultValue() {
+                return StreamStatus.UNINITIALIZED.getCode();
+            }
+            @Override
+            public Number getSample() {
+                return status.getCode();
+            }
+        };
     }
 
     @Override
@@ -231,7 +243,8 @@ public class StreamImpl implements Stream {
     private DistributedLogManager openLog(String name) throws IOException {
         Optional<DistributedLogConfiguration> dlConf = Optional.<DistributedLogConfiguration>absent();
         Optional<DynamicDistributedLogConfiguration> dynDlConf = Optional.of(dynConf);
-        return dlNamespace.openLog(name, dlConf, dynDlConf);
+        Optional<StatsLogger> perStreamStatsLogger = Optional.of(streamLogger);
+        return dlNamespace.openLog(name, dlConf, dynDlConf, perStreamStatsLogger);
     }
 
     // Expensive initialization, only called once per stream.
@@ -241,16 +254,7 @@ public class StreamImpl implements Stream {
 
         // Better to avoid registering the gauge multiple times, so do this in init
         // which only gets called once.
-        streamLogger.registerGauge("stream_status", new Gauge<Number>() {
-            @Override
-            public Number getDefaultValue() {
-                return StreamStatus.UNINITIALIZED.getCode();
-            }
-            @Override
-            public Number getSample() {
-                return status.getCode();
-            }
-        });
+        streamLogger.registerGauge("stream_status", this.streamStatusGauge);
 
         // Signal initialization is complete, should be last in this method.
         status = StreamStatus.INITIALIZING;
@@ -760,6 +764,7 @@ public class StreamImpl implements Stream {
         // after the async writer is closed. so we could clear up the lock before redirect
         // them.
         close(abort);
+        unregisterGauge();
         if (uncache) {
             final long probationTimeoutMs;
             if (null != owner) {
@@ -826,6 +831,7 @@ public class StreamImpl implements Stream {
         } else {
             closeWaitDuration = Duration.fromMilliseconds(writerCloseTimeoutMs);
         }
+
         FutureUtils.stats(
                 closeWriterFuture,
                 writerCloseStatLogger,
@@ -866,6 +872,13 @@ public class StreamImpl implements Stream {
         }
         limiter.close();
         logger.info("Closed stream {}.", name);
+    }
+
+    /**
+     * clean up the gauge to help GC
+     */
+    private void unregisterGauge(){
+        streamLogger.unregisterGauge("stream_status", this.streamStatusGauge);
     }
 
     // Test-only apis
