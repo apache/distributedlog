@@ -452,7 +452,7 @@ public class ReaderWorker implements Worker {
             serverSet.close();
         }
         // Unregister gauges to prevent GC spirals
-        for(StreamReader sr : streamReaders) {
+        for (StreamReader sr : streamReaders) {
             sr.unregisterGauge();
         }
     }

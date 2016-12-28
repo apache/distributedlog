@@ -143,7 +143,8 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
                         nonBlocking = true;
                         catchupStopwatch.stop();
                         logger.info("Catchup {} records (total {} bytes) in {} milliseconds",
-                                new Object[] { numCatchupReads, numCatchupBytes, stopwatch.elapsed(TimeUnit.MILLISECONDS) });
+                                new Object[] { numCatchupReads, numCatchupBytes,
+                                    stopwatch.elapsed(TimeUnit.MILLISECONDS) });
                     }
                     stopwatch.reset();
                 } catch (IOException e) {

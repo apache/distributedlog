@@ -24,7 +24,7 @@ import com.twitter.util.Future;
 import scala.runtime.BoxedUnit;
 
 /**
- * Cluster client
+ * Cluster client.
  */
 public class ClusterClient {
 
