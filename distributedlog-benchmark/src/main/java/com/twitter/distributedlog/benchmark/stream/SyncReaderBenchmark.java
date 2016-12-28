@@ -22,17 +22,20 @@ import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.LogReader;
 import com.twitter.distributedlog.LogRecord;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Benchmark on {@link com.twitter.distributedlog.LogReader} reading from a stream
+ * Benchmark on {@link com.twitter.distributedlog.LogReader} reading from a stream.
  */
 public class SyncReaderBenchmark extends AbstractReaderBenchmark {
+
+    private static final Logger logger = LoggerFactory.getLogger(SyncReaderBenchmark.class);
 
     public SyncReaderBenchmark() {}
 
@@ -49,6 +52,8 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep while creating dlm for stream {} : ",
+                        streamName, e);
                 }
             }
         }
@@ -103,6 +108,8 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep after reader was reassigned null for stream {} : ",
+                        streamName, e);
                 }
                 continue;
             }
@@ -140,6 +147,8 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
             try {
                 TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
             } catch (InterruptedException e) {
+                logger.warn("Interrupted from sleep while creating reader for stream {} : ",
+                    streamName, e);
             }
         }
     }

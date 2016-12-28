@@ -24,22 +24,21 @@ import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.LogRecordWithDLSN;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.util.FutureUtils;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 /**
- * Benchmark on {@link com.twitter.distributedlog.AsyncLogReader} reading from a stream
+ * Benchmark on {@link com.twitter.distributedlog.AsyncLogReader} reading from a stream.
  */
 public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
 
-    static final Logger logger = LoggerFactory.getLogger(AsyncReaderBenchmark.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncReaderBenchmark.class);
 
     @Override
     protected void benchmark(DistributedLogNamespace namespace, String logName, StatsLogger statsLogger) {
@@ -54,6 +53,8 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep while creating dlm for stream {} : ",
+                        streamName, e);
                 }
             }
         }
@@ -120,6 +121,8 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep after reader was reassigned null for stream {} : ",
+                        streamName, e);
                 }
                 continue;
             }
@@ -147,6 +150,8 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
             try {
                 TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
             } catch (InterruptedException e) {
+                logger.warn("Interrupted from sleep while creating reader for stream {} : ",
+                    streamName, e);
             }
         }
     }

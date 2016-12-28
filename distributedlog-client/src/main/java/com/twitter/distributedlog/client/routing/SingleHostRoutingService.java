@@ -17,15 +17,18 @@
  */
 package com.twitter.distributedlog.client.routing;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.Sets;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.StatsReceiver;
-
 import java.net.SocketAddress;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * Single Host Routing Service.
+ */
 class SingleHostRoutingService implements RoutingService {
 
     @Deprecated
@@ -33,18 +36,26 @@ class SingleHostRoutingService implements RoutingService {
         return new SingleHostRoutingService(address);
     }
 
+    /**
+     * Builder to build single host based routing service.
+     *
+     * @return builder to build single host based routing service.
+     */
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Builder to build single host based routing service.
+     */
     public static class Builder implements RoutingService.Builder {
 
-        private SocketAddress _address;
+        private SocketAddress address;
 
         private Builder() {}
 
         public Builder address(SocketAddress address) {
-            this._address = address;
+            this.address = address;
             return this;
         }
 
@@ -55,8 +66,8 @@ class SingleHostRoutingService implements RoutingService {
 
         @Override
         public RoutingService build() {
-            Preconditions.checkNotNull(_address, "Host is null");
-            return new SingleHostRoutingService(_address);
+            checkNotNull(address, "Host is null");
+            return new SingleHostRoutingService(address);
         }
     }
 

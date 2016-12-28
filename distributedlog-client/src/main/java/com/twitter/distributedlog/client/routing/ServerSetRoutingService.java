@@ -17,7 +17,8 @@
  */
 package com.twitter.distributedlog.client.routing;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.hash.HashFunction;
@@ -25,9 +26,6 @@ import com.google.common.hash.Hashing;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.StatsReceiver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,26 +37,31 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Routing Service based on a given {@link com.twitter.common.zookeeper.ServerSet}.
  */
 class ServerSetRoutingService extends Thread implements RoutingService {
 
-    static final Logger logger = LoggerFactory.getLogger(ServerSetRoutingService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServerSetRoutingService.class);
 
     static ServerSetRoutingServiceBuilder newServerSetRoutingServiceBuilder() {
         return new ServerSetRoutingServiceBuilder();
     }
 
+    /**
+     * Builder to build {@link com.twitter.common.zookeeper.ServerSet} based routing service.
+     */
     static class ServerSetRoutingServiceBuilder implements RoutingService.Builder {
 
-        private ServerSetWatcher _serverSetWatcher;
+        private ServerSetWatcher serverSetWatcher;
 
         private ServerSetRoutingServiceBuilder() {}
 
         public ServerSetRoutingServiceBuilder serverSetWatcher(ServerSetWatcher serverSetWatcher) {
-            this._serverSetWatcher = serverSetWatcher;
+            this.serverSetWatcher = serverSetWatcher;
             return this;
         }
 
@@ -69,14 +72,14 @@ class ServerSetRoutingService extends Thread implements RoutingService {
 
         @Override
         public RoutingService build() {
-            Preconditions.checkNotNull(_serverSetWatcher, "No serverset watcher provided.");
-            return new ServerSetRoutingService(this._serverSetWatcher);
+            checkNotNull(serverSetWatcher, "No serverset watcher provided.");
+            return new ServerSetRoutingService(this.serverSetWatcher);
         }
     }
 
     private static class HostComparator implements Comparator<SocketAddress> {
 
-        static final HostComparator instance = new HostComparator();
+        private static final HostComparator INSTANCE = new HostComparator();
 
         @Override
         public int compare(SocketAddress o1, SocketAddress o2) {
@@ -165,7 +168,7 @@ class ServerSetRoutingService extends Thread implements RoutingService {
                     address = newList.get(hostId);
                     int i = hostId;
                     while (rContext.isTriedHost(address)) {
-                        i = (i+1) % newList.size();
+                        i = (i + 1) % newList.size();
                         if (i == hostId) {
                             address = null;
                             break;
@@ -188,7 +191,7 @@ class ServerSetRoutingService extends Thread implements RoutingService {
                 logger.info("Node {} left due to : ", host, reason);
             }
             hostList = new ArrayList<SocketAddress>(hostSet);
-            Collections.sort(hostList, HostComparator.instance);
+            Collections.sort(hostList, HostComparator.INSTANCE);
             logger.info("Host list becomes : {}.", hostList);
         }
     }
@@ -253,7 +256,7 @@ class ServerSetRoutingService extends Thread implements RoutingService {
 
         synchronized (hostSet) {
             hostList = new ArrayList<SocketAddress>(hostSet);
-            Collections.sort(hostList, HostComparator.instance);
+            Collections.sort(hostList, HostComparator.INSTANCE);
             logger.info("Host list becomes : {}.", hostList);
         }
 

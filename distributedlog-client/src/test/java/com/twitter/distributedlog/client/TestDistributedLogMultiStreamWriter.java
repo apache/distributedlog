@@ -17,6 +17,16 @@
  */
 package com.twitter.distributedlog.client;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.common.collect.Lists;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.LogRecord;
@@ -29,22 +39,17 @@ import com.twitter.finagle.IndividualRequestTimeoutException;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
 import com.twitter.util.Promise;
+import java.nio.ByteBuffer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.nio.ByteBuffer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Charsets.UTF_8;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
 /**
- * Test {@link DistributedLogMultiStreamWriter}
+ * Test {@link DistributedLogMultiStreamWriter}.
  */
 public class TestDistributedLogMultiStreamWriter {
 

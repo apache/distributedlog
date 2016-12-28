@@ -21,21 +21,20 @@ import com.google.common.collect.ImmutableMap;
 import com.twitter.distributedlog.client.ClientConfig;
 import com.twitter.distributedlog.client.stats.OwnershipStatsLogger;
 import com.twitter.finagle.stats.StatsReceiver;
-import org.jboss.netty.util.HashedWheelTimer;
-import org.jboss.netty.util.Timeout;
-import org.jboss.netty.util.TimerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.SocketAddress;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import org.jboss.netty.util.HashedWheelTimer;
+import org.jboss.netty.util.Timeout;
+import org.jboss.netty.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Client Side Ownership Cache
+ * Client Side Ownership Cache.
  */
 public class OwnershipCache implements TimerTask {
 
@@ -62,8 +61,8 @@ public class OwnershipCache implements TimerTask {
     }
 
     private void scheduleDumpOwnershipCache() {
-        if (clientConfig.isPeriodicDumpOwnershipCacheEnabled() &&
-                clientConfig.getPeriodicDumpOwnershipCacheIntervalMs() > 0) {
+        if (clientConfig.isPeriodicDumpOwnershipCacheEnabled()
+            && clientConfig.getPeriodicDumpOwnershipCacheIntervalMs() > 0) {
             timer.newTimeout(this, clientConfig.getPeriodicDumpOwnershipCacheIntervalMs(),
                     TimeUnit.MILLISECONDS);
         }

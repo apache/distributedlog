@@ -17,13 +17,6 @@
  */
 package com.twitter.distributedlog.client.routing;
 
-import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.google.common.collect.ImmutableSet;
 import com.twitter.common.base.Command;
 import com.twitter.common.base.Commands;
@@ -36,16 +29,26 @@ import com.twitter.finagle.Resolver$;
 import com.twitter.thrift.Endpoint;
 import com.twitter.thrift.ServiceInstance;
 import com.twitter.thrift.Status;
+import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.runtime.AbstractFunction1;
 import scala.runtime.BoxedUnit;
 
+/**
+ * Finagle Name based {@link ServerSet} implementation.
+ */
 class NameServerSet implements ServerSet {
 
-    static final Logger logger = LoggerFactory.getLogger(NameServerSet.class);
+    private static final Logger logger = LoggerFactory.getLogger(NameServerSet.class);
 
-    private volatile Set<HostChangeMonitor<ServiceInstance>> watchers = new HashSet<HostChangeMonitor<ServiceInstance>>();
+    private volatile Set<HostChangeMonitor<ServiceInstance>> watchers =
+        new HashSet<HostChangeMonitor<ServiceInstance>>();
     private volatile ImmutableSet<ServiceInstance> hostSet = ImmutableSet.of();
     private AtomicBoolean resolutionPending = new AtomicBoolean(true);
 
@@ -70,21 +73,22 @@ class NameServerSet implements ServerSet {
 
     private void initialize(Name name) {
         if (name instanceof TestName) {
-            ((TestName)name).changes(new AbstractFunction1<Addr, BoxedUnit>() {
+            ((TestName) name).changes(new AbstractFunction1<Addr, BoxedUnit>() {
                 @Override
                 public BoxedUnit apply(Addr varAddr) {
                     return NameServerSet.this.respondToChanges(varAddr);
                 }
             });
         } else if (name instanceof Name.Bound) {
-            ((Name.Bound)name).addr().changes().respond(new AbstractFunction1<Addr, BoxedUnit>() {
+            ((Name.Bound) name).addr().changes().respond(new AbstractFunction1<Addr, BoxedUnit>() {
                 @Override
                 public BoxedUnit apply(Addr varAddr) {
                     return NameServerSet.this.respondToChanges(varAddr);
                 }
             });
         } else {
-            logger.error("NameServerSet only supports Name.Bound. While the resolved name {} was {}", name, name.getClass());
+            logger.error("NameServerSet only supports Name.Bound. While the resolved name {} was {}",
+                name, name.getClass());
             throw new UnsupportedOperationException("NameServerSet only supports Name.Bound");
         }
     }
@@ -113,7 +117,7 @@ class NameServerSet implements ServerSet {
         ImmutableSet<ServiceInstance> newHostSet = oldHostSet;
 
         if (addr instanceof Addr.Bound) {
-            scala.collection.immutable.Set<Address> endpointAddresses = ((Addr.Bound)addr).addrs();
+            scala.collection.immutable.Set<Address> endpointAddresses = ((Addr.Bound) addr).addrs();
             scala.collection.Iterator<Address> endpointAddressesIterator = endpointAddresses.toIterator();
             HashSet<ServiceInstance> serviceInstances = new HashSet<ServiceInstance>();
             while (endpointAddressesIterator.hasNext()) {
@@ -122,7 +126,7 @@ class NameServerSet implements ServerSet {
             newHostSet = ImmutableSet.copyOf(serviceInstances);
 
         } else if (addr instanceof Addr.Failed) {
-            logger.error("Name resolution failed", ((Addr.Failed)addr).cause());
+            logger.error("Name resolution failed", ((Addr.Failed) addr).cause());
             newHostSet = ImmutableSet.of();
         } else if (addr.toString().equals("Pending")) {
             logger.info("Name resolution pending");
@@ -176,7 +180,9 @@ class NameServerSet implements ServerSet {
      * @deprecated The status field is deprecated. Please use {@link #join(java.net.InetSocketAddress, java.util.Map)}
      */
     @Override
-    public EndpointStatus join(InetSocketAddress endpoint, Map<String, InetSocketAddress> additionalEndpoints, Status status)
+    public EndpointStatus join(InetSocketAddress endpoint,
+                               Map<String, InetSocketAddress> additionalEndpoints,
+                               Status status)
             throws Group.JoinException, InterruptedException {
         throw new UnsupportedOperationException("NameServerSet does not support join");
     }
@@ -207,7 +213,9 @@ class NameServerSet implements ServerSet {
      * @throws InterruptedException if interrupted while waiting to join the server set
      */
     @Override
-    public EndpointStatus join(InetSocketAddress endpoint, Map<String, InetSocketAddress> additionalEndpoints, int shardId)
+    public EndpointStatus join(InetSocketAddress endpoint,
+                               Map<String, InetSocketAddress> additionalEndpoints,
+                               int shardId)
             throws Group.JoinException, InterruptedException {
         throw new UnsupportedOperationException("NameServerSet does not support join");
     }
@@ -246,7 +254,7 @@ class NameServerSet implements ServerSet {
             watchers.add(monitor);
         }
 
-        if(resolutionPending.compareAndSet(false, false)) {
+        if (resolutionPending.compareAndSet(false, false)) {
             monitor.onChange(hostSet);
         }
 

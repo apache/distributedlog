@@ -17,13 +17,16 @@
  */
 package com.twitter.distributedlog.service;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
+/**
+ * Socket Address identifier for a DL proxy.
+ */
 public class DLSocketAddress {
 
     private static final int VERSION = 1;
@@ -49,7 +52,7 @@ public class DLSocketAddress {
     }
 
     /**
-     * Socket address for dl write proxy
+     * Socket address for dl write proxy.
      *
      * @return socket address for dl write proxy
      */
@@ -126,7 +129,7 @@ public class DLSocketAddress {
      */
     public static InetSocketAddress parseSocketAddress(String addr) {
         String[] parts =  addr.split(COLON);
-        Preconditions.checkArgument(parts.length == 2);
+        checkArgument(parts.length == 2);
         String hostname = parts[0];
         int port = Integer.parseInt(parts[1]);
         return new InetSocketAddress(hostname, port);

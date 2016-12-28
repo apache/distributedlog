@@ -17,6 +17,7 @@
  */
 package com.twitter.distributedlog.benchmark.stream;
 
+import java.util.Enumeration;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.LedgerEntry;
 import org.apache.bookkeeper.client.LedgerHandle;
@@ -24,14 +25,12 @@ import org.apache.bookkeeper.proto.BookkeeperInternalCallbacks.ReadEntryListener
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Enumeration;
-
 /**
- * Read ledgers in batches
+ * Read ledgers in batches.
  */
 public class LedgerBatchReader implements Runnable {
 
-    static final Logger logger = LoggerFactory.getLogger(LedgerBatchReader.class);
+    private static final Logger logger = LoggerFactory.getLogger(LedgerBatchReader.class);
 
     private final LedgerHandle lh;
     private final ReadEntryListener readEntryListener;

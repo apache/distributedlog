@@ -18,21 +18,29 @@
 package com.twitter.distributedlog.client.routing;
 
 import com.google.common.collect.ImmutableSet;
-
 import com.google.common.collect.Sets;
 import com.twitter.common.net.pool.DynamicHostSet;
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.thrift.Endpoint;
 import com.twitter.thrift.ServiceInstance;
-
 import java.net.InetSocketAddress;
 import java.util.Set;
 
+/**
+ * Twitter {@link ServerSet} based watcher.
+ */
 public class TwitterServerSetWatcher implements ServerSetWatcher {
+
     private final ServerSet serverSet;
     private final boolean resolvedFromName;
 
+    /**
+     * Construct a {@link ServerSet} based watcher.
+     *
+     * @param serverSet server set.
+     * @param resolvedFromName whether to resolve hosts from {@link com.twitter.finagle.Name}.
+     */
     public TwitterServerSetWatcher(ServerSet serverSet,
                                    boolean resolvedFromName) {
         this.serverSet = serverSet;
@@ -40,8 +48,9 @@ public class TwitterServerSetWatcher implements ServerSetWatcher {
     }
 
     /**
-     * Registers a monitor to receive change notices for this server set as long as this jvm process
-     * is alive.  Blocks until the initial server set can be gathered and delivered to the monitor.
+     * Registers a monitor to receive change notices for this server set as long as this jvm process is alive.
+     *
+     * <p>Blocks until the initial server set can be gathered and delivered to the monitor.
      * The monitor will be notified if the membership set or parameters of existing members have
      * changed.
      *

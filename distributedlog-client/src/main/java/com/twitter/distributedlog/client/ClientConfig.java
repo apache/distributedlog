@@ -17,12 +17,12 @@
  */
 package com.twitter.distributedlog.client;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * Client Config
+ * Client Config.
  */
 public class ClientConfig {
     int redirectBackoffStartMs = 25;
@@ -95,7 +95,7 @@ public class ClientConfig {
     }
 
     public ClientConfig setStreamNameRegex(String nameRegex) {
-        Preconditions.checkNotNull(nameRegex);
+        checkNotNull(nameRegex);
         this.streamNameRegex = nameRegex;
         return this;
     }

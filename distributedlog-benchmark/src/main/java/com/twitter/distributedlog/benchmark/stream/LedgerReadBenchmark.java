@@ -17,6 +17,8 @@
  */
 package com.twitter.distributedlog.benchmark.stream;
 
+import static com.google.common.base.Charsets.UTF_8;
+
 import com.google.common.base.Stopwatch;
 import com.twitter.distributedlog.BookKeeperClientBuilder;
 import com.twitter.distributedlog.DistributedLogManager;
@@ -25,6 +27,9 @@ import com.twitter.distributedlog.ZooKeeperClient;
 import com.twitter.distributedlog.ZooKeeperClientBuilder;
 import com.twitter.distributedlog.metadata.BKDLConfig;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.LedgerEntry;
 import org.apache.bookkeeper.client.LedgerHandle;
@@ -34,18 +39,12 @@ import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Charsets.UTF_8;
-
 /**
- * Benchmark ledger reading
+ * Benchmark ledger reading.
  */
 public class LedgerReadBenchmark extends AbstractReaderBenchmark {
 
-    static final Logger logger = LoggerFactory.getLogger(AsyncReaderBenchmark.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncReaderBenchmark.class);
 
     @Override
     protected void benchmark(DistributedLogNamespace namespace, String logName, StatsLogger statsLogger) {
@@ -60,6 +59,8 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep while creating dlm for stream {} : ",
+                        streamName, e);
                 }
             }
         }
@@ -76,6 +77,8 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
                 try {
                     TimeUnit.MILLISECONDS.sleep(conf.getZKSessionTimeoutMilliseconds());
                 } catch (InterruptedException e) {
+                    logger.warn("Interrupted from sleep while geting log segments for stream {} : ",
+                        streamName, e);
                 }
             }
         }
@@ -119,7 +122,7 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
                 LedgerHandle lh = bk.openLedgerNoRecovery(
                         lid, BookKeeper.DigestType.CRC32, conf.getBKDigestPW().getBytes(UTF_8));
                 logger.info("It took {} ms to open log segment {}",
-                        new Object[] { stopwatch.elapsed(TimeUnit.MILLISECONDS), (lh.getLastAddConfirmed() + 1), segment });
+                    new Object[] { stopwatch.elapsed(TimeUnit.MILLISECONDS), (lh.getLastAddConfirmed() + 1), segment });
                 stopwatch.reset().start();
                 Runnable reader;
                 if (streamRead) {
@@ -139,7 +142,7 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
                 }
                 reader.run();
                 logger.info("It took {} ms to complete reading {} entries from log segment {}",
-                        new Object[] { stopwatch.elapsed(TimeUnit.MILLISECONDS), (lh.getLastAddConfirmed() + 1), segment });
+                    new Object[] { stopwatch.elapsed(TimeUnit.MILLISECONDS), (lh.getLastAddConfirmed() + 1), segment });
             }
         } catch (Exception e) {
             logger.error("Error on reading bk ", e);

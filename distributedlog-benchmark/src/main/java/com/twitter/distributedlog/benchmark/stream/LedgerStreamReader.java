@@ -17,6 +17,10 @@
  */
 package com.twitter.distributedlog.benchmark.stream;
 
+import java.util.Enumeration;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 import org.apache.bookkeeper.client.AsyncCallback;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.LedgerEntry;
@@ -25,17 +29,12 @@ import org.apache.bookkeeper.proto.BookkeeperInternalCallbacks.ReadEntryListener
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Enumeration;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicLong;
-
 /**
  * Reading ledger in a streaming way.
  */
 public class LedgerStreamReader implements Runnable {
 
-    static final Logger logger = LoggerFactory.getLogger(LedgerStreamReader.class);
+    private static final Logger logger = LoggerFactory.getLogger(LedgerStreamReader.class);
 
     class PendingReadRequest implements AsyncCallback.ReadCallback {
 

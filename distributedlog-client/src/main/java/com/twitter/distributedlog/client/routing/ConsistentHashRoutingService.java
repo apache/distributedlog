@@ -17,8 +17,10 @@
  */
 package com.twitter.distributedlog.client.routing;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
@@ -34,14 +36,6 @@ import com.twitter.finagle.stats.Gauge;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.util.Function0;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jboss.netty.util.HashedWheelTimer;
-import org.jboss.netty.util.Timeout;
-import org.jboss.netty.util.TimerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import scala.collection.Seq;
-
 import java.net.SocketAddress;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,7 +47,17 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jboss.netty.util.HashedWheelTimer;
+import org.jboss.netty.util.Timeout;
+import org.jboss.netty.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import scala.collection.Seq;
 
+/**
+ * Consistent Hashing Based {@link RoutingService}.
+ */
 public class ConsistentHashRoutingService extends ServerSetRoutingService {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsistentHashRoutingService.class);
@@ -63,52 +67,60 @@ public class ConsistentHashRoutingService extends ServerSetRoutingService {
         return new ConsistentHashRoutingService(serverSetWatcher, numReplicas, 300, NullStatsReceiver.get());
     }
 
+    /**
+     * Builder helper class to build a consistent hash bashed {@link RoutingService}.
+     *
+     * @return builder to build a consistent hash based {@link RoutingService}.
+     */
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Builder for building consistent hash based routing service.
+     */
     public static class Builder implements RoutingService.Builder {
 
-        private ServerSet _serverSet;
-        private boolean _resolveFromName = false;
-        private int _numReplicas;
-        private int _blackoutSeconds = 300;
-        private StatsReceiver _statsReceiver = NullStatsReceiver.get();
+        private ServerSet serverSet;
+        private boolean resolveFromName = false;
+        private int numReplicas;
+        private int blackoutSeconds = 300;
+        private StatsReceiver statsReceiver = NullStatsReceiver.get();
 
         private Builder() {}
 
         public Builder serverSet(ServerSet serverSet) {
-            this._serverSet = serverSet;
+            this.serverSet = serverSet;
             return this;
         }
 
         public Builder resolveFromName(boolean enabled) {
-            this._resolveFromName = enabled;
+            this.resolveFromName = enabled;
             return this;
         }
 
         public Builder numReplicas(int numReplicas) {
-            this._numReplicas = numReplicas;
+            this.numReplicas = numReplicas;
             return this;
         }
 
         public Builder blackoutSeconds(int seconds) {
-            this._blackoutSeconds = seconds;
+            this.blackoutSeconds = seconds;
             return this;
         }
 
         public Builder statsReceiver(StatsReceiver statsReceiver) {
-            this._statsReceiver = statsReceiver;
+            this.statsReceiver = statsReceiver;
             return this;
         }
 
         @Override
         public RoutingService build() {
-            Preconditions.checkNotNull(_serverSet, "No serverset provided.");
-            Preconditions.checkNotNull(_statsReceiver, "No stats receiver provided.");
-            Preconditions.checkArgument(_numReplicas > 0, "Invalid number of replicas : " + _numReplicas);
-            return new ConsistentHashRoutingService(new TwitterServerSetWatcher(_serverSet, _resolveFromName),
-                    _numReplicas, _blackoutSeconds, _statsReceiver);
+            checkNotNull(serverSet, "No serverset provided.");
+            checkNotNull(statsReceiver, "No stats receiver provided.");
+            checkArgument(numReplicas > 0, "Invalid number of replicas : " + numReplicas);
+            return new ConsistentHashRoutingService(new TwitterServerSetWatcher(serverSet, resolveFromName),
+                numReplicas, blackoutSeconds, statsReceiver);
         }
     }
 
@@ -365,8 +377,9 @@ public class ConsistentHashRoutingService extends ServerSetRoutingService {
                 circle.remove(shardId, host);
                 if (reason.isPresent()) {
                     if (reason.get() instanceof ChannelException) {
-                        logger.info("Shard {} ({}) left due to ChannelException, black it out for {} seconds (message = {})",
-                                new Object[] { shardId, host, blackoutSeconds, reason.get().toString() });
+                        logger.info("Shard {} ({}) left due to ChannelException, black it out for {} seconds"
+                            + " (message = {})",
+                            new Object[] { shardId, host, blackoutSeconds, reason.get().toString() });
                         BlackoutHost blackoutHost = new BlackoutHost(shardId, host);
                         hashedWheelTimer.newTimeout(blackoutHost, blackoutSeconds, TimeUnit.SECONDS);
                     } else {
@@ -425,7 +438,7 @@ public class ConsistentHashRoutingService extends ServerSetRoutingService {
                         // Assign a random negative shardId
                         int shardId;
                         do {
-                            shardId = Math.min(-1 , (int)(Math.random() * Integer.MIN_VALUE));
+                            shardId = Math.min(-1 , (int) (Math.random() * Integer.MIN_VALUE));
                         } while (null != shardId2Address.get(shardId));
                         shard = shardId;
                     }

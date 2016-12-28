@@ -17,7 +17,11 @@
  */
 package com.twitter.distributedlog.client;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORDSET_SIZE;
+import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
+
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Ticker;
 import com.google.common.collect.Lists;
@@ -37,7 +41,6 @@ import com.twitter.util.Duration;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
-
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
@@ -47,30 +50,36 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.twitter.distributedlog.LogRecord.*;
-
 /**
- * Write to multiple streams
+ * Write to multiple streams.
  */
 public class DistributedLogMultiStreamWriter implements Runnable {
 
+    /**
+     * Create a new builder to create a multi stream writer.
+     *
+     * @return a new builder to create a multi stream writer.
+     */
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Builder for the multi stream writer.
+     */
     public static class Builder {
 
-        private DistributedLogClient _client = null;
-        private List<String> _streams = null;
-        private int _bufferSize = 16 * 1024; // 16k
-        private long _flushIntervalMicros = 2000; // 2ms
-        private CompressionCodec.Type _codec = CompressionCodec.Type.NONE;
-        private ScheduledExecutorService _executorService = null;
-        private long _requestTimeoutMs = 500; // 500ms
-        private int _firstSpeculativeTimeoutMs = 50; // 50ms
-        private int _maxSpeculativeTimeoutMs = 200; // 200ms
-        private float _speculativeBackoffMultiplier = 2;
-        private Ticker _ticker = Ticker.systemTicker();
+        private DistributedLogClient client = null;
+        private List<String> streams = null;
+        private int bufferSize = 16 * 1024; // 16k
+        private long flushIntervalMicros = 2000; // 2ms
+        private CompressionCodec.Type codec = CompressionCodec.Type.NONE;
+        private ScheduledExecutorService executorService = null;
+        private long requestTimeoutMs = 500; // 500ms
+        private int firstSpeculativeTimeoutMs = 50; // 50ms
+        private int maxSpeculativeTimeoutMs = 200; // 200ms
+        private float speculativeBackoffMultiplier = 2;
+        private Ticker ticker = Ticker.systemTicker();
 
         private Builder() {}
 
@@ -82,7 +91,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder client(DistributedLogClient client) {
-            this._client = client;
+            this.client = client;
             return this;
         }
 
@@ -94,12 +103,13 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder streams(List<String> streams) {
-            this._streams = streams;
+            this.streams = streams;
             return this;
         }
 
         /**
          * Set the output buffer size.
+         *
          * <p>If output buffer size is 0, the writes will be transmitted to
          * wire immediately.
          *
@@ -108,7 +118,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder bufferSize(int bufferSize) {
-            this._bufferSize = bufferSize;
+            this.bufferSize = bufferSize;
             return this;
         }
 
@@ -120,7 +130,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder flushIntervalMs(int flushIntervalMs) {
-            this._flushIntervalMicros = TimeUnit.MILLISECONDS.toMicros(flushIntervalMs);
+            this.flushIntervalMicros = TimeUnit.MILLISECONDS.toMicros(flushIntervalMs);
             return this;
         }
 
@@ -132,7 +142,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder flushIntervalMicros(int flushIntervalMicros) {
-            this._flushIntervalMicros = flushIntervalMicros;
+            this.flushIntervalMicros = flushIntervalMicros;
             return this;
         }
 
@@ -143,7 +153,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder compressionCodec(CompressionCodec.Type codec) {
-            this._codec = codec;
+            this.codec = codec;
             return this;
         }
 
@@ -155,7 +165,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder scheduler(ScheduledExecutorService executorService) {
-            this._executorService = executorService;
+            this.executorService = executorService;
             return this;
         }
 
@@ -167,17 +177,19 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder requestTimeoutMs(long requestTimeoutMs) {
-            this._requestTimeoutMs = requestTimeoutMs;
+            this.requestTimeoutMs = requestTimeoutMs;
             return this;
         }
 
         /**
          * Set the first speculative timeout in milliseconds.
+         *
          * <p>The multi-streams writer does speculative writes on streams.
          * The write issues first write request to a stream, if the write request
          * doesn't respond within speculative timeout. it issues next write request
          * to a different stream. It does such speculative retries until receive
          * a success or request timeout ({@link #requestTimeoutMs(long)}).
+         *
          * <p>This setting is to configure the first speculative timeout, in milliseconds.
          *
          * @param timeoutMs
@@ -185,17 +197,19 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder firstSpeculativeTimeoutMs(int timeoutMs) {
-            this._firstSpeculativeTimeoutMs = timeoutMs;
+            this.firstSpeculativeTimeoutMs = timeoutMs;
             return this;
         }
 
         /**
          * Set the max speculative timeout in milliseconds.
+         *
          * <p>The multi-streams writer does speculative writes on streams.
          * The write issues first write request to a stream, if the write request
          * doesn't respond within speculative timeout. it issues next write request
          * to a different stream. It does such speculative retries until receive
          * a success or request timeout ({@link #requestTimeoutMs(long)}).
+         *
          * <p>This setting is to configure the max speculative timeout, in milliseconds.
          *
          * @param timeoutMs
@@ -203,17 +217,19 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder maxSpeculativeTimeoutMs(int timeoutMs) {
-            this._maxSpeculativeTimeoutMs = timeoutMs;
+            this.maxSpeculativeTimeoutMs = timeoutMs;
             return this;
         }
 
         /**
          * Set the speculative timeout backoff multiplier.
+         *
          * <p>The multi-streams writer does speculative writes on streams.
          * The write issues first write request to a stream, if the write request
          * doesn't respond within speculative timeout. it issues next write request
          * to a different stream. It does such speculative retries until receive
          * a success or request timeout ({@link #requestTimeoutMs(long)}).
+         *
          * <p>This setting is to configure the speculative timeout backoff multiplier.
          *
          * @param multiplier
@@ -221,7 +237,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return builder
          */
         public Builder speculativeBackoffMultiplier(float multiplier) {
-            this._speculativeBackoffMultiplier = multiplier;
+            this.speculativeBackoffMultiplier = multiplier;
             return this;
         }
 
@@ -234,7 +250,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @see Ticker
          */
         public Builder clockTicker(Ticker ticker) {
-            this._ticker = ticker;
+            this.ticker = ticker;
             return this;
         }
 
@@ -244,29 +260,29 @@ public class DistributedLogMultiStreamWriter implements Runnable {
          * @return the multi stream writer.
          */
         public DistributedLogMultiStreamWriter build() {
-            Preconditions.checkArgument((null != _streams && !_streams.isEmpty()),
+            checkArgument((null != streams && !streams.isEmpty()),
                     "No streams provided");
-            Preconditions.checkNotNull(_client,
+            checkNotNull(client,
                     "No distributedlog client provided");
-            Preconditions.checkNotNull(_codec,
+            checkNotNull(codec,
                     "No compression codec provided");
-            Preconditions.checkArgument(_firstSpeculativeTimeoutMs > 0
-                    && _firstSpeculativeTimeoutMs <= _maxSpeculativeTimeoutMs
-                    && _speculativeBackoffMultiplier > 0
-                    && _maxSpeculativeTimeoutMs < _requestTimeoutMs,
+            checkArgument(firstSpeculativeTimeoutMs > 0
+                    && firstSpeculativeTimeoutMs <= maxSpeculativeTimeoutMs
+                    && speculativeBackoffMultiplier > 0
+                    && maxSpeculativeTimeoutMs < requestTimeoutMs,
                     "Invalid speculative timeout settings");
             return new DistributedLogMultiStreamWriter(
-                    _streams,
-                    _client,
-                    Math.min(_bufferSize, MAX_LOGRECORDSET_SIZE),
-                    _flushIntervalMicros,
-                    _requestTimeoutMs,
-                    _firstSpeculativeTimeoutMs,
-                    _maxSpeculativeTimeoutMs,
-                    _speculativeBackoffMultiplier,
-                    _codec,
-                    _ticker,
-                    _executorService);
+                streams,
+                client,
+                Math.min(bufferSize, MAX_LOGRECORDSET_SIZE),
+                flushIntervalMicros,
+                requestTimeoutMs,
+                firstSpeculativeTimeoutMs,
+                maxSpeculativeTimeoutMs,
+                speculativeBackoffMultiplier,
+                codec,
+                ticker,
+                executorService);
         }
     }
 

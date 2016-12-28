@@ -18,13 +18,12 @@
 package com.twitter.distributedlog.benchmark.utils;
 
 import com.google.common.util.concurrent.RateLimiter;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A wrapper over rate limiter
+ * A wrapper over rate limiter.
  */
 public class ShiftableRateLimiter implements Runnable {
 

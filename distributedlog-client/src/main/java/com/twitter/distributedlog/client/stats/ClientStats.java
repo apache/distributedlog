@@ -20,13 +20,12 @@ package com.twitter.distributedlog.client.stats;
 import com.twitter.distributedlog.client.resolver.RegionResolver;
 import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.finagle.stats.StatsReceiver;
-
 import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Client Stats
+ * Client Stats.
  */
 public class ClientStats {
 

@@ -89,7 +89,8 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         dlConf.addConfiguration(conf);
         dlConf.setLockTimeout(0)
                 .setOutputBufferSize(0)
-                .setPeriodicFlushFrequencyMilliSeconds(10);
+                .setPeriodicFlushFrequencyMilliSeconds(10)
+                .setSchedulerShutdownTimeoutMs(100);
         serverConf = newLocalServerConf();
         uri = createDLMURI("/" + testName.getMethodName());
         ensureURICreated(uri);
@@ -171,10 +172,11 @@ public class TestDistributedLogService extends TestDistributedLogBase {
     public void testAcquireStreams() throws Exception {
         String streamName = testName.getMethodName();
         StreamImpl s0 = createUnstartedStream(service, streamName);
-        s0.suspendAcquiring();
-        DistributedLogServiceImpl service1 = createService(serverConf, dlConf);
+        ServerConfiguration serverConf1 = new ServerConfiguration();
+        serverConf1.addConfiguration(serverConf);
+        serverConf1.setServerPort(9999);
+        DistributedLogServiceImpl service1 = createService(serverConf1, dlConf);
         StreamImpl s1 = createUnstartedStream(service1, streamName);
-        s1.suspendAcquiring();
 
         // create write ops
         WriteOp op0 = createWriteOp(service, streamName, 0L);
@@ -190,7 +192,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
                 1, s1.numPendingOps());
 
         // start acquiring s0
-        s0.resumeAcquiring().start();
+        s0.start();
         WriteResponse wr0 = Await.result(op0.result());
         assertEquals("Op 0 should succeed",
                 StatusCode.SUCCESS, wr0.getHeader().getCode());
@@ -201,12 +203,12 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         assertNull(s0.getLastException());
 
         // start acquiring s1
-        s1.resumeAcquiring().start();
+        s1.start();
         WriteResponse wr1 = Await.result(op1.result());
         assertEquals("Op 1 should fail",
                 StatusCode.FOUND, wr1.getHeader().getCode());
-        assertEquals("Service 1 should be in BACKOFF state",
-                StreamStatus.BACKOFF, s1.getStatus());
+        assertEquals("Service 1 should be in ERROR state",
+                StreamStatus.ERROR, s1.getStatus());
         assertNotNull(s1.getManager());
         assertNull(s1.getWriter());
         assertNotNull(s1.getLastException());
@@ -727,7 +729,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
 
         for (Stream s : streamManager.getAcquiredStreams().values()) {
             StreamImpl stream = (StreamImpl) s;
-            stream.setStatus(StreamStatus.FAILED);
+            stream.setStatus(StreamStatus.ERROR);
         }
 
         Future<List<Void>> closeResult = localService.closeStreams();

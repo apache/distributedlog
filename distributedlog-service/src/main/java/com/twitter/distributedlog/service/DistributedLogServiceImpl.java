@@ -51,6 +51,7 @@ import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
 import com.twitter.distributedlog.service.stream.WriteOp;
 import com.twitter.distributedlog.service.stream.limiter.ServiceRequestLimiter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
+import com.twitter.distributedlog.service.utils.ServerUtils;
 import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
 import com.twitter.distributedlog.thrift.service.ClientInfo;
 import com.twitter.distributedlog.thrift.service.DistributedLogService;
@@ -90,7 +91,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -164,7 +164,10 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         int shard = serverConf.getServerShardId();
         int numThreads = serverConf.getServerThreads();
         this.clientId = DLSocketAddress.toLockId(DLSocketAddress.getSocketAddress(serverPort), shard);
-        String allocatorPoolName = String.format("allocator_%04d_%010d", serverRegionId, shard);
+        String allocatorPoolName = ServerUtils.getLedgerAllocatorPoolName(
+            serverRegionId,
+            shard,
+            serverConf.isUseHostnameAsAllocatorPoolName());
         dlConf.setLedgerAllocatorPoolName(allocatorPoolName);
         this.featureProvider = AbstractFeatureProvider.getFeatureProvider("", dlConf, statsLogger.scope("features"));
         if (this.featureProvider instanceof AbstractFeatureProvider) {
@@ -378,7 +381,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                     // if it is closed, we would not acquire stream again.
                     return null;
                 }
-                writer = streamManager.getOrCreateStream(stream);
+                writer = streamManager.getOrCreateStream(stream, true);
             } finally {
                 closeLock.readLock().unlock();
             }
@@ -631,26 +634,6 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         logger.info("Released KeepAlive Latch. Main thread will shut the service down.");
     }
 
-    @VisibleForTesting
-    java.util.concurrent.Future<?> schedule(Runnable runnable, long delayMs) {
-        closeLock.readLock().lock();
-        try {
-            if (serverStatus != ServerStatus.WRITE_AND_ACCEPT) {
-                return null;
-            } else if (delayMs > 0) {
-                return scheduler.schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
-            } else {
-                return scheduler.submit(runnable);
-            }
-        } catch (RejectedExecutionException ree) {
-            logger.error("Failed to schedule task {} in {} ms : ",
-                    new Object[] { runnable, delayMs, ree });
-            return null;
-        } finally {
-            closeLock.readLock().unlock();
-        }
-    }
-
     // Test methods.
 
     private DynamicDistributedLogConfiguration getDynConf(String streamName) {
@@ -664,8 +647,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     }
 
     @VisibleForTesting
-    Stream newStream(String name) {
-        return streamFactory.create(name, getDynConf(name), streamManager);
+    Stream newStream(String name) throws IOException {
+        return streamManager.getOrCreateStream(name, false);
     }
 
     @VisibleForTesting

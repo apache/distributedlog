@@ -17,6 +17,12 @@
  */
 package com.twitter.distributedlog.client.routing;
 
+import static org.junit.Assert.assertEquals;
+
+import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
+import com.twitter.finagle.Address;
+import com.twitter.finagle.Addresses;
+import com.twitter.finagle.addr.WeightedAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -25,17 +31,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
-import com.twitter.finagle.Address;
-import com.twitter.finagle.Addresses;
-import com.twitter.finagle.addr.WeightedAddress;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Test Case for {@link RoutingService}.
+ */
 @RunWith(Parameterized.class)
 public class TestRoutingService {
 
@@ -54,9 +58,9 @@ public class TestRoutingService {
         return list;
     }
 
-    final private boolean consistentHash;
-    final private boolean weightedAddresses;
-    final private boolean asyncResolution;
+    private final boolean consistentHash;
+    private final boolean weightedAddresses;
+    private final boolean asyncResolution;
 
     public TestRoutingService(boolean consistentHash, boolean weightedAddresses, boolean asyncResolution) {
         this.consistentHash = consistentHash;
@@ -85,7 +89,10 @@ public class TestRoutingService {
         }
     }
 
-    private void testRoutingServiceHelper(boolean consistentHash, boolean weightedAddresses, boolean asyncResolution) throws Exception {
+    private void testRoutingServiceHelper(boolean consistentHash,
+                                          boolean weightedAddresses,
+                                          boolean asyncResolution)
+        throws Exception {
         ExecutorService executorService = null;
         final List<Address> addresses = getAddresses(weightedAddresses);
         final TestName name = new TestName();
@@ -124,7 +131,7 @@ public class TestRoutingService {
             }
         }
 
-        assert(mapping.size() == addresses.size());
+        assertEquals(mapping.size(), addresses.size());
 
         if (null != executorService) {
             executorService.shutdown();
