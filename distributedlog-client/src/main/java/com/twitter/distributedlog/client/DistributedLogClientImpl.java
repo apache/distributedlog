@@ -17,14 +17,16 @@
  */
 package com.twitter.distributedlog.client;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.LogRecordSetBuffer;
+import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
 import com.twitter.distributedlog.client.ownership.OwnershipCache;
 import com.twitter.distributedlog.client.proxy.ClusterClient;
 import com.twitter.distributedlog.client.proxy.HostProvider;
@@ -240,7 +242,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             // to go so large for other reasons though.
             this.results = new ArrayList<Promise<DLSN>>(data.size());
             for (int i = 0; i < data.size(); i++) {
-                Preconditions.checkNotNull(data.get(i));
+                checkNotNull(data.get(i));
                 this.results.add(new Promise<DLSN>());
             }
         }
@@ -871,8 +873,8 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
                 @Override
                 public void onSuccess(WriteResponse value) {
-                    if (StatusCode.FOUND == value.getHeader().getCode() &&
-                            null != value.getHeader().getLocation()) {
+                    if (StatusCode.FOUND == value.getHeader().getCode()
+                          && null != value.getHeader().getLocation()) {
                         SocketAddress addr;
                         try {
                              addr = DLSocketAddress.deserialize(value.getHeader().getLocation()).getSocketAddress();

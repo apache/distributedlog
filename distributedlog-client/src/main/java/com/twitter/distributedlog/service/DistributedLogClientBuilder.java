@@ -534,21 +534,21 @@ public final class DistributedLogClientBuilder {
 
     @SuppressWarnings("unchecked")
     ClusterClient buildServerRoutingServiceClient(String serverRoutingServiceFinagleName) {
-        ClientBuilder builder = _clientBuilder;
+        ClientBuilder builder = this.clientBuilder;
         if (null == builder) {
             builder = ClientBuilder.get()
                     .tcpConnectTimeout(Duration.fromMilliseconds(200))
                     .connectTimeout(Duration.fromMilliseconds(200))
                     .requestTimeout(Duration.fromSeconds(1))
                     .retries(20);
-            if (!_clientConfig.getThriftMux()) {
+            if (!clientConfig.getThriftMux()) {
                 builder = builder.hostConnectionLimit(1);
             }
         }
-        if (_clientConfig.getThriftMux()) {
-            builder = builder.stack(ThriftMux.client().withClientId(_clientId));
+        if (clientConfig.getThriftMux()) {
+            builder = builder.stack(ThriftMux.client().withClientId(clientId));
         } else {
-            builder = builder.codec(ThriftClientFramedCodec.apply(Option.apply(_clientId)));
+            builder = builder.codec(ThriftClientFramedCodec.apply(Option.apply(clientId)));
         }
 
         Name name;
@@ -562,7 +562,7 @@ public final class DistributedLogClientBuilder {
         // builder the client
         Service<ThriftClientRequest, byte[]> client =
                 ClientBuilder.safeBuildFactory(
-                        builder.dest(name).reportTo(_statsReceiver.scope("routing"))
+                        builder.dest(name).reportTo(statsReceiver.scope("routing"))
                 ).toService();
         DistributedLogService.ServiceIface service =
                 new DistributedLogService.ServiceToClient(client, new TBinaryProtocol.Factory());
