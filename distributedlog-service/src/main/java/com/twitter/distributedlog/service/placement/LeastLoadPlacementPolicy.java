@@ -71,10 +71,15 @@ public class LeastLoadPlacementPolicy extends PlacementPolicy {
     });
   }
 
+  private synchronized String getStreamOwner(String stream) {
+    return streamToServer.get(stream);
+  }
+
   @Override
   public Future<String> placeStream(String stream) {
-    if (streamToServer.containsKey(stream)) {
-      return Future.value(streamToServer.get(stream));
+    String streamOwner = getStreamOwner(stream);
+    if (null != streamOwner) {
+      return Future.value(streamOwner);
     }
     Future<StreamLoad> streamLoadFuture = loadAppraiser.getStreamLoad(stream);
     return streamLoadFuture.map(new Function<StreamLoad, String>() {

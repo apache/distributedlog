@@ -93,6 +93,9 @@ public class StreamLoad implements Comparable {
 
   @Override
   public boolean equals(Object o) {
+    if (!(o instanceof StreamLoad)) {
+      return false;
+    }
     StreamLoad other = (StreamLoad) o;
     return stream.equals(other.getStream()) && load == other.getLoad();
   }

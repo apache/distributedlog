@@ -57,7 +57,7 @@ public class ServerLoad implements Comparable {
   synchronized public long removeStream(String stream) {
     for (StreamLoad streamLoad : streamLoads) {
       if (streamLoad.stream.equals(stream)) {
-        this.load -= load;
+        this.load -= streamLoad.getLoad();
         streamLoads.remove(streamLoad);
         return this.load;
       }
@@ -65,19 +65,19 @@ public class ServerLoad implements Comparable {
     return this.load; //Throwing an exception wouldn't help us as our logic should never reach here
   }
 
-  public long getLoad() {
+  public synchronized long getLoad() {
     return load;
   }
 
-  public Set<StreamLoad> getStreamLoads() {
+  public synchronized Set<StreamLoad> getStreamLoads() {
     return streamLoads;
   }
 
-  public String getServer() {
+  public synchronized String getServer() {
     return server;
   }
 
-  protected com.twitter.distributedlog.service.placement.thrift.ServerLoad toThrift() {
+  protected synchronized com.twitter.distributedlog.service.placement.thrift.ServerLoad toThrift() {
     com.twitter.distributedlog.service.placement.thrift.ServerLoad tServerLoad
         = new com.twitter.distributedlog.service.placement.thrift.ServerLoad();
     tServerLoad.setServer(server);
@@ -125,9 +125,9 @@ public class ServerLoad implements Comparable {
   }
 
   @Override
-  public int compareTo(Object o) {
+  public synchronized int compareTo(Object o) {
     ServerLoad other = (ServerLoad) o;
-    if (load == other.load) {
+    if (load == other.getLoad()) {
       return server.compareTo(other.getServer());
     } else {
       return Long.compare(load, other.getLoad());
@@ -135,18 +135,21 @@ public class ServerLoad implements Comparable {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public synchronized boolean equals(Object o) {
+    if (!(o instanceof ServerLoad)) {
+      return false;
+    }
     ServerLoad other = (ServerLoad) o;
     return server.equals(other.getServer()) && load == other.getLoad() && streamLoads.equals(other.getStreamLoads());
   }
 
   @Override
-  public String toString() {
+  public synchronized String toString() {
     return String.format("ServerLoad<Server: %s, Load: %d, Streams: %s>", server, load, streamLoads);
   }
 
   @Override
-  public int hashCode() {
+  public synchronized int hashCode() {
     return new HashCodeBuilder().append(server).append(load).append(streamLoads).build();
   }
 }
