@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestServerLoad {
 
-  @Test
+  @Test(timeout = 60000)
   public void testSerializeDeserialize() throws IOException {
     final ServerLoad serverLoad = new ServerLoad("th1s1s@s3rv3rn@m3");
     for (int i = 0; i < 20; i++) {
@@ -34,7 +34,7 @@ public class TestServerLoad {
     assertEquals(serverLoad, ServerLoad.deserialize(serverLoad.serialize()));
   }
 
-  @Test
+  @Test(timeout = 60000)
   public void testGetLoad() throws IOException {
     final ServerLoad serverLoad = new ServerLoad("th1s1s@s3rv3rn@m3");
     assertEquals(0, serverLoad.getLoad());

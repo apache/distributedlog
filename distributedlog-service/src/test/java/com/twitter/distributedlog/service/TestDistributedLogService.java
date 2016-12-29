@@ -211,8 +211,9 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         WriteResponse wr1 = Await.result(op1.result());
         assertEquals("Op 1 should fail",
                 StatusCode.FOUND, wr1.getHeader().getCode());
-        assertEquals("Service 1 should be in ERROR state",
-                StreamStatus.ERROR, s1.getStatus());
+        // the stream will be set to ERROR and then be closed.
+        assertTrue("Service 1 should be in unavailable state",
+                StreamStatus.isUnavailable(s1.getStatus()));
         assertNotNull(s1.getManager());
         assertNull(s1.getWriter());
         assertNotNull(s1.getLastException());
@@ -527,15 +528,26 @@ public class TestDistributedLogService extends TestDistributedLogBase {
     public void testStreamOpNoChecksum() throws Exception {
         DistributedLogServiceImpl localService = createConfiguredLocalService();
         WriteContext ctx = new WriteContext();
-        Future<WriteResponse> result = localService.release("test", ctx);
+        HeartbeatOptions option = new HeartbeatOptions();
+        option.setSendHeartBeatToReader(true);
+
+        // hearbeat to acquire the stream and then release the stream
+        Future<WriteResponse> result = localService.heartbeatWithOptions("test", ctx, option);
         WriteResponse resp = Await.result(result);
+        assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
+        result = localService.release("test", ctx);
+        resp = Await.result(result);
+        assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
+
+        // heartbeat to acquire the stream and then delete the stream
+        result = localService.heartbeatWithOptions("test", ctx, option);
+        resp = Await.result(result);
         assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
         result = localService.delete("test", ctx);
         resp = Await.result(result);
         assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
-        result = localService.heartbeat("test", ctx);
-        resp = Await.result(result);
-        assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
+
+        // shutdown the local service
         localService.shutdown();
     }
 

@@ -55,7 +55,7 @@ import static org.mockito.Mockito.when;
 
 public class TestLeastLoadPlacementPolicy {
 
-  @Test
+  @Test(timeout = 10000)
   public void testCalculateBalances() throws Exception {
     int numSevers = new Random().nextInt(20) + 1;
     int numStreams = new Random().nextInt(200) + 1;
@@ -73,7 +73,7 @@ public class TestLeastLoadPlacementPolicy {
     }
   }
 
-  @Test
+  @Test(timeout = 10000)
   public void testRefreshAndPlaceStream() throws Exception {
     int numSevers = new Random().nextInt(20) + 1;
     int numStreams = new Random().nextInt(200) + 1;
@@ -98,7 +98,7 @@ public class TestLeastLoadPlacementPolicy {
     assertEquals(next.getServer(), serverPlacement);
   }
 
-  @Test
+  @Test(timeout = 10000)
   public void testCalculateUnequalWeight() throws Exception {
     int numSevers = new Random().nextInt(20) + 1;
     int numStreams = new Random().nextInt(200) + 1;
@@ -131,7 +131,10 @@ public class TestLeastLoadPlacementPolicy {
         highestLoadSeen = load;
       }
     }
-    assertTrue(highestLoadSeen - lowestLoadSeen < maxLoad.get());
+    assertTrue("Unexpected placement for " + numStreams + " streams to "
+            + numSevers + " servers : highest load = " + highestLoadSeen
+            + ", lowest load = " + lowestLoadSeen + ", max stream load = " + maxLoad.get(),
+            highestLoadSeen - lowestLoadSeen < maxLoad.get());
   }
 
   private Set<SocketAddress> generateSocketAddresses(int num) {

@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestStreamLoad {
 
-  @Test
+  @Test(timeout = 10000)
   public void testSerializeDeserialize() throws IOException {
     final String streamName = "aHellaRandomStreamName";
     final int load = 1337;
