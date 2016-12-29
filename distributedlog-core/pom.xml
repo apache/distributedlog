@@ -196,6 +196,12 @@
           <argLine>-Xmx3G -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=2G</argLine>
           <forkMode>always</forkMode>
           <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>com.twitter.distributedlog.TimedOutTestsListener</value>
+            </property>
+          </properties>
         </configuration>
       </plugin>
       <plugin>
