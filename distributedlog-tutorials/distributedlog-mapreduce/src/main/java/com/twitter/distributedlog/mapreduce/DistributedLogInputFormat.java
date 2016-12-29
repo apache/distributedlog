@@ -18,12 +18,14 @@
 package com.twitter.distributedlog.mapreduce;
 
 import com.google.common.collect.Lists;
-import com.twitter.distributedlog.BKDistributedLogNamespace;
-import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.DistributedLogManager;
+import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.LogRecordWithDLSN;
 import com.twitter.distributedlog.LogSegmentMetadata;
+import com.twitter.distributedlog.impl.BKNamespaceDriver;
+import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeperAccessor;
@@ -57,7 +59,7 @@ public class DistributedLogInputFormat
     protected Configuration conf;
     protected DistributedLogConfiguration dlConf;
     protected URI dlUri;
-    protected BKDistributedLogNamespace namespace;
+    protected DistributedLogNamespace namespace;
     protected String streamName;
     protected DistributedLogManager dlm;
 
@@ -69,7 +71,7 @@ public class DistributedLogInputFormat
         dlUri = URI.create(configuration.get(DL_URI, ""));
         streamName = configuration.get(DL_STREAM, "");
         try {
-            namespace = BKDistributedLogNamespace.newBuilder()
+            namespace = DistributedLogNamespaceBuilder.newBuilder()
                     .conf(dlConf)
                     .uri(dlUri)
                     .build();
@@ -89,7 +91,7 @@ public class DistributedLogInputFormat
             throws IOException, InterruptedException {
         List<LogSegmentMetadata> segments = dlm.getLogSegments();
         List<InputSplit> inputSplits = Lists.newArrayListWithCapacity(segments.size());
-        BookKeeper bk = namespace.getReaderBKC().get();
+        BookKeeper bk = ((BKNamespaceDriver) namespace.getNamespaceDriver()).getReaderBKC().get();
         LedgerManager lm = BookKeeperAccessor.getLedgerManager(bk);
         final AtomicInteger rcHolder = new AtomicInteger(0);
         final AtomicReference<LedgerMetadata> metadataHolder = new AtomicReference<LedgerMetadata>(null);
@@ -121,7 +123,7 @@ public class DistributedLogInputFormat
         return new LogSegmentReader(
                 streamName,
                 dlConf,
-                namespace.getReaderBKC().get(),
+                ((BKNamespaceDriver) namespace.getNamespaceDriver()).getReaderBKC().get(),
                 (LogSegmentSplit) inputSplit);
     }
 }

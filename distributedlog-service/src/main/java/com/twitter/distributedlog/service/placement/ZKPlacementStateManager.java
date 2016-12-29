@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import com.twitter.distributedlog.BKDistributedLogNamespace;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.ZooKeeperClient;
-import com.twitter.distributedlog.util.DLUtils;
+import com.twitter.distributedlog.impl.BKNamespaceDriver;
 import com.twitter.distributedlog.util.Utils;
 
 /**
@@ -55,11 +55,12 @@ public class ZKPlacementStateManager implements PlacementStateManager {
   private boolean watching = false;
 
   public ZKPlacementStateManager(URI uri, DistributedLogConfiguration conf, StatsLogger statsLogger) {
-    zkClient = BKDistributedLogNamespace.createDLZKClientBuilder(
-        String.format("dlzk:%s:factory_writer_shared", uri),
+    String zkServers = BKNamespaceDriver.getZKServersFromDLUri(uri);
+    zkClient = BKNamespaceDriver.createZKClientBuilder(
+        String.format("ZKPlacementStateManager-%s", zkServers),
         conf,
-        DLUtils.getZKServersFromDLUri(uri),
-        statsLogger.scope("dlzk_factory_writer_shared")).build();
+        zkServers,
+        statsLogger.scope("placement_state_manager")).build();
     serverLoadPath = uri.getPath() + SERVER_LOAD_DIR;
   }
 
