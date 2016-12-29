@@ -95,7 +95,7 @@ public class DistributedLogInputFormat
         final AtomicReference<LedgerMetadata> metadataHolder = new AtomicReference<LedgerMetadata>(null);
         for (LogSegmentMetadata segment : segments) {
             final CountDownLatch latch = new CountDownLatch(1);
-            lm.readLedgerMetadata(segment.getLedgerId(),
+            lm.readLedgerMetadata(segment.getLogSegmentId(),
                     new BookkeeperInternalCallbacks.GenericCallback<LedgerMetadata>() {
                 @Override
                 public void operationComplete(int rc, LedgerMetadata ledgerMetadata) {
