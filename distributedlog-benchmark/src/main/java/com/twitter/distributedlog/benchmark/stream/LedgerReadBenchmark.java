@@ -118,7 +118,7 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
         try {
             for (LogSegmentMetadata segment : segments) {
                 Stopwatch stopwatch = Stopwatch.createStarted();
-                long lid = segment.getLedgerId();
+                long lid = segment.getLogSegmentId();
                 LedgerHandle lh = bk.openLedgerNoRecovery(
                         lid, BookKeeper.DigestType.CRC32, conf.getBKDigestPW().getBytes(UTF_8));
                 logger.info("It took {} ms to open log segment {}",
