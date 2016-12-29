@@ -19,9 +19,11 @@ package com.twitter.distributedlog.metadata;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.DistributedLogConstants;
 import com.twitter.distributedlog.ZooKeeperClient;
+import com.twitter.distributedlog.namespace.resolver.NamespaceResolver;
 import com.twitter.distributedlog.thrift.BKDLConfigFormat;
 import com.twitter.distributedlog.util.DLUtils;
 import org.apache.thrift.TException;

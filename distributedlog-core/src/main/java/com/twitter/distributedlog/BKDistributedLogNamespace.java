@@ -48,6 +48,8 @@ import com.twitter.distributedlog.logsegment.LogSegmentMetadataStore;
 import com.twitter.distributedlog.metadata.BKDLConfig;
 import com.twitter.distributedlog.metadata.LogMetadataStore;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import com.twitter.distributedlog.namespace.resolver.DefaultNamespaceResolver;
+import com.twitter.distributedlog.namespace.resolver.NamespaceResolver;
 import com.twitter.distributedlog.stats.ReadAheadExceptionsLogger;
 import com.twitter.distributedlog.util.ConfUtils;
 import com.twitter.distributedlog.util.DLUtils;
@@ -65,6 +67,7 @@ import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.SettableFeatureProvider;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.bookkeeper.util.ReflectionUtils;
 import org.apache.bookkeeper.zookeeper.BoundExponentialBackoffRetryPolicy;
 import org.apache.bookkeeper.zookeeper.RetryPolicy;
 import org.apache.zookeeper.KeeperException;
@@ -310,6 +313,8 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     private final LogSegmentMetadataStore readerSegmentMetadataStore;
     // lock factory
     private final SessionLockFactory lockFactory;
+    // namespace resolver
+    private final NamespaceResolver nsResolver;
 
     // feature provider
     private final FeatureProvider featureProvider;
@@ -347,6 +352,9 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         } else {
             this.clientId = clientId;
         }
+
+        // Build the namespace resolver
+        this.nsResolver = new DefaultNamespaceResolver();
 
         // Build resources
         StatsLogger schedulerStatsLogger = statsLogger.scope("factory").scope("thread_pool");
@@ -487,6 +495,23 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
 
         LOG.info("Constructed BK DistributedLogNamespace : clientId = {}, regionId = {}, federated = {}.",
                 new Object[] { clientId, regionId, bkdlConfig.isFederatedNamespace() });
+    }
+
+    /**
+     * Validate the stream name.
+     *
+     * @param nameOfStream
+     *          name of stream
+     * @throws InvalidStreamNameException
+     */
+    private void validateName(String nameOfStream)
+            throws InvalidStreamNameException {
+        // validate the stream name
+        nsResolver.validateStreamName(nameOfStream);
+        if (isReservedStreamName(nameOfStream)) {
+            throw new InvalidStreamNameException(nameOfStream,
+                    "Stream Name is reserved");
+        }
     }
 
     //
@@ -827,6 +852,8 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         checkState();
         validateName(nameOfLogStream);
 
+        String pathOfLogStream = nsResolver.resolveStreamPath(nameOfLogStream);
+
         DistributedLogConfiguration mergedConfiguration = new DistributedLogConfiguration();
         mergedConfiguration.addConfiguration(conf);
         mergedConfiguration.loadStreamConf(logConfiguration);
@@ -892,7 +919,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         StatsLogger perLogStatsLogger = perStreamStatsLogger.or(this.perLogStatsLogger);
 
         return new BKDistributedLogManager(
-                nameOfLogStream,                    /* Log Name */
+                pathOfLogStream,                    /* Log Name */
                 mergedConfiguration,                /* Configuration */
                 dynConf,                            /* Dynamic Configuration */
                 uri,                                /* Namespace */
@@ -955,29 +982,24 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
         });
     }
 
-    private static void validateInput(DistributedLogConfiguration conf, URI uri, String nameOfStream)
+    private void validateInput(DistributedLogConfiguration conf, URI uri, String nameOfStream)
         throws IllegalArgumentException, InvalidStreamNameException {
         validateConfAndURI(conf, uri);
         validateName(nameOfStream);
     }
 
-    private static boolean checkIfLogExists(DistributedLogConfiguration conf, URI uri, String name)
+    private boolean checkIfLogExists(DistributedLogConfiguration conf, URI uri, String name)
         throws IOException, IllegalArgumentException {
         validateInput(conf, uri, name);
         final String logRootPath = uri.getPath() + String.format("/%s", name);
-        return withZooKeeperClient(new ZooKeeperClientHandler<Boolean>() {
-            @Override
-            public Boolean handle(ZooKeeperClient zkc) throws IOException {
-                // check existence after syncing
-                try {
-                    return null != Utils.sync(zkc, logRootPath).exists(logRootPath, false);
-                } catch (KeeperException e) {
-                    throw new ZKException("Error on checking if log " + logRootPath + " exists", e.code());
-                } catch (InterruptedException e) {
-                    throw new DLInterruptedException("Interrupted on checking if log " + logRootPath + " exists", e);
-                }
-            }
-        }, conf, uri);
+        // check existence after syncing
+        try {
+            return null != Utils.sync(sharedWriterZKCForDL, logRootPath).exists(logRootPath, false);
+        } catch (KeeperException e) {
+            throw new ZKException("Error on checking if log " + logRootPath + " exists", e.code());
+        } catch (InterruptedException e) {
+            throw new DLInterruptedException("Interrupted on checking if log " + logRootPath + " exists", e);
+        }
     }
 
     public static Map<String, byte[]> enumerateLogsWithMetadataInNamespace(final DistributedLogConfiguration conf, final URI uri)
