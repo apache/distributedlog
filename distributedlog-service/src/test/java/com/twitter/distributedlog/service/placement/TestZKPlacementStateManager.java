@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.curator.test.TestingServer;
@@ -30,15 +31,9 @@ import org.junit.Test;
 
 import com.twitter.distributedlog.DistributedLogConfiguration;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import static com.twitter.distributedlog.LocalDLMEmulator.DLOG_NAMESPACE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestZKPlacementStateManager {
   private TestingServer zkTestServer;
@@ -54,7 +49,7 @@ public class TestZKPlacementStateManager {
     zkPlacementStateManager = new ZKPlacementStateManager(uri, new DistributedLogConfiguration(), NullStatsLogger.INSTANCE);
   }
 
-  @Test
+  @Test(timeout = 60000)
   public void testSaveLoad() throws Exception {
     TreeSet<ServerLoad> ownerships = new TreeSet<ServerLoad>();
     zkPlacementStateManager.saveOwnership(ownerships);
@@ -83,33 +78,48 @@ public class TestZKPlacementStateManager {
     assertEquals(ownerships, loadedOwnerships);
   }
 
-  @Test
+  private TreeSet<ServerLoad> waitForServerLoadsNotificationAsc(
+          LinkedBlockingQueue<TreeSet<ServerLoad>> notificationQueue,
+          int expectedNumServerLoads) throws InterruptedException {
+    TreeSet<ServerLoad> notification = notificationQueue.take();
+    assertNotNull(notification);
+    while (notification.size() < expectedNumServerLoads) {
+      notification = notificationQueue.take();
+    }
+    assertEquals(expectedNumServerLoads, notification.size());
+    return notification;
+  }
+
+  @Test(timeout = 60000)
   public void testWatchIndefinitely() throws Exception {
     TreeSet<ServerLoad> ownerships = new TreeSet<ServerLoad>();
     ownerships.add(new ServerLoad("server1"));
-    PlacementStateManager.PlacementCallback callback = mock(PlacementStateManager.PlacementCallback.class);
+    final LinkedBlockingQueue<TreeSet<ServerLoad>> serverLoadNotifications =
+            new LinkedBlockingQueue<TreeSet<ServerLoad>>();
+    PlacementStateManager.PlacementCallback callback = new PlacementStateManager.PlacementCallback() {
+      @Override
+      public void callback(TreeSet<ServerLoad> serverLoads) {
+        serverLoadNotifications.add(serverLoads);
+      }
+    };
     zkPlacementStateManager.saveOwnership(ownerships); // need to initialize the zk path before watching
     zkPlacementStateManager.watch(callback);
     // cannot verify the callback here as it may call before the verify is called
 
     zkPlacementStateManager.saveOwnership(ownerships);
-    verify(callback, timeout(1000)).callback(ownerships);
+    assertEquals(ownerships, waitForServerLoadsNotificationAsc(serverLoadNotifications, 1));
 
     ServerLoad server2 = new ServerLoad("server2");
     server2.addStream(new StreamLoad("hella-important-stream", 415));
     ownerships.add(server2);
     zkPlacementStateManager.saveOwnership(ownerships);
-    verify(callback, timeout(1000)).callback(ownerships);
-
-    server2.removeStream("server1");
-    zkPlacementStateManager.saveOwnership(ownerships);
-    verify(callback, timeout(1000)).callback(ownerships);
+    assertEquals(ownerships, waitForServerLoadsNotificationAsc(serverLoadNotifications, 2));
   }
 
-  @Test
+  @Test(timeout = 60000)
   public void testZkFormatting() throws Exception {
-    final String server = "smf1-eci-41-sr1.prod.twitter.com/10.70.186.139:31351";
-    final String zkFormattedServer = "smf1-eci-41-sr1.prod.twitter.com--10.70.186.139:31351";
+    final String server = "host/10.0.0.0:31351";
+    final String zkFormattedServer = "host--10.0.0.0:31351";
     URI uri = new URI("distributedlog-bk://" + zkServers + DLOG_NAMESPACE + "/bknamespace");
     ZKPlacementStateManager zkPlacementStateManager = new ZKPlacementStateManager(uri, new DistributedLogConfiguration(), NullStatsLogger.INSTANCE);
     assertEquals(zkFormattedServer, zkPlacementStateManager.serverToZkFormat(server));

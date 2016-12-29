@@ -82,7 +82,7 @@ public class StreamImpl implements Stream {
      * any error, the stream should be put in error state. If a stream is in error state,
      * it should be removed and not reused anymore.
      */
-    public static enum StreamStatus {
+    public enum StreamStatus {
         UNINITIALIZED(-1),
         INITIALIZING(0),
         INITIALIZED(1),
@@ -101,7 +101,7 @@ public class StreamImpl implements Stream {
             return code;
         }
 
-        static boolean isUnavailable(StreamStatus status) {
+        public static boolean isUnavailable(StreamStatus status) {
             return StreamStatus.ERROR == status || StreamStatus.CLOSING == status || StreamStatus.CLOSED == status;
         }
     }
@@ -763,23 +763,7 @@ public class StreamImpl implements Stream {
         // we will fail the requests that are coming in between closing and closed only
         // after the async writer is closed. so we could clear up the lock before redirect
         // them.
-        close(abort);
-        unregisterGauge();
-        if (uncache) {
-            final long probationTimeoutMs;
-            if (null != owner) {
-                probationTimeoutMs = 2 * dlConfig.getZKSessionTimeoutMilliseconds() / 3;
-            } else {
-                probationTimeoutMs = 0L;
-            }
-            closePromise.onSuccess(new AbstractFunction1<Void, BoxedUnit>() {
-                @Override
-                public BoxedUnit apply(Void result) {
-                    streamManager.scheduleRemoval(StreamImpl.this, probationTimeoutMs);
-                    return BoxedUnit.UNIT;
-                }
-            });
-        }
+        close(abort, uncache);
         return closePromise;
     }
 
@@ -799,11 +783,29 @@ public class StreamImpl implements Stream {
     }
 
     /**
+     * Post action executed after closing.
+     */
+    private void postClose(boolean uncache) {
+        closeManagerAndErrorOutPendingRequests();
+        unregisterGauge();
+        if (uncache) {
+            if (null != owner) {
+                long probationTimeoutMs = 2 * dlConfig.getZKSessionTimeoutMilliseconds() / 3;
+                streamManager.scheduleRemoval(this, probationTimeoutMs);
+            } else {
+                streamManager.notifyRemoved(this);
+                logger.info("Removed cached stream {}.", getStreamName());
+            }
+        }
+        FutureUtils.setValue(closePromise, null);
+    }
+
+    /**
      * Shouldn't call close directly. The callers should call #requestClose instead
      *
      * @param shouldAbort shall we abort the stream instead of closing
      */
-    private Future<Void> close(boolean shouldAbort) {
+    private Future<Void> close(boolean shouldAbort, final boolean uncache) {
         boolean abort;
         closeLock.writeLock().lock();
         try {
@@ -841,16 +843,14 @@ public class StreamImpl implements Stream {
                 new FutureEventListener<Void>() {
                     @Override
                     public void onSuccess(Void value) {
-                        closeManagerAndErrorOutPendingRequests();
-                        FutureUtils.setValue(closePromise, null);
+                        postClose(uncache);
                     }
                     @Override
                     public void onFailure(Throwable cause) {
                         if (cause instanceof TimeoutException) {
                             writerCloseTimeoutCounter.inc();
                         }
-                        closeManagerAndErrorOutPendingRequests();
-                        FutureUtils.setValue(closePromise, null);
+                        postClose(uncache);
                     }
                 }, scheduler, name));
         return closePromise;
