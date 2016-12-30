@@ -17,8 +17,12 @@
 # limitations under the License.
 ################################################################################
 
+usage() {
+  echo "Usage: build <env> [dest] [serve]."
+}
+
 if [ $# -lt 1 ]; then
-  echo "Usage: build <env>."
+  usage
   exit 1
 fi
 
@@ -31,9 +35,15 @@ DLOG_HOME=`cd $BINDIR/.. > /dev/null;pwd`
 
 if [ $# -gt 1 ]; then
   DEST_DIR=$2
-else
+else 
   DEST_DIR=${DLOG_HOME}
 fi
+
+SERVE="FALSE"
+if [ $# -gt 2 ]; then
+  SERVE="TRUE"
+fi
+
 rm -rf ${DEST_DIR}/content
 
 if [ ! -d "${DLOG_HOME}/website/docs" ]; then
@@ -47,6 +57,7 @@ echo "Building the website to ${DEST_DIR}/content ..."
 
 # build the website
 cd ${DLOG_HOME}/website
+
 bundle exec jekyll build --destination ${DEST_DIR}/content --config _config.yml,${OVERRIDED_CONFIG}
 
 echo "Built the website @ ${DEST_DIR}/content."
@@ -73,7 +84,7 @@ fi
 # create the doc dest directory
 mkdir -p ${DOC_DEST_HOME}
 
-cd ${DOC_HOME}
+cd ${DOC_SRC_HOME}
 
 bundle exec jekyll build --destination ${DOC_DEST_HOME} --config _config.yml,${OVERRIDED_CONFIG}
 
@@ -91,3 +102,9 @@ mvn -DskipTests clean package javadoc:aggregate \
 cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
 
 echo "Built the documentation for version ${PROJECT_VERSION}."
+
+if [[ "${SERVE}" == "TRUE" ]]; then
+  cd ${DLOG_HOME}/website
+  bundle exec jekyll serve --destination ${DEST_DIR}/content --config _config.yml,${OVERRIDED_CONFIG} --incremental
+fi
+
