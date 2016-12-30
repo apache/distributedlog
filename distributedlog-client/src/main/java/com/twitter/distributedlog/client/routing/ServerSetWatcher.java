@@ -21,11 +21,14 @@ import com.google.common.collect.ImmutableSet;
 import com.twitter.distributedlog.service.DLSocketAddress;
 
 /**
- * Watch on server set changes
+ * Watch on server set changes.
  */
 public interface ServerSetWatcher {
 
-    public static class MonitorException extends Exception {
+    /**
+     * Exception thrown when failed to monitor serverset.
+     */
+    class MonitorException extends Exception {
 
         private static final long serialVersionUID = 392751505154339548L;
 
@@ -39,14 +42,15 @@ public interface ServerSetWatcher {
     }
 
     /**
-     * An interface to an object that is interested in receiving notification whenever the host set
-     * changes.
+     * An interface to an object that is interested in receiving notification whenever the host set changes.
      */
-    public static interface ServerSetMonitor {
+    interface ServerSetMonitor {
 
         /**
-         * Called when either the available set of services changes (when a service dies or a new
-         * instance comes on-line) or when an existing service advertises a status or health change.
+         * Called when either the available set of services changes.
+         *
+         * <p>It happens either when a service dies or a new INSTANCE comes on-line or
+         * when an existing service advertises a status or health change.
          *
          * @param hostSet the current set of available ServiceInstances
          */
@@ -54,8 +58,9 @@ public interface ServerSetWatcher {
     }
 
     /**
-     * Registers a monitor to receive change notices for this server set as long as this jvm process
-     * is alive.  Blocks until the initial server set can be gathered and delivered to the monitor.
+     * Registers a monitor to receive change notices for this server set as long as this jvm process is alive.
+     *
+     * <p>Blocks until the initial server set can be gathered and delivered to the monitor.
      * The monitor will be notified if the membership set or parameters of existing members have
      * changed.
      *

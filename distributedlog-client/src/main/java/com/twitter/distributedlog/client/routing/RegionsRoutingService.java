@@ -17,65 +17,83 @@
  */
 package com.twitter.distributedlog.client.routing;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.Sets;
 import com.twitter.distributedlog.client.resolver.RegionResolver;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
+import java.net.SocketAddress;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.SocketAddress;
-import java.util.Set;
-
 /**
- * Chain multiple routing services
+ * Chain multiple routing services.
  */
 public class RegionsRoutingService implements RoutingService {
 
     private static final Logger logger = LoggerFactory.getLogger(RegionsRoutingService.class);
 
+    /**
+     * Create a multiple regions routing services based on a list of region routing {@code services}.
+     *
+     * <p>It is deprecated. Please use {@link Builder} to build multiple regions routing service.
+     *
+     * @param regionResolver region resolver
+     * @param services a list of region routing services.
+     * @return multiple regions routing service
+     * @see Builder
+     */
     @Deprecated
     public static RegionsRoutingService of(RegionResolver regionResolver,
                                          RoutingService...services) {
         return new RegionsRoutingService(regionResolver, services);
     }
 
+    /**
+     * Create a builder to build a multiple-regions routing service.
+     *
+     * @return builder to build a multiple-regions routing service.
+     */
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Builder to build a multiple-regions routing service.
+     */
     public static class Builder implements RoutingService.Builder {
 
-        private RegionResolver _resolver;
-        private RoutingService.Builder[] _routingServiceBuilders;
-        private StatsReceiver _statsReceiver = NullStatsReceiver.get();
+        private RegionResolver resolver;
+        private RoutingService.Builder[] routingServiceBuilders;
+        private StatsReceiver statsReceiver = NullStatsReceiver.get();
 
         private Builder() {}
 
         public Builder routingServiceBuilders(RoutingService.Builder...builders) {
-            this._routingServiceBuilders = builders;
+            this.routingServiceBuilders = builders;
             return this;
         }
 
         public Builder resolver(RegionResolver regionResolver) {
-            this._resolver = regionResolver;
+            this.resolver = regionResolver;
             return this;
         }
 
         @Override
         public RoutingService.Builder statsReceiver(StatsReceiver statsReceiver) {
-            this._statsReceiver = statsReceiver;
+            this.statsReceiver = statsReceiver;
             return this;
         }
 
         @Override
         public RegionsRoutingService build() {
-            Preconditions.checkNotNull(_routingServiceBuilders, "No routing service builder provided.");
-            Preconditions.checkNotNull(_resolver, "No region resolver provided.");
-            Preconditions.checkNotNull(_statsReceiver, "No stats receiver provided");
-            RoutingService[] services = new RoutingService[_routingServiceBuilders.length];
+            checkNotNull(routingServiceBuilders, "No routing service builder provided.");
+            checkNotNull(resolver, "No region resolver provided.");
+            checkNotNull(statsReceiver, "No stats receiver provided");
+            RoutingService[] services = new RoutingService[routingServiceBuilders.length];
             for (int i = 0; i < services.length; i++) {
                 String statsScope;
                 if (0 == i) {
@@ -83,11 +101,11 @@ public class RegionsRoutingService implements RoutingService {
                 } else {
                     statsScope = "remote_" + i;
                 }
-                services[i] = _routingServiceBuilders[i]
-                        .statsReceiver(_statsReceiver.scope(statsScope))
+                services[i] = routingServiceBuilders[i]
+                        .statsReceiver(statsReceiver.scope(statsScope))
                         .build();
             }
-            return new RegionsRoutingService(_resolver, services);
+            return new RegionsRoutingService(resolver, services);
         }
     }
 

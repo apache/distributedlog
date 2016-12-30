@@ -17,7 +17,8 @@
  */
 package com.twitter.distributedlog.benchmark;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.common.zookeeper.ServerSet;
@@ -44,14 +45,6 @@ import com.twitter.util.Function;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
-import org.apache.bookkeeper.stats.Counter;
-import org.apache.bookkeeper.stats.Gauge;
-import org.apache.bookkeeper.stats.OpStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -60,10 +53,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.stats.Counter;
+import org.apache.bookkeeper.stats.Gauge;
+import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * The benchmark for core library reader.
+ */
 public class ReaderWorker implements Worker {
 
-    static final Logger LOG = LoggerFactory.getLogger(ReaderWorker.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReaderWorker.class);
 
     static final int BACKOFF_MS = 200;
 
@@ -103,12 +106,13 @@ public class ReaderWorker implements Worker {
         final String streamName;
         DLSN prevDLSN = null;
         long prevSequenceId = Long.MIN_VALUE;
+        private static final String gaugeLabel = "sequence_id";
 
         StreamReader(int idx, StatsLogger statsLogger) {
             this.streamIdx = idx;
             int streamId = startStreamId + streamIdx;
             streamName = String.format("%s_%d", streamPrefix, streamId);
-            statsLogger.scope(streamName).registerGauge("sequence_id", this);
+            statsLogger.scope(streamName).registerGauge(gaugeLabel, this);
         }
 
         @Override
@@ -215,6 +219,10 @@ public class ReaderWorker implements Worker {
         public synchronized Number getSample() {
             return prevSequenceId;
         }
+
+        void unregisterGauge() {
+            statsLogger.scope(streamName).unregisterGauge(gaugeLabel, this);
+        }
     }
 
     public ReaderWorker(DistributedLogConfiguration conf,
@@ -229,7 +237,7 @@ public class ReaderWorker implements Worker {
                         boolean readFromHead, /* read from the earliest data of log */
                         StatsReceiver statsReceiver,
                         StatsLogger statsLogger) throws IOException {
-        Preconditions.checkArgument(startStreamId <= endStreamId);
+        checkArgument(startStreamId <= endStreamId);
         this.streamPrefix = streamPrefix;
         this.startStreamId = startStreamId;
         this.endStreamId = endStreamId;
@@ -267,6 +275,7 @@ public class ReaderWorker implements Worker {
                     .redirectBackoffMaxMs(500)
                     .requestTimeoutMs(2000)
                     .statsReceiver(statsReceiver)
+                    .thriftmux(true)
                     .name("reader");
 
             if (serverSetPaths.isEmpty()) {
@@ -281,7 +290,7 @@ public class ReaderWorker implements Worker {
                 ServerSet local = this.serverSets[0].getServerSet();
                 ServerSet[] remotes = new ServerSet[this.serverSets.length - 1];
                 for (int i = 1; i < serverSets.length; i++) {
-                    remotes[i-1] = serverSets[i].getServerSet();
+                    remotes[i - 1] = serverSets[i].getServerSet();
                 }
 
                 builder = builder.serverSets(local, remotes);
@@ -441,6 +450,10 @@ public class ReaderWorker implements Worker {
         }
         for (DLZkServerSet serverSet: serverSets) {
             serverSet.close();
+        }
+        // Unregister gauges to prevent GC spirals
+        for (StreamReader sr : streamReaders) {
+            sr.unregisterGauge();
         }
     }
 

@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 /**
- * DistributedLog Client
+ * DistributedLog Client.
  */
 package com.twitter.distributedlog.client;

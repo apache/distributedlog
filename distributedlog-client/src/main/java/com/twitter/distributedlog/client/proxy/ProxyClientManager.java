@@ -25,12 +25,6 @@ import com.twitter.distributedlog.client.stats.OpStats;
 import com.twitter.distributedlog.thrift.service.ClientInfo;
 import com.twitter.distributedlog.thrift.service.ServerInfo;
 import com.twitter.util.FutureEventListener;
-import org.jboss.netty.util.HashedWheelTimer;
-import org.jboss.netty.util.Timeout;
-import org.jboss.netty.util.TimerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.SocketAddress;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +34,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.jboss.netty.util.HashedWheelTimer;
+import org.jboss.netty.util.Timeout;
+import org.jboss.netty.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manager manages clients (channels) to proxies.
@@ -94,8 +93,8 @@ public class ProxyClientManager implements TimerTask {
             return;
         }
         if (periodicHandshakeEnabled) {
-            final boolean syncOwnerships;
-            syncOwnerships = lastOwnershipSyncStopwatch.elapsed(TimeUnit.MILLISECONDS) >= clientConfig.getPeriodicOwnershipSyncIntervalMs();
+            final boolean syncOwnerships = lastOwnershipSyncStopwatch.elapsed(TimeUnit.MILLISECONDS)
+                >= clientConfig.getPeriodicOwnershipSyncIntervalMs();
 
             final Set<SocketAddress> hostsSnapshot = hostProvider.getHosts();
             final AtomicInteger numHosts = new AtomicInteger(hostsSnapshot.size());
@@ -130,10 +129,13 @@ public class ProxyClientManager implements TimerTask {
                     private void complete() {
                         if (0 == numHosts.decrementAndGet()) {
                             if (syncOwnerships) {
-                                logger.info("Periodic handshaked with {} hosts : {} streams returned," +
-                                                " {} hosts succeeded, {} hosts failed",
-                                        new Object[]{hostsSnapshot.size(), numStreams.get(),
-                                                numSuccesses.get(), numFailures.get()});
+                                logger.info("Periodic handshaked with {} hosts : {} streams returned,"
+                                    + " {} hosts succeeded, {} hosts failed",
+                                    new Object[] {
+                                        hostsSnapshot.size(),
+                                        numStreams.get(),
+                                        numSuccesses.get(),
+                                        numFailures.get()});
                                 if (clientConfig.isHandshakeTracingEnabled()) {
                                     logger.info("Periodic handshaked stream distribution : {}", streamDistributions);
                                 }
@@ -265,7 +267,7 @@ public class ProxyClientManager implements TimerTask {
     }
 
     /**
-     * Handshake with a given proxy
+     * Handshake with a given proxy.
      *
      * @param address
      *          proxy address
@@ -299,7 +301,7 @@ public class ProxyClientManager implements TimerTask {
     /**
      * Handshake with all proxies.
      *
-     * NOTE: this is a synchronous call.
+     * <p>NOTE: this is a synchronous call.
      */
     public void handshake() {
         Set<SocketAddress> hostsSnapshot = hostProvider.getHosts();

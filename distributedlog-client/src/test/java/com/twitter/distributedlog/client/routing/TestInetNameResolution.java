@@ -17,23 +17,24 @@
  */
 package com.twitter.distributedlog.client.routing;
 
+import com.google.common.collect.ImmutableSet;
+import com.twitter.common.net.pool.DynamicHostSet;
+import com.twitter.thrift.Endpoint;
+import com.twitter.thrift.ServiceInstance;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.google.common.collect.ImmutableSet;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.twitter.common.net.pool.DynamicHostSet;
-import com.twitter.thrift.Endpoint;
-import com.twitter.thrift.ServiceInstance;
-
+/**
+ * Test Case for `inet` name resolution.
+ */
 public class TestInetNameResolution {
-    static final Logger logger = LoggerFactory.getLogger(TestRoutingService.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(TestRoutingService.class);
 
     @Test(timeout = 10000)
     public void testInetNameResolution() throws Exception {
@@ -57,7 +58,8 @@ public class TestInetNameResolution {
                         logger.error("Port does not match the expected port {}", endpoint.getPort());
                         validationFailed.set(true);
                     } else if (!address.getAddress().getHostAddress().equals("127.0.0.1")) {
-                        logger.error("Host address does not match the expected address {}", address.getAddress().getHostAddress());
+                        logger.error("Host address does not match the expected address {}",
+                            address.getAddress().getHostAddress());
                         validationFailed.set(true);
                     }
                     resolved.countDown();

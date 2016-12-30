@@ -212,6 +212,14 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
     public static final String BKDL_UNPARTITIONED_STREAM_NAME = "unpartitionedStreamName";
     public static final String BKDL_UNPARTITIONED_STREAM_NAME_DEFAULT = "<default>";
 
+    // Log Segment Cache Parameters
+    public static final String BKDL_LOGSEGMENT_CACHE_TTL_MS = "logSegmentCacheTTLMs";
+    public static final long BKDL_LOGSEGMENT_CACHE_TTL_MS_DEFAULT = 600000; // 10 mins
+    public static final String BKDL_LOGSEGMENT_CACHE_MAX_SIZE = "logSegmentCacheMaxSize";
+    public static final long BKDL_LOGSEGMENT_CACHE_MAX_SIZE_DEFAULT = 10000;
+    public static final String BKDL_LOGSEGMENT_CACHE_ENABLED = "logSegmentCacheEnabled";
+    public static final boolean BKDL_LOGSEGMENT_CACHE_ENABLED_DEFAULT = true;
+
     //
     // DL Writer Settings
     //
@@ -344,6 +352,10 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
     public static final int BKDL_READAHEAD_NOSUCHLEDGER_EXCEPTION_ON_READLAC_ERROR_THRESHOLD_MILLIS_DEFAULT = 10000;
     public static final String BKDL_READAHEAD_SKIP_BROKEN_ENTRIES = "readAheadSkipBrokenEntries";
     public static final boolean BKDL_READAHEAD_SKIP_BROKEN_ENTRIES_DEFAULT = false;
+    public static final String BKDL_NUM_PREFETCH_ENTRIES_PER_LOGSEGMENT = "numPrefetchEntriesPerLogSegment";
+    public static final int BKDL_NUM_PREFETCH_ENTRIES_PER_LOGSEGMENT_DEFAULT = 4;
+    public static final String BKDL_MAX_PREFETCH_ENTRIES_PER_LOGSEGMENT = "maxPrefetchEntriesPerLogSegment";
+    public static final int BKDL_MAX_PREFETCH_ENTRIES_PER_LOGSEGMENT_DEFAULT = 32;
 
     // Scan Settings
     public static final String BKDL_FIRST_NUM_ENTRIES_PER_READ_LAST_RECORD_SCAN = "firstNumEntriesEachPerLastRecordScan";
@@ -1289,6 +1301,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * @return number of dedicated readahead worker threads.
      * @see #getNumWorkerThreads()
      */
+    @Deprecated
     public int getNumReadAheadWorkerThreads() {
         return getInt(BKDL_NUM_READAHEAD_WORKER_THREADS, 0);
     }
@@ -1301,6 +1314,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * @return configuration
      * @see #getNumReadAheadWorkerThreads()
      */
+    @Deprecated
     public DistributedLogConfiguration setNumReadAheadWorkerThreads(int numWorkerThreads) {
         setProperty(BKDL_NUM_READAHEAD_WORKER_THREADS, numWorkerThreads);
         return this;
@@ -1549,6 +1563,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      *
      * @return true if should check txn id with max txn id, otherwise false.
      */
+    @Deprecated
     public boolean getSanityCheckTxnID() {
         return getBoolean(BKDL_MAXID_SANITYCHECK, BKDL_MAXID_SANITYCHECK_DEFAULT);
     }
@@ -1561,6 +1576,7 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * @return configuration.
      * @see #getSanityCheckTxnID()
      */
+    @Deprecated
     public DistributedLogConfiguration setSanityCheckTxnID(boolean enabled) {
         setProperty(BKDL_MAXID_SANITYCHECK, enabled);
         return this;
@@ -1640,6 +1656,69 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      */
     public DistributedLogConfiguration setUnpartitionedStreamName(String streamName) {
         setProperty(BKDL_UNPARTITIONED_STREAM_NAME, streamName);
+        return this;
+    }
+
+    //
+    // LogSegment Cache Settings
+    //
+
+    /**
+     * Get the log segment cache entry TTL in milliseconds.
+     *
+     * @return log segment cache ttl in milliseconds.
+     */
+    public long getLogSegmentCacheTTLMs() {
+        return getLong(BKDL_LOGSEGMENT_CACHE_TTL_MS, BKDL_LOGSEGMENT_CACHE_MAX_SIZE_DEFAULT);
+    }
+
+    /**
+     * Set the log segment cache entry TTL in milliseconds.
+     *
+     * @param ttlMs TTL in milliseconds
+     * @return distributedlog configuration
+     */
+    public DistributedLogConfiguration setLogSegmentCacheTTLMs(long ttlMs) {
+        setProperty(BKDL_LOGSEGMENT_CACHE_TTL_MS, ttlMs);
+        return this;
+    }
+
+    /**
+     * Get the maximum size of the log segment cache.
+     *
+     * @return maximum size of the log segment cache.
+     */
+    public long getLogSegmentCacheMaxSize() {
+        return getLong(BKDL_LOGSEGMENT_CACHE_MAX_SIZE, BKDL_LOGSEGMENT_CACHE_MAX_SIZE_DEFAULT);
+    }
+
+    /**
+     * Set the maximum size of the log segment cache.
+     *
+     * @param maxSize maximum size of the log segment cache.
+     * @return distributedlog configuration
+     */
+    public DistributedLogConfiguration setLogSegmentCacheMaxSize(long maxSize) {
+        setProperty(BKDL_LOGSEGMENT_CACHE_MAX_SIZE, maxSize);
+        return this;
+    }
+
+    /**
+     * Is log segment cache enabled?
+     *
+     * @return true if log segment cache is enabled; otherwise false
+     */
+    public boolean isLogSegmentCacheEnabled() {
+        return getBoolean(BKDL_LOGSEGMENT_CACHE_ENABLED, BKDL_LOGSEGMENT_CACHE_ENABLED_DEFAULT);
+    }
+
+    /**
+     * Enable/disable log segment cache.
+     *
+     * @return distributedlog configuration
+     */
+    public DistributedLogConfiguration setLogSegmentCacheEnabled(boolean enabled) {
+        setProperty(BKDL_LOGSEGMENT_CACHE_ENABLED, enabled);
         return this;
     }
 
@@ -2697,6 +2776,46 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
         return this;
     }
 
+    /**
+     * Get the number prefetch entries per log segment. Default value is 4.
+     *
+     * @return the number prefetch entries per log segment.
+     */
+    public int getNumPrefetchEntriesPerLogSegment() {
+        return getInt(BKDL_NUM_PREFETCH_ENTRIES_PER_LOGSEGMENT, BKDL_NUM_PREFETCH_ENTRIES_PER_LOGSEGMENT_DEFAULT);
+    }
+
+    /**
+     * Set the number prefetch entries per log segment.
+     *
+     * @param numEntries the number prefetch entries per log segment.
+     * @return configuration
+     */
+    public DistributedLogConfiguration setNumPrefetchEntriesPerLogSegment(int numEntries) {
+        setProperty(BKDL_NUM_PREFETCH_ENTRIES_PER_LOGSEGMENT, numEntries);
+        return this;
+    }
+
+    /**
+     * Get the max prefetch entries per log segment. Default value is 4.
+     *
+     * @return the max prefetch entries per log segment.
+     */
+    public int getMaxPrefetchEntriesPerLogSegment() {
+        return getInt(BKDL_MAX_PREFETCH_ENTRIES_PER_LOGSEGMENT, BKDL_MAX_PREFETCH_ENTRIES_PER_LOGSEGMENT_DEFAULT);
+    }
+
+    /**
+     * Set the max prefetch entries per log segment.
+     *
+     * @param numEntries the max prefetch entries per log segment.
+     * @return configuration
+     */
+    public DistributedLogConfiguration setMaxPrefetchEntriesPerLogSegment(int numEntries) {
+        setProperty(BKDL_MAX_PREFETCH_ENTRIES_PER_LOGSEGMENT, numEntries);
+        return this;
+    }
+
     //
     // DL Reader Scan Settings
     //
@@ -3395,9 +3514,14 @@ public class DistributedLogConfiguration extends CompositeConfiguration {
      * Validate the configuration
      */
     public void validate() {
-        Preconditions.checkArgument(getBKClientReadTimeout() * 1000 > getReadLACLongPollTimeout(),
-            "Invalid timeout configuration : bkcReadTimeoutSeconds ("+getBKClientReadTimeout()+
+        Preconditions.checkArgument(getBKClientReadTimeout() * 1000 >= getReadLACLongPollTimeout(),
+            "Invalid timeout configuration: bkcReadTimeoutSeconds ("+getBKClientReadTimeout()+
                 ") should be longer than readLACLongPollTimeout ("+getReadLACLongPollTimeout()+")");
+        long readerIdleWarnThresholdMs = getReaderIdleWarnThresholdMillis();
+        if (readerIdleWarnThresholdMs > 0) { // NOTE: some test cases set the idle warn threshold to 0
+            Preconditions.checkArgument(readerIdleWarnThresholdMs > 2 * getReadLACLongPollTimeout(),
+                    "Invalid configuration: ReaderIdleWarnThreshold should be 2x larget than readLACLongPollTimeout");
+        }
     }
 
 

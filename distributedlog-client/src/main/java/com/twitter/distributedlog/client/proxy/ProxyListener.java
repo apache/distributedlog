@@ -18,11 +18,10 @@
 package com.twitter.distributedlog.client.proxy;
 
 import com.twitter.distributedlog.thrift.service.ServerInfo;
-
 import java.net.SocketAddress;
 
 /**
- * Listener on server changes
+ * Listener on server changes.
  */
 public interface ProxyListener {
     /**

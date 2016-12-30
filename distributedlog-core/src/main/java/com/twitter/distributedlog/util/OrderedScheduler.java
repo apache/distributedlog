@@ -310,6 +310,8 @@ public class OrderedScheduler implements ScheduledExecutorService {
     @Override
     public void shutdown() {
         for (MonitoredScheduledThreadPoolExecutor executor : executors) {
+            // Unregister gauges
+            executor.unregisterGauges();
             executor.shutdown();
         }
     }
@@ -471,6 +473,14 @@ public class OrderedScheduler implements ScheduledExecutorService {
 
     public ScheduledFuture<?> schedule(Object key, Runnable command, long delay, TimeUnit unit) {
         return chooseExecutor(key).schedule(command, delay, unit);
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(Object key,
+                                                  Runnable command,
+                                                  long initialDelay,
+                                                  long period,
+                                                  TimeUnit unit) {
+        return chooseExecutor(key).scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 
     public Future<?> submit(Object key, Runnable command) {

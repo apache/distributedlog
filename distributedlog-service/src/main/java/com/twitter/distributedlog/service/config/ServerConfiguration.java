@@ -91,6 +91,14 @@ public class ServerConfiguration extends CompositeConfiguration {
     // Server stream to partition converter
     protected final static String SERVER_STREAM_PARTITION_CONVERTER_CLASS = "stream_partition_converter_class";
 
+    // Use hostname as the allocator pool name
+    protected static final String SERVER_USE_HOSTNAME_AS_ALLOCATOR_POOL_NAME
+        = "server_use_hostname_as_allocator_pool_name";
+    protected static final boolean SERVER_USE_HOSTNAME_AS_ALLOCATOR_POOL_NAME_DEFAULT = false;
+    //Configure refresh interval for calculating resource placement in seconds
+    public static final String SERVER_RESOURCE_PLACEMENT_REFRESH_INTERVAL_S = "server_resource_placement_refresh_interval_sec";
+    public static final int  SERVER_RESOURCE_PLACEMENT_REFRESH_INTERVAL_DEFAULT = 120;
+
     public ServerConfiguration() {
         super();
         addConfiguration(new SystemConfiguration());
@@ -368,6 +376,39 @@ public class ServerConfiguration extends CompositeConfiguration {
                 IdentityStreamPartitionConverter.class,
                 StreamPartitionConverter.class,
                 defaultLoader);
+    }
+
+     /**
+      * Set if use hostname as the allocator pool name.
+      *
+      * @param useHostname whether to use hostname as the allocator pool name.
+      * @return server configuration
+      * @see #isUseHostnameAsAllocatorPoolName()
+      */
+    public ServerConfiguration setUseHostnameAsAllocatorPoolName(boolean useHostname) {
+        setProperty(SERVER_USE_HOSTNAME_AS_ALLOCATOR_POOL_NAME, useHostname);
+        return this;
+    }
+
+    /**
+     * Get if use hostname as the allocator pool name
+     *
+     * @return true if use hostname as the allocator pool name. otherwise, use
+     * {@link #getServerShardId()} as the allocator pool name.
+     * @see #getServerShardId()
+     */
+    public boolean isUseHostnameAsAllocatorPoolName() {
+        return getBoolean(SERVER_USE_HOSTNAME_AS_ALLOCATOR_POOL_NAME,
+            SERVER_USE_HOSTNAME_AS_ALLOCATOR_POOL_NAME_DEFAULT);
+    }
+
+    public ServerConfiguration setResourcePlacementRefreshInterval(int refreshIntervalSecs) {
+        setProperty(SERVER_RESOURCE_PLACEMENT_REFRESH_INTERVAL_S, refreshIntervalSecs);
+        return this;
+    }
+
+    public int getResourcePlacementRefreshInterval() {
+        return getInt(SERVER_RESOURCE_PLACEMENT_REFRESH_INTERVAL_S, SERVER_RESOURCE_PLACEMENT_REFRESH_INTERVAL_DEFAULT);
     }
 
     /**
