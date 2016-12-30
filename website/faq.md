@@ -13,7 +13,7 @@ The Apache DistributedLog FAQ page is in the process of bootstrapping. So please
 
 # Frequently Asked Questions
 
-The following questions are frequently asked with regard to the DistributedLog project in general. If you have further questions, make sure to consult the [documentation]({{ site.baseurl }}/docs/latest) or [ask the community]({{ site.baseurl }}/community).
+The following questions are frequently asked with regard to the DistributedLog project in general. If you have further questions, make sure to consult the [documentation]({{ site.baseurl }}/docs/{{ site.stable_doc_version }}) or [ask the community]({{ site.baseurl }}/community).
 
 * TOC
 {:toc}
