@@ -53,8 +53,8 @@ public class LogSegmentSplit extends InputSplit implements Writable {
         return logSegmentMetadata;
     }
 
-    public long getLedgerId() {
-        return logSegmentMetadata.getLedgerId();
+    public long getLogSegmentId() {
+        return logSegmentMetadata.getLogSegmentId();
     }
 
     @Override

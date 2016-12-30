@@ -85,6 +85,7 @@ public class Benchmarker {
     boolean enableBatching = false;
     int batchBufferSize = 256 * 1024;
     int batchFlushIntervalMicros = 2000;
+    String routingServiceFinagleNameString;
 
     final DistributedLogConfiguration conf = new DistributedLogConfiguration();
     final StatsReceiver statsReceiver = new OstrichStatsReceiver();
@@ -125,6 +126,7 @@ public class Benchmarker {
         options.addOption("bt", "enable-batch", false, "Enable batching on writers");
         options.addOption("bbs", "batch-buffer-size", true, "The batch buffer size in bytes");
         options.addOption("bfi", "batch-flush-interval", true, "The batch buffer flush interval in micros");
+        options.addOption("rs", "routing-service", true, "The routing service finagle name for server-side routing");
         options.addOption("h", "help", false, "Print usage.");
     }
 
@@ -221,6 +223,9 @@ public class Benchmarker {
         if (cmdline.hasOption("rb")) {
             recvBufferSize = Integer.parseInt(cmdline.getOptionValue("rb"));
         }
+        if (cmdline.hasOption("rs")) {
+            routingServiceFinagleNameString = cmdline.getOptionValue("rs");
+        }
         thriftmux = cmdline.hasOption("mx");
         handshakeWithClientInfo = cmdline.hasOption("hsci");
         readFromHead = cmdline.hasOption("rfh");
@@ -311,7 +316,8 @@ public class Benchmarker {
                 recvBufferSize,
                 enableBatching,
                 batchBufferSize,
-                batchFlushIntervalMicros);
+                batchFlushIntervalMicros,
+                routingServiceFinagleNameString);
     }
 
     protected WriterWorker createWriteWorker(
@@ -335,7 +341,8 @@ public class Benchmarker {
             int recvBufferSize,
             boolean enableBatching,
             int batchBufferSize,
-            int batchFlushIntervalMicros) {
+            int batchFlushIntervalMicros,
+            String routingServiceFinagleNameString) {
         return new WriterWorker(
                 streamPrefix,
                 uri,
@@ -357,7 +364,8 @@ public class Benchmarker {
                 recvBufferSize,
                 enableBatching,
                 batchBufferSize,
-                batchFlushIntervalMicros);
+                batchFlushIntervalMicros,
+                routingServiceFinagleNameString);
     }
 
     Worker runDLWriter() throws IOException {
@@ -453,7 +461,7 @@ public class Benchmarker {
         try {
             benchmarker.run();
         } catch (Exception e) {
-            logger.info("Benchmark quitted due to : ", e);
+            logger.info("Benchmark quit due to : ", e);
         }
     }
 

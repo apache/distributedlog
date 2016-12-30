@@ -25,7 +25,7 @@ import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.LogSegmentMetadata;
 import com.twitter.distributedlog.ZooKeeperClient;
 import com.twitter.distributedlog.ZooKeeperClientBuilder;
-import com.twitter.distributedlog.metadata.BKDLConfig;
+import com.twitter.distributedlog.impl.metadata.BKDLConfig;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import java.io.IOException;
 import java.util.List;
@@ -118,7 +118,7 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
         try {
             for (LogSegmentMetadata segment : segments) {
                 Stopwatch stopwatch = Stopwatch.createStarted();
-                long lid = segment.getLedgerId();
+                long lid = segment.getLogSegmentId();
                 LedgerHandle lh = bk.openLedgerNoRecovery(
                         lid, BookKeeper.DigestType.CRC32, conf.getBKDigestPW().getBytes(UTF_8));
                 logger.info("It took {} ms to open log segment {}",

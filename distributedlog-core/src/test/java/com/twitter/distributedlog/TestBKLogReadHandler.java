@@ -20,6 +20,7 @@ package com.twitter.distributedlog;
 import com.google.common.base.Optional;
 import com.twitter.distributedlog.exceptions.LogNotFoundException;
 import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
+import com.twitter.distributedlog.logsegment.LogSegmentFilter;
 import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.distributedlog.util.Utils;
 import com.twitter.util.Duration;
@@ -28,12 +29,9 @@ import com.twitter.util.Await;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.twitter.util.TimeoutException;
-import org.apache.bookkeeper.proto.BookkeeperInternalCallbacks;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -52,27 +50,6 @@ public class TestBKLogReadHandler extends TestDistributedLogBase {
     @Rule
     public TestName runtime = new TestName();
 
-    private void prepareLogSegments(String name, int numSegments, int numEntriesPerSegment) throws Exception {
-        DLMTestUtil.BKLogPartitionWriteHandlerAndClients bkdlmAndClients = createNewBKDLM(conf, name);
-        long txid = 1;
-        for (int sid = 0; sid < numSegments; ++sid) {
-            BKLogSegmentWriter out = bkdlmAndClients.getWriteHandler().startLogSegment(txid);
-            for (int eid = 0; eid < numEntriesPerSegment; ++eid) {
-                LogRecord record = DLMTestUtil.getLargeLogRecordInstance(txid);
-                out.write(record);
-                ++txid;
-            }
-            FutureUtils.result(out.asyncClose());
-            bkdlmAndClients.getWriteHandler().completeAndCloseLogSegment(
-                    out.getLogSegmentSequenceNumber(),
-                    out.getLogSegmentId(),
-                    1 + sid * numEntriesPerSegment,
-                    (sid + 1) * numEntriesPerSegment,
-                    numEntriesPerSegment);
-        }
-        bkdlmAndClients.close();
-    }
-
     private void prepareLogSegmentsNonPartitioned(String name, int numSegments, int numEntriesPerSegment) throws Exception {
         DistributedLogManager dlm = createNewDLM(conf, name);
         long txid = 1;
@@ -89,85 +66,15 @@ public class TestBKLogReadHandler extends TestDistributedLogBase {
     }
 
     @Test(timeout = 60000)
-    public void testGetLedgerList() throws Exception {
-        String dlName = runtime.getMethodName();
-        prepareLogSegments(dlName, 3, 3);
-        BKDistributedLogManager dlm = createNewDLM(conf, dlName);
-        BKLogReadHandler readHandler = dlm.createReadHandler();
-        List<LogSegmentMetadata> ledgerList = readHandler.getLedgerList(false, false, LogSegmentMetadata.COMPARATOR, false);
-        List<LogSegmentMetadata> ledgerList2 = readHandler.getFilteredLedgerList(true, false);
-        List<LogSegmentMetadata> ledgerList3 = readHandler.getLedgerList(false, false, LogSegmentMetadata.COMPARATOR, false);
-        assertEquals(3, ledgerList.size());
-        assertEquals(3, ledgerList2.size());
-        assertEquals(3, ledgerList3.size());
-        for (int i=0; i<3; i++) {
-            assertEquals(ledgerList3.get(i), ledgerList2.get(i));
-        }
-    }
-
-    @Test(timeout = 60000)
-    public void testForceGetLedgerList() throws Exception {
-        String dlName = runtime.getMethodName();
-        prepareLogSegments(dlName, 3, 3);
-        BKDistributedLogManager dlm = createNewDLM(conf, dlName);
-        BKLogReadHandler readHandler = dlm.createReadHandler();
-        List<LogSegmentMetadata> ledgerList = readHandler.getLedgerList(true, false, LogSegmentMetadata.COMPARATOR, false);
-        final AtomicReference<List<LogSegmentMetadata>> resultHolder =
-                new AtomicReference<List<LogSegmentMetadata>>(null);
-        final CountDownLatch latch = new CountDownLatch(1);
-        readHandler.asyncGetLedgerList(LogSegmentMetadata.COMPARATOR, null, new BookkeeperInternalCallbacks.GenericCallback<List<LogSegmentMetadata>>() {
-            @Override
-            public void operationComplete(int rc, List<LogSegmentMetadata> result) {
-                resultHolder.set(result);
-                latch.countDown();
-            }
-        });
-        latch.await();
-        List<LogSegmentMetadata> newLedgerList = resultHolder.get();
-        assertNotNull(newLedgerList);
-        LOG.info("Force sync get list : {}", ledgerList);
-        LOG.info("Async get list : {}", newLedgerList);
-        assertEquals(3, ledgerList.size());
-        assertEquals(3, newLedgerList.size());
-        for (int i=0; i<3; i++) {
-            assertEquals(ledgerList.get(i), newLedgerList.get(i));
-        }
-    }
-
-    @Test(timeout = 60000)
-    public void testGetFilteredLedgerListInWriteHandler() throws Exception {
-        String dlName = runtime.getMethodName();
-        prepareLogSegments(dlName, 11, 3);
-        BKDistributedLogManager dlm = createNewDLM(conf, dlName);
-
-        // Get full list.
-        BKLogWriteHandler writeHandler0 = dlm.createWriteHandler(false);
-        List<LogSegmentMetadata> cachedFullLedgerList =
-                writeHandler0.getCachedLogSegments(LogSegmentMetadata.DESC_COMPARATOR);
-        assertTrue(cachedFullLedgerList.size() <= 1);
-        List<LogSegmentMetadata> fullLedgerList = writeHandler0.getFullLedgerListDesc(false, false);
-        assertEquals(11, fullLedgerList.size());
-
-        // Get filtered list.
-        BKLogWriteHandler writeHandler1 = dlm.createWriteHandler(false);
-        List<LogSegmentMetadata> filteredLedgerListDesc = writeHandler1.getFilteredLedgerListDesc(false, false);
-        assertEquals(1, filteredLedgerListDesc.size());
-        assertEquals(fullLedgerList.get(0), filteredLedgerListDesc.get(0));
-        List<LogSegmentMetadata> filteredLedgerList = writeHandler1.getFilteredLedgerList(false, false);
-        assertEquals(1, filteredLedgerList.size());
-        assertEquals(fullLedgerList.get(0), filteredLedgerList.get(0));
-    }
-
-    @Test(timeout = 60000)
     public void testGetFirstDLSNWithOpenLedger() throws Exception {
         String dlName = runtime.getMethodName();
 
         DistributedLogConfiguration confLocal = new DistributedLogConfiguration();
         confLocal.loadConf(conf);
-        confLocal.setImmediateFlushEnabled(true);
+        confLocal.setImmediateFlushEnabled(false);
         confLocal.setOutputBufferSize(0);
 
-        int numEntriesPerSegment = 100;
+        int numEntriesPerSegment = 10;
         DistributedLogManager dlm1 = createNewDLM(confLocal, dlName);
         long txid = 1;
 
@@ -177,15 +84,14 @@ public class TestBKLogReadHandler extends TestDistributedLogBase {
             futures.add(out.write(DLMTestUtil.getLogRecordInstance(txid)));
             ++txid;
         }
-        for (Future<DLSN> future : futures) {
-            Await.result(future);
-        }
-
-        BKLogReadHandler readHandler =
-            ((BKDistributedLogManager) dlm1).createReadHandler();
+        FutureUtils.result(Future.collect(futures));
+        // commit
+        LogRecord controlRecord = new LogRecord(txid, DistributedLogConstants.CONTROL_RECORD_CONTENT);
+        controlRecord.setControl();
+        FutureUtils.result(out.write(controlRecord));
 
         DLSN last = dlm1.getLastDLSN();
-        assertEquals(new DLSN(1,99,0), last);
+        assertEquals(new DLSN(1,9,0), last);
         DLSN first = Await.result(dlm1.getFirstDLSNAsync());
         assertEquals(new DLSN(1,0,0), first);
         Utils.close(out);
@@ -207,8 +113,8 @@ public class TestBKLogReadHandler extends TestDistributedLogBase {
     @Test(timeout = 60000)
     public void testGetFirstDLSNWithLogSegments() throws Exception {
         String dlName = runtime.getMethodName();
-        prepareLogSegments(dlName, 3, 3);
         BKDistributedLogManager dlm = createNewDLM(conf, dlName);
+        DLMTestUtil.generateCompletedLogSegments(dlm, conf, 3, 3);
         BKLogReadHandler readHandler = dlm.createReadHandler();
         Future<LogRecordWithDLSN> futureRecord = readHandler.asyncGetFirstLogRecord();
         try {
@@ -363,7 +269,13 @@ public class TestBKLogReadHandler extends TestDistributedLogBase {
         Await.result(out.write(DLMTestUtil.getLargeLogRecordInstance(txid++, false)));
 
         BKLogReadHandler readHandler = bkdlm.createReadHandler();
-        List<LogSegmentMetadata> ledgerList = readHandler.getLedgerList(false, false, LogSegmentMetadata.COMPARATOR, false);
+        List<LogSegmentMetadata> ledgerList = FutureUtils.result(
+                readHandler.readLogSegmentsFromStore(
+                        LogSegmentMetadata.COMPARATOR,
+                        LogSegmentFilter.DEFAULT_FILTER,
+                        null
+                )
+        ).getValue();
         assertEquals(1, ledgerList.size());
         assertTrue(ledgerList.get(0).isInProgress());
 
@@ -387,7 +299,12 @@ public class TestBKLogReadHandler extends TestDistributedLogBase {
         Await.result(out.write(DLMTestUtil.getLargeLogRecordInstance(txid++, false)));
 
         BKLogReadHandler readHandler = bkdlm.createReadHandler();
-        List<LogSegmentMetadata> ledgerList = readHandler.getLedgerList(false, false, LogSegmentMetadata.COMPARATOR, false);
+        List<LogSegmentMetadata> ledgerList = FutureUtils.result(
+                readHandler.readLogSegmentsFromStore(
+                        LogSegmentMetadata.COMPARATOR,
+                        LogSegmentFilter.DEFAULT_FILTER,
+                        null)
+        ).getValue();
         assertEquals(2, ledgerList.size());
         assertFalse(ledgerList.get(0).isInProgress());
         assertTrue(ledgerList.get(1).isInProgress());

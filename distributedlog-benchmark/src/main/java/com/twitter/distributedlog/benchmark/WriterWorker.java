@@ -81,6 +81,7 @@ public class WriterWorker implements Worker {
     final boolean enableBatching;
     final int batchBufferSize;
     final int batchFlushIntervalMicros;
+    private final String routingServiceFinagleName;
 
     volatile boolean running = true;
 
@@ -113,7 +114,8 @@ public class WriterWorker implements Worker {
                         int recvBufferSize,
                         boolean enableBatching,
                         int batchBufferSize,
-                        int batchFlushIntervalMicros) {
+                        int batchFlushIntervalMicros,
+                        String routingServiceFinagleName) {
         checkArgument(startStreamId <= endStreamId);
         checkArgument(!finagleNames.isEmpty() || !serverSetPaths.isEmpty());
         this.streamPrefix = streamPrefix;
@@ -143,6 +145,7 @@ public class WriterWorker implements Worker {
         this.finagleNames = finagleNames;
         this.serverSets = createServerSets(serverSetPaths);
         this.executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this.routingServiceFinagleName = routingServiceFinagleName;
 
         // Streams
         streamNames = new ArrayList<String>(endStreamId - startStreamId);
@@ -197,6 +200,7 @@ public class WriterWorker implements Worker {
             .periodicOwnershipSyncIntervalMs(TimeUnit.MINUTES.toMillis(5))
             .periodicDumpOwnershipCache(true)
             .handshakeTracing(true)
+            .serverRoutingServiceFinagleNameStr(routingServiceFinagleName)
             .name("writer");
 
         if (!finagleNames.isEmpty()) {

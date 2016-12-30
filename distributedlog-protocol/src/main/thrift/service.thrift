@@ -94,6 +94,12 @@ enum StatusCode {
     CHECKSUM_FAILED = 523,
     /* Overcapacity: too many streams */
     TOO_MANY_STREAMS = 524,
+    /* Log Segment Not Found */
+    LOG_SEGMENT_NOT_FOUND = 525,
+    // End of Log Segment
+    END_OF_LOG_SEGMENT = 526,
+    // Log Segment Is Truncated
+    LOG_SEGMENT_IS_TRUNCATED = 527,
 
     /* 6xx: unexpected */
 
@@ -165,14 +171,17 @@ struct ClientInfo {
 
 service DistributedLogService {
 
+    /* Deprecated */
     ServerInfo handshake();
 
     ServerInfo handshakeWithClientInfo(ClientInfo clientInfo);
 
+    /* Deprecated */
     WriteResponse heartbeat(string stream, WriteContext ctx);
 
     WriteResponse heartbeatWithOptions(string stream, WriteContext ctx, HeartbeatOptions options);
 
+    /* Deprecated */
     WriteResponse write(string stream, binary data);
 
     WriteResponse writeWithContext(string stream, binary data, WriteContext ctx);
@@ -186,6 +195,8 @@ service DistributedLogService {
     WriteResponse create(string stream, WriteContext ctx);
 
     WriteResponse delete(string stream, WriteContext ctx);
+
+    WriteResponse getOwner(string stream, WriteContext ctx);
 
     /* Admin Methods */
     void setAcceptNewStream(bool enabled);
