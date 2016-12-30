@@ -40,11 +40,11 @@ rm -rf ${BUILT_DIR}
 
 # BRANCHES
 # SRC_REMOTE_NAME="apache"
-SRC_REMOTE_NAME="sijie"
+SRC_REMOTE_NAME="origin"
 # SRC_BRANCH="master"
 SRC_BRANCH="sijie/merge_website_script"
 # SITE_REMOTE_NAME="apache"
-SITE_REMOTE_NAME="sijie"
+SITE_REMOTE_NAME="origin"
 SITE_BRANCH="asf-site"
 
 # Temp Branch to merge
@@ -84,6 +84,8 @@ git add ${DLOG_ROOT}/content
 
 # commit the add
 git commit -m "Built website from gitsha '${SRC_GITSHA}'."
+
+exit 1
 
 # push the branch
 git push ${SITE_REMOTE_NAME} ${TEMP_SITE_BRANCH}:${SITE_BRANCH}
