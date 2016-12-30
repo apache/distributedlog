@@ -15,28 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.distributedlog;
-
 /**
- * A iterator to iterate records in the stream.
+ * Subscription utils for tracking offsets.
  */
-interface RecordStream {
-    /**
-     * advance <i>numRecords</i> records.
-     */
-    void advance(int numRecords);
-
-    /**
-     * Get position of current record in the stream.
-     *
-     * @return position of current record
-     */
-    DLSN getCurrentPosition();
-
-    /**
-     * Get the name of the stream.
-     *
-     * @return the name of the stream
-     */
-    String getName();
-}
+package com.twitter.distributedlog.subscription;

@@ -20,7 +20,7 @@ package com.twitter.distributedlog;
 import com.twitter.distributedlog.exceptions.OverCapacityException;
 import com.twitter.distributedlog.util.PermitLimiter;
 
-public class WriteLimiter {
+class WriteLimiter {
 
     String streamName;
     final PermitLimiter streamLimiter;
