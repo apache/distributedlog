@@ -66,7 +66,7 @@ public class ServiceRequestLimiter extends DynamicRequestLimiter<StreamOp> {
             .overlimit(new OverlimitFunction<StreamOp>() {
                 @Override
                 public void apply(StreamOp request) throws OverCapacityException {
-                    throw new OverCapacityException("RPS limit exceeded for the service instance");
+                    throw new OverCapacityException("Being rate limited: RPS limit exceeded for the service instance");
                 }
             });
 
@@ -80,7 +80,7 @@ public class ServiceRequestLimiter extends DynamicRequestLimiter<StreamOp> {
             .overlimit(new OverlimitFunction<StreamOp>() {
                 @Override
                 public void apply(StreamOp request) throws OverCapacityException {
-                    throw new OverCapacityException("BPS limit exceeded for the service instance");
+                    throw new OverCapacityException("Being rate limited: BPS limit exceeded for the service instance");
                 }
             });
 

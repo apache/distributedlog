@@ -21,10 +21,15 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.twitter.common.net.InetSocketAddressHelper;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.acl.AccessControlManager;
+import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
+import com.twitter.distributedlog.client.resolver.RegionResolver;
+import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
+import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.RegionUnavailableException;
 import com.twitter.distributedlog.exceptions.ServiceUnavailableException;
 import com.twitter.distributedlog.exceptions.StreamUnavailableException;
@@ -36,8 +41,11 @@ import com.twitter.distributedlog.rate.MovingAverageRate;
 import com.twitter.distributedlog.rate.MovingAverageRateFactory;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.config.StreamConfigProvider;
+import com.twitter.distributedlog.service.placement.LeastLoadPlacementPolicy;
+import com.twitter.distributedlog.service.placement.LoadAppraiser;
+import com.twitter.distributedlog.service.placement.PlacementPolicy;
+import com.twitter.distributedlog.service.placement.ZKPlacementStateManager;
 import com.twitter.distributedlog.service.stream.BulkWriteOp;
-import com.twitter.distributedlog.service.stream.CreateOp;
 import com.twitter.distributedlog.service.stream.DeleteOp;
 import com.twitter.distributedlog.service.stream.HeartbeatOp;
 import com.twitter.distributedlog.service.stream.ReleaseOp;
@@ -51,8 +59,11 @@ import com.twitter.distributedlog.service.stream.StreamOpStats;
 import com.twitter.distributedlog.service.stream.TruncateOp;
 import com.twitter.distributedlog.service.stream.WriteOp;
 import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
+import com.twitter.distributedlog.service.stream.admin.CreateOp;
+import com.twitter.distributedlog.service.stream.admin.StreamAdminOp;
 import com.twitter.distributedlog.service.stream.limiter.ServiceRequestLimiter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
+import com.twitter.distributedlog.service.utils.ServerUtils;
 import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
 import com.twitter.distributedlog.thrift.service.ClientInfo;
 import com.twitter.distributedlog.thrift.service.DistributedLogService;
@@ -68,6 +79,7 @@ import com.twitter.distributedlog.util.OrderedScheduler;
 import com.twitter.distributedlog.util.SchedulerUtils;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
+import com.twitter.util.Function;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
@@ -106,6 +118,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     private final DistributedLogConfiguration dlConfig;
     private final DistributedLogNamespace dlNamespace;
     private final int serverRegionId;
+    private final PlacementPolicy placementPolicy;
     private ServerStatus serverStatus = ServerStatus.WRITE_AND_ACCEPT;
     private final ReentrantReadWriteLock closeLock =
             new ReentrantReadWriteLock();
@@ -117,6 +130,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     private final StreamConfigProvider streamConfigProvider;
     private final StreamManager streamManager;
     private final StreamFactory streamFactory;
+    private final RoutingService routingService;
+    private final RegionResolver regionResolver;
     private final MovingAverageRateFactory movingAvgFactory;
     private final MovingAverageRate windowedRps;
     private final MovingAverageRate windowedBps;
@@ -143,6 +158,12 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     private final ConcurrentHashMap<StatusCode, Counter> statusCodeCounters =
             new ConcurrentHashMap<StatusCode, Counter>();
     private final Counter statusCodeTotal;
+    private final Gauge<Number> proxyStatusGauge;
+    private final Gauge<Number> movingAvgRpsGauge;
+    private final Gauge<Number> movingAvgBpsGauge;
+    private final Gauge<Number> streamAcquiredGauge;
+    private final Gauge<Number> streamCachedGauge;
+    private final int shard;
 
     DistributedLogServiceImpl(ServerConfiguration serverConf,
                               DistributedLogConfiguration dlConf,
@@ -150,9 +171,11 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                               StreamConfigProvider streamConfigProvider,
                               URI uri,
                               StreamPartitionConverter converter,
+                              RoutingService routingService,
                               StatsLogger statsLogger,
                               StatsLogger perStreamStatsLogger,
-                              CountDownLatch keepAliveLatch)
+                              CountDownLatch keepAliveLatch,
+                              LoadAppraiser loadAppraiser)
             throws IOException {
         // Configuration.
         this.serverConfig = serverConf;
@@ -162,10 +185,13 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         this.serverRegionId = serverConf.getRegionId();
         this.streamPartitionConverter = converter;
         int serverPort = serverConf.getServerPort();
-        int shard = serverConf.getServerShardId();
+        this.shard = serverConf.getServerShardId();
         int numThreads = serverConf.getServerThreads();
         this.clientId = DLSocketAddress.toLockId(DLSocketAddress.getSocketAddress(serverPort), shard);
-        String allocatorPoolName = String.format("allocator_%04d_%010d", serverRegionId, shard);
+        String allocatorPoolName = ServerUtils.getLedgerAllocatorPoolName(
+            serverRegionId,
+            shard,
+            serverConf.isUseHostnameAsAllocatorPoolName());
         dlConf.setLedgerAllocatorPoolName(allocatorPoolName);
         this.featureProvider = AbstractFeatureProvider.getFeatureProvider("", dlConf, statsLogger.scope("features"));
         if (this.featureProvider instanceof AbstractFeatureProvider) {
@@ -222,6 +248,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                 converter,
                 streamConfigProvider,
                 dlNamespace);
+        this.routingService = routingService;
+        this.regionResolver = new DefaultRegionResolver();
 
         // Service features
         this.featureRegionStopAcceptNewStream = this.featureProvider.getFeature(
@@ -244,12 +272,20 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                 streamManager,
                 limiterDisabledFeature);
 
+        this.placementPolicy = new LeastLoadPlacementPolicy(
+            loadAppraiser,
+            routingService,
+            dlNamespace,
+            new ZKPlacementStateManager(uri, dlConf, statsLogger),
+            Duration.fromSeconds(serverConf.getResourcePlacementRefreshInterval()),
+            statsLogger);
+        logger.info("placement started");
+
         // Stats
         this.statsLogger = statsLogger;
 
-        // Stats on server
-        // Gauge for server status/health
-        statsLogger.registerGauge("proxy_status", new Gauge<Number>() {
+        // Gauges for server status/health
+        this.proxyStatusGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -260,9 +296,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
                 return ServerStatus.DOWN == serverStatus ? -1 : (featureRegionStopAcceptNewStream.isAvailable()
                     ? 3 : (ServerStatus.WRITE_AND_ACCEPT == serverStatus ? 1 : 2));
             }
-        });
-        // Global moving average rps
-        statsLogger.registerGauge("moving_avg_rps", new Gauge<Number>() {
+        };
+        this.movingAvgRpsGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -272,9 +307,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return windowedRps.get();
             }
-        });
-        // Global moving average bps
-        statsLogger.registerGauge("moving_avg_bps", new Gauge<Number>() {
+        };
+        this.movingAvgBpsGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -284,19 +318,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return windowedBps.get();
             }
-        });
-
-        // Stats on requests
-        this.bulkWritePendingStat = streamOpStats.requestPendingCounter("bulkWritePending");
-        this.writePendingStat = streamOpStats.requestPendingCounter("writePending");
-        this.redirects = streamOpStats.requestCounter("redirect");
-        this.statusCodeStatLogger = streamOpStats.requestScope("statuscode");
-        this.statusCodeTotal = streamOpStats.requestCounter("statuscode_count");
-        this.receivedRecordCounter = streamOpStats.recordsCounter("received");
-
-        // Stats on streams
-        StatsLogger streamsStatsLogger = statsLogger.scope("streams");
-        streamsStatsLogger.registerGauge("acquired", new Gauge<Number>() {
+        };
+        // Gauges for streams
+        this.streamAcquiredGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -306,8 +330,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return streamManager.numAcquired();
             }
-        });
-        streamsStatsLogger.registerGauge("cached", new Gauge<Number>() {
+        };
+        this.streamCachedGauge = new Gauge<Number>() {
             @Override
             public Number getDefaultValue() {
                 return 0;
@@ -317,7 +341,26 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             public Number getSample() {
                 return streamManager.numCached();
             }
-        });
+        };
+
+        // Stats on server
+        statsLogger.registerGauge("proxy_status", proxyStatusGauge);
+        // Global moving average rps
+        statsLogger.registerGauge("moving_avg_rps", movingAvgRpsGauge);
+        // Global moving average bps
+        statsLogger.registerGauge("moving_avg_bps", movingAvgBpsGauge);
+        // Stats on requests
+        this.bulkWritePendingStat = streamOpStats.requestPendingCounter("bulkWritePending");
+        this.writePendingStat = streamOpStats.requestPendingCounter("writePending");
+        this.redirects = streamOpStats.requestCounter("redirect");
+        this.statusCodeStatLogger = streamOpStats.requestScope("statuscode");
+        this.statusCodeTotal = streamOpStats.requestCounter("statuscode_count");
+        this.receivedRecordCounter = streamOpStats.recordsCounter("received");
+
+        // Stats for streams
+        StatsLogger streamsStatsLogger = statsLogger.scope("streams");
+        streamsStatsLogger.registerGauge("acquired", this.streamAcquiredGauge);
+        streamsStatsLogger.registerGauge("cached", this.streamCachedGauge);
 
         // Setup complete
         logger.info("Running distributedlog server : client id {}, allocator pool {}, perstream stat {},"
@@ -470,9 +513,33 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     @Override
     public Future<WriteResponse> create(String stream, WriteContext ctx) {
         CreateOp op = new CreateOp(stream, statsLogger, streamManager, getChecksum(ctx), featureChecksumDisabled);
-        executeStreamOp(op);
-        return op.result();
+        return executeStreamAdminOp(op);
     }
+
+    //
+    // Ownership RPC
+    //
+
+    @Override
+    public Future<WriteResponse> getOwner(String streamName, WriteContext ctx) {
+        if (streamManager.isAcquired(streamName)) {
+            // the stream is already acquired
+            return Future.value(new WriteResponse(ResponseUtils.ownerToHeader(clientId)));
+        }
+
+        return placementPolicy.placeStream(streamName).map(new Function<String, WriteResponse>() {
+            @Override
+            public WriteResponse apply(String server) {
+                String host = DLSocketAddress.toLockId(InetSocketAddressHelper.parse(server), -1);
+                return new WriteResponse(ResponseUtils.ownerToHeader(host));
+            }
+        });
+    }
+
+
+    //
+    // Admin RPCs
+    //
 
     @Override
     public Future<Void> setAcceptNewStream(boolean enabled) {
@@ -510,6 +577,15 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
     private Long getChecksum(WriteContext ctx) {
         return ctx.isSetCrc32() ? ctx.getCrc32() : null;
+    }
+
+    private Future<WriteResponse> executeStreamAdminOp(final StreamAdminOp op) {
+        try {
+            op.preExecute();
+        } catch (DLException dle) {
+            return Future.exception(dle);
+        }
+        return op.execute();
     }
 
     private void executeStreamOp(final StreamOp op) {
@@ -617,6 +693,10 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
             // Stop the timer.
             timer.stop();
+            placementPolicy.close();
+
+            // clean up gauge
+            unregisterGauge();
 
             // shutdown the executor after requesting closing streams.
             SchedulerUtils.shutdownScheduler(scheduler, 60, TimeUnit.SECONDS);
@@ -627,6 +707,10 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
             keepAliveLatch.countDown();
             logger.info("Finished shutting down distributedlog service.");
         }
+    }
+
+    protected void startPlacementPolicy() {
+        this.placementPolicy.start(shard == 0);
     }
 
     @Override
@@ -653,6 +737,17 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         }
     }
 
+    /**
+     * clean up the gauge before we close to help GC.
+     */
+    private void unregisterGauge(){
+        this.statsLogger.unregisterGauge("proxy_status", this.proxyStatusGauge);
+        this.statsLogger.unregisterGauge("moving_avg_rps", this.movingAvgRpsGauge);
+        this.statsLogger.unregisterGauge("moving_avg_bps", this.movingAvgBpsGauge);
+        this.statsLogger.unregisterGauge("acquired", this.streamAcquiredGauge);
+        this.statsLogger.unregisterGauge("cached", this.streamCachedGauge);
+    }
+
     @VisibleForTesting
     Stream newStream(String name) throws IOException {
         return streamManager.getOrCreateStream(name, false);
@@ -661,6 +756,16 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     @VisibleForTesting
     WriteOp newWriteOp(String stream, ByteBuffer data, Long checksum) {
         return newWriteOp(stream, data, checksum, false);
+    }
+
+    @VisibleForTesting
+    RoutingService getRoutingService() {
+        return this.routingService;
+    }
+
+    @VisibleForTesting
+    DLSocketAddress getServiceAddress() throws IOException {
+        return DLSocketAddress.deserialize(clientId);
     }
 
     WriteOp newWriteOp(String stream,

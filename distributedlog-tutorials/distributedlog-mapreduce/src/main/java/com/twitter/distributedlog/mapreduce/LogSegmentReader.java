@@ -56,7 +56,7 @@ class LogSegmentReader extends RecordReader<DLSN, LogRecordWithDLSN> {
         this.metadata = split.getMetadata();
         try {
             this.lh = bk.openLedgerNoRecovery(
-                    split.getLedgerId(),
+                    split.getLogSegmentId(),
                     BookKeeper.DigestType.CRC32,
                     conf.getBKDigestPW().getBytes(UTF_8));
         } catch (BKException e) {

@@ -161,15 +161,15 @@ public abstract class AbstractStreamOp<Response> implements StreamOp {
     // fail the result with the given response header
     protected abstract void fail(ResponseHeader header);
 
-    protected static OpStatsLogger requestStat(StatsLogger statsLogger, String opName) {
+    public static OpStatsLogger requestStat(StatsLogger statsLogger, String opName) {
         return requestLogger(statsLogger).getOpStatsLogger(opName);
     }
 
-    protected static StatsLogger requestLogger(StatsLogger statsLogger) {
+    public static StatsLogger requestLogger(StatsLogger statsLogger) {
         return statsLogger.scope("request");
     }
 
-    protected static StatsLogger requestScope(StatsLogger statsLogger, String scope) {
+    public static StatsLogger requestScope(StatsLogger statsLogger, String scope) {
         return requestLogger(statsLogger).scope(scope);
     }
 }

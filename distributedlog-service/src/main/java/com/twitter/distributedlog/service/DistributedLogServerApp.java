@@ -17,6 +17,7 @@
  */
 package com.twitter.distributedlog.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalBooleanArg;
 import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalIntegerArg;
 import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalStringArg;
@@ -24,12 +25,17 @@ import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalString
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.twitter.distributedlog.DistributedLogConfiguration;
+import com.twitter.distributedlog.client.routing.RoutingService;
+import com.twitter.distributedlog.client.routing.RoutingUtils;
+import com.twitter.distributedlog.client.serverset.DLZkServerSet;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import org.apache.bookkeeper.stats.NullStatsProvider;
 import org.apache.bookkeeper.stats.StatsProvider;
@@ -66,6 +72,7 @@ public class DistributedLogServerApp {
         options.addOption("pd", "stats-provider", true, "DistributedLog Stats Provider");
         options.addOption("si", "shard-id", true, "DistributedLog Shard ID");
         options.addOption("a", "announce", false, "ServerSet Path to Announce");
+        options.addOption("la", "load-appraiser", true, "LoadAppraiser Implementation to Use");
         options.addOption("mx", "thriftmux", false, "Is thriftmux enabled");
     }
 
@@ -95,10 +102,14 @@ public class DistributedLogServerApp {
         } catch (IOException ie) {
             logger.error("Failed to start distributedlog server : ", ie);
             Runtime.getRuntime().exit(-1);
+        } catch (ClassNotFoundException cnf) {
+          logger.error("Failed to start distributedlog server : ", cnf);
+          Runtime.getRuntime().exit(-1);
         }
     }
 
-    private void runCmd(CommandLine cmdline) throws IllegalArgumentException, IOException, ConfigurationException {
+    private void runCmd(CommandLine cmdline)
+        throws IllegalArgumentException, IOException, ConfigurationException, ClassNotFoundException {
         final StatsReceiver statsReceiver = NullStatsReceiver.get();
         Optional<String> confOptional = getOptionalStringArg(cmdline, "c");
         DistributedLogConfiguration dlConf = new DistributedLogConfiguration();
@@ -124,15 +135,26 @@ public class DistributedLogServerApp {
                     }
                 }).or(new NullStatsProvider());
 
+        final Optional<String> uriOption = getOptionalStringArg(cmdline, "u");
+        checkArgument(uriOption.isPresent(), "No distributedlog uri provided.");
+        URI dlUri = URI.create(uriOption.get());
+
+        DLZkServerSet serverSet = DLZkServerSet.of(dlUri, (int) TimeUnit.SECONDS.toMillis(60));
+        RoutingService routingService = RoutingUtils.buildRoutingService(serverSet.getServerSet())
+                .statsReceiver(statsReceiver.scope("routing"))
+                .build();
+
         final DistributedLogServer server = DistributedLogServer.runServer(
-                getOptionalStringArg(cmdline, "u"),
+                uriOption,
                 confOptional,
                 getOptionalStringArg(cmdline, "sc"),
                 getOptionalIntegerArg(cmdline, "p"),
                 getOptionalIntegerArg(cmdline, "sp"),
                 getOptionalIntegerArg(cmdline, "si"),
                 getOptionalBooleanArg(cmdline, "a"),
+                getOptionalStringArg(cmdline, "la"),
                 getOptionalBooleanArg(cmdline, "mx"),
+                routingService,
                 statsReceiver,
                 statsProvider);
 

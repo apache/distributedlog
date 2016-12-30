@@ -18,11 +18,13 @@
 package com.twitter.distributedlog.client.monitor;
 
 import com.twitter.util.Future;
-
 import java.net.SocketAddress;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Interface for distributedlog monitor service.
+ */
 public interface MonitorServiceClient {
 
     /**
@@ -35,7 +37,7 @@ public interface MonitorServiceClient {
     Future<Void> check(String stream);
 
     /**
-     * Send heartbeat to the stream and its readers
+     * Send heartbeat to the stream and its readers.
      *
      * @param stream
      *          stream.
@@ -51,7 +53,7 @@ public interface MonitorServiceClient {
     Map<SocketAddress, Set<String>> getStreamOwnershipDistribution();
 
     /**
-     * Enable/Disable accepting new stream on a given proxy
+     * Enable/Disable accepting new stream on a given proxy.
      *
      * @param enabled
      *          flag to enable/disable accepting new streams on a given proxy
@@ -60,7 +62,7 @@ public interface MonitorServiceClient {
     Future<Void> setAcceptNewStream(boolean enabled);
 
     /**
-     * Close the client
+     * Close the client.
      */
     void close();
 }

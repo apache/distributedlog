@@ -17,7 +17,8 @@
  */
 package com.twitter.distributedlog.benchmark;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
@@ -29,12 +30,6 @@ import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.distributedlog.util.SchedulerUtils;
 import com.twitter.util.FutureEventListener;
-import org.apache.bookkeeper.stats.OpStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -47,10 +42,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * The benchmark for core library writer.
+ */
 public class DLWriterWorker implements Worker {
 
-    static final Logger LOG = LoggerFactory.getLogger(DLWriterWorker.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DLWriterWorker.class);
 
     static final int BACKOFF_MS = 200;
 
@@ -82,7 +85,7 @@ public class DLWriterWorker implements Worker {
                           int writeConcurrency,
                           int messageSizeBytes,
                           StatsLogger statsLogger) throws IOException {
-        Preconditions.checkArgument(startStreamId <= endStreamId);
+        checkArgument(startStreamId <= endStreamId);
         this.streamPrefix = streamPrefix;
         this.startStreamId = startStreamId;
         this.endStreamId = endStreamId;

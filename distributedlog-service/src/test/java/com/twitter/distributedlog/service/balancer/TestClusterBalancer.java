@@ -53,6 +53,7 @@ public class TestClusterBalancer extends DistributedLogServerTestCase {
     private DLClient client;
 
     public TestClusterBalancer() {
+        super(true);
         this.cluster = new ArrayList<DLServer>();
     }
 
@@ -64,7 +65,7 @@ public class TestClusterBalancer extends DistributedLogServerTestCase {
         for (int i = 0; i < numServers; i++) {
             cluster.add(createDistributedLogServer(initPort + i));
         }
-        client = createDistributedLogClient("cluster_client");
+        client = createDistributedLogClient("cluster_client", Optional.<String>absent());
     }
 
     @After

@@ -55,7 +55,7 @@ public class StreamRequestLimiter extends DynamicRequestLimiter<StreamOp> {
             .overlimit(new OverlimitFunction<StreamOp>() {
                 @Override
                 public void apply(StreamOp op) throws OverCapacityException {
-                    throw new OverCapacityException("RPS limit exceeded for stream " + streamName);
+                    throw new OverCapacityException("Being rate limited: RPS limit exceeded for stream " + streamName);
                 }
             });
         RequestLimiterBuilder rpsSoftLimiterBuilder = RequestLimiterBuilder.newRpsLimiterBuilder()
@@ -69,7 +69,7 @@ public class StreamRequestLimiter extends DynamicRequestLimiter<StreamOp> {
             .overlimit(new OverlimitFunction<StreamOp>() {
                 @Override
                 public void apply(StreamOp op) throws OverCapacityException {
-                    throw new OverCapacityException("BPS limit exceeded for stream " + streamName);
+                    throw new OverCapacityException("Being rate limited: BPS limit exceeded for stream " + streamName);
                 }
             });
         RequestLimiterBuilder bpsSoftLimiterBuilder = RequestLimiterBuilder.newBpsLimiterBuilder()

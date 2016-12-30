@@ -20,6 +20,8 @@ package com.twitter.distributedlog.logsegment;
 import com.google.common.annotations.Beta;
 import com.twitter.distributedlog.LogSegmentMetadata;
 import com.twitter.distributedlog.callback.LogSegmentNamesListener;
+import com.twitter.distributedlog.metadata.LogMetadata;
+import com.twitter.distributedlog.metadata.LogMetadataForWriter;
 import com.twitter.distributedlog.util.Transaction;
 import com.twitter.distributedlog.util.Transaction.OpListener;
 import com.twitter.util.Future;
@@ -52,15 +54,15 @@ public interface LogSegmentMetadataStore extends Closeable {
      *
      * @param txn
      *          transaction to execute for storing log segment sequence number.
-     * @param path
-     *          path to store sequence number
+     * @param logMetadata
+     *          metadata of the log stream
      * @param sequenceNumber
      *          log segment sequence number to store
      * @param listener
      *          listener on the result to this operation
      */
     void storeMaxLogSegmentSequenceNumber(Transaction<Object> txn,
-                                          String path,
+                                          LogMetadata logMetadata,
                                           Versioned<Long> sequenceNumber,
                                           OpListener<Version> listener);
 
@@ -69,15 +71,15 @@ public interface LogSegmentMetadataStore extends Closeable {
      *
      * @param txn
      *          transaction to execute for storing transaction id
-     * @param path
-     *          path to store sequence number
+     * @param logMetadata
+     *          metadata of the log stream
      * @param transactionId
      *          transaction id to store
      * @param listener
      *          listener on the result to this operation
      */
     void storeMaxTxnId(Transaction<Object> txn,
-                       String path,
+                       LogMetadataForWriter logMetadata,
                        Versioned<Long> transactionId,
                        OpListener<Version> listener);
 
@@ -91,8 +93,12 @@ public interface LogSegmentMetadataStore extends Closeable {
      *          transaction to execute for this operation
      * @param segment
      *          segment to create
+     * @param opListener
+     *          the listener on the operation result
      */
-    void createLogSegment(Transaction<Object> txn, LogSegmentMetadata segment);
+    void createLogSegment(Transaction<Object> txn,
+                          LogSegmentMetadata segment,
+                          OpListener<Void> opListener);
 
     /**
      * Delete a log segment <code>segment</code> under transaction <code>txn</code>.
@@ -105,7 +111,9 @@ public interface LogSegmentMetadataStore extends Closeable {
      * @param segment
      *          segment to delete
      */
-    void deleteLogSegment(Transaction<Object> txn, LogSegmentMetadata segment);
+    void deleteLogSegment(Transaction<Object> txn,
+                          LogSegmentMetadata segment,
+                          OpListener<Void> opListener);
 
     /**
      * Update a log segment <code>segment</code> under transaction <code>txn</code>.
@@ -130,24 +138,17 @@ public interface LogSegmentMetadataStore extends Closeable {
     Future<LogSegmentMetadata> getLogSegment(String logSegmentPath);
 
     /**
-     * Retrieve the list of log segments under <code>logSegmentsPath</code>.
+     * Retrieve the list of log segments under <code>logSegmentsPath</code> and register a <i>listener</i>
+     * for subsequent changes for the list of log segments.
      *
      * @param logSegmentsPath
      *          path to store list of log segments
-     * @return future of the retrieved list of log segment names
-     */
-    Future<List<String>> getLogSegmentNames(String logSegmentsPath);
-
-    /**
-     * Register a log segment <code>listener</code> on log segment changes under <code>logSegmentsPath</code>.
-     *
-     * @param logSegmentsPath
-     *          log segments path
      * @param listener
      *          log segment listener on log segment changes
+     * @return future of the retrieved list of log segment names
      */
-    void registerLogSegmentListener(String logSegmentsPath,
-                                    LogSegmentNamesListener listener);
+    Future<Versioned<List<String>>> getLogSegmentNames(String logSegmentsPath,
+                                                       LogSegmentNamesListener listener);
 
     /**
      * Unregister a log segment <code>listener</code> on log segment changes under <code>logSegmentsPath</code>.

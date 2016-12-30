@@ -44,12 +44,16 @@ public class TestSimpleBalancer extends DistributedLogServerTestCase {
     DLClient targetClient;
     DLServer targetServer;
 
+    public TestSimpleBalancer() {
+        super(true);
+    }
+
     @Before
     @Override
     public void setup() throws Exception {
         super.setup();
         targetServer = createDistributedLogServer(7003);
-        targetClient = createDistributedLogClient("target");
+        targetClient = createDistributedLogClient("target", Optional.<String>absent());
     }
 
     @After

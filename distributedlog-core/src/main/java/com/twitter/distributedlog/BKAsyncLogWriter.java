@@ -24,7 +24,6 @@ import com.twitter.distributedlog.exceptions.StreamNotReadyException;
 import com.twitter.distributedlog.exceptions.WriteCancelledException;
 import com.twitter.distributedlog.exceptions.WriteException;
 import com.twitter.distributedlog.feature.CoreFeatureKeys;
-import com.twitter.distributedlog.stats.OpStatsListener;
 import com.twitter.distributedlog.util.FailpointUtils;
 import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.util.Future;
@@ -121,7 +120,7 @@ public class BKAsyncLogWriter extends BKAbstractLogWriter implements AsyncLogWri
         public void onSuccess(DLSN value) {
             super.onSuccess(value);
             // roll log segment and issue all pending requests.
-            rollLogSegmentAndIssuePendingRequests(record);
+            rollLogSegmentAndIssuePendingRequests(record.getTransactionId());
         }
 
         @Override
@@ -308,7 +307,7 @@ public class BKAsyncLogWriter extends BKAbstractLogWriter implements AsyncLogWri
                 result = lastLogRecordInCurrentSegment.promise;
             } else { // no log segment yet. roll the log segment and issue pending requests.
                 result = queueRequest(record, flush);
-                rollLogSegmentAndIssuePendingRequests(record);
+                rollLogSegmentAndIssuePendingRequests(record.getTransactionId());
             }
         } else {
             result = w.asyncWrite(record, flush);
@@ -353,8 +352,8 @@ public class BKAsyncLogWriter extends BKAbstractLogWriter implements AsyncLogWri
         }
     }
 
-    private void rollLogSegmentAndIssuePendingRequests(LogRecord record) {
-        getLogSegmentWriter(record.getTransactionId(), true, true)
+    private void rollLogSegmentAndIssuePendingRequests(final long firstTxId) {
+        getLogSegmentWriter(firstTxId, true, true)
                 .addEventListener(new FutureEventListener<BKLogSegmentWriter>() {
             @Override
             public void onSuccess(BKLogSegmentWriter writer) {
@@ -364,6 +363,17 @@ public class BKAsyncLogWriter extends BKAbstractLogWriter implements AsyncLogWri
                             FailpointUtils.checkFailPoint(FailpointUtils.FailPointName.FP_LogWriterIssuePending);
                             writer.asyncWrite(pendingLogRecord.record, pendingLogRecord.flush)
                                     .addEventListener(pendingLogRecord);
+                        }
+                        // if there are no records in the pending queue, let's write a control record
+                        // so that when a new log segment is rolled, a control record will be added and
+                        // the corresponding bookies would be able to create its ledger.
+                        if (pendingRequests.isEmpty()) {
+                            LogRecord controlRecord = new LogRecord(firstTxId,
+                                    DistributedLogConstants.CONTROL_RECORD_CONTENT);
+                            controlRecord.setControl();
+                            PendingLogRecord controlReq = new PendingLogRecord(controlRecord, false);
+                            writer.asyncWrite(controlReq.record, controlReq.flush)
+                                    .addEventListener(controlReq);
                         }
                         if (null != rollingFuture) {
                             FutureUtils.setValue(rollingFuture, writer);
@@ -526,6 +536,20 @@ public class BKAsyncLogWriter extends BKAbstractLogWriter implements AsyncLogWri
     @Override
     public String getStreamName() {
         return bkDistributedLogManager.getStreamName();
+    }
+
+    @Override
+    public Future<Void> asyncAbort() {
+        Future<Void> result = super.asyncAbort();
+        synchronized (this) {
+            if (pendingRequests != null) {
+                for (PendingLogRecord pendingLogRecord : pendingRequests) {
+                    pendingLogRecord.promise.setException(new WriteException(bkDistributedLogManager.getStreamName(),
+                            "abort wring: writer has been closed due to error."));
+                }
+            }
+        }
+        return result;
     }
 
     @Override

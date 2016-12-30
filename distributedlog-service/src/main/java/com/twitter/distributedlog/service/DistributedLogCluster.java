@@ -19,8 +19,10 @@ package com.twitter.distributedlog.service;
 
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.LocalDLMEmulator;
-import com.twitter.distributedlog.metadata.BKDLConfig;
+import com.twitter.distributedlog.client.routing.SingleHostRoutingService;
+import com.twitter.distributedlog.impl.metadata.BKDLConfig;
 import com.twitter.distributedlog.metadata.DLMetadata;
+import com.twitter.distributedlog.service.placement.EqualLoadAppraiser;
 import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.finagle.builder.Server;
 import java.io.File;
@@ -62,6 +64,7 @@ public class DistributedLogCluster {
         int zkPort = 0;
         boolean shouldStartProxy = true;
         int proxyPort = 7000;
+        boolean thriftmux = false;
         DistributedLogConfiguration dlConf = new DistributedLogConfiguration()
                 .setLockTimeout(10)
                 .setOutputBufferSize(0)
@@ -164,6 +167,17 @@ public class DistributedLogCluster {
             return this;
         }
 
+        /**
+         * Enable thriftmux for the dl server.
+         *
+         * @param enabled flag to enable thriftmux
+         * @return builder
+         */
+        public Builder thriftmux(boolean enabled) {
+            this.thriftmux = enabled;
+            return this;
+        }
+
         public DistributedLogCluster build() throws Exception {
             // build the cluster
             return new DistributedLogCluster(
@@ -174,7 +188,8 @@ public class DistributedLogCluster {
                 zkHost,
                 zkPort,
                 shouldStartProxy,
-                proxyPort);
+                proxyPort,
+                thriftmux);
         }
     }
 
@@ -191,8 +206,12 @@ public class DistributedLogCluster {
 
         public final InetSocketAddress address;
         public final Pair<DistributedLogServiceImpl, Server> dlServer;
+        private final SingleHostRoutingService routingService = SingleHostRoutingService.of(null);
 
-        protected DLServer(DistributedLogConfiguration dlConf, URI uri, int basePort) throws Exception {
+        protected DLServer(DistributedLogConfiguration dlConf,
+                           URI uri,
+                           int basePort,
+                           boolean thriftmux) throws Exception {
             proxyPort = basePort;
 
             boolean success = false;
@@ -209,8 +228,14 @@ public class DistributedLogCluster {
                             dlConf,
                             uri,
                             new IdentityStreamPartitionConverter(),
+                            routingService,
                             new NullStatsProvider(),
-                            proxyPort);
+                            proxyPort,
+                            thriftmux,
+                            new EqualLoadAppraiser());
+                    routingService.setAddress(DLSocketAddress.getSocketAddress(proxyPort));
+                    routingService.startService();
+                    serverPair.getLeft().startPlacementPolicy();
                     success = true;
                 } catch (BindException be) {
                     retries++;
@@ -224,7 +249,7 @@ public class DistributedLogCluster {
                 }
             }
 
-            LOG.info("Runnning DL on port {}", proxyPort);
+            LOG.info("Running DL on port {}", proxyPort);
 
             dlServer = serverPair;
             address = DLSocketAddress.getSocketAddress(proxyPort);
@@ -236,6 +261,7 @@ public class DistributedLogCluster {
 
         public void shutdown() {
             DistributedLogServer.closeServer(dlServer, 0, TimeUnit.MILLISECONDS);
+            routingService.stopService();
         }
     }
 
@@ -245,6 +271,7 @@ public class DistributedLogCluster {
     private DLServer dlServer;
     private final boolean shouldStartProxy;
     private final int proxyPort;
+    private final boolean thriftmux;
     private final List<File> tmpDirs = new ArrayList<File>();
 
     private DistributedLogCluster(DistributedLogConfiguration dlConf,
@@ -254,7 +281,8 @@ public class DistributedLogCluster {
                                   String zkServers,
                                   int zkPort,
                                   boolean shouldStartProxy,
-                                  int proxyPort) throws Exception {
+                                  int proxyPort,
+                                  boolean thriftmux) throws Exception {
         this.dlConf = dlConf;
         if (shouldStartZK) {
             File zkTmpDir = IOUtils.createTempDir("zookeeper", "distrlog");
@@ -278,6 +306,7 @@ public class DistributedLogCluster {
                 .build();
         this.shouldStartProxy = shouldStartProxy;
         this.proxyPort = proxyPort;
+        this.thriftmux = thriftmux;
     }
 
     public void start() throws Exception {
@@ -285,7 +314,11 @@ public class DistributedLogCluster {
         BKDLConfig bkdlConfig = new BKDLConfig(this.dlmEmulator.getZkServers(), "/ledgers").setACLRootPath(".acl");
         DLMetadata.create(bkdlConfig).update(this.dlmEmulator.getUri());
         if (shouldStartProxy) {
-            this.dlServer = new DLServer(dlConf, this.dlmEmulator.getUri(), proxyPort);
+            this.dlServer = new DLServer(
+                    dlConf,
+                    this.dlmEmulator.getUri(),
+                    proxyPort,
+                    thriftmux);
         } else {
             this.dlServer = null;
         }

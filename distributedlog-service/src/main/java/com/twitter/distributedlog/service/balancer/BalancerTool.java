@@ -24,12 +24,12 @@ import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
 import com.twitter.distributedlog.client.serverset.DLZkServerSet;
+import com.twitter.distributedlog.impl.BKNamespaceDriver;
 import com.twitter.distributedlog.service.ClientUtils;
 import com.twitter.distributedlog.service.DLSocketAddress;
 import com.twitter.distributedlog.service.DistributedLogClient;
 import com.twitter.distributedlog.service.DistributedLogClientBuilder;
 import com.twitter.distributedlog.tools.Tool;
-import com.twitter.distributedlog.util.DLUtils;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Await;
@@ -283,8 +283,8 @@ public class BalancerTool extends Tool {
                         ClientUtils.buildClient(builder2);
                 try {
                     SimpleBalancer balancer = new SimpleBalancer(
-                            DLUtils.getZKServersFromDLUri(region1), pair1.getLeft(), pair1.getRight(),
-                            DLUtils.getZKServersFromDLUri(region2), pair2.getLeft(), pair2.getRight());
+                            BKNamespaceDriver.getZKServersFromDLUri(region1), pair1.getLeft(), pair1.getRight(),
+                            BKNamespaceDriver.getZKServersFromDLUri(region2), pair2.getLeft(), pair2.getRight());
                     try {
                         return runBalancer(balancer);
                     } finally {

@@ -28,19 +28,21 @@ import com.twitter.finagle.thrift.ThriftClientFramedCodec;
 import com.twitter.finagle.thrift.ThriftClientRequest;
 import com.twitter.util.Duration;
 import com.twitter.util.Future;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import scala.Option;
 import scala.runtime.BoxedUnit;
-
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
 /**
  * Client talks to a single proxy.
  */
 public class ProxyClient {
 
-    public static interface Builder {
+  /**
+   * Builder to build a proxy client talking to given host <code>address</code>.
+   */
+  public interface Builder {
         /**
          * Build a proxy client to <code>address</code>.
          *
@@ -59,6 +61,9 @@ public class ProxyClient {
         return new DefaultBuilder(clientName, clientId, clientBuilder, clientConfig, clientStats);
     }
 
+    /**
+     * Default Builder for {@link ProxyClient}.
+     */
     public static class DefaultBuilder implements Builder {
 
         private final String clientName;

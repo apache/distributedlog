@@ -70,6 +70,7 @@ public class TestRegionUnavailable extends DistributedLogServerTestCase {
     private TwoRegionDLClient client;
 
     public TestRegionUnavailable() {
+        super(true);
         this.localCluster = new ArrayList<DLServer>();
         this.remoteCluster = new ArrayList<DLServer>();
     }

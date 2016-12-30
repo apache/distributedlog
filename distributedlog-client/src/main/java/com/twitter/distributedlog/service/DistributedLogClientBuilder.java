@@ -17,43 +17,63 @@
  */
 package com.twitter.distributedlog.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
+import com.google.common.base.Optional;
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.client.ClientConfig;
 import com.twitter.distributedlog.client.DistributedLogClientImpl;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
-import com.twitter.distributedlog.client.resolver.RegionResolver;
+import com.twitter.distributedlog.client.proxy.ClusterClient;
 import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
+import com.twitter.distributedlog.client.resolver.RegionResolver;
 import com.twitter.distributedlog.client.routing.RegionsRoutingService;
 import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.client.routing.RoutingUtils;
+import com.twitter.distributedlog.thrift.service.DistributedLogService;
+import com.twitter.finagle.Name;
+import com.twitter.finagle.Resolver$;
+import com.twitter.finagle.Service;
+import com.twitter.finagle.ThriftMux;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.finagle.thrift.ClientId;
-import org.apache.commons.lang.StringUtils;
-
+import com.twitter.finagle.thrift.ThriftClientFramedCodec;
+import com.twitter.finagle.thrift.ThriftClientRequest;
+import com.twitter.util.Duration;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.Random;
+import org.apache.commons.lang.StringUtils;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import scala.Option;
 
+/**
+ * Builder to build {@link DistributedLogClient}.
+ */
 public final class DistributedLogClientBuilder {
+
+    private static final Logger logger = LoggerFactory.getLogger(DistributedLogClientBuilder.class);
 
     private static final Random random = new Random(System.currentTimeMillis());
 
-    private String _name = null;
-    private ClientId _clientId = null;
-    private RoutingService.Builder _routingServiceBuilder = null;
-    private ClientBuilder _clientBuilder = null;
-    private StatsReceiver _statsReceiver = new NullStatsReceiver();
-    private StatsReceiver _streamStatsReceiver = new NullStatsReceiver();
-    private ClientConfig _clientConfig = new ClientConfig();
-    private boolean _enableRegionStats = false;
-    private final RegionResolver _regionResolver = new DefaultRegionResolver();
+    private String name = null;
+    private ClientId clientId = null;
+    private RoutingService.Builder routingServiceBuilder = null;
+    private ClientBuilder clientBuilder = null;
+    private String serverRoutingServiceFinagleName = null;
+    private StatsReceiver statsReceiver = new NullStatsReceiver();
+    private StatsReceiver streamStatsReceiver = new NullStatsReceiver();
+    private ClientConfig clientConfig = new ClientConfig();
+    private boolean enableRegionStats = false;
+    private final RegionResolver regionResolver = new DefaultRegionResolver();
 
     /**
-     * Create a client builder
+     * Create a client builder.
      *
      * @return client builder
      */
@@ -61,16 +81,23 @@ public final class DistributedLogClientBuilder {
         return new DistributedLogClientBuilder();
     }
 
+    /**
+     * Create a new client builder from an existing {@code builder}.
+     *
+     * @param builder the existing builder.
+     * @return a new client builder.
+     */
     public static DistributedLogClientBuilder newBuilder(DistributedLogClientBuilder builder) {
         DistributedLogClientBuilder newBuilder = new DistributedLogClientBuilder();
-        newBuilder._name = builder._name;
-        newBuilder._clientId = builder._clientId;
-        newBuilder._clientBuilder = builder._clientBuilder;
-        newBuilder._routingServiceBuilder = builder._routingServiceBuilder;
-        newBuilder._statsReceiver = builder._statsReceiver;
-        newBuilder._streamStatsReceiver = builder._streamStatsReceiver;
-        newBuilder._enableRegionStats = builder._enableRegionStats;
-        newBuilder._clientConfig = ClientConfig.newConfig(builder._clientConfig);
+        newBuilder.name = builder.name;
+        newBuilder.clientId = builder.clientId;
+        newBuilder.clientBuilder = builder.clientBuilder;
+        newBuilder.routingServiceBuilder = builder.routingServiceBuilder;
+        newBuilder.statsReceiver = builder.statsReceiver;
+        newBuilder.streamStatsReceiver = builder.streamStatsReceiver;
+        newBuilder.enableRegionStats = builder.enableRegionStats;
+        newBuilder.serverRoutingServiceFinagleName = builder.serverRoutingServiceFinagleName;
+        newBuilder.clientConfig = ClientConfig.newConfig(builder.clientConfig);
         return newBuilder;
     }
 
@@ -86,7 +113,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder name(String name) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._name = name;
+        newBuilder.name = name;
         return newBuilder;
     }
 
@@ -99,7 +126,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder clientId(ClientId clientId) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientId = clientId;
+        newBuilder.clientId = clientId;
         return newBuilder;
     }
 
@@ -112,14 +139,15 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder serverSet(ServerSet serverSet) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._routingServiceBuilder = RoutingUtils.buildRoutingService(serverSet);
-        newBuilder._enableRegionStats = false;
+        newBuilder.routingServiceBuilder = RoutingUtils.buildRoutingService(serverSet);
+        newBuilder.enableRegionStats = false;
         return newBuilder;
     }
 
     /**
-     * Server Sets to access proxy services. The <i>local</i> server set will be tried first,
-     * then <i>remotes</i>.
+     * Server Sets to access proxy services.
+     *
+     * <p>The <i>local</i> server set will be tried first then <i>remotes</i>.
      *
      * @param local local server set.
      * @param remotes remote server sets.
@@ -130,12 +158,12 @@ public final class DistributedLogClientBuilder {
         RoutingService.Builder[] builders = new RoutingService.Builder[remotes.length + 1];
         builders[0] = RoutingUtils.buildRoutingService(local);
         for (int i = 1; i < builders.length; i++) {
-            builders[i] = RoutingUtils.buildRoutingService(remotes[i-1]);
+            builders[i] = RoutingUtils.buildRoutingService(remotes[i - 1]);
         }
-        newBuilder._routingServiceBuilder = RegionsRoutingService.newBuilder()
-                .resolver(_regionResolver)
+        newBuilder.routingServiceBuilder = RegionsRoutingService.newBuilder()
+                .resolver(regionResolver)
                 .routingServiceBuilders(builders);
-        newBuilder._enableRegionStats = remotes.length > 0;
+        newBuilder.enableRegionStats = remotes.length > 0;
         return newBuilder;
     }
 
@@ -148,14 +176,15 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder finagleNameStr(String finagleNameStr) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._routingServiceBuilder = RoutingUtils.buildRoutingService(finagleNameStr);
-        newBuilder._enableRegionStats = false;
+        newBuilder.routingServiceBuilder = RoutingUtils.buildRoutingService(finagleNameStr);
+        newBuilder.enableRegionStats = false;
         return newBuilder;
     }
 
     /**
-     * Finagle name strs to access proxy services. The <i>local</i> finalge name str will be tried first,
-     * then <i>remotes</i>.
+     * Finagle name strs to access proxy services.
+     *
+     * <p>The <i>local</i> finalge name str will be tried first, then <i>remotes</i>.
      *
      * @param local local server set.
      * @param remotes remote server sets.
@@ -168,17 +197,17 @@ public final class DistributedLogClientBuilder {
         for (int i = 1; i < builders.length; i++) {
             builders[i] = RoutingUtils.buildRoutingService(remotes[i - 1]);
         }
-        newBuilder._routingServiceBuilder = RegionsRoutingService.newBuilder()
+        newBuilder.routingServiceBuilder = RegionsRoutingService.newBuilder()
                 .routingServiceBuilders(builders)
-                .resolver(_regionResolver);
-        newBuilder._enableRegionStats = remotes.length > 0;
+                .resolver(regionResolver);
+        newBuilder.enableRegionStats = remotes.length > 0;
         return newBuilder;
     }
 
     /**
-     * URI to access proxy services. Assuming the write proxies are announced under `.write_proxy` of
-     * the provided namespace uri.
-     * <p>
+     * URI to access proxy services.
+     *
+     * <p>Assuming the write proxies are announced under `.write_proxy` of the provided namespace uri.
      * The builder will convert the dl uri (e.g. distributedlog://{zkserver}/path/to/namespace) to
      * zookeeper serverset based finagle name str (`zk!{zkserver}!/path/to/namespace/.write_proxy`)
      *
@@ -193,8 +222,8 @@ public final class DistributedLogClientBuilder {
                 "zk!%s!%s/.write_proxy",
                 zkServerList[random.nextInt(zkServerList.length)], // zk server
                 uri.getPath());
-        newBuilder._routingServiceBuilder = RoutingUtils.buildRoutingService(finagleNameStr);
-        newBuilder._enableRegionStats = false;
+        newBuilder.routingServiceBuilder = RoutingUtils.buildRoutingService(finagleNameStr);
+        newBuilder.enableRegionStats = false;
         return newBuilder;
     }
 
@@ -207,15 +236,15 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder host(SocketAddress address) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._routingServiceBuilder = RoutingUtils.buildRoutingService(address);
-        newBuilder._enableRegionStats = false;
+        newBuilder.routingServiceBuilder = RoutingUtils.buildRoutingService(address);
+        newBuilder.enableRegionStats = false;
         return newBuilder;
     }
 
     private DistributedLogClientBuilder routingServiceBuilder(RoutingService.Builder builder) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._routingServiceBuilder = builder;
-        newBuilder._enableRegionStats = false;
+        newBuilder.routingServiceBuilder = builder;
+        newBuilder.enableRegionStats = false;
         return newBuilder;
     }
 
@@ -229,8 +258,8 @@ public final class DistributedLogClientBuilder {
     @VisibleForTesting
     public DistributedLogClientBuilder routingService(RoutingService routingService) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._routingServiceBuilder = RoutingUtils.buildRoutingService(routingService);
-        newBuilder._enableRegionStats = false;
+        newBuilder.routingServiceBuilder = RoutingUtils.buildRoutingService(routingService);
+        newBuilder.enableRegionStats = false;
         return newBuilder;
     }
 
@@ -243,7 +272,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder statsReceiver(StatsReceiver statsReceiver) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._statsReceiver = statsReceiver;
+        newBuilder.statsReceiver = statsReceiver;
         return newBuilder;
     }
 
@@ -256,7 +285,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder streamStatsReceiver(StatsReceiver streamStatsReceiver) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._streamStatsReceiver = streamStatsReceiver;
+        newBuilder.streamStatsReceiver = streamStatsReceiver;
         return newBuilder;
     }
 
@@ -269,7 +298,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder clientBuilder(ClientBuilder builder) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientBuilder = builder;
+        newBuilder.clientBuilder = builder;
         return newBuilder;
     }
 
@@ -282,7 +311,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder redirectBackoffStartMs(int ms) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setRedirectBackoffStartMs(ms);
+        newBuilder.clientConfig.setRedirectBackoffStartMs(ms);
         return newBuilder;
     }
 
@@ -295,13 +324,14 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder redirectBackoffMaxMs(int ms) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setRedirectBackoffMaxMs(ms);
+        newBuilder.clientConfig.setRedirectBackoffMaxMs(ms);
         return newBuilder;
     }
 
     /**
-     * Max redirects that is allowed per request. If <i>redirects</i> are
-     * exhausted, fail the request immediately.
+     * Max redirects that is allowed per request.
+     *
+     * <p>If <i>redirects</i> are exhausted, fail the request immediately.
      *
      * @param redirects
      *          max redirects allowed before failing a request.
@@ -309,7 +339,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder maxRedirects(int redirects) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setMaxRedirects(redirects);
+        newBuilder.clientConfig.setMaxRedirects(redirects);
         return newBuilder;
     }
 
@@ -322,7 +352,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder requestTimeoutMs(int timeoutMs) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setRequestTimeoutMs(timeoutMs);
+        newBuilder.clientConfig.setRequestTimeoutMs(timeoutMs);
         return newBuilder;
     }
 
@@ -335,7 +365,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder thriftmux(boolean enabled) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setThriftMux(enabled);
+        newBuilder.clientConfig.setThriftMux(enabled);
         return newBuilder;
     }
 
@@ -348,7 +378,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder streamFailfast(boolean enabled) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setStreamFailfast(enabled);
+        newBuilder.clientConfig.setStreamFailfast(enabled);
         return newBuilder;
     }
 
@@ -361,13 +391,14 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder streamNameRegex(String nameRegex) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setStreamNameRegex(nameRegex);
+        newBuilder.clientConfig.setStreamNameRegex(nameRegex);
         return newBuilder;
     }
 
     /**
-     * Whether to use the new handshake endpoint to exchange ownership cache. Enable this
-     * when the servers are updated to support handshaking with client info.
+     * Whether to use the new handshake endpoint to exchange ownership cache.
+     *
+     * <p>Enable this when the servers are updated to support handshaking with client info.
      *
      * @param enabled
      *          new handshake endpoint is enabled.
@@ -375,14 +406,15 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder handshakeWithClientInfo(boolean enabled) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setHandshakeWithClientInfo(enabled);
+        newBuilder.clientConfig.setHandshakeWithClientInfo(enabled);
         return newBuilder;
     }
 
     /**
-     * Set the periodic handshake interval in milliseconds. Every <code>intervalMs</code>,
-     * the DL client will handshake with existing proxies again. If the interval is less than
-     * ownership sync interval, the handshake won't sync ownerships. Otherwise, it will.
+     * Set the periodic handshake interval in milliseconds.
+     *
+     * <p>Every <code>intervalMs</code>, the DL client will handshake with existing proxies again.
+     * If the interval is less than ownership sync interval, the handshake won't sync ownerships. Otherwise, it will.
      *
      * @see #periodicOwnershipSyncIntervalMs(long)
      * @param intervalMs
@@ -391,13 +423,15 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder periodicHandshakeIntervalMs(long intervalMs) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setPeriodicHandshakeIntervalMs(intervalMs);
+        newBuilder.clientConfig.setPeriodicHandshakeIntervalMs(intervalMs);
         return newBuilder;
     }
 
     /**
-     * Set the periodic ownership sync interval in milliseconds. If periodic handshake is enabled,
-     * the handshake will sync ownership if the elapsed time is larger than sync interval.
+     * Set the periodic ownership sync interval in milliseconds.
+     *
+     * <p>If periodic handshake is enabled, the handshake will sync ownership if the elapsed time is larger than
+     * sync interval.
      *
      * @see #periodicHandshakeIntervalMs(long)
      * @param intervalMs
@@ -406,7 +440,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder periodicOwnershipSyncIntervalMs(long intervalMs) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setPeriodicOwnershipSyncIntervalMs(intervalMs);
+        newBuilder.clientConfig.setPeriodicOwnershipSyncIntervalMs(intervalMs);
         return newBuilder;
     }
 
@@ -419,7 +453,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder periodicDumpOwnershipCache(boolean enabled) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setPeriodicDumpOwnershipCacheEnabled(enabled);
+        newBuilder.clientConfig.setPeriodicDumpOwnershipCacheEnabled(enabled);
         return newBuilder;
     }
 
@@ -432,7 +466,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder periodicDumpOwnershipCacheIntervalMs(long intervalMs) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setPeriodicDumpOwnershipCacheIntervalMs(intervalMs);
+        newBuilder.clientConfig.setPeriodicDumpOwnershipCacheIntervalMs(intervalMs);
         return newBuilder;
     }
 
@@ -445,7 +479,7 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder handshakeTracing(boolean enabled) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setHandshakeTracingEnabled(enabled);
+        newBuilder.clientConfig.setHandshakeTracingEnabled(enabled);
         return newBuilder;
     }
 
@@ -458,13 +492,25 @@ public final class DistributedLogClientBuilder {
      */
     public DistributedLogClientBuilder checksum(boolean enabled) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig.setChecksumEnabled(enabled);
+        newBuilder.clientConfig.setChecksumEnabled(enabled);
+        return newBuilder;
+    }
+
+    /**
+     * Configure the finagle name string for the server-side routing service.
+     *
+     * @param nameStr name string of the server-side routing service
+     * @return client builder
+     */
+    public DistributedLogClientBuilder serverRoutingServiceFinagleNameStr(String nameStr) {
+        DistributedLogClientBuilder newBuilder = newBuilder(this);
+        newBuilder.serverRoutingServiceFinagleName = nameStr;
         return newBuilder;
     }
 
     DistributedLogClientBuilder clientConfig(ClientConfig clientConfig) {
         DistributedLogClientBuilder newBuilder = newBuilder(this);
-        newBuilder._clientConfig = ClientConfig.newConfig(clientConfig);
+        newBuilder.clientConfig = ClientConfig.newConfig(clientConfig);
         return newBuilder;
     }
 
@@ -483,25 +529,77 @@ public final class DistributedLogClientBuilder {
      * @return monitor service client.
      */
     public MonitorServiceClient buildMonitorClient() {
+
         return buildClient();
     }
 
-    DistributedLogClientImpl buildClient() {
-        Preconditions.checkNotNull(_name, "No name provided.");
-        Preconditions.checkNotNull(_clientId, "No client id provided.");
-        Preconditions.checkNotNull(_routingServiceBuilder, "No routing service builder provided.");
-        Preconditions.checkNotNull(_statsReceiver, "No stats receiver provided.");
-        if (null == _streamStatsReceiver) {
-            _streamStatsReceiver = new NullStatsReceiver();
+    @SuppressWarnings("unchecked")
+    ClusterClient buildServerRoutingServiceClient(String serverRoutingServiceFinagleName) {
+        ClientBuilder builder = this.clientBuilder;
+        if (null == builder) {
+            builder = ClientBuilder.get()
+                    .tcpConnectTimeout(Duration.fromMilliseconds(200))
+                    .connectTimeout(Duration.fromMilliseconds(200))
+                    .requestTimeout(Duration.fromSeconds(1))
+                    .retries(20);
+            if (!clientConfig.getThriftMux()) {
+                builder = builder.hostConnectionLimit(1);
+            }
+        }
+        if (clientConfig.getThriftMux()) {
+            builder = builder.stack(ThriftMux.client().withClientId(clientId));
+        } else {
+            builder = builder.codec(ThriftClientFramedCodec.apply(Option.apply(clientId)));
         }
 
-        RoutingService routingService = _routingServiceBuilder
-                .statsReceiver(_statsReceiver.scope("routing"))
+        Name name;
+        try {
+            name = Resolver$.MODULE$.eval(serverRoutingServiceFinagleName);
+        } catch (Exception exc) {
+            logger.error("Exception in Resolver.eval for name {}", serverRoutingServiceFinagleName, exc);
+            throw new RuntimeException(exc);
+        }
+
+        // builder the client
+        Service<ThriftClientRequest, byte[]> client =
+                ClientBuilder.safeBuildFactory(
+                        builder.dest(name).reportTo(statsReceiver.scope("routing"))
+                ).toService();
+        DistributedLogService.ServiceIface service =
+                new DistributedLogService.ServiceToClient(client, new TBinaryProtocol.Factory());
+        return new ClusterClient(client, service);
+    }
+
+    DistributedLogClientImpl buildClient() {
+        checkNotNull(name, "No name provided.");
+        checkNotNull(clientId, "No client id provided.");
+        checkNotNull(routingServiceBuilder, "No routing service builder provided.");
+        checkNotNull(statsReceiver, "No stats receiver provided.");
+        if (null == streamStatsReceiver) {
+            streamStatsReceiver = new NullStatsReceiver();
+        }
+
+        Optional<ClusterClient> serverRoutingServiceClient = Optional.absent();
+        if (null != serverRoutingServiceFinagleName) {
+            serverRoutingServiceClient = Optional.of(
+                    buildServerRoutingServiceClient(serverRoutingServiceFinagleName));
+        }
+
+        RoutingService routingService = routingServiceBuilder
+                .statsReceiver(statsReceiver.scope("routing"))
                 .build();
         DistributedLogClientImpl clientImpl =
                 new DistributedLogClientImpl(
-                        _name, _clientId, routingService, _clientBuilder, _clientConfig,
-                        _statsReceiver, _streamStatsReceiver, _regionResolver, _enableRegionStats);
+                        name,
+                        clientId,
+                        routingService,
+                        clientBuilder,
+                        clientConfig,
+                        serverRoutingServiceClient,
+                        statsReceiver,
+                        streamStatsReceiver,
+                        regionResolver,
+                        enableRegionStats);
         routingService.startService();
         clientImpl.handshake();
         return clientImpl;

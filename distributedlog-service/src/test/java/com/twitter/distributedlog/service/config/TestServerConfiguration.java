@@ -18,6 +18,8 @@
 package com.twitter.distributedlog.service.config;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -53,6 +55,14 @@ public class TestServerConfiguration {
         conf.setServerShardId(100);
         conf.setDlsnVersion((byte) 9999);
         conf.validate();
+    }
+
+    @Test(timeout = 60000)
+    public void testUseHostnameAsAllocatorPoolName() {
+        ServerConfiguration conf = new ServerConfiguration();
+        assertFalse("Should not use hostname by default", conf.isUseHostnameAsAllocatorPoolName());
+        conf.setUseHostnameAsAllocatorPoolName(true);
+        assertTrue("Should use hostname now", conf.isUseHostnameAsAllocatorPoolName());
     }
 
 }

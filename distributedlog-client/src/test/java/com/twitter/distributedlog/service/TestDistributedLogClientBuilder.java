@@ -17,15 +17,15 @@
  */
 package com.twitter.distributedlog.service;
 
-import com.twitter.finagle.thrift.ClientId$;
+import static org.junit.Assert.assertFalse;
+
 import com.twitter.finagle.builder.ClientBuilder;
+import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Duration;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
- * Test Case of {@link com.twitter.distributedlog.service.DistributedLogClientBuilder}
+ * Test Case of {@link com.twitter.distributedlog.service.DistributedLogClientBuilder}.
  */
 public class TestDistributedLogClientBuilder {
 

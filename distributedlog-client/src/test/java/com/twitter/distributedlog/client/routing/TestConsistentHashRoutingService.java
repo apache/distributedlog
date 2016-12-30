@@ -17,18 +17,22 @@
  */
 package com.twitter.distributedlog.client.routing;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
 import com.twitter.distributedlog.service.DLSocketAddress;
-import com.twitter.finagle.ChannelWriteException;
 import com.twitter.finagle.Address;
 import com.twitter.finagle.Addresses;
+import com.twitter.finagle.ChannelWriteException;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.NullStatsReceiver;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -38,9 +42,11 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link ConsistentHashRoutingService}.
+ */
 public class TestConsistentHashRoutingService {
 
     @Test(timeout = 60000)
@@ -275,7 +281,7 @@ public class TestConsistentHashRoutingService {
         // fill up the addresses2 - overlap with addresses1
         for (int i = 0; i < numHosts; i++) {
             InetSocketAddress inetAddress = new InetSocketAddress("127.0.0.1", basePort + numHosts + i);
-            DLSocketAddress dsa = new DLSocketAddress(i+2, inetAddress);
+            DLSocketAddress dsa = new DLSocketAddress(i + 2, inetAddress);
             addresses2.add(dsa);
         }
         // fill up the addresses3 - not overlap with addresses2
@@ -365,7 +371,7 @@ public class TestConsistentHashRoutingService {
             InetSocketAddress inetAddress = new InetSocketAddress("127.0.0.1", basePort + numHosts + i);
             assertTrue(routingService.address2ShardId.containsKey(inetAddress));
             int shardId = routingService.address2ShardId.get(inetAddress);
-            assertEquals(i+2, shardId);
+            assertEquals(i + 2, shardId);
             SocketAddress sa = routingService.shardId2Address.get(shardId);
             assertNotNull(sa);
             assertEquals(inetAddress, sa);

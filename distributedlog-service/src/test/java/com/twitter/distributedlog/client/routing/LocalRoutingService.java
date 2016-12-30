@@ -97,7 +97,7 @@ public class LocalRoutingService implements RoutingService {
         return this;
     }
 
-    public void addHost(String stream, SocketAddress address) {
+    public LocalRoutingService addHost(String stream, SocketAddress address) {
         boolean notify = false;
         synchronized (this) {
             LinkedHashSet<SocketAddress> addresses = localAddresses.get(stream);
@@ -114,6 +114,7 @@ public class LocalRoutingService implements RoutingService {
                 listener.onServerJoin(address);
             }
         }
+        return this;
     }
 
     @Override
