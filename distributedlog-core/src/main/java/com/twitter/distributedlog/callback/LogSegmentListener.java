@@ -22,7 +22,7 @@ import com.twitter.distributedlog.LogSegmentMetadata;
 import java.util.List;
 
 /**
- * Listener on log segments changes for a given stream.
+ * Listener on log segments changes for a given stream used by {@link com.twitter.distributedlog.BKLogReadHandler}
  */
 public interface LogSegmentListener {
 
@@ -34,4 +34,9 @@ public interface LogSegmentListener {
      *          updated list of segments.
      */
     void onSegmentsUpdated(List<LogSegmentMetadata> segments);
+
+    /**
+     * Notified when the log stream is deleted.
+     */
+    void onLogStreamDeleted();
 }

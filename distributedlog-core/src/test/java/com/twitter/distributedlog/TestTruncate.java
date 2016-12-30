@@ -111,7 +111,7 @@ public class TestTruncate extends TestDistributedLogBase {
         distributedLogManager.close();
     }
 
-    @Test
+    @Test(timeout = 60000)
     public void testTruncation() throws Exception {
         String name = "distrlog-truncation";
 
@@ -137,13 +137,13 @@ public class TestTruncate extends TestDistributedLogBase {
         int txn = 43;
         DLSN dlsn = txid2DLSN.get((long) txn);
         assertTrue(Await.result(pair.getRight().truncate(dlsn)));
-        verifyEntries(name, 1, 31, 20);
+        verifyEntries(name, 1, 41, 10);
 
         Utils.close(pair.getRight());
         pair.getLeft().close();
     }
 
-    @Test
+    @Test(timeout = 60000)
     public void testExplicitTruncation() throws Exception {
         String name = "distrlog-truncation-explicit";
 
@@ -168,7 +168,7 @@ public class TestTruncate extends TestDistributedLogBase {
         int txn = 43;
         DLSN dlsn = txid2DLSN.get((long) txn);
         assertTrue(Await.result(pair.getRight().truncate(dlsn)));
-        verifyEntries(name, 1, 31, 20);
+        verifyEntries(name, 1, 41, 10);
 
         Utils.close(pair.getRight());
         pair.getLeft().close();
@@ -178,7 +178,7 @@ public class TestTruncate extends TestDistributedLogBase {
         BKLogWriteHandler handler = dlm.createWriteHandler(true);
         FutureUtils.result(handler.purgeLogSegmentsOlderThanTxnId(Integer.MAX_VALUE));
 
-        verifyEntries(name, 1, 31, 20);
+        verifyEntries(name, 1, 41, 10);
     }
 
     @Test(timeout = 60000)
@@ -329,7 +329,6 @@ public class TestTruncate extends TestDistributedLogBase {
         LogRecord r = reader.readNext(false);
         while (null != r) {
             DLMTestUtil.verifyLogRecord(r);
-            LOG.trace("Read entry {}.", r.getTransactionId());
             assertEquals(txid++, r.getTransactionId());
             ++numRead;
             r = reader.readNext(false);

@@ -18,23 +18,23 @@
 package com.twitter.distributedlog;
 
 /**
- * Stream of records
+ * A iterator to iterate records in the stream.
  */
-public interface RecordStream {
+interface RecordStream {
     /**
      * advance <i>numRecords</i> records.
      */
     void advance(int numRecords);
 
     /**
-     * Get postion of current record in the stream
+     * Get position of current record in the stream.
      *
      * @return position of current record
      */
     DLSN getCurrentPosition();
 
     /**
-     * Get the name of the stream
+     * Get the name of the stream.
      *
      * @return the name of the stream
      */

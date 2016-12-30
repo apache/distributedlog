@@ -46,15 +46,15 @@ class NonBlockingReadsTestUtil {
                                 boolean forceStall,
                                 long segmentSize,
                                 boolean waitForIdle) throws Exception {
-        BKSyncLogReaderDLSN reader = null;
+        BKSyncLogReader reader = null;
         try {
-            reader = (BKSyncLogReaderDLSN) dlm.getInputStream(1);
+            reader = (BKSyncLogReader) dlm.getInputStream(1);
         } catch (LogNotFoundException lnfe) {
         }
         while (null == reader) {
             TimeUnit.MILLISECONDS.sleep(20);
             try {
-                reader = (BKSyncLogReaderDLSN) dlm.getInputStream(1);
+                reader = (BKSyncLogReader) dlm.getInputStream(1);
             } catch (LogNotFoundException lnfe) {
             } catch (LogEmptyException lee) {
             } catch (IOException ioe) {
@@ -65,7 +65,7 @@ class NonBlockingReadsTestUtil {
         try {
             LOG.info("Created reader reading from {}", dlm.getStreamName());
             if (forceStall) {
-                reader.disableReadAheadZKNotification();
+                reader.getReadHandler().disableReadAheadLogSegmentsNotification();
             }
 
             long numTrans = 0;

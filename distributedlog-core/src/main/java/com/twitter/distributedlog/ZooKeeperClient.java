@@ -169,6 +169,7 @@ public class ZooKeeperClient {
         this.credentials = credentials;
         this.watcherManager = ZKWatcherManager.newBuilder()
                 .name(name)
+                .zkc(this)
                 .statsLogger(statsLogger.scope("watcher_manager"))
                 .build();
     }
@@ -394,6 +395,8 @@ public class ZooKeeperClient {
         }
         LOG.info("Close zookeeper client {}.", name);
         closeInternal();
+        // unregister gauges to prevent GC spiral
+        this.watcherManager.unregisterGauges();
         closed = true;
     }
 }

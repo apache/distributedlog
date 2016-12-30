@@ -30,7 +30,6 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -53,10 +52,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Preconditions;
 import com.twitter.distributedlog.BKDistributedLogNamespace;
 import com.twitter.distributedlog.Entry;
+import com.twitter.distributedlog.MetadataAccessor;
+import com.twitter.distributedlog.callback.NamespaceListener;
+import com.twitter.distributedlog.impl.BKNamespaceDriver;
 import com.twitter.distributedlog.logsegment.LogSegmentMetadataStore;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
+import com.twitter.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import com.twitter.distributedlog.namespace.NamespaceDriver;
 import com.twitter.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
@@ -99,15 +104,15 @@ import com.twitter.distributedlog.ZooKeeperClientBuilder;
 import com.twitter.distributedlog.auditor.DLAuditor;
 import com.twitter.distributedlog.bk.LedgerAllocator;
 import com.twitter.distributedlog.bk.LedgerAllocatorUtils;
-import com.twitter.distributedlog.metadata.BKDLConfig;
+import com.twitter.distributedlog.impl.metadata.BKDLConfig;
 import com.twitter.distributedlog.metadata.MetadataUpdater;
 import com.twitter.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
 import com.twitter.distributedlog.util.SchedulerUtils;
 import com.twitter.util.Await;
+import com.twitter.util.FutureEventListener;
 
 import static com.google.common.base.Charsets.UTF_8;
 
-@SuppressWarnings("deprecation")
 public class DistributedLogTool extends Tool {
 
     static final Logger logger = LoggerFactory.getLogger(DistributedLogTool.class);
@@ -158,7 +163,7 @@ public class DistributedLogTool extends Tool {
         protected URI uri;
         protected String zkAclId = null;
         protected boolean force = false;
-        protected com.twitter.distributedlog.DistributedLogManagerFactory factory = null;
+        protected DistributedLogNamespace namespace = null;
 
         protected PerDLCommand(String name, String description) {
             super(name, description);
@@ -183,10 +188,8 @@ public class DistributedLogTool extends Tool {
             try {
                 return runCmd();
             } finally {
-                synchronized (this) {
-                    if (null != factory) {
-                        factory.close();
-                    }
+                if (null != namespace) {
+                    namespace.close();
                 }
             }
         }
@@ -249,30 +252,33 @@ public class DistributedLogTool extends Tool {
             this.force = force;
         }
 
-        protected synchronized com.twitter.distributedlog.DistributedLogManagerFactory getFactory() throws IOException {
-            if (null == this.factory) {
-                this.factory = new com.twitter.distributedlog.DistributedLogManagerFactory(getConf(), getUri());
-                logger.info("Construct DLM : uri = {}", getUri());
+        protected DistributedLogNamespace getNamespace() throws IOException {
+            if (null == this.namespace) {
+                this.namespace = DistributedLogNamespaceBuilder.newBuilder()
+                        .uri(getUri())
+                        .conf(getConf())
+                        .build();
             }
-            return this.factory;
+            return this.namespace;
         }
 
         protected LogSegmentMetadataStore getLogSegmentMetadataStore() throws IOException {
-            DistributedLogNamespace namespace = getFactory().getNamespace();
-            assert(namespace instanceof BKDistributedLogNamespace);
-            return ((BKDistributedLogNamespace) namespace).getWriterSegmentMetadataStore();
+            return getNamespace()
+                    .getNamespaceDriver()
+                    .getLogStreamMetadataStore(NamespaceDriver.Role.READER)
+                    .getLogSegmentMetadataStore();
         }
 
         protected ZooKeeperClient getZooKeeperClient() throws IOException {
-            DistributedLogNamespace namespace = getFactory().getNamespace();
-            assert(namespace instanceof BKDistributedLogNamespace);
-            return ((BKDistributedLogNamespace) namespace).getSharedWriterZKCForDL();
+            NamespaceDriver driver = getNamespace().getNamespaceDriver();
+            assert(driver instanceof BKNamespaceDriver);
+            return ((BKNamespaceDriver) driver).getWriterZKC();
         }
 
         protected BookKeeperClient getBookKeeperClient() throws IOException {
-            DistributedLogNamespace namespace = getFactory().getNamespace();
-            assert(namespace instanceof BKDistributedLogNamespace);
-            return ((BKDistributedLogNamespace) namespace).getReaderBKC();
+            NamespaceDriver driver = getNamespace().getNamespaceDriver();
+            assert(driver instanceof BKNamespaceDriver);
+            return ((BKNamespaceDriver) driver).getReaderBKC();
         }
     }
 
@@ -339,6 +345,10 @@ public class DistributedLogTool extends Tool {
         }
     }
 
+    /**
+     * NOTE: we might consider adding a command to 'delete' namespace. The implementation of the namespace
+     *       driver should implement the 'delete' operation.
+     */
     protected static class DeleteAllocatorPoolCommand extends PerDLCommand {
 
         int concurrency = 1;
@@ -372,8 +382,12 @@ public class DistributedLogTool extends Tool {
             String rootPath = getUri().getPath() + "/" + allocationPoolPath;
             final ScheduledExecutorService allocationExecutor = Executors.newSingleThreadScheduledExecutor();
             ExecutorService executorService = Executors.newFixedThreadPool(concurrency);
+            Preconditions.checkArgument(getNamespace() instanceof BKDistributedLogNamespace);
+            BKDistributedLogNamespace bkns = (BKDistributedLogNamespace) getNamespace();
+            final ZooKeeperClient zkc = ((BKNamespaceDriver) bkns.getNamespaceDriver()).getWriterZKC();
+            final BookKeeperClient bkc = ((BKNamespaceDriver) bkns.getNamespaceDriver()).getReaderBKC();
             try {
-                List<String> pools = getZooKeeperClient().get().getChildren(rootPath, false);
+                List<String> pools = zkc.get().getChildren(rootPath, false);
                 final LinkedBlockingQueue<String> poolsToDelete = new LinkedBlockingQueue<String>();
                 if (getForce() || IOUtils.confirmPrompt("Are you sure you want to delete allocator pools : " + pools)) {
                     for (String pool : pools) {
@@ -393,7 +407,7 @@ public class DistributedLogTool extends Tool {
                                     try {
                                         LedgerAllocator allocator =
                                                 LedgerAllocatorUtils.createLedgerAllocatorPool(poolPath, 0, getConf(),
-                                                        getZooKeeperClient(), getBookKeeperClient(),
+                                                        zkc, bkc,
                                                         allocationExecutor);
                                         allocator.delete();
                                         System.out.println("Deleted allocator pool : " + poolPath + " .");
@@ -446,42 +460,84 @@ public class DistributedLogTool extends Tool {
 
         @Override
         protected int runCmd() throws Exception {
-            if (printMetadata) {
-                printStreamsWithMetadata(getFactory());
-            } else {
-                printStreams(getFactory());
-            }
+            printStreams(getNamespace());
             return 0;
         }
 
-        protected void printStreamsWithMetadata(com.twitter.distributedlog.DistributedLogManagerFactory factory)
-                throws Exception {
-            Map<String, byte[]> streams = factory.enumerateLogsWithMetadataInNamespace();
+        protected void printStreams(DistributedLogNamespace namespace) throws Exception {
+            Iterator<String> streams = namespace.getLogs();
             System.out.println("Streams under " + getUri() + " : ");
             System.out.println("--------------------------------");
-            for (Map.Entry<String, byte[]> entry : streams.entrySet()) {
-                println(entry.getKey());
-                if (null == entry.getValue() || entry.getValue().length == 0) {
+            while (streams.hasNext()) {
+                String streamName = streams.next();
+                System.out.println(streamName);
+                if (!printMetadata) {
+                    continue;
+                }
+                MetadataAccessor accessor =
+                        namespace.getNamespaceDriver().getMetadataAccessor(streamName);
+                byte[] metadata = accessor.getMetadata();
+                if (null == metadata || metadata.length == 0) {
                     continue;
                 }
                 if (printHex) {
-                    System.out.println(Hex.encodeHexString(entry.getValue()));
+                    System.out.println(Hex.encodeHexString(metadata));
                 } else {
-                    System.out.println(new String(entry.getValue(), UTF_8));
+                    System.out.println(new String(metadata, UTF_8));
                 }
                 System.out.println("");
             }
             System.out.println("--------------------------------");
         }
+    }
 
-        protected void printStreams(com.twitter.distributedlog.DistributedLogManagerFactory factory) throws Exception {
-            Collection<String> streams = factory.enumerateAllLogsInNamespace();
-            System.out.println("Streams under " + getUri() + " : ");
-            System.out.println("--------------------------------");
-            for (String stream : streams) {
+    public static class WatchNamespaceCommand extends PerDLCommand implements NamespaceListener {
+        private Set<String> currentSet = Sets.<String>newHashSet();
+        private CountDownLatch doneLatch = new CountDownLatch(1);
+
+        WatchNamespaceCommand() {
+            super("watch", "watch and report changes for a dl namespace");
+        }
+
+        @Override
+        protected void parseCommandLine(CommandLine cmdline) throws ParseException {
+            super.parseCommandLine(cmdline);
+        }
+
+        @Override
+        protected String getUsage() {
+            return "watch [options]";
+        }
+
+        @Override
+        protected int runCmd() throws Exception {
+            watchAndReportChanges(getNamespace());
+            doneLatch.await();
+            return 0;
+        }
+
+        @Override
+        public synchronized void onStreamsChanged(Iterator<String> streams) {
+            Set<String> updatedSet = Sets.newHashSet(streams);
+            Set<String> oldStreams = Sets.difference(currentSet, updatedSet);
+            Set<String> newStreams = Sets.difference(updatedSet, currentSet);
+            currentSet = updatedSet;
+
+            System.out.println("Old streams : ");
+            for (String stream : oldStreams) {
                 System.out.println(stream);
             }
-            System.out.println("--------------------------------");
+
+            System.out.println("New streams : ");
+            for (String stream : newStreams) {
+                System.out.println(stream);
+            }
+
+            System.out.println("");
+        }
+
+        protected void watchAndReportChanges(DistributedLogNamespace namespace) throws Exception {
+            namespace.registerNamespaceListener(this);
         }
     }
 
@@ -551,16 +607,17 @@ public class DistributedLogTool extends Tool {
 
         private void inspectStreams(final SortedMap<String, List<Pair<LogSegmentMetadata, List<String>>>> corruptedCandidates)
                 throws Exception {
-            Collection<String> streamCollection = getFactory().enumerateAllLogsInNamespace();
+            Iterator<String> streamCollection = getNamespace().getLogs();
             final List<String> streams = new ArrayList<String>();
-            if (null != streamPrefix) {
-                for (String s : streamCollection) {
+            while (streamCollection.hasNext()) {
+                String s = streamCollection.next();
+                if (null != streamPrefix) {
                     if (s.startsWith(streamPrefix)) {
                         streams.add(s);
                     }
+                } else {
+                    streams.add(s);
                 }
-            } else {
-                streams.addAll(streamCollection);
             }
             if (0 == streams.size()) {
                 return;
@@ -602,8 +659,7 @@ public class DistributedLogTool extends Tool {
             for (int i = startIdx; i < endIdx; i++) {
                 String s = streams.get(i);
                 BookKeeperClient bkc = getBookKeeperClient();
-                DistributedLogManager dlm =
-                        getFactory().createDistributedLogManagerWithSharedClients(s);
+                DistributedLogManager dlm = getNamespace().openLog(s);
                 try {
                     List<LogSegmentMetadata> segments = dlm.getLogSegments();
                     if (segments.size() <= 1) {
@@ -645,7 +701,7 @@ public class DistributedLogTool extends Tool {
                             LogSegmentMetadata segment = seg;
                             List<String> dumpedEntries = new ArrayList<String>();
                             if (segment.isInProgress()) {
-                                LedgerHandle lh = bkc.get().openLedgerNoRecovery(segment.getLedgerId(), BookKeeper.DigestType.CRC32,
+                                LedgerHandle lh = bkc.get().openLedgerNoRecovery(segment.getLogSegmentId(), BookKeeper.DigestType.CRC32,
                                                                                  dlConf.getBKDigestPW().getBytes(UTF_8));
                                 try {
                                     long lac = lh.readLastConfirmed();
@@ -724,20 +780,21 @@ public class DistributedLogTool extends Tool {
         @Override
         protected int runCmd() throws Exception {
             getConf().setZkAclId(getZkAclId());
-            return truncateStreams(getFactory());
+            return truncateStreams(getNamespace());
         }
 
-        private int truncateStreams(final com.twitter.distributedlog.DistributedLogManagerFactory factory) throws Exception {
-            Collection<String> streamCollection = factory.enumerateAllLogsInNamespace();
+        private int truncateStreams(final DistributedLogNamespace namespace) throws Exception {
+            Iterator<String> streamCollection = namespace.getLogs();
             final List<String> streams = new ArrayList<String>();
-            if (null != streamPrefix) {
-                for (String s : streamCollection) {
+            while (streamCollection.hasNext()) {
+                String s = streamCollection.next();
+                if (null != streamPrefix) {
                     if (s.startsWith(streamPrefix)) {
                         streams.add(s);
                     }
+                } else {
+                    streams.add(s);
                 }
-            } else {
-                streams.addAll(streamCollection);
             }
             if (0 == streams.size()) {
                 return 0;
@@ -747,7 +804,7 @@ public class DistributedLogTool extends Tool {
                 return 0;
             }
             numThreads = Math.min(streams.size(), numThreads);
-            final int numStreamsPerThreads = streams.size() / numThreads;
+            final int numStreamsPerThreads = streams.size() / numThreads + 1;
             Thread[] threads = new Thread[numThreads];
             for (int i = 0; i < numThreads; i++) {
                 final int tid = i;
@@ -755,7 +812,7 @@ public class DistributedLogTool extends Tool {
                     @Override
                     public void run() {
                         try {
-                            truncateStreams(factory, streams, tid, numStreamsPerThreads);
+                            truncateStreams(namespace, streams, tid, numStreamsPerThreads);
                             System.out.println("Thread " + tid + " finished.");
                         } catch (IOException e) {
                             System.err.println("Thread " + tid + " quits with exception : " + e.getMessage());
@@ -770,14 +827,13 @@ public class DistributedLogTool extends Tool {
             return 0;
         }
 
-        private void truncateStreams(com.twitter.distributedlog.DistributedLogManagerFactory factory, List<String> streams,
+        private void truncateStreams(DistributedLogNamespace namespace, List<String> streams,
                                      int tid, int numStreamsPerThreads) throws IOException {
             int startIdx = tid * numStreamsPerThreads;
             int endIdx = Math.min(streams.size(), (tid + 1) * numStreamsPerThreads);
             for (int i = startIdx; i < endIdx; i++) {
                 String s = streams.get(i);
-                DistributedLogManager dlm =
-                        factory.createDistributedLogManagerWithSharedClients(s);
+                DistributedLogManager dlm = namespace.openLog(s);
                 try {
                     if (deleteStream) {
                         dlm.delete();
@@ -872,7 +928,7 @@ public class DistributedLogTool extends Tool {
 
         @Override
         protected int runCmd() throws Exception {
-            DistributedLogManager dlm = getFactory().createDistributedLogManagerWithSharedClients(getStreamName());
+            DistributedLogManager dlm = getNamespace().openLog(getStreamName());
             try {
                 if (listEppStats) {
                     bkc = new SimpleBookKeeperClient(getConf(), getUri());
@@ -953,7 +1009,7 @@ public class DistributedLogTool extends Tool {
 
         private Map<BookieSocketAddress, Integer> getBookieStats(LogSegmentMetadata segment) throws Exception {
             Map<BookieSocketAddress, Integer> stats = new HashMap<BookieSocketAddress, Integer>();
-            LedgerHandle lh = bkc.client().get().openLedgerNoRecovery(segment.getLedgerId(), BookKeeper.DigestType.CRC32,
+            LedgerHandle lh = bkc.client().get().openLedgerNoRecovery(segment.getLogSegmentId(), BookKeeper.DigestType.CRC32,
                     getConf().getBKDigestPW().getBytes(UTF_8));
             long eidFirst = 0;
             for (SortedMap.Entry<Long, ArrayList<BookieSocketAddress>> entry : LedgerReader.bookiesForLedger(lh).entrySet()) {
@@ -1020,7 +1076,7 @@ public class DistributedLogTool extends Tool {
 
         @Override
         protected int runCmd() throws Exception {
-            DistributedLogManager dlm = getFactory().createDistributedLogManagerWithSharedClients(getStreamName());
+            DistributedLogManager dlm = getNamespace().openLog(getStreamName());
             try {
                 long count = 0;
                 if (null == endDLSN) {
@@ -1083,7 +1139,7 @@ public class DistributedLogTool extends Tool {
         @Override
         protected int runCmd() throws Exception {
             getConf().setZkAclId(getZkAclId());
-            DistributedLogManager dlm = getFactory().createDistributedLogManagerWithSharedClients(getStreamName());
+            DistributedLogManager dlm = getNamespace().openLog(getStreamName());
             try {
                 dlm.delete();
             } finally {
@@ -1289,7 +1345,7 @@ public class DistributedLogTool extends Tool {
             }
             getConf().setZkAclId(getZkAclId());
             for (String stream : streams) {
-                getFactory().getNamespace().createLog(stream);
+                getNamespace().createLog(stream);
             }
             return 0;
         }
@@ -1377,7 +1433,7 @@ public class DistributedLogTool extends Tool {
 
         @Override
         protected int runCmd() throws Exception {
-            DistributedLogManager dlm = getFactory().createDistributedLogManagerWithSharedClients(getStreamName());
+            DistributedLogManager dlm = getNamespace().openLog(getStreamName());
             long totalCount = dlm.getLogRecordCount();
             try {
                 AsyncLogReader reader;
@@ -1478,7 +1534,7 @@ public class DistributedLogTool extends Tool {
 
         @Override
         protected int runCmd() throws Exception {
-            DistributedLogManager dlm = getFactory().createDistributedLogManagerWithSharedClients(getStreamName());
+            DistributedLogManager dlm = getNamespace().openLog(getStreamName());
             try {
                 return inspectAndRepair(dlm.getLogSegments());
             } finally {
@@ -1543,7 +1599,7 @@ public class DistributedLogTool extends Tool {
                 System.out.println("Skip inprogress log segment " + metadata);
                 return true;
             }
-            long ledgerId = metadata.getLedgerId();
+            long ledgerId = metadata.getLogSegmentId();
             LedgerHandle lh = bkc.get().openLedger(ledgerId, BookKeeper.DigestType.CRC32,
                     getConf().getBKDigestPW().getBytes(UTF_8));
             LedgerHandle readLh = bkc.get().openLedger(ledgerId, BookKeeper.DigestType.CRC32,
@@ -1609,7 +1665,7 @@ public class DistributedLogTool extends Tool {
                 System.out.println("Skip inprogress log segment " + segment);
                 return;
             }
-            LedgerHandle lh = bkAdmin.openLedger(segment.getLedgerId(), true);
+            LedgerHandle lh = bkAdmin.openLedger(segment.getLogSegmentId(), true);
             long lac = lh.getLastAddConfirmed();
             Enumeration<LedgerEntry> entries = lh.readEntries(lac, lac);
             if (!entries.hasMoreElements()) {
@@ -2045,6 +2101,42 @@ public class DistributedLogTool extends Tool {
         @Override
         protected String getUsage() {
             return "recoverledger [options]";
+        }
+    }
+
+    protected static class FindLedgerCommand extends PerLedgerCommand {
+
+        FindLedgerCommand() {
+            super("findledger", "find the stream for a given ledger");
+        }
+
+        @Override
+        protected int runCmd() throws Exception {
+            Iterator<String> logs = getNamespace().getLogs();
+            while (logs.hasNext()) {
+                String logName = logs.next();
+                if (processLog(logName)) {
+                    System.out.println("Found ledger " + getLedgerID() + " at log stream '" + logName + "'");
+                }
+            }
+            return 0;
+        }
+
+        boolean processLog(String logName) throws Exception {
+            DistributedLogManager dlm = getNamespace().openLog(logName);
+            try {
+                List<LogSegmentMetadata> segments = dlm.getLogSegments();
+                for (LogSegmentMetadata segment : segments) {
+                    if (getLedgerID() == segment.getLogSegmentId()) {
+                        System.out.println("Found ledger " + getLedgerID() + " at log segment "
+                                + segment + " for stream '" + logName + "'");
+                        return true;
+                    }
+                }
+                return false;
+            } finally {
+                dlm.close();
+            }
         }
     }
 
@@ -2546,11 +2638,11 @@ public class DistributedLogTool extends Tool {
         @Override
         protected int runCmd() throws Exception {
             getConf().setZkAclId(getZkAclId());
-            return truncateStream(getFactory(), getStreamName(), dlsn);
+            return truncateStream(getNamespace(), getStreamName(), dlsn);
         }
 
-        private int truncateStream(final com.twitter.distributedlog.DistributedLogManagerFactory factory, String streamName, DLSN dlsn) throws Exception {
-            DistributedLogManager dlm = factory.createDistributedLogManagerWithSharedClients(streamName);
+        private int truncateStream(final DistributedLogNamespace namespace, String streamName, DLSN dlsn) throws Exception {
+            DistributedLogManager dlm = namespace.openLog(streamName);
             try {
                 long totalRecords = dlm.getLogRecordCount();
                 long recordsAfterTruncate = Await.result(dlm.getLogRecordCountAsync(dlsn));
@@ -2632,6 +2724,119 @@ public class DistributedLogTool extends Tool {
         }
     }
 
+    public static class DeleteSubscriberCommand extends PerDLCommand {
+
+        int numThreads = 1;
+        String streamPrefix = null;
+        String subscriberId = null;
+
+        DeleteSubscriberCommand() {
+            super("delete_subscriber", "Delete the subscriber in subscription store. ");
+            options.addOption("s", "subscriberId", true, "SubscriberId to remove from the stream");
+            options.addOption("t", "threads", true, "Number of threads");
+            options.addOption("ft", "filter", true, "Stream filter by prefix");
+        }
+
+        @Override
+        protected void parseCommandLine(CommandLine cmdline) throws ParseException {
+            super.parseCommandLine(cmdline);
+            if (!cmdline.hasOption("s")) {
+                throw new ParseException("No subscriberId provided.");
+            } else {
+                subscriberId = cmdline.getOptionValue("s");
+            }
+            if (cmdline.hasOption("t")) {
+                numThreads = Integer.parseInt(cmdline.getOptionValue("t"));
+            }
+            if (cmdline.hasOption("ft")) {
+                streamPrefix = cmdline.getOptionValue("ft");
+            }
+        }
+
+        @Override
+        protected String getUsage() {
+            return "delete_subscriber [options]";
+        }
+
+        @Override
+        protected int runCmd() throws Exception {
+            getConf().setZkAclId(getZkAclId());
+            return deleteSubscriber(getNamespace());
+        }
+
+        private int deleteSubscriber(final DistributedLogNamespace namespace) throws Exception {
+            Iterator<String> streamCollection = namespace.getLogs();
+            final List<String> streams = new ArrayList<String>();
+            while (streamCollection.hasNext()) {
+                String s = streamCollection.next();
+                if (null != streamPrefix) {
+                    if (s.startsWith(streamPrefix)) {
+                        streams.add(s);
+                    }
+                } else {
+                    streams.add(s);
+                }
+            }
+            if (0 == streams.size()) {
+                return 0;
+            }
+            System.out.println("Streams : " + streams);
+            if (!getForce() && !IOUtils.confirmPrompt("Do you want to delete subscriber "
+                + subscriberId + " for " + streams.size() + " streams ?")) {
+                return 0;
+            }
+            numThreads = Math.min(streams.size(), numThreads);
+            final int numStreamsPerThreads = streams.size() / numThreads + 1;
+            Thread[] threads = new Thread[numThreads];
+            for (int i = 0; i < numThreads; i++) {
+                final int tid = i;
+                threads[i] = new Thread("RemoveSubscriberThread-" + i) {
+                    @Override
+                    public void run() {
+                        try {
+                            deleteSubscriber(namespace, streams, tid, numStreamsPerThreads);
+                            System.out.println("Thread " + tid + " finished.");
+                        } catch (Exception e) {
+                            System.err.println("Thread " + tid + " quits with exception : " + e.getMessage());
+                        }
+                    }
+                };
+                threads[i].start();
+            }
+            for (int i = 0; i < numThreads; i++) {
+                threads[i].join();
+            }
+            return 0;
+        }
+
+        private void deleteSubscriber(DistributedLogNamespace namespace, List<String> streams,
+                                      int tid, int numStreamsPerThreads) throws Exception {
+            int startIdx = tid * numStreamsPerThreads;
+            int endIdx = Math.min(streams.size(), (tid + 1) * numStreamsPerThreads);
+            for (int i = startIdx; i < endIdx; i++) {
+                final String s = streams.get(i);
+                DistributedLogManager dlm = namespace.openLog(s);
+                final CountDownLatch countDownLatch = new CountDownLatch(1);
+                dlm.getSubscriptionsStore().deleteSubscriber(subscriberId)
+                    .addEventListener(new FutureEventListener<Boolean>() {
+                        @Override
+                        public void onFailure(Throwable cause) {
+                            System.out.println("Failed to delete subscriber for stream " + s);
+                            cause.printStackTrace();
+                            countDownLatch.countDown();
+                        }
+
+                        @Override
+                        public void onSuccess(Boolean value) {
+                            countDownLatch.countDown();
+                        }
+                    });
+                countDownLatch.await();
+                dlm.close();
+            }
+        }
+    }
+
     public DistributedLogTool() {
         super();
         addCommand(new AuditBKSpaceCommand());
@@ -2643,6 +2848,7 @@ public class DistributedLogTool extends Tool {
         addCommand(new DeleteAllocatorPoolCommand());
         addCommand(new DeleteLedgersCommand());
         addCommand(new DumpCommand());
+        addCommand(new FindLedgerCommand());
         addCommand(new InspectCommand());
         addCommand(new InspectStreamCommand());
         addCommand(new ListCommand());
@@ -2655,6 +2861,8 @@ public class DistributedLogTool extends Tool {
         addCommand(new TruncateStreamCommand());
         addCommand(new DeserializeDLSNCommand());
         addCommand(new SerializeDLSNCommand());
+        addCommand(new WatchNamespaceCommand());
+        addCommand(new DeleteSubscriberCommand());
     }
 
     @Override

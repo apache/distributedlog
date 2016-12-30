@@ -18,32 +18,32 @@
 package com.twitter.distributedlog;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
-import com.google.common.base.Ticker;
+import com.twitter.distributedlog.callback.LogSegmentListener;
+import com.twitter.distributedlog.callback.LogSegmentNamesListener;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.exceptions.DLIllegalStateException;
-import com.twitter.distributedlog.exceptions.DLInterruptedException;
-import com.twitter.distributedlog.exceptions.LockCancelledException;
 import com.twitter.distributedlog.exceptions.LockingException;
 import com.twitter.distributedlog.exceptions.LogNotFoundException;
-import com.twitter.distributedlog.impl.metadata.ZKLogMetadataForReader;
-import com.twitter.distributedlog.injector.AsyncFailureInjector;
+import com.twitter.distributedlog.exceptions.LogSegmentNotFoundException;
+import com.twitter.distributedlog.exceptions.UnexpectedException;
+import com.twitter.distributedlog.logsegment.LogSegmentEntryStore;
+import com.twitter.distributedlog.metadata.LogMetadataForReader;
 import com.twitter.distributedlog.lock.DistributedLock;
-import com.twitter.distributedlog.lock.SessionLockFactory;
-import com.twitter.distributedlog.lock.ZKDistributedLock;
-import com.twitter.distributedlog.lock.ZKSessionLockFactory;
 import com.twitter.distributedlog.logsegment.LogSegmentFilter;
-import com.twitter.distributedlog.logsegment.LogSegmentMetadataStore;
-import com.twitter.distributedlog.readahead.ReadAheadWorker;
-import com.twitter.distributedlog.stats.BroadCastStatsLogger;
-import com.twitter.distributedlog.stats.ReadAheadExceptionsLogger;
+import com.twitter.distributedlog.logsegment.LogSegmentMetadataCache;
+import com.twitter.distributedlog.metadata.LogStreamMetadataStore;
 import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.distributedlog.util.OrderedScheduler;
 import com.twitter.distributedlog.util.Utils;
 import com.twitter.util.ExceptionalFunction;
-import com.twitter.util.ExceptionalFunction0;
 import com.twitter.util.Function;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
@@ -55,13 +55,14 @@ import org.apache.bookkeeper.stats.AlertStatsLogger;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.bookkeeper.util.SafeRunnable;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.KeeperException;
+import org.apache.bookkeeper.versioning.Version;
+import org.apache.bookkeeper.versioning.Versioned;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Function0;
 import scala.runtime.AbstractFunction1;
 import scala.runtime.BoxedUnit;
+
+import javax.annotation.Nullable;
 
 /**
  * Log Handler for Readers.
@@ -99,103 +100,70 @@ import scala.runtime.BoxedUnit;
  * becoming idle.
  * </ul>
  * <h4>Read Lock</h4>
- * All read lock related stats are exposed under scope `read_lock`. See {@link ZKDistributedLock}
+ * All read lock related stats are exposed under scope `read_lock`.
  * for detail stats.
  */
-class BKLogReadHandler extends BKLogHandler {
+class BKLogReadHandler extends BKLogHandler implements LogSegmentNamesListener {
     static final Logger LOG = LoggerFactory.getLogger(BKLogReadHandler.class);
 
-    private static final int LAYOUT_VERSION = -1;
+    protected final LogMetadataForReader logMetadataForReader;
 
-    protected final ZKLogMetadataForReader logMetadataForReader;
-    protected final ReadAheadCache readAheadCache;
-    protected final LedgerHandleCache handleCache;
-
-    protected final OrderedScheduler readAheadExecutor;
     protected final DynamicDistributedLogConfiguration dynConf;
-    protected ReadAheadWorker readAheadWorker = null;
-    private final boolean isHandleForReading;
 
-    private final SessionLockFactory lockFactory;
-    private final OrderedScheduler lockStateExecutor;
     private final Optional<String> subscriberId;
-    private final String readLockPath;
     private DistributedLock readLock;
     private Future<Void> lockAcquireFuture;
 
+    // notify the state change about the read handler
+    protected final AsyncNotification readerStateNotification;
+
+    // log segments listener
+    protected boolean logSegmentsNotificationDisabled = false;
+    protected final CopyOnWriteArraySet<LogSegmentListener> listeners =
+            new CopyOnWriteArraySet<LogSegmentListener>();
+    protected Versioned<List<LogSegmentMetadata>> lastNotifiedLogSegments =
+            new Versioned<List<LogSegmentMetadata>>(null, Version.NEW);
+
     // stats
-    private final AlertStatsLogger alertStatsLogger;
-    private final StatsLogger handlerStatsLogger;
     private final StatsLogger perLogStatsLogger;
-    private final ReadAheadExceptionsLogger readAheadExceptionsLogger;
 
     /**
      * Construct a Bookkeeper journal manager.
      */
-    public BKLogReadHandler(ZKLogMetadataForReader logMetadata,
-                            Optional<String> subscriberId,
-                            DistributedLogConfiguration conf,
-                            DynamicDistributedLogConfiguration dynConf,
-                            ZooKeeperClientBuilder zkcBuilder,
-                            BookKeeperClientBuilder bkcBuilder,
-                            LogSegmentMetadataStore metadataStore,
-                            OrderedScheduler scheduler,
-                            OrderedScheduler lockStateExecutor,
-                            OrderedScheduler readAheadExecutor,
-                            AlertStatsLogger alertStatsLogger,
-                            ReadAheadExceptionsLogger readAheadExceptionsLogger,
-                            StatsLogger statsLogger,
-                            StatsLogger perLogStatsLogger,
-                            String clientId,
-                            AsyncNotification notification,
-                            boolean isHandleForReading,
-                            boolean deserializeRecordSet) {
-        super(logMetadata, conf, zkcBuilder, bkcBuilder, metadataStore, scheduler,
-              statsLogger, alertStatsLogger, notification, LogSegmentFilter.DEFAULT_FILTER, clientId);
+    BKLogReadHandler(LogMetadataForReader logMetadata,
+                     Optional<String> subscriberId,
+                     DistributedLogConfiguration conf,
+                     DynamicDistributedLogConfiguration dynConf,
+                     LogStreamMetadataStore streamMetadataStore,
+                     LogSegmentMetadataCache metadataCache,
+                     LogSegmentEntryStore entryStore,
+                     OrderedScheduler scheduler,
+                     AlertStatsLogger alertStatsLogger,
+                     StatsLogger statsLogger,
+                     StatsLogger perLogStatsLogger,
+                     String clientId,
+                     AsyncNotification readerStateNotification,
+                     boolean isHandleForReading) {
+        super(logMetadata,
+                conf,
+                streamMetadataStore,
+                metadataCache,
+                entryStore,
+                scheduler,
+                statsLogger,
+                alertStatsLogger,
+                clientId);
         this.logMetadataForReader = logMetadata;
         this.dynConf = dynConf;
-        this.readAheadExecutor = readAheadExecutor;
-        this.alertStatsLogger = alertStatsLogger;
         this.perLogStatsLogger =
                 isHandleForReading ? perLogStatsLogger : NullStatsLogger.INSTANCE;
-        this.handlerStatsLogger =
-                BroadCastStatsLogger.masterslave(this.perLogStatsLogger, statsLogger);
-        this.readAheadExceptionsLogger = readAheadExceptionsLogger;
-
-        handleCache = LedgerHandleCache.newBuilder()
-                .bkc(this.bookKeeperClient)
-                .conf(conf)
-                .statsLogger(statsLogger)
-                .build();
-        readAheadCache = new ReadAheadCache(
-                getFullyQualifiedName(),
-                handlerStatsLogger,
-                alertStatsLogger,
-                notification,
-                dynConf.getReadAheadMaxRecords(),
-                deserializeRecordSet,
-                conf.getTraceReadAheadDeliveryLatency(),
-                conf.getDataLatencyWarnThresholdMillis(),
-                Ticker.systemTicker());
-
+        this.readerStateNotification = readerStateNotification;
         this.subscriberId = subscriberId;
-        this.readLockPath = logMetadata.getReadLockPath(subscriberId);
-        this.lockStateExecutor = lockStateExecutor;
-        this.lockFactory = new ZKSessionLockFactory(
-                zooKeeperClient,
-                getLockClientId(),
-                lockStateExecutor,
-                conf.getZKNumRetries(),
-                conf.getLockTimeoutMilliSeconds(),
-                conf.getZKRetryBackoffStartMillis(),
-                statsLogger.scope("read_lock"));
-
-        this.isHandleForReading = isHandleForReading;
     }
 
     @VisibleForTesting
     String getReadLockPath() {
-        return readLockPath;
+        return logMetadataForReader.getReadLockPath(subscriberId);
     }
 
     <T> void satisfyPromiseAsync(final Promise<T> promise, final Try<T> result) {
@@ -207,38 +175,24 @@ class BKLogReadHandler extends BKLogHandler {
         });
     }
 
+    Future<Void> checkLogStreamExists() {
+        return streamMetadataStore.logExists(logMetadata.getUri(), logMetadata.getLogName());
+    }
+
     /**
      * Elective stream lock--readers are not required to acquire the lock before using the stream.
      */
     synchronized Future<Void> lockStream() {
         if (null == lockAcquireFuture) {
-            final Function0<DistributedLock> lockFunction =  new ExceptionalFunction0<DistributedLock>() {
-                @Override
-                public DistributedLock applyE() throws IOException {
-                    // Unfortunately this has a blocking call which we should not execute on the
-                    // ZK completion thread
-                    BKLogReadHandler.this.readLock = new ZKDistributedLock(
-                            lockStateExecutor,
-                            lockFactory,
-                            readLockPath,
-                            conf.getLockTimeoutMilliSeconds(),
-                            statsLogger.scope("read_lock"));
-
-                    LOG.info("acquiring readlock {} at {}", getLockClientId(), readLockPath);
-                    return BKLogReadHandler.this.readLock;
-                }
-            };
-            lockAcquireFuture = ensureReadLockPathExist().flatMap(new ExceptionalFunction<Void, Future<Void>>() {
-                @Override
-                public Future<Void> applyE(Void in) throws Throwable {
-                    return scheduler.apply(lockFunction).flatMap(new ExceptionalFunction<DistributedLock, Future<Void>>() {
+            lockAcquireFuture = streamMetadataStore.createReadLock(logMetadataForReader, subscriberId)
+                    .flatMap(new ExceptionalFunction<DistributedLock, Future<Void>>() {
                         @Override
-                        public Future<Void> applyE(DistributedLock lock) throws IOException {
+                        public Future<Void> applyE(DistributedLock lock) throws Throwable {
+                            BKLogReadHandler.this.readLock = lock;
+                            LOG.info("acquiring readlock {} at {}", getLockClientId(), getReadLockPath());
                             return acquireLockOnExecutorThread(lock);
                         }
                     });
-                }
-            });
         }
         return lockAcquireFuture;
     }
@@ -265,14 +219,14 @@ class BKLogReadHandler extends BKLogHandler {
         acquireFuture.addEventListener(new FutureEventListener<DistributedLock>() {
             @Override
             public void onSuccess(DistributedLock lock) {
-                LOG.info("acquired readlock {} at {}", getLockClientId(), readLockPath);
+                LOG.info("acquired readlock {} at {}", getLockClientId(), getReadLockPath());
                 satisfyPromiseAsync(threadAcquirePromise, new Return<Void>(null));
             }
 
             @Override
             public void onFailure(Throwable cause) {
                 LOG.info("failed to acquire readlock {} at {}",
-                        new Object[]{getLockClientId(), readLockPath, cause});
+                        new Object[]{ getLockClientId(), getReadLockPath(), cause });
                 satisfyPromiseAsync(threadAcquirePromise, new Throw<Void>(cause));
             }
         });
@@ -301,17 +255,13 @@ class BKLogReadHandler extends BKLogHandler {
             }
             lockToClose = readLock;
         }
-        return Utils.closeSequence(scheduler, readAheadWorker, lockToClose)
+        return Utils.closeSequence(scheduler, lockToClose)
                 .flatMap(new AbstractFunction1<Void, Future<Void>>() {
             @Override
             public Future<Void> apply(Void result) {
-                if (null != readAheadCache) {
-                    readAheadCache.clear();
-                }
-                if (null != handleCache) {
-                    handleCache.clear();
-                }
-                return BKLogReadHandler.super.asyncClose();
+                // unregister the log segment listener
+                metadataStore.unregisterLogSegmentListener(logMetadata.getLogSegmentsPath(), BKLogReadHandler.this);
+                return Future.Void();
             }
         });
     }
@@ -321,91 +271,161 @@ class BKLogReadHandler extends BKLogHandler {
         return asyncClose();
     }
 
-    public void startReadAhead(LedgerReadPosition startPosition,
-                               AsyncFailureInjector failureInjector) {
-        if (null == readAheadWorker) {
-            readAheadWorker = new ReadAheadWorker(
-                    conf,
-                    dynConf,
-                    logMetadataForReader,
-                    this,
-                    zooKeeperClient,
-                    readAheadExecutor,
-                    handleCache,
-                    startPosition,
-                    readAheadCache,
-                    isHandleForReading,
-                    readAheadExceptionsLogger,
-                    handlerStatsLogger,
-                    perLogStatsLogger,
-                    alertStatsLogger,
-                    failureInjector,
-                    notification);
-            readAheadWorker.start();
-        }
-    }
-
-    public boolean isReadAheadCaughtUp() {
-        return null != readAheadWorker && readAheadWorker.isCaughtUp();
-    }
-
-    public LedgerHandleCache getHandleCache() {
-        return handleCache;
-    }
-
-    private Future<Void> ensureReadLockPathExist() {
-        final Promise<Void> promise = new Promise<Void>();
-        promise.setInterruptHandler(new com.twitter.util.Function<Throwable, BoxedUnit>() {
-            @Override
-            public BoxedUnit apply(Throwable t) {
-                FutureUtils.setException(promise, new LockCancelledException(readLockPath, "Could not ensure read lock path", t));
-                return null;
-            }
-        });
-        Optional<String> parentPathShouldNotCreate = Optional.of(logMetadata.getLogRootPath());
-        Utils.zkAsyncCreateFullPathOptimisticRecursive(zooKeeperClient, readLockPath, parentPathShouldNotCreate,
-                new byte[0], zooKeeperClient.getDefaultACL(), CreateMode.PERSISTENT,
-                new org.apache.zookeeper.AsyncCallback.StringCallback() {
-                    @Override
-                    public void processResult(final int rc, final String path, Object ctx, String name) {
-                        scheduler.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (KeeperException.Code.NONODE.intValue() == rc) {
-                                    FutureUtils.setException(promise, new LogNotFoundException(String.format("Log %s does not exist or has been deleted", getFullyQualifiedName())));
-                                } else if (KeeperException.Code.OK.intValue() == rc) {
-                                    FutureUtils.setValue(promise, null);
-                                    LOG.trace("Created path {}.", path);
-                                } else if (KeeperException.Code.NODEEXISTS.intValue() == rc) {
-                                    FutureUtils.setValue(promise, null);
-                                    LOG.trace("Path {} is already existed.", path);
-                                } else if (DistributedLogConstants.ZK_CONNECTION_EXCEPTION_RESULT_CODE == rc) {
-                                    FutureUtils.setException(promise, new ZooKeeperClient.ZooKeeperConnectionException(path));
-                                } else if (DistributedLogConstants.DL_INTERRUPTED_EXCEPTION_RESULT_CODE == rc) {
-                                    FutureUtils.setException(promise, new DLInterruptedException(path));
-                                } else {
-                                    FutureUtils.setException(promise, KeeperException.create(KeeperException.Code.get(rc)));
-                                }
-                            }
-                        });
-                    }
-                }, null);
+    /**
+     * Start fetch the log segments and register the {@link LogSegmentNamesListener}.
+     * The future is satisfied only on a successful fetch or encountered a fatal failure.
+     *
+     * @return future represents the fetch result
+     */
+    Future<Versioned<List<LogSegmentMetadata>>> asyncStartFetchLogSegments() {
+        Promise<Versioned<List<LogSegmentMetadata>>> promise =
+                new Promise<Versioned<List<LogSegmentMetadata>>>();
+        asyncStartFetchLogSegments(promise);
         return promise;
     }
 
-    public LogRecordWithDLSN getNextReadAheadRecord() throws IOException {
-        return readAheadCache.getNextReadAheadRecord();
-    }
+    void asyncStartFetchLogSegments(final Promise<Versioned<List<LogSegmentMetadata>>> promise) {
+        readLogSegmentsFromStore(
+                LogSegmentMetadata.COMPARATOR,
+                LogSegmentFilter.DEFAULT_FILTER,
+                this).addEventListener(new FutureEventListener<Versioned<List<LogSegmentMetadata>>>() {
+            @Override
+            public void onFailure(Throwable cause) {
+                if (cause instanceof LogNotFoundException ||
+                        cause instanceof LogSegmentNotFoundException ||
+                        cause instanceof UnexpectedException) {
+                    // indicate some inconsistent behavior, abort
+                    metadataException.compareAndSet(null, (IOException) cause);
+                    // notify the reader that read handler is in error state
+                    notifyReaderOnError(cause);
+                    FutureUtils.setException(promise, cause);
+                    return;
+                }
+                scheduler.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        asyncStartFetchLogSegments(promise);
+                    }
+                }, conf.getZKRetryBackoffMaxMillis(), TimeUnit.MILLISECONDS);
+            }
 
-    public ReadAheadCache getReadAheadCache() {
-        return readAheadCache;
+            @Override
+            public void onSuccess(Versioned<List<LogSegmentMetadata>> segments) {
+                // no-op
+                FutureUtils.setValue(promise, segments);
+            }
+        });
     }
 
     @VisibleForTesting
-    void disableReadAheadZKNotification() {
-        if (null != readAheadWorker) {
-            readAheadWorker.disableZKNotification();
+    void disableReadAheadLogSegmentsNotification() {
+        logSegmentsNotificationDisabled = true;
+    }
+
+    @Override
+    public void onSegmentsUpdated(final Versioned<List<String>> segments) {
+        synchronized (this) {
+            if (lastNotifiedLogSegments.getVersion() != Version.NEW &&
+                    lastNotifiedLogSegments.getVersion().compare(segments.getVersion()) != Version.Occurred.BEFORE) {
+                // the log segments has been read, and it is possibly a retry from last segments update
+                return;
+            }
+        }
+
+        Promise<Versioned<List<LogSegmentMetadata>>> readLogSegmentsPromise =
+                new Promise<Versioned<List<LogSegmentMetadata>>>();
+        readLogSegmentsPromise.addEventListener(new FutureEventListener<Versioned<List<LogSegmentMetadata>>>() {
+            @Override
+            public void onFailure(Throwable cause) {
+                if (cause instanceof LogNotFoundException ||
+                        cause instanceof LogSegmentNotFoundException ||
+                        cause instanceof UnexpectedException) {
+                    // indicate some inconsistent behavior, abort
+                    metadataException.compareAndSet(null, (IOException) cause);
+                    // notify the reader that read handler is in error state
+                    notifyReaderOnError(cause);
+                    return;
+                }
+                scheduler.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        onSegmentsUpdated(segments);
+                    }
+                }, conf.getZKRetryBackoffMaxMillis(), TimeUnit.MILLISECONDS);
+            }
+
+            @Override
+            public void onSuccess(Versioned<List<LogSegmentMetadata>> logSegments) {
+                List<LogSegmentMetadata> segmentsToNotify = null;
+                synchronized (BKLogReadHandler.this) {
+                    Versioned<List<LogSegmentMetadata>> lastLogSegments = lastNotifiedLogSegments;
+                    if (lastLogSegments.getVersion() == Version.NEW ||
+                            lastLogSegments.getVersion().compare(logSegments.getVersion()) == Version.Occurred.BEFORE) {
+                        lastNotifiedLogSegments = logSegments;
+                        segmentsToNotify = logSegments.getValue();
+                    }
+                }
+                if (null != segmentsToNotify) {
+                    notifyUpdatedLogSegments(segmentsToNotify);
+                }
+            }
+        });
+        // log segments list is updated, read their metadata
+        readLogSegmentsFromStore(
+                segments,
+                LogSegmentMetadata.COMPARATOR,
+                LogSegmentFilter.DEFAULT_FILTER,
+                readLogSegmentsPromise);
+    }
+
+    @Override
+    public void onLogStreamDeleted() {
+        notifyLogStreamDeleted();
+    }
+
+    //
+    // Listener for log segments
+    //
+
+    protected void registerListener(@Nullable LogSegmentListener listener) {
+        if (null != listener) {
+            listeners.add(listener);
         }
     }
 
+    protected void unregisterListener(@Nullable LogSegmentListener listener) {
+        if (null != listener) {
+            listeners.remove(listener);
+        }
+    }
+
+    protected void notifyUpdatedLogSegments(List<LogSegmentMetadata> segments) {
+        if (logSegmentsNotificationDisabled) {
+            return;
+        }
+
+        for (LogSegmentListener listener : listeners) {
+            List<LogSegmentMetadata> listToReturn =
+                    new ArrayList<LogSegmentMetadata>(segments);
+            Collections.sort(listToReturn, LogSegmentMetadata.COMPARATOR);
+            listener.onSegmentsUpdated(listToReturn);
+        }
+    }
+
+    protected void notifyLogStreamDeleted() {
+        if (logSegmentsNotificationDisabled) {
+            return;
+        }
+
+        for (LogSegmentListener listener : listeners) {
+            listener.onLogStreamDeleted();
+        }
+    }
+
+    // notify the errors
+    protected void notifyReaderOnError(Throwable cause) {
+        if (null != readerStateNotification) {
+            readerStateNotification.notifyOnError(cause);
+        }
+    }
 }

@@ -17,13 +17,15 @@
  */
 package com.twitter.distributedlog.util;
 
-import com.twitter.distributedlog.exceptions.BKTransmitException;
+import com.google.common.base.Stopwatch;
 import com.twitter.distributedlog.DistributedLogConstants;
+import com.twitter.distributedlog.exceptions.BKTransmitException;
 import com.twitter.distributedlog.exceptions.LockingException;
 import com.twitter.distributedlog.ZooKeeperClient;
 import com.twitter.distributedlog.exceptions.DLInterruptedException;
 import com.twitter.distributedlog.exceptions.UnexpectedException;
 import com.twitter.distributedlog.exceptions.ZKException;
+import com.twitter.distributedlog.stats.OpStatsListener;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Function;
@@ -33,10 +35,13 @@ import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
 import com.twitter.util.Return;
 import com.twitter.util.Throw;
+import com.twitter.util.Try;
 import org.apache.bookkeeper.client.BKException;
+import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.runtime.AbstractFunction1;
 import scala.runtime.BoxedUnit;
 
 import javax.annotation.Nullable;
@@ -225,6 +230,21 @@ public class FutureUtils {
     }
 
     /**
+     * Add a event listener over <i>result</i> for collecting the operation stats.
+     *
+     * @param result result to listen on
+     * @param opStatsLogger stats logger to record operations stats
+     * @param stopwatch stop watch to time operation
+     * @param <T>
+     * @return result after registered the event listener
+     */
+    public static <T> Future<T> stats(Future<T> result,
+                                      OpStatsLogger opStatsLogger,
+                                      Stopwatch stopwatch) {
+        return result.addEventListener(new OpStatsListener<T>(opStatsLogger, stopwatch));
+    }
+
+    /**
      * Await for the result of the future and thrown bk related exceptions.
      *
      * @param result future to wait for
@@ -251,7 +271,7 @@ public class FutureUtils {
      *
      * @param throwable the cause of the exception
      * @return the bk exception return code. if the exception isn't bk exceptions,
-     *         it would return bk exception code.
+     *         it would return {@link BKException.Code#UnexpectedConditionException}.
      */
     public static int bkResultCode(Throwable throwable) {
         if (throwable instanceof BKException) {
@@ -325,9 +345,10 @@ public class FutureUtils {
      */
     public static Throwable zkException(Throwable throwable, String path) {
         if (throwable instanceof KeeperException) {
-            return throwable;
+            return new ZKException("Encountered zookeeper exception on " + path, (KeeperException) throwable);
         } else if (throwable instanceof ZooKeeperClient.ZooKeeperConnectionException) {
-            return KeeperException.create(KeeperException.Code.CONNECTIONLOSS, path);
+            return new ZKException("Encountered zookeeper connection loss on " + path,
+                    KeeperException.Code.CONNECTIONLOSS);
         } else if (throwable instanceof InterruptedException) {
             return new DLInterruptedException("Interrupted on operating " + path, throwable);
         } else {
@@ -365,14 +386,25 @@ public class FutureUtils {
         if (timeout < DistributedLogConstants.FUTURE_TIMEOUT_IMMEDIATE || promise.isDefined()) {
             return promise;
         }
-        scheduler.schedule(key, new Runnable() {
+        // schedule a timeout to raise timeout exception
+        final java.util.concurrent.ScheduledFuture<?> task = scheduler.schedule(key, new Runnable() {
             @Override
             public void run() {
-                logger.info("Raise exception", cause);
-                // satisfy the promise
-                FutureUtils.setException(promise, cause);
+                if (!promise.isDefined() && FutureUtils.setException(promise, cause)) {
+                    logger.info("Raise exception", cause);
+                }
             }
         }, timeout, unit);
+        // when the promise is satisfied, cancel the timeout task
+        promise.respond(new AbstractFunction1<Try<T>, BoxedUnit>() {
+            @Override
+            public BoxedUnit apply(Try<T> value) {
+                if (!task.cancel(true)) {
+                    logger.debug("Failed to cancel the timeout task");
+                }
+                return BoxedUnit.UNIT;
+            }
+        });
         return promise;
     }
 
@@ -423,13 +455,13 @@ public class FutureUtils {
      * @param key submit key of the ordered scheduler
      */
     public static <T> void setException(final Promise<T> promise,
-                                        final Throwable throwable,
+                                        final Throwable cause,
                                         OrderedScheduler scheduler,
                                         Object key) {
         scheduler.submit(key, new Runnable() {
             @Override
             public void run() {
-                setException(promise, throwable);
+                setException(promise, cause);
             }
         });
     }

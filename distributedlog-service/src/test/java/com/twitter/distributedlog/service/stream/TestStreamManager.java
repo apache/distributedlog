@@ -100,7 +100,7 @@ public class TestStreamManager {
         assertEquals(0, streamManager.numCached());
     }
 
-    @Test
+    @Test(timeout = 60000)
     public void testCreateStream() throws Exception {
         Stream mockStream = mock(Stream.class);
         final String streamName = "stream1";

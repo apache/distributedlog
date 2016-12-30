@@ -30,6 +30,8 @@ import com.twitter.distributedlog.exceptions.InvalidStreamNameException;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.bookkeeper.stats.StatsLogger;
+
 /**
  * A namespace is the basic unit for managing a set of distributedlogs.
  *
@@ -67,6 +69,13 @@ import java.util.Iterator;
  */
 @Beta
 public interface DistributedLogNamespace {
+
+    /**
+     * Get the namespace driver used by this namespace.
+     *
+     * @return namespace driver
+     */
+    NamespaceDriver getNamespaceDriver();
 
     //
     // Method to operate logs
@@ -128,7 +137,8 @@ public interface DistributedLogNamespace {
      */
     DistributedLogManager openLog(String logName,
                                   Optional<DistributedLogConfiguration> logConf,
-                                  Optional<DynamicDistributedLogConfiguration> dynamicLogConf)
+                                  Optional<DynamicDistributedLogConfiguration> dynamicLogConf,
+                                  Optional<StatsLogger> perStreamStatsLogger)
             throws InvalidStreamNameException, IOException;
 
     /**

@@ -19,5 +19,8 @@ package com.twitter.distributedlog.benchmark;
 
 import java.io.Closeable;
 
+/**
+ * Worker to run benchmark.
+ */
 public interface Worker extends Closeable, Runnable {
 }

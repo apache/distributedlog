@@ -17,6 +17,9 @@
  */
 package com.twitter.distributedlog.benchmark.stream;
 
+/**
+ * The read mode for streaming read benchmark.
+ */
 public enum ReadMode {
     OLDEST,
     LATEST,

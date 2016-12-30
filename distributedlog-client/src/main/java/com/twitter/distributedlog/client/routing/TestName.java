@@ -17,21 +17,23 @@
  */
 package com.twitter.distributedlog.client.routing;
 
+import com.twitter.finagle.Addr;
+import com.twitter.finagle.Address;
+import com.twitter.finagle.Addrs;
+import com.twitter.finagle.Name;
 import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.runtime.AbstractFunction1;
 import scala.runtime.BoxedUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.twitter.finagle.Addrs;
-import com.twitter.finagle.Addr;
-import com.twitter.finagle.Address;
-import com.twitter.finagle.Name;
-
+/**
+ * A {@link Name} implementation for testing purpose.
+ */
 public class TestName implements Name {
-    static final Logger LOG = LoggerFactory.getLogger(TestName.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(TestName.class);
+
     private AbstractFunction1<Addr, BoxedUnit> callback = null;
 
     public void changes(AbstractFunction1<Addr, BoxedUnit> callback) {

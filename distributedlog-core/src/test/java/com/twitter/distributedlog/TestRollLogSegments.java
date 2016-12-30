@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import com.twitter.distributedlog.feature.CoreFeatureKeys;
+import com.twitter.distributedlog.impl.logsegment.BKLogSegmentEntryReader;
 import com.twitter.distributedlog.util.FailpointUtils;
 import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.distributedlog.util.Utils;
@@ -253,6 +254,7 @@ public class TestRollLogSegments extends TestDistributedLogBase {
         confLocal.setOutputBufferSize(0);
         confLocal.setLogSegmentRollingIntervalMinutes(0);
         confLocal.setMaxLogSegmentBytes(1);
+        confLocal.setLogSegmentRollingConcurrency(Integer.MAX_VALUE);
 
         int numLogSegments = 10;
 
@@ -310,18 +312,18 @@ public class TestRollLogSegments extends TestDistributedLogBase {
     }
 
     private void checkAndWaitWriterReaderPosition(BKLogSegmentWriter writer, long expectedWriterPosition,
-                                                  BKAsyncLogReaderDLSN reader, long expectedReaderPosition,
+                                                  BKAsyncLogReader reader, long expectedReaderPosition,
                                                   LedgerHandle inspector, long expectedLac) throws Exception {
         while (getLedgerHandle(writer).getLastAddConfirmed() < expectedWriterPosition) {
             Thread.sleep(1000);
         }
         assertEquals(expectedWriterPosition, getLedgerHandle(writer).getLastAddConfirmed());
         assertEquals(expectedLac, inspector.readLastConfirmed());
-        LedgerReadPosition readPosition = reader.bkLedgerManager.readAheadWorker.getNextReadAheadPosition();
+        EntryPosition readPosition = reader.getReadAheadReader().getNextEntryPosition();
         logger.info("ReadAhead moved read position {} : ", readPosition);
         while (readPosition.getEntryId() < expectedReaderPosition) {
             Thread.sleep(1000);
-            readPosition = reader.bkLedgerManager.readAheadWorker.getNextReadAheadPosition();
+            readPosition = reader.getReadAheadReader().getNextEntryPosition();
             logger.info("ReadAhead moved read position {} : ", readPosition);
         }
         assertEquals(expectedReaderPosition, readPosition.getEntryId());
@@ -329,6 +331,7 @@ public class TestRollLogSegments extends TestDistributedLogBase {
 
     @FlakyTest
     @Test(timeout = 60000)
+    @SuppressWarnings("deprecation")
     public void testCaughtUpReaderOnLogSegmentRolling() throws Exception {
         String name = "distrlog-caughtup-reader-on-logsegment-rolling";
 
@@ -342,6 +345,8 @@ public class TestRollLogSegments extends TestDistributedLogBase {
         confLocal.setWriteQuorumSize(1);
         confLocal.setAckQuorumSize(1);
         confLocal.setReadLACLongPollTimeout(99999999);
+        confLocal.setReaderIdleWarnThresholdMillis(2 * 99999999 + 1);
+        confLocal.setBKClientReadTimeout(99999999 + 1);
 
         DistributedLogManager dlm = createNewDLM(confLocal, name);
         BKSyncLogWriter writer = (BKSyncLogWriter) dlm.startLogSegmentNonPartitioned();
@@ -355,7 +360,7 @@ public class TestRollLogSegments extends TestDistributedLogBase {
         }
 
         BKDistributedLogManager readDLM = (BKDistributedLogManager) createNewDLM(confLocal, name);
-        final BKAsyncLogReaderDLSN reader = (BKAsyncLogReaderDLSN) readDLM.getAsyncLogReader(DLSN.InitialDLSN);
+        final BKAsyncLogReader reader = (BKAsyncLogReader) readDLM.getAsyncLogReader(DLSN.InitialDLSN);
 
         // 2) reader should be able to read 5 entries.
         for (long i = 1; i <= numEntries; i++) {
@@ -366,7 +371,7 @@ public class TestRollLogSegments extends TestDistributedLogBase {
         }
 
         BKLogSegmentWriter perStreamWriter = writer.segmentWriter;
-        BookKeeperClient bkc = readDLM.getReaderBKC();
+        BookKeeperClient bkc = DLMTestUtil.getBookKeeperClient(readDLM);
         LedgerHandle readLh = bkc.get().openLedgerNoRecovery(getLedgerHandle(perStreamWriter).getId(),
                 BookKeeper.DigestType.CRC32, conf.getBKDigestPW().getBytes(UTF_8));
 
@@ -385,7 +390,12 @@ public class TestRollLogSegments extends TestDistributedLogBase {
         // Writer moved to lac = 11, while reader knows lac = 10 and moving to wait on 11
         checkAndWaitWriterReaderPosition(perStreamWriter, 11, reader, 11, readLh, 10);
 
-        while (null == reader.bkLedgerManager.readAheadWorker.getMetadataNotification()) {
+        while (true) {
+            BKLogSegmentEntryReader entryReader =
+                    (BKLogSegmentEntryReader) reader.getReadAheadReader().getCurrentSegmentReader().getEntryReader();
+            if (null != entryReader && null != entryReader.getOutstandingLongPoll()) {
+                break;
+            }
             Thread.sleep(1000);
         }
         logger.info("Waiting for long poll getting interrupted with metadata changed");

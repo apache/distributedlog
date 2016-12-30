@@ -65,7 +65,7 @@ public interface Stream {
 
     /**
      * Another initialize method (actually Thread.start). Should probably be
-     * moved to initiaize().
+     * moved to initialize().
      */
     void start();
 

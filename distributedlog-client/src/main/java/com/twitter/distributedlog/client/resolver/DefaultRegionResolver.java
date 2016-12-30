@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Default implementation of {@link RegionResolver}.
+ */
 public class DefaultRegionResolver implements RegionResolver {
 
     private static final String DEFAULT_REGION = "default-region";

@@ -17,7 +17,8 @@
  */
 package com.twitter.distributedlog.benchmark;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.twitter.common.zookeeper.ServerSet;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.benchmark.utils.ShiftableRateLimiter;
@@ -30,17 +31,11 @@ import com.twitter.distributedlog.service.DistributedLogClientBuilder;
 import com.twitter.distributedlog.util.SchedulerUtils;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.StatsReceiver;
-import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.finagle.thrift.ClientId;
+import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Duration$;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
-import org.apache.bookkeeper.stats.OpStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -49,9 +44,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Benchmark for distributedlog proxy client.
+ */
 public class WriterWorker implements Worker {
 
     static final Logger LOG = LoggerFactory.getLogger(WriterWorker.class);
@@ -79,6 +81,7 @@ public class WriterWorker implements Worker {
     final boolean enableBatching;
     final int batchBufferSize;
     final int batchFlushIntervalMicros;
+    private final String routingServiceFinagleName;
 
     volatile boolean running = true;
 
@@ -111,9 +114,10 @@ public class WriterWorker implements Worker {
                         int recvBufferSize,
                         boolean enableBatching,
                         int batchBufferSize,
-                        int batchFlushIntervalMicros) {
-        Preconditions.checkArgument(startStreamId <= endStreamId);
-        Preconditions.checkArgument(!finagleNames.isEmpty() || !serverSetPaths.isEmpty());
+                        int batchFlushIntervalMicros,
+                        String routingServiceFinagleName) {
+        checkArgument(startStreamId <= endStreamId);
+        checkArgument(!finagleNames.isEmpty() || !serverSetPaths.isEmpty());
         this.streamPrefix = streamPrefix;
         this.dlUri = uri;
         this.startStreamId = startStreamId;
@@ -141,6 +145,7 @@ public class WriterWorker implements Worker {
         this.finagleNames = finagleNames;
         this.serverSets = createServerSets(serverSetPaths);
         this.executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this.routingServiceFinagleName = routingServiceFinagleName;
 
         // Streams
         streamNames = new ArrayList<String>(endStreamId - startStreamId);
@@ -195,6 +200,7 @@ public class WriterWorker implements Worker {
             .periodicOwnershipSyncIntervalMs(TimeUnit.MINUTES.toMillis(5))
             .periodicDumpOwnershipCache(true)
             .handshakeTracing(true)
+            .serverRoutingServiceFinagleNameStr(routingServiceFinagleName)
             .name("writer");
 
         if (!finagleNames.isEmpty()) {
@@ -207,7 +213,7 @@ public class WriterWorker implements Worker {
             ServerSet local = serverSets[0].getServerSet();
             ServerSet[] remotes = new ServerSet[serverSets.length - 1];
             for (int i = 1; i < serverSets.length; i++) {
-                remotes[i-1] = serverSets[i].getServerSet();
+                remotes[i - 1] = serverSets[i].getServerSet();
             }
             builder = builder.serverSets(local, remotes);
         } else {

@@ -23,10 +23,12 @@ import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.TestDistributedLogBase;
 import com.twitter.distributedlog.acl.DefaultAccessControlManager;
+import com.twitter.distributedlog.client.routing.LocalRoutingService;
 import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
 import com.twitter.distributedlog.exceptions.StreamUnavailableException;
 import com.twitter.distributedlog.service.config.NullStreamConfigProvider;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
+import com.twitter.distributedlog.service.placement.EqualLoadAppraiser;
 import com.twitter.distributedlog.service.stream.WriteOp;
 import com.twitter.distributedlog.service.stream.StreamImpl.StreamStatus;
 import com.twitter.distributedlog.service.stream.StreamImpl;
@@ -89,7 +91,8 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         dlConf.addConfiguration(conf);
         dlConf.setLockTimeout(0)
                 .setOutputBufferSize(0)
-                .setPeriodicFlushFrequencyMilliSeconds(10);
+                .setPeriodicFlushFrequencyMilliSeconds(10)
+                .setSchedulerShutdownTimeoutMs(100);
         serverConf = newLocalServerConf();
         uri = createDLMURI("/" + testName.getMethodName());
         ensureURICreated(uri);
@@ -138,15 +141,17 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             converter = new IdentityStreamPartitionConverter();
         }
         return new DistributedLogServiceImpl(
-                serverConf,
-                dlConf,
-                ConfUtils.getConstDynConf(dlConf),
-                new NullStreamConfigProvider(),
-                uri,
-                converter,
-                NullStatsLogger.INSTANCE,
-                NullStatsLogger.INSTANCE,
-                latch);
+            serverConf,
+            dlConf,
+            ConfUtils.getConstDynConf(dlConf),
+            new NullStreamConfigProvider(),
+            uri,
+            converter,
+            new LocalRoutingService(),
+            NullStatsLogger.INSTANCE,
+            NullStatsLogger.INSTANCE,
+            latch,
+            new EqualLoadAppraiser());
     }
 
     private StreamImpl createUnstartedStream(DistributedLogServiceImpl service,
@@ -171,10 +176,11 @@ public class TestDistributedLogService extends TestDistributedLogBase {
     public void testAcquireStreams() throws Exception {
         String streamName = testName.getMethodName();
         StreamImpl s0 = createUnstartedStream(service, streamName);
-        s0.suspendAcquiring();
-        DistributedLogServiceImpl service1 = createService(serverConf, dlConf);
+        ServerConfiguration serverConf1 = new ServerConfiguration();
+        serverConf1.addConfiguration(serverConf);
+        serverConf1.setServerPort(9999);
+        DistributedLogServiceImpl service1 = createService(serverConf1, dlConf);
         StreamImpl s1 = createUnstartedStream(service1, streamName);
-        s1.suspendAcquiring();
 
         // create write ops
         WriteOp op0 = createWriteOp(service, streamName, 0L);
@@ -190,7 +196,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
                 1, s1.numPendingOps());
 
         // start acquiring s0
-        s0.resumeAcquiring().start();
+        s0.start();
         WriteResponse wr0 = Await.result(op0.result());
         assertEquals("Op 0 should succeed",
                 StatusCode.SUCCESS, wr0.getHeader().getCode());
@@ -201,12 +207,13 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         assertNull(s0.getLastException());
 
         // start acquiring s1
-        s1.resumeAcquiring().start();
+        s1.start();
         WriteResponse wr1 = Await.result(op1.result());
         assertEquals("Op 1 should fail",
                 StatusCode.FOUND, wr1.getHeader().getCode());
-        assertEquals("Service 1 should be in BACKOFF state",
-                StreamStatus.BACKOFF, s1.getStatus());
+        // the stream will be set to ERROR and then be closed.
+        assertTrue("Service 1 should be in unavailable state",
+                StreamStatus.isUnavailable(s1.getStatus()));
         assertNotNull(s1.getManager());
         assertNull(s1.getWriter());
         assertNotNull(s1.getLastException());
@@ -521,15 +528,26 @@ public class TestDistributedLogService extends TestDistributedLogBase {
     public void testStreamOpNoChecksum() throws Exception {
         DistributedLogServiceImpl localService = createConfiguredLocalService();
         WriteContext ctx = new WriteContext();
-        Future<WriteResponse> result = localService.release("test", ctx);
+        HeartbeatOptions option = new HeartbeatOptions();
+        option.setSendHeartBeatToReader(true);
+
+        // hearbeat to acquire the stream and then release the stream
+        Future<WriteResponse> result = localService.heartbeatWithOptions("test", ctx, option);
         WriteResponse resp = Await.result(result);
+        assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
+        result = localService.release("test", ctx);
+        resp = Await.result(result);
+        assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
+
+        // heartbeat to acquire the stream and then delete the stream
+        result = localService.heartbeatWithOptions("test", ctx, option);
+        resp = Await.result(result);
         assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
         result = localService.delete("test", ctx);
         resp = Await.result(result);
         assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
-        result = localService.heartbeat("test", ctx);
-        resp = Await.result(result);
-        assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
+
+        // shutdown the local service
         localService.shutdown();
     }
 
@@ -727,7 +745,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
 
         for (Stream s : streamManager.getAcquiredStreams().values()) {
             StreamImpl stream = (StreamImpl) s;
-            stream.setStatus(StreamStatus.FAILED);
+            stream.setStatus(StreamStatus.ERROR);
         }
 
         Future<List<Void>> closeResult = localService.closeStreams();
@@ -765,6 +783,41 @@ public class TestDistributedLogService extends TestDistributedLogBase {
                 streamManager.getCachedStreams().isEmpty());
         assertTrue("There should be no streams acquired after shutdown",
                 streamManager.getAcquiredStreams().isEmpty());
+    }
+
+    @Test(timeout = 60000)
+    public void testGetOwner() throws Exception {
+        ((LocalRoutingService) service.getRoutingService())
+                .addHost("stream-0", service.getServiceAddress().getSocketAddress())
+                .setAllowRetrySameHost(false);
+
+        service.startPlacementPolicy();
+
+        WriteResponse response = FutureUtils.result(service.getOwner("stream-1", new WriteContext()));
+        assertEquals(StatusCode.FOUND, response.getHeader().getCode());
+        assertEquals(service.getServiceAddress().toString(),
+                response.getHeader().getLocation());
+
+        // service cache "stream-2"
+        StreamImpl stream = (StreamImpl) service.getStreamManager().getOrCreateStream("stream-2", false);
+        // create write ops to stream-2 to make service acquire the stream
+        WriteOp op = createWriteOp(service, "stream-2", 0L);
+        stream.submit(op);
+        stream.start();
+        WriteResponse wr = Await.result(op.result());
+        assertEquals("Op should succeed",
+                StatusCode.SUCCESS, wr.getHeader().getCode());
+        assertEquals("Service should acquire stream",
+                StreamStatus.INITIALIZED, stream.getStatus());
+        assertNotNull(stream.getManager());
+        assertNotNull(stream.getWriter());
+        assertNull(stream.getLastException());
+
+        // the stream is acquired
+        response = FutureUtils.result(service.getOwner("stream-2", new WriteContext()));
+        assertEquals(StatusCode.FOUND, response.getHeader().getCode());
+        assertEquals(service.getServiceAddress().toString(),
+                response.getHeader().getLocation());
     }
 
 }

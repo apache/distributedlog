@@ -17,16 +17,18 @@
  */
 package com.twitter.distributedlog.client.speculative;
 
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Default implementation of {@link SpeculativeRequestExecutionPolicy}.
+ */
 public class DefaultSpeculativeRequestExecutionPolicy implements SpeculativeRequestExecutionPolicy {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultSpeculativeRequestExecutionPolicy.class);
@@ -48,7 +50,7 @@ public class DefaultSpeculativeRequestExecutionPolicy implements SpeculativeRequ
         }
 
         // Prevent potential over flow
-        if (Math.round((double)maxSpeculativeRequestTimeout * (double)backoffMultiplier) > Integer.MAX_VALUE) {
+        if (Math.round((double) maxSpeculativeRequestTimeout * (double) backoffMultiplier) > Integer.MAX_VALUE) {
             throw new IllegalArgumentException("Invalid values for maxSpeculativeRequestTimeout and backoffMultiplier");
         }
     }
@@ -59,7 +61,7 @@ public class DefaultSpeculativeRequestExecutionPolicy implements SpeculativeRequ
     }
 
     /**
-     * Initialize the speculative request execution policy
+     * Initialize the speculative request execution policy.
      *
      * @param scheduler The scheduler service to issue the speculative request
      * @param requestExecutor The executor is used to issue the actual speculative requests
@@ -82,9 +84,9 @@ public class DefaultSpeculativeRequestExecutionPolicy implements SpeculativeRequ
                     nextSpeculativeRequestTimeout = Math.min(maxSpeculativeRequestTimeout,
                             (int) (nextSpeculativeRequestTimeout * backoffMultiplier));
                 } else {
-                    if(LOG.isTraceEnabled()) {
-                        LOG.trace("Stopped issuing speculative requests for {}, " +
-                                "speculativeReadTimeout = {}", requestExecutor, nextSpeculativeRequestTimeout);
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Stopped issuing speculative requests for {}, "
+                            + "speculativeReadTimeout = {}", requestExecutor, nextSpeculativeRequestTimeout);
                     }
                 }
             }

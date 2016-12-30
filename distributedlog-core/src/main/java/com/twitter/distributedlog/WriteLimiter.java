@@ -20,7 +20,7 @@ package com.twitter.distributedlog;
 import com.twitter.distributedlog.exceptions.OverCapacityException;
 import com.twitter.distributedlog.util.PermitLimiter;
 
-public class WriteLimiter {
+class WriteLimiter {
 
     String streamName;
     final PermitLimiter streamLimiter;
@@ -53,5 +53,10 @@ public class WriteLimiter {
     public void release(int permits) {
         streamLimiter.release(permits);
         globalLimiter.release(permits);
+    }
+
+    public void close() {
+        streamLimiter.close();
+        globalLimiter.close();
     }
 }
