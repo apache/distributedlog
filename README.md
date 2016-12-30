@@ -89,6 +89,8 @@ For filing bugs, suggesting improvements, or requesting new features, help us ou
 
 [Subscribe](mailto:dev-subscribe@distributedlog.incubator.apache.org) or [mail](mailto:dev@distributedlog.incubator.apache.org) the [dev@distributedlog.incubator.apache.org](mailto:dev@distributedlog.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
 
+[Join us on Slack](https://getdl-slack.herokuapp.com/) - This is the most immediate way to connect with DistributedLog committers and contributors.
+
 ## Contributing
 
 We feel that a welcoming open community is important and welcome contributions.
