@@ -1,0 +1,18 @@
+{
+    "franckcuny": {
+        "name" : "Franck Cuny",
+        "email" : "fcuny@apache.org"
+    },
+    "leighst": {
+        "name" : "Leigh Stewart",
+        "email" : "lstewart@apache.org"
+    },
+    "mgodave": {
+        "name" : "Dave Rusek",
+        "email" : "drusek@apache.org"
+    },
+    "sijie": {
+        "name" : "Sijie Guo",
+        "email" : "sijie@apache.org"
+    }
+}
