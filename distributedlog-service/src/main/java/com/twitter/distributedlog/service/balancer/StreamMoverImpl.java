@@ -48,7 +48,7 @@ public class StreamMoverImpl implements StreamMover {
     }
 
     /**
-     * Move given stream <i>streamName</i>
+     * Move given stream <i>streamName</i>.
      *
      * @param streamName
      *          stream name to move

@@ -17,8 +17,13 @@
  */
 package com.twitter.distributedlog.service;
 
+import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalBooleanArg;
+import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalIntegerArg;
+import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalStringArg;
+
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
+import java.io.IOException;
 import org.apache.bookkeeper.stats.NullStatsProvider;
 import org.apache.bookkeeper.stats.StatsProvider;
 import org.apache.bookkeeper.util.ReflectionUtils;
@@ -30,15 +35,16 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 
-import static com.twitter.distributedlog.util.CommandLineUtils.*;
-
+/**
+ * The launcher to run monitor service.
+ */
 public class MonitorServiceApp {
 
-    static final Logger logger = LoggerFactory.getLogger(MonitorServiceApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(MonitorServiceApp.class);
 
-    final static String USAGE = "MonitorService [-u <uri>] [-c <conf>] [-s serverset]";
+    static final String USAGE = "MonitorService [-u <uri>] [-c <conf>] [-s serverset]";
+
     final String[] args;
     final Options options = new Options();
 

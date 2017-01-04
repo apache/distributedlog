@@ -26,9 +26,9 @@ import java.util.Map;
 /**
  * Manage lifecycle of streams.
  *
- * StreamManager is responsible for creating, destroying, and keeping track of Stream objects.
+ * <p>StreamManager is responsible for creating, destroying, and keeping track of Stream objects.
  *
- * Stream objects, which are managed by StreamManager and created by StreamFactory, are essentially the
+ * <p>Stream objects, which are managed by StreamManager and created by StreamFactory, are essentially the
  * per stream request handlers, responsible fo dispatching ex. write requests to an underlying AsyncLogWriter,
  * managing stream lock, interpreting exceptions, error conditions, and etc.
  */

@@ -17,17 +17,18 @@
  */
 package com.twitter.distributedlog.service.stream;
 
-import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.service.ResponseUtils;
-import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.thrift.service.ResponseHeader;
+import com.twitter.distributedlog.thrift.service.WriteResponse;
+import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.util.Future;
-
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.OpStatsLogger;
-
 import scala.runtime.AbstractFunction1;
 
+/**
+ * Abstract Write Operation.
+ */
 public abstract class AbstractWriteOp extends AbstractStreamOp<WriteResponse> {
 
     protected AbstractWriteOp(String stream,

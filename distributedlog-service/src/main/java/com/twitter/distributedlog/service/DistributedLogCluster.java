@@ -25,6 +25,13 @@ import com.twitter.distributedlog.metadata.DLMetadata;
 import com.twitter.distributedlog.service.placement.EqualLoadAppraiser;
 import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.finagle.builder.Server;
+import java.io.File;
+import java.net.BindException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.conf.ServerConfiguration;
 import org.apache.bookkeeper.shims.zk.ZooKeeperServerShim;
 import org.apache.bookkeeper.stats.NullStatsProvider;
@@ -34,14 +41,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.net.BindException;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * DistributedLog Cluster is an emulator to run distributedlog components.
@@ -59,18 +58,18 @@ public class DistributedLogCluster {
      */
     public static class Builder {
 
-        int _numBookies = 3;
-        boolean _shouldStartZK = true;
-        String _zkHost = "127.0.0.1";
-        int _zkPort = 0;
-        boolean _shouldStartProxy = true;
-        int _proxyPort = 7000;
-        boolean _thriftmux = false;
-        DistributedLogConfiguration _dlConf = new DistributedLogConfiguration()
+        int numBookies = 3;
+        boolean shouldStartZK = true;
+        String zkHost = "127.0.0.1";
+        int zkPort = 0;
+        boolean shouldStartProxy = true;
+        int proxyPort = 7000;
+        boolean thriftmux = false;
+        DistributedLogConfiguration dlConf = new DistributedLogConfiguration()
                 .setLockTimeout(10)
                 .setOutputBufferSize(0)
                 .setImmediateFlushEnabled(true);
-        ServerConfiguration _bkConf = new ServerConfiguration();
+        ServerConfiguration bkConf = new ServerConfiguration();
 
         private Builder() {}
 
@@ -80,7 +79,7 @@ public class DistributedLogCluster {
          * @return builder
          */
         public Builder numBookies(int numBookies) {
-            this._numBookies = numBookies;
+            this.numBookies = numBookies;
             return this;
         }
 
@@ -92,7 +91,7 @@ public class DistributedLogCluster {
          * @return builder
          */
         public Builder shouldStartZK(boolean startZK) {
-            this._shouldStartZK = startZK;
+            this.shouldStartZK = startZK;
             return this;
         }
 
@@ -104,7 +103,7 @@ public class DistributedLogCluster {
          * @return builder
          */
         public Builder zkServers(String zkServers) {
-            this._zkHost = zkServers;
+            this.zkHost = zkServers;
             return this;
         }
 
@@ -116,7 +115,7 @@ public class DistributedLogCluster {
          * @return builder.
          */
         public Builder zkPort(int zkPort) {
-            this._zkPort = zkPort;
+            this.zkPort = zkPort;
             return this;
         }
 
@@ -128,7 +127,7 @@ public class DistributedLogCluster {
          * @return builder
          */
         public Builder shouldStartProxy(boolean startProxy) {
-            this._shouldStartProxy = startProxy;
+            this.shouldStartProxy = startProxy;
             return this;
         }
 
@@ -140,60 +139,63 @@ public class DistributedLogCluster {
          * @return builder
          */
         public Builder proxyPort(int proxyPort) {
-            this._proxyPort = proxyPort;
+            this.proxyPort = proxyPort;
             return this;
         }
 
         /**
-         * DistributedLog Configuration
+         * Set the distributedlog configuration.
          *
          * @param dlConf
          *          distributedlog configuration
          * @return builder
          */
         public Builder dlConf(DistributedLogConfiguration dlConf) {
-            this._dlConf = dlConf;
+            this.dlConf = dlConf;
             return this;
         }
 
         /**
-         * Bookkeeper server configuration
+         * Set the Bookkeeper server configuration.
          *
          * @param bkConf
          *          bookkeeper server configuration
          * @return builder
          */
         public Builder bkConf(ServerConfiguration bkConf) {
-            this._bkConf = bkConf;
+            this.bkConf = bkConf;
             return this;
         }
 
         /**
-         * Enable thriftmux for the dl server
+         * Enable thriftmux for the dl server.
          *
          * @param enabled flag to enable thriftmux
          * @return builder
          */
         public Builder thriftmux(boolean enabled) {
-            this._thriftmux = enabled;
+            this.thriftmux = enabled;
             return this;
         }
 
         public DistributedLogCluster build() throws Exception {
             // build the cluster
             return new DistributedLogCluster(
-                    _dlConf,
-                    _bkConf,
-                    _numBookies,
-                    _shouldStartZK,
-                    _zkHost,
-                    _zkPort,
-                    _shouldStartProxy,
-                    _proxyPort,
-                    _thriftmux);
+                dlConf,
+                bkConf,
+                numBookies,
+                shouldStartZK,
+                zkHost,
+                zkPort,
+                shouldStartProxy,
+                proxyPort,
+                thriftmux);
         }
     }
 
+    /**
+     * Run a distributedlog proxy server.
+     */
     public static class DLServer {
 
         static final int MAX_RETRIES = 20;

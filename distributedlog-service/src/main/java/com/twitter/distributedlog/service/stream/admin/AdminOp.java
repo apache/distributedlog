@@ -21,9 +21,9 @@ import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.util.Future;
 
 /**
- * An admin operation
+ * Admin operation interface.
  */
-public interface AdminOp<Response> {
+public interface AdminOp<RespT> {
 
     /**
      * Invoked before the stream op is executed.
@@ -35,6 +35,6 @@ public interface AdminOp<Response> {
      *
      * @return the future represents the response of the operation
      */
-    Future<Response> execute();
+    Future<RespT> execute();
 
 }

@@ -18,20 +18,18 @@
 package com.twitter.distributedlog.service.stream;
 
 import com.google.common.base.Stopwatch;
-
-import com.twitter.distributedlog.util.Sequencer;
-import com.twitter.util.Future;
-import com.twitter.util.FutureEventListener;
-import com.twitter.util.Promise;
-import com.twitter.util.Return;
-import com.twitter.util.Try;
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.exceptions.ChecksumFailedException;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
 import com.twitter.distributedlog.service.ResponseUtils;
 import com.twitter.distributedlog.thrift.service.ResponseHeader;
-
+import com.twitter.distributedlog.util.Sequencer;
+import com.twitter.util.Future;
+import com.twitter.util.FutureEventListener;
+import com.twitter.util.Promise;
+import com.twitter.util.Return;
+import com.twitter.util.Try;
 import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.OpStatsLogger;
@@ -40,8 +38,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Option;
 
+/**
+ * Abstract Stream Operation.
+ */
 public abstract class AbstractStreamOp<Response> implements StreamOp {
-    static final Logger logger = LoggerFactory.getLogger(AbstractStreamOp.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractStreamOp.class);
+
     protected final String stream;
     protected final OpStatsLogger opStatsLogger;
     private final Promise<Response> result = new Promise<Response>();
@@ -103,7 +106,7 @@ public abstract class AbstractStreamOp<Response> implements StreamOp {
     }
 
     /**
-     * Fail with current <i>owner</i> and its reason <i>t</i>
+     * Fail with current <i>owner</i> and its reason <i>t</i>.
      *
      * @param cause
      *          failure reason

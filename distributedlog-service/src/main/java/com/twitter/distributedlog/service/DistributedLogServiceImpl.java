@@ -47,7 +47,6 @@ import com.twitter.distributedlog.service.placement.PlacementPolicy;
 import com.twitter.distributedlog.service.placement.ZKPlacementStateManager;
 import com.twitter.distributedlog.service.stream.BulkWriteOp;
 import com.twitter.distributedlog.service.stream.DeleteOp;
-import com.twitter.distributedlog.service.stream.admin.CreateOp;
 import com.twitter.distributedlog.service.stream.HeartbeatOp;
 import com.twitter.distributedlog.service.stream.ReleaseOp;
 import com.twitter.distributedlog.service.stream.Stream;
@@ -59,8 +58,8 @@ import com.twitter.distributedlog.service.stream.StreamOp;
 import com.twitter.distributedlog.service.stream.StreamOpStats;
 import com.twitter.distributedlog.service.stream.TruncateOp;
 import com.twitter.distributedlog.service.stream.WriteOp;
-import com.twitter.distributedlog.service.stream.admin.StreamAdminOp;
 import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
+import com.twitter.distributedlog.service.stream.admin.CreateOp;
 import com.twitter.distributedlog.service.stream.admin.StreamAdminOp;
 import com.twitter.distributedlog.service.stream.limiter.ServiceRequestLimiter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
@@ -86,7 +85,6 @@ import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.ScheduledThreadPoolTimer;
 import com.twitter.util.Timer;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -96,7 +94,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.stats.Counter;
@@ -105,15 +102,17 @@ import org.apache.bookkeeper.stats.StatsLogger;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.runtime.BoxedUnit;
 
+/**
+ * Implementation of distributedlog thrift service.
+ */
 public class DistributedLogServiceImpl implements DistributedLogService.ServiceIface,
                                                   FatalErrorHandler {
 
-    static final Logger logger = LoggerFactory.getLogger(DistributedLogServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DistributedLogServiceImpl.class);
 
-    private final int MOVING_AVERAGE_WINDOW_SECS = 60;
+    private static final int MOVING_AVERAGE_WINDOW_SECS = 60;
 
     private final ServerConfiguration serverConfig;
     private final DistributedLogConfiguration dlConfig;
@@ -294,8 +293,8 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
             @Override
             public Number getSample() {
-                return ServerStatus.DOWN == serverStatus ? -1 : (featureRegionStopAcceptNewStream.isAvailable() ?
-                    3 : (ServerStatus.WRITE_AND_ACCEPT == serverStatus ? 1 : 2));
+                return ServerStatus.DOWN == serverStatus ? -1 : (featureRegionStopAcceptNewStream.isAvailable()
+                    ? 3 : (ServerStatus.WRITE_AND_ACCEPT == serverStatus ? 1 : 2));
             }
         };
         this.movingAvgRpsGauge = new Gauge<Number>() {
@@ -364,8 +363,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         streamsStatsLogger.registerGauge("cached", this.streamCachedGauge);
 
         // Setup complete
-        logger.info("Running distributedlog server : client id {}, allocator pool {}, perstream stat {}, dlsn version {}.",
-                new Object[] { clientId, allocatorPoolName, serverConf.isPerStreamStatEnabled(), dlsnVersion });
+        logger.info("Running distributedlog server : client id {}, allocator pool {}, perstream stat {},"
+            + " dlsn version {}.",
+            new Object[] { clientId, allocatorPoolName, serverConf.isPerStreamStatEnabled(), dlsnVersion });
     }
 
     private void countStatusCode(StatusCode code) {
@@ -440,7 +440,9 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     }
 
     @Override
-    public Future<BulkWriteResponse> writeBulkWithContext(final String stream, List<ByteBuffer> data, WriteContext ctx) {
+    public Future<BulkWriteResponse> writeBulkWithContext(final String stream,
+                                                          List<ByteBuffer> data,
+                                                          WriteContext ctx) {
         bulkWritePendingStat.inc();
         receivedRecordCounter.add(data.size());
         BulkWriteOp op = new BulkWriteOp(stream, data, statsLogger, perStreamStatsLogger, streamPartitionConverter,
@@ -480,8 +482,14 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
     @Override
     public Future<WriteResponse> truncate(String stream, String dlsn, WriteContext ctx) {
-        TruncateOp op = new TruncateOp(stream, DLSN.deserialize(dlsn), statsLogger, perStreamStatsLogger, getChecksum(ctx),
-            featureChecksumDisabled, accessControlManager);
+        TruncateOp op = new TruncateOp(
+            stream,
+            DLSN.deserialize(dlsn),
+            statsLogger,
+            perStreamStatsLogger,
+            getChecksum(ctx),
+            featureChecksumDisabled,
+            accessControlManager);
         executeStreamOp(op);
         return op.result();
     }
@@ -730,14 +738,14 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     }
 
     /**
-     * clean up the gauge before we close to help GC
+     * clean up the gauge before we close to help GC.
      */
     private void unregisterGauge(){
-        this.statsLogger.unregisterGauge("proxy_status",this.proxyStatusGauge);
-        this.statsLogger.unregisterGauge("moving_avg_rps",this.movingAvgRpsGauge);
-        this.statsLogger.unregisterGauge("moving_avg_bps",this.movingAvgBpsGauge);
-        this.statsLogger.unregisterGauge("acquired",this.streamAcquiredGauge);
-        this.statsLogger.unregisterGauge("cached",this.streamCachedGauge);
+        this.statsLogger.unregisterGauge("proxy_status", this.proxyStatusGauge);
+        this.statsLogger.unregisterGauge("moving_avg_rps", this.movingAvgRpsGauge);
+        this.statsLogger.unregisterGauge("moving_avg_bps", this.movingAvgBpsGauge);
+        this.statsLogger.unregisterGauge("acquired", this.streamAcquiredGauge);
+        this.statsLogger.unregisterGauge("cached", this.streamCachedGauge);
     }
 
     @VisibleForTesting

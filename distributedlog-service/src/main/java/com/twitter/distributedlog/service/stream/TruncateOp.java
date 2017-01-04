@@ -19,26 +19,27 @@ package com.twitter.distributedlog.service.stream;
 
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.acl.AccessControlManager;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.RequestDeniedException;
 import com.twitter.distributedlog.service.ResponseUtils;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
+import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.util.Sequencer;
 import com.twitter.util.Future;
-
-import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.runtime.AbstractFunction1;
 
+/**
+ * Operation to truncate a log stream.
+ */
 public class TruncateOp extends AbstractWriteOp {
 
-    static final Logger logger = LoggerFactory.getLogger(TruncateOp.class);
+    private static final Logger logger = LoggerFactory.getLogger(TruncateOp.class);
 
     private final Counter deniedTruncateCounter;
     private final DLSN dlsn;

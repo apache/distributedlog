@@ -26,13 +26,12 @@ import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.util.Future;
 import com.twitter.util.FutureTransformer;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 
-import java.util.concurrent.TimeUnit;
-
 /**
- * Stream admin op
+ * Stream admin op.
  */
 public abstract class StreamAdminOp implements AdminOp<WriteResponse> {
 

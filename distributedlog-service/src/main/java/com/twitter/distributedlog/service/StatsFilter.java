@@ -18,17 +18,13 @@
 package com.twitter.distributedlog.service;
 
 import com.google.common.base.Stopwatch;
-
 import com.twitter.finagle.Service;
 import com.twitter.finagle.SimpleFilter;
 import com.twitter.util.Future;
-import com.twitter.util.FutureEventListener;
-
-import org.apache.bookkeeper.stats.StatsLogger;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
-
-import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.stats.StatsLogger;
 
 /**
  * Track distributedlog server finagle-service stats.

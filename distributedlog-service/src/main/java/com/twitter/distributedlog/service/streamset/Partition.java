@@ -22,6 +22,7 @@ import com.google.common.base.Objects;
 /**
  * `Partition` defines the relationship between a `virtual` stream and a
  * physical DL stream.
+ *
  * <p>A `virtual` stream could be partitioned into multiple partitions
  * and each partition is effectively a DL stream.
  */

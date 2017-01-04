@@ -17,31 +17,33 @@
  */
 package com.twitter.distributedlog.service.stream.limiter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.config.ConcurrentConstConfiguration;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.exceptions.OverCapacityException;
+import com.twitter.distributedlog.limiter.ChainedRequestLimiter;
+import com.twitter.distributedlog.limiter.ComposableRequestLimiter;
 import com.twitter.distributedlog.limiter.ComposableRequestLimiter.CostFunction;
 import com.twitter.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
-import com.twitter.distributedlog.limiter.ComposableRequestLimiter;
-import com.twitter.distributedlog.limiter.ChainedRequestLimiter;
 import com.twitter.distributedlog.limiter.GuavaRateLimiter;
 import com.twitter.distributedlog.limiter.RateLimiter;
 import com.twitter.distributedlog.limiter.RequestLimiter;
-
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.bookkeeper.feature.SettableFeature;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link ServiceRequestLimiter}.
+ */
 public class TestServiceRequestLimiter {
-    static final Logger LOG = LoggerFactory.getLogger(TestServiceRequestLimiter.class);
 
+    /**
+     * Mock Request.
+     */
     class MockRequest {
         int size;
         MockRequest() {
@@ -55,11 +57,17 @@ public class TestServiceRequestLimiter {
         }
     }
 
+    /**
+     * Mock request limiter.
+     */
     class MockRequestLimiter implements RequestLimiter<MockRequest> {
         public void apply(MockRequest request) {
         }
     }
 
+    /**
+     * Counter based limiter.
+     */
     static class CounterLimiter implements RateLimiter {
         final int limit;
         int count;
@@ -78,6 +86,9 @@ public class TestServiceRequestLimiter {
         }
     }
 
+    /**
+     * Mock hard request limiter.
+     */
     class MockHardRequestLimiter implements RequestLimiter<MockRequest> {
 
         RequestLimiter<MockRequest> limiter;
@@ -114,6 +125,9 @@ public class TestServiceRequestLimiter {
         }
     }
 
+    /**
+     * Mock soft request limiter.
+     */
     class MockSoftRequestLimiter implements RequestLimiter<MockRequest> {
 
         RequestLimiter<MockRequest> limiter;

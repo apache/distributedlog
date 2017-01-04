@@ -29,6 +29,9 @@ import com.twitter.util.Timer;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.jboss.netty.util.HashedWheelTimer;
 
+/**
+ * The implementation of {@link StreamFactory}.
+ */
 public class StreamFactoryImpl implements StreamFactory {
     private final String clientId;
     private final StreamOpStats streamOpStats;

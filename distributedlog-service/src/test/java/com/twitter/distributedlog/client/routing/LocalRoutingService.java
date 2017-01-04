@@ -20,7 +20,6 @@ package com.twitter.distributedlog.client.routing;
 import com.google.common.collect.Sets;
 import com.twitter.finagle.NoBrokersAvailableException;
 import com.twitter.finagle.stats.StatsReceiver;
-
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -28,12 +27,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * A local routing service that used for testing.
+ */
 public class LocalRoutingService implements RoutingService {
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Builder to build a local routing service for testing.
+     */
     public static class Builder implements RoutingService.Builder {
 
         private Builder() {}

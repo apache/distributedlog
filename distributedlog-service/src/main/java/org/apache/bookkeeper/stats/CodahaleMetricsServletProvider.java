@@ -23,11 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Extend the codahale metrics provider to run servlets
+ * Extend the codahale metrics provider to run servlets.
  */
 public class CodahaleMetricsServletProvider extends CodahaleMetricsProvider {
 
-    private final static Logger logger = LoggerFactory.getLogger(CodahaleMetricsServletProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(CodahaleMetricsServletProvider.class);
 
     ServletReporter servletReporter = null;
     private final HealthCheckRegistry healthCheckRegistry = new HealthCheckRegistry();

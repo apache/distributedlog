@@ -25,13 +25,14 @@ import com.twitter.distributedlog.service.ResponseUtils;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.util.Sequencer;
 import com.twitter.util.Future;
-
-import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;
-
 import scala.runtime.AbstractFunction1;
 
+/**
+ * Operation to release ownership of a log stream.
+ */
 public class ReleaseOp extends AbstractWriteOp {
     private final StreamManager streamManager;
     private final Counter deniedReleaseCounter;

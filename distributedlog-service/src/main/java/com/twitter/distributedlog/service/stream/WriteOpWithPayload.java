@@ -17,6 +17,9 @@
  */
 package com.twitter.distributedlog.service.stream;
 
+/**
+ * A write operation with payload.
+ */
 public interface WriteOpWithPayload {
 
     // Return the payload size in bytes

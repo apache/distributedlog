@@ -21,6 +21,9 @@ import com.twitter.distributedlog.client.DistributedLogClientImpl;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * DistributedLog Client Related Utils.
+ */
 public class ClientUtils {
 
     public static Pair<DistributedLogClient, MonitorServiceClient> buildClient(DistributedLogClientBuilder builder) {

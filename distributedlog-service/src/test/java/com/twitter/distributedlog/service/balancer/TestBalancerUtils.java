@@ -17,13 +17,15 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link BalancerUtils}.
+ */
 public class TestBalancerUtils {
 
     @Test(timeout = 60000)

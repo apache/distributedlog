@@ -18,7 +18,7 @@
 package com.twitter.distributedlog.service;
 
 /**
- * List of feature keys used by distributedlog server
+ * List of feature keys used by distributedlog server.
  */
 public enum ServerFeatureKeys {
 

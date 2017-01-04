@@ -19,7 +19,21 @@ package com.twitter.distributedlog.service.placement;
 
 import com.twitter.util.Future;
 
+/**
+ * Interface for load appraiser.
+ */
 public interface LoadAppraiser {
-  Future<StreamLoad> getStreamLoad(String stream);
-  Future<Void> refreshCache();
+    /**
+     * Retrieve the stream load for a given {@code stream}.
+     *
+     * @param stream name of the stream
+     * @return the stream load of the stream.
+     */
+    Future<StreamLoad> getStreamLoad(String stream);
+
+    /**
+     * Refesch the cache.
+     * @return
+     */
+    Future<Void> refreshCache();
 }

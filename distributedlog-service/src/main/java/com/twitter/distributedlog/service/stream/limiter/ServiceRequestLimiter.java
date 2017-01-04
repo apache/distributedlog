@@ -22,9 +22,9 @@ import com.twitter.distributedlog.exceptions.OverCapacityException;
 import com.twitter.distributedlog.limiter.ChainedRequestLimiter;
 import com.twitter.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
 import com.twitter.distributedlog.limiter.RequestLimiter;
+import com.twitter.distributedlog.rate.MovingAverageRate;
 import com.twitter.distributedlog.service.stream.StreamManager;
 import com.twitter.distributedlog.service.stream.StreamOp;
-import com.twitter.distributedlog.rate.MovingAverageRate;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.StatsLogger;
 
@@ -89,8 +89,10 @@ public class ServiceRequestLimiter extends DynamicRequestLimiter<StreamOp> {
             .limit(bpsSoftServiceLimit);
 
         ChainedRequestLimiter.Builder<StreamOp> builder = new ChainedRequestLimiter.Builder<StreamOp>();
-        builder.addLimiter(new StreamAcquireLimiter(streamManager, serviceRps, rpsStreamAcquireLimit, limiterStatLogger.scope("rps_acquire")));
-        builder.addLimiter(new StreamAcquireLimiter(streamManager, serviceBps, bpsStreamAcquireLimit, limiterStatLogger.scope("bps_acquire")));
+        builder.addLimiter(new StreamAcquireLimiter(
+            streamManager, serviceRps, rpsStreamAcquireLimit, limiterStatLogger.scope("rps_acquire")));
+        builder.addLimiter(new StreamAcquireLimiter(
+            streamManager, serviceBps, bpsStreamAcquireLimit, limiterStatLogger.scope("bps_acquire")));
         builder.addLimiter(bpsHardLimiterBuilder.build());
         builder.addLimiter(bpsSoftLimiterBuilder.build());
         builder.addLimiter(rpsHardLimiterBuilder.build());

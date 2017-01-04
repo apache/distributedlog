@@ -17,26 +17,32 @@
  */
 package com.twitter.distributedlog.service.stream.limiter;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.twitter.distributedlog.exceptions.OverCapacityException;
 import com.twitter.distributedlog.limiter.ComposableRequestLimiter;
-import com.twitter.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
 import com.twitter.distributedlog.limiter.ComposableRequestLimiter.CostFunction;
+import com.twitter.distributedlog.limiter.ComposableRequestLimiter.OverlimitFunction;
 import com.twitter.distributedlog.limiter.GuavaRateLimiter;
 import com.twitter.distributedlog.limiter.RateLimiter;
 import com.twitter.distributedlog.limiter.RequestLimiter;
 import com.twitter.distributedlog.service.stream.StreamOp;
 import com.twitter.distributedlog.service.stream.WriteOpWithPayload;
-
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 
+/**
+ * Request limiter builder.
+ */
 public class RequestLimiterBuilder {
     private OverlimitFunction<StreamOp> overlimitFunction = NOP_OVERLIMIT_FUNCTION;
     private RateLimiter limiter;
     private CostFunction<StreamOp> costFunction;
     private StatsLogger statsLogger = NullStatsLogger.INSTANCE;
 
+    /**
+     * Function to calculate the `RPS` (Request per second) cost of a given stream operation.
+     */
     public static final CostFunction<StreamOp> RPS_COST_FUNCTION = new CostFunction<StreamOp>() {
         @Override
         public int apply(StreamOp op) {
@@ -48,6 +54,9 @@ public class RequestLimiterBuilder {
         }
     };
 
+    /**
+     * Function to calculate the `BPS` (Bytes per second) cost of a given stream operation.
+     */
     public static final CostFunction<StreamOp> BPS_COST_FUNCTION = new CostFunction<StreamOp>() {
         @Override
         public int apply(StreamOp op) {
@@ -60,6 +69,9 @@ public class RequestLimiterBuilder {
         }
     };
 
+    /**
+     * Function to check if a stream operation will cause {@link OverCapacityException}.
+     */
     public static final OverlimitFunction<StreamOp> NOP_OVERLIMIT_FUNCTION = new OverlimitFunction<StreamOp>() {
         @Override
         public void apply(StreamOp op) throws OverCapacityException {
@@ -96,9 +108,9 @@ public class RequestLimiterBuilder {
     }
 
     public RequestLimiter<StreamOp> build() {
-        Preconditions.checkNotNull(limiter);
-        Preconditions.checkNotNull(overlimitFunction);
-        Preconditions.checkNotNull(costFunction);
+        checkNotNull(limiter);
+        checkNotNull(overlimitFunction);
+        checkNotNull(costFunction);
         return new ComposableRequestLimiter(limiter, overlimitFunction, costFunction, statsLogger);
     }
 }

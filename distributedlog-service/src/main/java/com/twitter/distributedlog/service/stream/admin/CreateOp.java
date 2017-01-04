@@ -17,6 +17,8 @@
  */
 package com.twitter.distributedlog.service.stream.admin;
 
+import static com.twitter.distributedlog.service.stream.AbstractStreamOp.requestStat;
+
 import com.twitter.distributedlog.service.ResponseUtils;
 import com.twitter.distributedlog.service.stream.StreamManager;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
@@ -25,8 +27,9 @@ import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.StatsLogger;
 import scala.runtime.AbstractFunction1;
 
-import static com.twitter.distributedlog.service.stream.AbstractStreamOp.requestStat;
-
+/**
+ * Operation to create log stream.
+ */
 public class CreateOp extends StreamAdminOp {
 
   public CreateOp(String stream,

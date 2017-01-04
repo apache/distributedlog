@@ -20,7 +20,7 @@ package com.twitter.distributedlog.service.announcer;
 import java.io.IOException;
 
 /**
- * Announce service information
+ * Announce service information.
  */
 public interface Announcer {
 

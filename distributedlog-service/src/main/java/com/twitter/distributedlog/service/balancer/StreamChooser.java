@@ -18,7 +18,7 @@
 package com.twitter.distributedlog.service.balancer;
 
 /**
- * Choose a stream to rebalance
+ * Choose a stream to rebalance.
  */
 public interface StreamChooser {
     /**

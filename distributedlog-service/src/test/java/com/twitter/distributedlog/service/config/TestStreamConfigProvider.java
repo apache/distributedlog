@@ -17,21 +17,25 @@
  */
 package com.twitter.distributedlog.service.config;
 
+import static com.twitter.distributedlog.DistributedLogConfiguration.BKDL_RETENTION_PERIOD_IN_HOURS;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 import com.twitter.distributedlog.config.PropertiesWriter;
 import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
-import org.junit.Test;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
-import static com.twitter.distributedlog.DistributedLogConfiguration.BKDL_RETENTION_PERIOD_IN_HOURS;
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link StreamConfigProvider}.
+ */
 public class TestStreamConfigProvider {
     private static final String DEFAULT_CONFIG_DIR = "conf";
     private final String defaultConfigPath;

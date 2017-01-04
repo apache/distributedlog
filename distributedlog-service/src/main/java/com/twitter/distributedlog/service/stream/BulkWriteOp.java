@@ -17,19 +17,13 @@
  */
 package com.twitter.distributedlog.service.stream;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import com.twitter.distributedlog.exceptions.AlreadyClosedException;
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.DLSN;
-import com.twitter.distributedlog.exceptions.LockingException;
 import com.twitter.distributedlog.LogRecord;
 import com.twitter.distributedlog.acl.AccessControlManager;
+import com.twitter.distributedlog.exceptions.AlreadyClosedException;
 import com.twitter.distributedlog.exceptions.DLException;
+import com.twitter.distributedlog.exceptions.LockingException;
 import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
 import com.twitter.distributedlog.exceptions.RequestDeniedException;
 import com.twitter.distributedlog.service.ResponseUtils;
@@ -39,21 +33,26 @@ import com.twitter.distributedlog.thrift.service.BulkWriteResponse;
 import com.twitter.distributedlog.thrift.service.ResponseHeader;
 import com.twitter.distributedlog.thrift.service.StatusCode;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
-import com.twitter.distributedlog.util.FutureUtils;
 import com.twitter.distributedlog.util.Sequencer;
 import com.twitter.util.ConstFuture;
+import com.twitter.util.Future;
 import com.twitter.util.Future$;
 import com.twitter.util.FutureEventListener;
-import com.twitter.util.Future;
 import com.twitter.util.Try;
-
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
-
 import scala.runtime.AbstractFunction1;
 
+/**
+ * Bulk Write Operation.
+ */
 public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements WriteOpWithPayload {
     private final List<ByteBuffer> buffers;
     private final long payloadSize;
@@ -77,9 +76,9 @@ public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements 
         try {
             result.get();
         } catch (Exception ex) {
-            if (ex instanceof OwnershipAcquireFailedException ||
-                ex instanceof AlreadyClosedException ||
-                ex instanceof LockingException) {
+            if (ex instanceof OwnershipAcquireFailedException
+                || ex instanceof AlreadyClosedException
+                || ex instanceof LockingException) {
                 def = true;
             }
         }

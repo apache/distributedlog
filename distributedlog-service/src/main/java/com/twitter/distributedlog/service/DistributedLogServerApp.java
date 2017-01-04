@@ -17,15 +17,26 @@
  */
 package com.twitter.distributedlog.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalBooleanArg;
+import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalIntegerArg;
+import static com.twitter.distributedlog.util.CommandLineUtils.getOptionalStringArg;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.client.routing.RoutingService;
 import com.twitter.distributedlog.client.routing.RoutingUtils;
 import com.twitter.distributedlog.client.serverset.DLZkServerSet;
 import com.twitter.finagle.stats.NullStatsReceiver;
 import com.twitter.finagle.stats.StatsReceiver;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 import org.apache.bookkeeper.stats.NullStatsProvider;
 import org.apache.bookkeeper.stats.StatsProvider;
 import org.apache.bookkeeper.util.ReflectionUtils;
@@ -38,21 +49,14 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
-import static com.twitter.distributedlog.util.CommandLineUtils.*;
-
+/**
+ * The launcher of the distributedlog proxy server.
+ */
 public class DistributedLogServerApp {
 
-    static final Logger logger = LoggerFactory.getLogger(DistributedLogServerApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(DistributedLogServerApp.class);
 
-    private final static String USAGE = "DistributedLogServerApp [-u <uri>] [-c <conf>]";
+    private static final String USAGE = "DistributedLogServerApp [-u <uri>] [-c <conf>]";
     private final String[] args;
     private final Options options = new Options();
 
@@ -104,7 +108,8 @@ public class DistributedLogServerApp {
         }
     }
 
-    private void runCmd(CommandLine cmdline) throws IllegalArgumentException, IOException, ConfigurationException, ClassNotFoundException {
+    private void runCmd(CommandLine cmdline)
+        throws IllegalArgumentException, IOException, ConfigurationException, ClassNotFoundException {
         final StatsReceiver statsReceiver = NullStatsReceiver.get();
         Optional<String> confOptional = getOptionalStringArg(cmdline, "c");
         DistributedLogConfiguration dlConf = new DistributedLogConfiguration();
@@ -113,7 +118,8 @@ public class DistributedLogServerApp {
             try {
                 dlConf.loadConf(new File(configFile).toURI().toURL());
             } catch (ConfigurationException e) {
-                throw new IllegalArgumentException("Failed to load distributedlog configuration from " + configFile + ".");
+                throw new IllegalArgumentException("Failed to load distributedlog configuration from "
+                    + configFile + ".");
             } catch (MalformedURLException e) {
                 throw new IllegalArgumentException("Failed to load distributedlog configuration from malformed "
                         + configFile + ".");
@@ -130,7 +136,7 @@ public class DistributedLogServerApp {
                 }).or(new NullStatsProvider());
 
         final Optional<String> uriOption = getOptionalStringArg(cmdline, "u");
-        Preconditions.checkArgument(uriOption.isPresent(), "No distributedlog uri provided.");
+        checkArgument(uriOption.isPresent(), "No distributedlog uri provided.");
         URI dlUri = URI.create(uriOption.get());
 
         DLZkServerSet serverSet = DLZkServerSet.of(dlUri, (int) TimeUnit.SECONDS.toMillis(60));

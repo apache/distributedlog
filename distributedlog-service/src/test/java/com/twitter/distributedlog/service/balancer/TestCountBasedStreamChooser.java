@@ -17,18 +17,24 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
-import com.google.common.collect.Sets;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import com.google.common.collect.Sets;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link CountBasedStreamChooser}.
+ */
 public class TestCountBasedStreamChooser {
 
     @Test(timeout = 60000)
@@ -52,7 +58,7 @@ public class TestCountBasedStreamChooser {
             }
 
             CountBasedStreamChooser chooser = new CountBasedStreamChooser(streamDistribution);
-            for (int k = 0; k < i+1; k++) {
+            for (int k = 0; k < i + 1; k++) {
                 assertNull(chooser.choose());
             }
         }

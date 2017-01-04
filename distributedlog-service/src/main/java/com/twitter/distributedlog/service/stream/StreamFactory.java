@@ -19,6 +19,9 @@ package com.twitter.distributedlog.service.stream;
 
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
 
+/**
+ * Factory to create a stream with provided stream configuration {@code streamConf}.
+ */
 public interface StreamFactory {
 
     /**

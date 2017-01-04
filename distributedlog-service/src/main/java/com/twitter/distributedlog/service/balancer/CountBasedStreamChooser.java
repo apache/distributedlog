@@ -17,8 +17,7 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
-import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.tuple.Pair;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.Serializable;
 import java.net.SocketAddress;
@@ -29,7 +28,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * A stream chooser based on number of streams.
+ */
 class CountBasedStreamChooser implements StreamChooser, Serializable,
         Comparator<Pair<SocketAddress, LinkedList<String>>> {
 
@@ -46,7 +49,7 @@ class CountBasedStreamChooser implements StreamChooser, Serializable,
     int next;
 
     CountBasedStreamChooser(Map<SocketAddress, Set<String>> streams) {
-        Preconditions.checkArgument(streams.size() > 0, "Only support no-empty streams distribution");
+        checkArgument(streams.size() > 0, "Only support no-empty streams distribution");
         streamsDistribution = new ArrayList<Pair<SocketAddress, LinkedList<String>>>(streams.size());
         for (Map.Entry<SocketAddress, Set<String>> entry : streams.entrySet()) {
             LinkedList<String> randomizedStreams = new LinkedList<String>(entry.getValue());

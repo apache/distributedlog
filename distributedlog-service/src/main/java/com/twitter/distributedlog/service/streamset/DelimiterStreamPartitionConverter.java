@@ -20,7 +20,7 @@ package com.twitter.distributedlog.service.streamset;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Stream Partition Converter
+ * Stream Partition Converter that converts the stream name into a stream-to-partition mapping by delimiter.
  */
 public class DelimiterStreamPartitionConverter extends CacheableStreamPartitionConverter {
 

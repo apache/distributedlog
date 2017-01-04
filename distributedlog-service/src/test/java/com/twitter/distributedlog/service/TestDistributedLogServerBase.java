@@ -17,22 +17,30 @@
  */
 package com.twitter.distributedlog.service;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.base.Optional;
 import com.twitter.distributedlog.AsyncLogReader;
 import com.twitter.distributedlog.DLMTestUtil;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogManager;
-import com.twitter.distributedlog.TestZooKeeperClientBuilder;
-import com.twitter.distributedlog.annotations.DistributedLogAnnotations;
-import com.twitter.distributedlog.exceptions.LogNotFoundException;
 import com.twitter.distributedlog.LogReader;
 import com.twitter.distributedlog.LogRecord;
 import com.twitter.distributedlog.LogRecordWithDLSN;
+import com.twitter.distributedlog.TestZooKeeperClientBuilder;
 import com.twitter.distributedlog.ZooKeeperClient;
 import com.twitter.distributedlog.acl.AccessControlManager;
-import com.twitter.distributedlog.impl.acl.ZKAccessControl;
+import com.twitter.distributedlog.annotations.DistributedLogAnnotations;
 import com.twitter.distributedlog.client.routing.LocalRoutingService;
 import com.twitter.distributedlog.exceptions.DLException;
+import com.twitter.distributedlog.exceptions.LogNotFoundException;
+import com.twitter.distributedlog.impl.acl.ZKAccessControl;
 import com.twitter.distributedlog.impl.metadata.BKDLConfig;
 import com.twitter.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.distributedlog.service.stream.StreamManagerImpl;
@@ -49,13 +57,6 @@ import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Future;
 import com.twitter.util.Futures;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -64,17 +65,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static com.twitter.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
+/**
+ * Test Case for {@link DistributedLogServer}.
+ */
 public abstract class TestDistributedLogServerBase extends DistributedLogServerTestCase {
-    static final Logger logger = LoggerFactory.getLogger(TestDistributedLogServerBase.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(TestDistributedLogServerBase.class);
 
     @Rule
     public TestName testName = new TestName();
@@ -84,7 +87,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
     }
 
     /**
-     * {@link https://issues.apache.org/jira/browse/DL-27}
+     * {@link https://issues.apache.org/jira/browse/DL-27}.
      */
     @DistributedLogAnnotations.FlakyTest
     @Ignore
@@ -212,10 +215,11 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         writes.add(null);
 
         try {
-            List<Future<DLSN>> futureResult = dlClient.dlClient.writeBulk(name, writes);
+            dlClient.dlClient.writeBulk(name, writes);
             fail("should not have succeeded");
         } catch (NullPointerException npe) {
-            ; // expected
+            // expected
+            logger.info("Expected to catch NullPointException.");
         }
     }
 
@@ -246,7 +250,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         for (int i = start; i < finish; i++) {
             Future<DLSN> future = futures.get(i);
             try {
-                DLSN dlsn = Await.result(future, Duration.fromSeconds(10));
+                Await.result(future, Duration.fromSeconds(10));
                 fail("future should have failed!");
             } catch (DLException cre) {
                 ++failed;
@@ -259,7 +263,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
     void validateFailedAsLogRecordTooLong(Future<DLSN> future) {
         try {
-            DLSN dlsn = Await.result(future, Duration.fromSeconds(10));
+            Await.result(future, Duration.fromSeconds(10));
             fail("should have failed");
         } catch (DLException dle) {
             assertEquals(StatusCode.TOO_LARGE_RECORD, dle.getCode());
@@ -276,7 +280,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
         final int writeCount = 100;
 
-        List<ByteBuffer> writes = new ArrayList<ByteBuffer>(writeCount*2 + 1);
+        List<ByteBuffer> writes = new ArrayList<ByteBuffer>(writeCount * 2 + 1);
         for (long i = 1; i <= writeCount; i++) {
             writes.add(ByteBuffer.wrap(("" + i).getBytes()));
         }
@@ -293,7 +297,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         for (int i = 0; i < writeCount; i++) {
             Future<DLSN> future = futures.get(i);
             try {
-                DLSN dlsn = Await.result(future, Duration.fromSeconds(10));
+                Await.result(future, Duration.fromSeconds(10));
                 ++succeeded;
             } catch (Exception ex) {
                 failDueToWrongException(ex);
@@ -510,7 +514,9 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         }
     }
 
-    /** This tests that create has touch like behavior in that trying to create the stream twice, simply does nothing */
+    /**
+     * This tests that create has touch like behavior in that trying to create the stream twice, simply does nothing.
+     */
     @Test(timeout = 60000)
     public void testCreateStreamTwice() throws Exception {
         try {

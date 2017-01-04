@@ -17,6 +17,9 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static org.junit.Assert.fail;
+
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
 import com.twitter.distributedlog.client.monitor.MonitorServiceClient;
@@ -25,6 +28,11 @@ import com.twitter.distributedlog.service.DistributedLogClient;
 import com.twitter.distributedlog.service.DistributedLogCluster.DLServer;
 import com.twitter.distributedlog.service.DistributedLogServerTestCase;
 import com.twitter.util.Await;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
@@ -33,18 +41,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static com.google.common.base.Charsets.UTF_8;
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link ClusterBalancer}.
+ */
 public class TestClusterBalancer extends DistributedLogServerTestCase {
 
-    static final Logger logger = LoggerFactory.getLogger(TestClusterBalancer.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestClusterBalancer.class);
 
     private final int numServers = 5;
     private final List<DLServer> cluster;
@@ -108,7 +110,7 @@ public class TestClusterBalancer extends DistributedLogServerTestCase {
         for (int i = 0; i < numStreams; i++) {
             String name = namePrefix + (streamId++);
             try {
-                Await.result(((DistributedLogClient) client.dlClient).write(name, ByteBuffer.wrap(name.getBytes(UTF_8))));
+                Await.result(client.dlClient.write(name, ByteBuffer.wrap(name.getBytes(UTF_8))));
             } catch (Exception e) {
                 logger.error("Error writing stream {} : ", name, e);
                 throw e;
@@ -145,7 +147,7 @@ public class TestClusterBalancer extends DistributedLogServerTestCase {
         Optional<RateLimiter> rateLimiter = Optional.absent();
 
         Balancer balancer = new ClusterBalancer(client.dlClientBuilder,
-                Pair.of((DistributedLogClient)client.dlClient, (MonitorServiceClient)client.dlClient));
+                Pair.of((DistributedLogClient) client.dlClient, (MonitorServiceClient) client.dlClient));
         logger.info("Rebalancing from 'unknown' target");
         try {
             balancer.balanceAll("unknown", 10, rateLimiter);

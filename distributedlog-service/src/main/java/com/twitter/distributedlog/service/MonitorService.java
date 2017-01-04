@@ -17,9 +17,9 @@
  */
 package com.twitter.distributedlog.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
 import com.google.common.hash.HashFunction;
@@ -41,14 +41,6 @@ import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Duration;
 import com.twitter.util.FutureEventListener;
-
-import org.apache.bookkeeper.stats.Gauge;
-import org.apache.bookkeeper.stats.StatsProvider;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -65,10 +57,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.stats.Gauge;
+import org.apache.bookkeeper.stats.StatsProvider;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Monitor Service.
+ */
 public class MonitorService implements NamespaceListener {
 
-    static final Logger logger = LoggerFactory.getLogger(MonitorService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MonitorService.class);
 
     private DistributedLogNamespace dlNamespace = null;
     private MonitorServiceClient dlClient = null;
@@ -271,9 +272,9 @@ public class MonitorService implements NamespaceListener {
     }
 
     public void runServer() throws IllegalArgumentException, IOException {
-        Preconditions.checkArgument(uriArg.isPresent(),
+        checkArgument(uriArg.isPresent(),
                 "No distributedlog uri provided.");
-        Preconditions.checkArgument(serverSetArg.isPresent(),
+        checkArgument(serverSetArg.isPresent(),
                 "No proxy server set provided.");
         if (intervalArg.isPresent()) {
             interval = intervalArg.get();
@@ -422,7 +423,7 @@ public class MonitorService implements NamespaceListener {
     }
 
     /**
-     * Close the server
+     * Close the server.
      */
     public void close() {
         logger.info("Closing monitor service.");
@@ -459,7 +460,7 @@ public class MonitorService implements NamespaceListener {
     }
 
     /**
-     * clean up the gauge before we close to help GC
+     * clean up the gauge before we close to help GC.
      */
     private void unregisterGauge(){
         statsProvider.getStatsLogger("monitor").unregisterGauge("num_streams", numOfStreamsGauge);

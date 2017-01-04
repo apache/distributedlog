@@ -20,13 +20,15 @@ package com.twitter.distributedlog.service.stream.limiter;
 import com.twitter.distributedlog.exceptions.OverCapacityException;
 import com.twitter.distributedlog.exceptions.TooManyStreamsException;
 import com.twitter.distributedlog.limiter.RequestLimiter;
+import com.twitter.distributedlog.rate.MovingAverageRate;
 import com.twitter.distributedlog.service.stream.StreamManager;
 import com.twitter.distributedlog.service.stream.StreamOp;
-import com.twitter.distributedlog.rate.MovingAverageRate;
-
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;
 
+/**
+ * A special limiter on limiting acquiring new streams.
+ */
 public class StreamAcquireLimiter implements RequestLimiter<StreamOp> {
     private final StreamManager streamManager;
     private final MovingAverageRate serviceRps;

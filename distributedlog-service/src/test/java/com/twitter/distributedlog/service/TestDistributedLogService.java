@@ -17,10 +17,17 @@
  */
 package com.twitter.distributedlog.service;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.collect.Lists;
 import com.twitter.distributedlog.DLSN;
 import com.twitter.distributedlog.DistributedLogConfiguration;
-import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.distributedlog.TestDistributedLogBase;
 import com.twitter.distributedlog.acl.DefaultAccessControlManager;
 import com.twitter.distributedlog.client.routing.LocalRoutingService;
@@ -29,11 +36,11 @@ import com.twitter.distributedlog.exceptions.StreamUnavailableException;
 import com.twitter.distributedlog.service.config.NullStreamConfigProvider;
 import com.twitter.distributedlog.service.config.ServerConfiguration;
 import com.twitter.distributedlog.service.placement.EqualLoadAppraiser;
-import com.twitter.distributedlog.service.stream.WriteOp;
-import com.twitter.distributedlog.service.stream.StreamImpl.StreamStatus;
-import com.twitter.distributedlog.service.stream.StreamImpl;
-import com.twitter.distributedlog.service.stream.StreamManagerImpl;
 import com.twitter.distributedlog.service.stream.Stream;
+import com.twitter.distributedlog.service.stream.StreamImpl;
+import com.twitter.distributedlog.service.stream.StreamImpl.StreamStatus;
+import com.twitter.distributedlog.service.stream.StreamManagerImpl;
+import com.twitter.distributedlog.service.stream.WriteOp;
 import com.twitter.distributedlog.service.streamset.DelimiterStreamPartitionConverter;
 import com.twitter.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import com.twitter.distributedlog.service.streamset.StreamPartitionConverter;
@@ -43,8 +50,15 @@ import com.twitter.distributedlog.thrift.service.WriteContext;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.util.ConfUtils;
 import com.twitter.distributedlog.util.FutureUtils;
+import com.twitter.distributedlog.util.ProtocolUtils;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
+import java.net.URI;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.feature.SettableFeature;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.util.ReflectionUtils;
@@ -57,22 +71,12 @@ import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Charsets.UTF_8;
-import static org.junit.Assert.*;
-
 /**
- * Test Case for DistributedLog Service
+ * Test Case for DistributedLog Service.
  */
 public class TestDistributedLogService extends TestDistributedLogBase {
 
-    static final Logger logger = LoggerFactory.getLogger(TestDistributedLogService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestDistributedLogService.class);
 
     @Rule
     public TestName testName = new TestName();
@@ -357,12 +361,12 @@ public class TestDistributedLogService extends TestDistributedLogBase {
 
         Future<Void> closeFuture0 = s.requestClose("close 0");
         assertTrue("Stream " + streamName + " should be set to " + StreamStatus.CLOSING,
-                StreamStatus.CLOSING == s.getStatus() ||
-                StreamStatus.CLOSED == s.getStatus());
+                StreamStatus.CLOSING == s.getStatus()
+                    || StreamStatus.CLOSED == s.getStatus());
         Future<Void> closeFuture1 = s.requestClose("close 1");
         assertTrue("Stream " + streamName + " should be set to " + StreamStatus.CLOSING,
-                StreamStatus.CLOSING == s.getStatus() ||
-                StreamStatus.CLOSED == s.getStatus());
+                StreamStatus.CLOSING == s.getStatus()
+                    || StreamStatus.CLOSED == s.getStatus());
 
         Await.result(closeFuture0);
         assertEquals("Stream " + streamName + " should be set to " + StreamStatus.CLOSED,
@@ -386,8 +390,8 @@ public class TestDistributedLogService extends TestDistributedLogBase {
 
         Future<Void> closeFuture = s.requestClose("close");
         assertTrue("Stream " + streamName + " should be set to " + StreamStatus.CLOSING,
-                StreamStatus.CLOSING == s.getStatus() ||
-                StreamStatus.CLOSED == s.getStatus());
+                StreamStatus.CLOSING == s.getStatus()
+                    || StreamStatus.CLOSED == s.getStatus());
         WriteOp op1 = createWriteOp(service, streamName, 0L);
         s.submit(op1);
         WriteResponse response1 = Await.result(op1.result());
@@ -430,8 +434,8 @@ public class TestDistributedLogService extends TestDistributedLogBase {
 
         StreamImpl s = (StreamImpl) streamManager.getCachedStreams().get(streamName);
         // the stream should be set CLOSING
-        while (StreamStatus.CLOSING != s.getStatus() &&
-                StreamStatus.CLOSED != s.getStatus()) {
+        while (StreamStatus.CLOSING != s.getStatus()
+            && StreamStatus.CLOSED != s.getStatus()) {
             TimeUnit.MILLISECONDS.sleep(20);
         }
         assertNotNull("Writer should be initialized", s.getWriter());
@@ -443,9 +447,9 @@ public class TestDistributedLogService extends TestDistributedLogBase {
                     futureList.get(i).isDefined());
             WriteResponse response = Await.result(futureList.get(i));
             assertTrue("Op should fail with " + StatusCode.WRITE_CANCELLED_EXCEPTION,
-                    StatusCode.BK_TRANSMIT_ERROR == response.getHeader().getCode() ||
-                    StatusCode.WRITE_EXCEPTION == response.getHeader().getCode() ||
-                    StatusCode.WRITE_CANCELLED_EXCEPTION == response.getHeader().getCode());
+                    StatusCode.BK_TRANSMIT_ERROR == response.getHeader().getCode()
+                        || StatusCode.WRITE_EXCEPTION == response.getHeader().getCode()
+                        || StatusCode.WRITE_CANCELLED_EXCEPTION == response.getHeader().getCode());
         }
 
         while (streamManager.getCachedStreams().containsKey(streamName)) {
@@ -518,7 +522,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
     public void testTruncateOpNoChecksum() throws Exception {
         DistributedLogServiceImpl localService = createConfiguredLocalService();
         WriteContext ctx = new WriteContext();
-        Future<WriteResponse> result = localService.truncate("test", new DLSN(1,2,3).serialize(), ctx);
+        Future<WriteResponse> result = localService.truncate("test", new DLSN(1, 2, 3).serialize(), ctx);
         WriteResponse resp = Await.result(result);
         assertEquals(StatusCode.SUCCESS, resp.getHeader().getCode());
         localService.shutdown();
@@ -580,7 +584,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             ProtocolUtils.writeOpCRC32("test", buffer.array()));
 
         // Overwrite 1 byte to corrupt data.
-        buffer.put(1, (byte)0xab);
+        buffer.put(1, (byte) 0xab);
         Future<WriteResponse> result = localService.writeWithContext("test", buffer, ctx);
         WriteResponse resp = Await.result(result);
         assertEquals(StatusCode.CHECKSUM_FAILED, resp.getHeader().getCode());
@@ -607,7 +611,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
     public void testTruncateOpChecksumBadChecksum() throws Exception {
         DistributedLogServiceImpl localService = createConfiguredLocalService();
         WriteContext ctx = new WriteContext().setCrc32(999);
-        Future<WriteResponse> result = localService.truncate("test", new DLSN(1,2,3).serialize(), ctx);
+        Future<WriteResponse> result = localService.truncate("test", new DLSN(1, 2, 3).serialize(), ctx);
         WriteResponse resp = Await.result(result);
         assertEquals(StatusCode.CHECKSUM_FAILED, resp.getHeader().getCode());
         localService.shutdown();
@@ -620,7 +624,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             new NullStatsLogger(),
             new IdentityStreamPartitionConverter(),
             new ServerConfiguration(),
-            (byte)0,
+            (byte) 0,
             checksum,
             false,
             disabledFeature,
@@ -651,8 +655,14 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         String streamName = testName.getMethodName();
 
         SettableFeature disabledFeature = new SettableFeature("", 1);
-        WriteOp writeOp0 = getWriteOp(streamName, disabledFeature, ProtocolUtils.writeOpCRC32(streamName, "test".getBytes()));
-        WriteOp writeOp1 = getWriteOp(streamName, disabledFeature, ProtocolUtils.writeOpCRC32(streamName, "test".getBytes()));
+        WriteOp writeOp0 = getWriteOp(
+            streamName,
+            disabledFeature,
+            ProtocolUtils.writeOpCRC32(streamName, "test".getBytes()));
+        WriteOp writeOp1 = getWriteOp(
+            streamName,
+            disabledFeature,
+            ProtocolUtils.writeOpCRC32(streamName, "test".getBytes()));
 
         writeOp0.preExecute();
         disabledFeature.set(0);
@@ -699,9 +709,9 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         for (Future<WriteResponse> future : futureList) {
             WriteResponse response = Await.result(future);
             assertTrue("Op should succeed or be rejected : " + response.getHeader().getCode(),
-                    StatusCode.SUCCESS == response.getHeader().getCode() ||
-                    StatusCode.WRITE_EXCEPTION == response.getHeader().getCode() ||
-                    StatusCode.STREAM_UNAVAILABLE == response.getHeader().getCode());
+                    StatusCode.SUCCESS == response.getHeader().getCode()
+                        || StatusCode.WRITE_EXCEPTION == response.getHeader().getCode()
+                        || StatusCode.STREAM_UNAVAILABLE == response.getHeader().getCode());
         }
         assertTrue("There should be no streams in the cache",
                 streamManager.getCachedStreams().isEmpty());
@@ -757,9 +767,9 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             WriteResponse response = Await.result(future);
             assertTrue("Op should fail with " + StatusCode.BK_TRANSMIT_ERROR + " or be rejected : "
                     + response.getHeader().getCode(),
-                    StatusCode.BK_TRANSMIT_ERROR == response.getHeader().getCode() ||
-                    StatusCode.WRITE_EXCEPTION == response.getHeader().getCode() ||
-                    StatusCode.WRITE_CANCELLED_EXCEPTION == response.getHeader().getCode());
+                    StatusCode.BK_TRANSMIT_ERROR == response.getHeader().getCode()
+                        || StatusCode.WRITE_EXCEPTION == response.getHeader().getCode()
+                        || StatusCode.WRITE_CANCELLED_EXCEPTION == response.getHeader().getCode());
         }
         // acquired streams should all been removed after we close them
         assertTrue("There should be no streams in the acquired cache",

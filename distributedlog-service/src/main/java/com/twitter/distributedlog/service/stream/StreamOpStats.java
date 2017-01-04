@@ -17,8 +17,8 @@
  */
 package com.twitter.distributedlog.service.stream;
 
-import com.twitter.distributedlog.stats.BroadCastStatsLogger;
 import com.twitter.distributedlog.service.streamset.Partition;
+import com.twitter.distributedlog.stats.BroadCastStatsLogger;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;

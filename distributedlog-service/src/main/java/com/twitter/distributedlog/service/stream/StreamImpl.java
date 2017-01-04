@@ -20,11 +20,11 @@ package com.twitter.distributedlog.service.stream;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
-import com.twitter.distributedlog.exceptions.AlreadyClosedException;
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.DistributedLogManager;
 import com.twitter.distributedlog.config.DynamicDistributedLogConfiguration;
+import com.twitter.distributedlog.exceptions.AlreadyClosedException;
 import com.twitter.distributedlog.exceptions.DLException;
 import com.twitter.distributedlog.exceptions.OverCapacityException;
 import com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException;
@@ -51,6 +51,12 @@ import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
 import com.twitter.util.TimeoutException;
 import com.twitter.util.Timer;
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.stats.Counter;
@@ -65,20 +71,17 @@ import org.slf4j.LoggerFactory;
 import scala.runtime.AbstractFunction1;
 import scala.runtime.BoxedUnit;
 
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+/**
+ * Implementation of {@link Stream}.
+ */
 public class StreamImpl implements Stream {
-    static final Logger logger = LoggerFactory.getLogger(StreamImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(StreamImpl.class);
 
     /**
      * The status of the stream.
      *
-     * The status change of the stream should just go in one direction. If a stream hits
+     * <p>The status change of the stream should just go in one direction. If a stream hits
      * any error, the stream should be put in error state. If a stream is in error state,
      * it should be removed and not reused anymore.
      */
@@ -405,7 +408,7 @@ public class StreamImpl implements Stream {
                     // Stream is closed, fail the op immediately
                     op.fail(new StreamUnavailableException("Stream " + name + " is closed."));
                     return;
-                } if (StreamStatus.INITIALIZED == status) {
+                } else if (StreamStatus.INITIALIZED == status) {
                     completeOpNow = true;
                     success = true;
                 } else if (failFastOnStreamNotReady) {
@@ -551,7 +554,8 @@ public class StreamImpl implements Stream {
     Future<Boolean> acquireStream() {
         final Stopwatch stopwatch = Stopwatch.createStarted();
         final Promise<Boolean> acquirePromise = new Promise<Boolean>();
-        manager.openAsyncLogWriter().addEventListener(FutureUtils.OrderedFutureEventListener.of(new FutureEventListener<AsyncLogWriter>() {
+        manager.openAsyncLogWriter().addEventListener(
+            FutureUtils.OrderedFutureEventListener.of(new FutureEventListener<AsyncLogWriter>() {
 
             @Override
             public void onSuccess(AsyncLogWriter w) {
@@ -748,8 +752,8 @@ public class StreamImpl implements Stream {
         final boolean abort;
         closeLock.writeLock().lock();
         try {
-            if (StreamStatus.CLOSING == status ||
-                StreamStatus.CLOSED == status) {
+            if (StreamStatus.CLOSING == status
+                || StreamStatus.CLOSED == status) {
                 return closePromise;
             }
             logger.info("Request to close stream {} : {}", getStreamName(), reason);
@@ -875,7 +879,7 @@ public class StreamImpl implements Stream {
     }
 
     /**
-     * clean up the gauge to help GC
+     * clean up the gauge to help GC.
      */
     private void unregisterGauge(){
         streamLogger.unregisterGauge("stream_status", this.streamStatusGauge);

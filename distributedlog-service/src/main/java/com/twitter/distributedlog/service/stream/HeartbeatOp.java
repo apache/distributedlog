@@ -17,6 +17,8 @@
  */
 package com.twitter.distributedlog.service.stream;
 
+import static com.google.common.base.Charsets.UTF_8;
+
 import com.twitter.distributedlog.AsyncLogWriter;
 import com.twitter.distributedlog.BKAsyncLogWriter;
 import com.twitter.distributedlog.DLSN;
@@ -28,15 +30,14 @@ import com.twitter.distributedlog.service.ResponseUtils;
 import com.twitter.distributedlog.thrift.service.WriteResponse;
 import com.twitter.distributedlog.util.Sequencer;
 import com.twitter.util.Future;
-
-import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;
-
 import scala.runtime.AbstractFunction1;
 
-import static com.google.common.base.Charsets.UTF_8;
-
+/**
+ * Heartbeat Operation.
+ */
 public class HeartbeatOp extends AbstractWriteOp {
 
     static final byte[] HEARTBEAT_DATA = "heartbeat".getBytes(UTF_8);

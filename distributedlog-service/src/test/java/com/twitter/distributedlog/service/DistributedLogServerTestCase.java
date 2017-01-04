@@ -17,38 +17,37 @@
  */
 package com.twitter.distributedlog.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+import com.twitter.distributedlog.DLMTestUtil;
 import com.twitter.distributedlog.DistributedLogConfiguration;
 import com.twitter.distributedlog.client.DistributedLogClientImpl;
 import com.twitter.distributedlog.client.resolver.DefaultRegionResolver;
 import com.twitter.distributedlog.client.routing.LocalRoutingService;
 import com.twitter.distributedlog.client.routing.RegionsRoutingService;
 import com.twitter.distributedlog.service.DistributedLogCluster.DLServer;
-import com.twitter.distributedlog.service.stream.StreamManagerImpl;
 import com.twitter.distributedlog.service.stream.StreamManager;
-import com.twitter.distributedlog.DLMTestUtil;
-import com.twitter.finagle.thrift.ClientId$;
+import com.twitter.distributedlog.service.stream.StreamManagerImpl;
 import com.twitter.finagle.builder.ClientBuilder;
+import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Duration;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
-import static org.junit.Assert.*;
-
+/**
+ * Base test case for distributedlog servers.
+ */
 public abstract class DistributedLogServerTestCase {
-
-    protected static final Logger LOG = LoggerFactory.getLogger(DistributedLogServerTestCase.class);
 
     protected static DistributedLogConfiguration conf =
             new DistributedLogConfiguration().setLockTimeout(10)
@@ -59,6 +58,9 @@ public abstract class DistributedLogServerTestCase {
     protected static DistributedLogCluster dlCluster;
     protected static DistributedLogCluster noAdHocCluster;
 
+    /**
+     * A distributedlog client wrapper for testing.
+     */
     protected static class DLClient {
         public final LocalRoutingService routingService;
         public DistributedLogClientBuilder dlClientBuilder;
@@ -94,6 +96,9 @@ public abstract class DistributedLogServerTestCase {
         }
     }
 
+    /**
+     * A distributedlog client wrapper that talks to two regions.
+     */
     protected static class TwoRegionDLClient {
 
         public final LocalRoutingService localRoutingService;

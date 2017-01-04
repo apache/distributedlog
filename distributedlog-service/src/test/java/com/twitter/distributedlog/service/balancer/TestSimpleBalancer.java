@@ -17,27 +17,29 @@
  */
 package com.twitter.distributedlog.service.balancer;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
-import com.twitter.distributedlog.service.DistributedLogClient;
 import com.twitter.distributedlog.service.DistributedLogCluster.DLServer;
 import com.twitter.distributedlog.service.DistributedLogServerTestCase;
 import com.twitter.util.Await;
+import java.nio.ByteBuffer;
+import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
-import java.util.Set;
-
-import static com.google.common.base.Charsets.*;
-import static org.junit.Assert.*;
-
+/**
+ * Test Case for {@link SimpleBalancer}.
+ */
 public class TestSimpleBalancer extends DistributedLogServerTestCase {
 
-    static final Logger logger = LoggerFactory.getLogger(TestSimpleBalancer.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestSimpleBalancer.class);
 
     DLClient targetClient;
     DLServer targetServer;
@@ -82,7 +84,7 @@ public class TestSimpleBalancer extends DistributedLogServerTestCase {
         // write to multiple streams
         for (int i = 0; i < numStreams; i++) {
             String name = namePrefix + i;
-            Await.result(((DistributedLogClient) dlClient.dlClient).write(name, ByteBuffer.wrap(("" + i).getBytes(UTF_8))));
+            Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes(UTF_8))));
         }
 
         // validation
@@ -139,7 +141,7 @@ public class TestSimpleBalancer extends DistributedLogServerTestCase {
         // write to multiple streams
         for (int i = 0; i < numStreams; i++) {
             String name = namePrefix + i;
-            Await.result(((DistributedLogClient) dlClient.dlClient).write(name, ByteBuffer.wrap(("" + i).getBytes(UTF_8))));
+            Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap(("" + i).getBytes(UTF_8))));
         }
 
         // validation

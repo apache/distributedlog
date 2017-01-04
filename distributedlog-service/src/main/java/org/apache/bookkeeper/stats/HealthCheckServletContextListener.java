@@ -21,7 +21,7 @@ import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 
 /**
- * Health Check Servlet Listener
+ * Health Check Servlet Listener.
  */
 public class HealthCheckServletContextListener extends HealthCheckServlet.ContextListener {
 

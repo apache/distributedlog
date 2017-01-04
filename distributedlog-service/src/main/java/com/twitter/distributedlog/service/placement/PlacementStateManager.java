@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,46 +20,60 @@ package com.twitter.distributedlog.service.placement;
 import java.util.TreeSet;
 
 /**
- * The PlacementStateManager handles persistence of calculated resource placements including, the
- * storage once the calculated, and the retrieval by the other shards.
+ * The PlacementStateManager handles persistence of calculated resource placements.
  */
 public interface PlacementStateManager {
 
-  /**
-   * Saves the ownership mapping as a TreeSet of ServerLoads to persistent storage
-   */
-  void saveOwnership(TreeSet<ServerLoad> serverLoads) throws StateManagerSaveException;
+    /**
+     * Saves the ownership mapping as a TreeSet of ServerLoads to persistent storage.
+     */
+    void saveOwnership(TreeSet<ServerLoad> serverLoads) throws StateManagerSaveException;
 
-  /**
-   * Loads the ownership mapping as TreeSet of ServerLoads from persistent storage
-   */
-  TreeSet<ServerLoad> loadOwnership() throws StateManagerLoadException;
+    /**
+     * Loads the ownership mapping as TreeSet of ServerLoads from persistent storage.
+     */
+    TreeSet<ServerLoad> loadOwnership() throws StateManagerLoadException;
 
-  /**
-   * Watch the persistent storage for changes to the ownership mapping and calls placementCallback
-   * with the new mapping when a change occurs
-   */
-  void watch(PlacementCallback placementCallback);
+    /**
+     * Watch the persistent storage for changes to the ownership mapping.
+     *
+     * <p>The placementCallback callbacks will be triggered with the new mapping when a change occurs.
+     */
+    void watch(PlacementCallback placementCallback);
 
-  interface PlacementCallback {
-    void callback(TreeSet<ServerLoad> serverLoads);
-  }
-
-  abstract class StateManagerException extends Exception {
-    public StateManagerException(String message, Exception e) {
-      super(message, e);
+    /**
+     * Placement Callback.
+     *
+     * <p>The callback is triggered when server loads are updated.
+     */
+    interface PlacementCallback {
+        void callback(TreeSet<ServerLoad> serverLoads);
     }
-  }
 
-  class StateManagerLoadException extends StateManagerException {
-    public StateManagerLoadException(Exception e) {
-      super("Load of Ownership failed", e);
+    /**
+     * The base exception thrown when state manager encounters errors.
+     */
+    abstract class StateManagerException extends Exception {
+        public StateManagerException(String message, Exception e) {
+            super(message, e);
+        }
     }
-  }
 
-  class StateManagerSaveException extends StateManagerException {
-    public StateManagerSaveException(Exception e) {
-      super("Save of Ownership failed", e);
+    /**
+     * Exception thrown when failed to load the ownership mapping.
+     */
+    class StateManagerLoadException extends StateManagerException {
+        public StateManagerLoadException(Exception e) {
+            super("Load of Ownership failed", e);
+        }
     }
-  }
+
+    /**
+     * Exception thrown when failed to save the ownership mapping.
+     */
+    class StateManagerSaveException extends StateManagerException {
+        public StateManagerSaveException(Exception e) {
+            super("Save of Ownership failed", e);
+        }
+    }
 }
