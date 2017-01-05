@@ -101,6 +101,10 @@
     <scrooge-maven-plugin.version>3.17.0</scrooge-maven-plugin.version>
     <codahale.metrics.version>3.0.1</codahale.metrics.version>
     <jetty.version>8.1.19.v20160209</jetty.version>
+    <grpc.version>1.0.0</grpc.version>
+    <!-- plugin versions -->
+    <os-maven-plugin.version>1.5.0.Final</os-maven-plugin.version>
+    <protobuf-maven-plugin.version>0.5.0</protobuf-maven-plugin.version>
   </properties>
   <build>
     <plugins>
