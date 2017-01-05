@@ -322,5 +322,5 @@ is a good example to check out for customizing your dns resolver based our netwo
 
 ::
 
-    bkEnsemblePlacementDnsResolverClass=com.twitter.distributedlog.net.DNSResolverForRacks
+    bkEnsemblePlacementDnsResolverClass=org.apache.distributedlog.net.DNSResolverForRacks
 

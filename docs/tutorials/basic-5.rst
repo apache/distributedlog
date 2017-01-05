@@ -149,7 +149,7 @@ Start the write proxy, listening on port 8000.
 ::
 
         // DistributedLogServerApp -p ${service-port} --shard-id ${shard-id} -sp ${stats-port} -u {distributedlog-uri} -mx -c ${conf-file}
-        ./distributedlog-service/bin/dlog com.twitter.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
+        ./distributedlog-service/bin/dlog org.apache.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
 
 
 Create the stream
@@ -172,8 +172,8 @@ Tailing the stream using `TailReader` to wait for new records.
 ::
 
         // Tailing Stream `basic-stream-9`
-        // runner run com.twitter.distributedlog.basic.TailReader ${distributedlog-uri} ${stream}
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.TailReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-9
+        // runner run org.apache.distributedlog.basic.TailReader ${distributedlog-uri} ${stream}
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.TailReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-9
 
 
 Write records
@@ -184,8 +184,8 @@ Run the example to write records to the stream in a console.
 ::
 
         // Write Records into Stream `basic-stream-9`
-        // runner run com.twitter.distributedlog.basic.ConsoleProxyWriter ${distributedlog-uri} ${stream}
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.ConsoleProxyWriter 'inet!127.0.0.1:8000' basic-stream-9
+        // runner run org.apache.distributedlog.basic.ConsoleProxyWriter ${distributedlog-uri} ${stream}
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.ConsoleProxyWriter 'inet!127.0.0.1:8000' basic-stream-9
 
 
 Check the results

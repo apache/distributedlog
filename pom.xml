@@ -112,7 +112,7 @@
           <groups>
             <group>
               <title>DistributedLog</title>
-              <packages>com.twitter.distributedlog.*</packages>
+              <packages>org.apache.distributedlog.*</packages>
             </group>
           </groups>
         </configuration>
@@ -194,6 +194,7 @@
 	    <exclude>OWNERS</exclude>
 	    <exclude>CONFIG.ini</exclude>
             <exclude>**/**.md</exclude>
+            <exclude>scripts/dev/reviewers</exclude>
           </excludes>
         </configuration>
       </plugin>

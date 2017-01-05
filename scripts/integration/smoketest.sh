@@ -77,11 +77,11 @@ done
 ${DLOG_ROOT}/distributedlog-service/bin/dlog-daemon.sh start writeproxy
 
 # tail the the streams
-nohup ${DLOG_ROOT}/distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.MultiReader distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE} ${SMOKESTREAM_PREFIX}1,${SMOKESTREAM_PREFIX}2,${SMOKESTREAM_PREFIX}3,${SMOKESTREAM_PREFIX}4,${SMOKESTREAM_PREFIX}5 > ${LOG_DIR}/reader.out 2>&1&
+nohup ${DLOG_ROOT}/distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.MultiReader distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE} ${SMOKESTREAM_PREFIX}1,${SMOKESTREAM_PREFIX}2,${SMOKESTREAM_PREFIX}3,${SMOKESTREAM_PREFIX}4,${SMOKESTREAM_PREFIX}5 > ${LOG_DIR}/reader.out 2>&1&
 echo $! > ${LOG_DIR}/reader.pid
 
 # generate the records
-nohup ${DLOG_ROOT}/distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator "inet!127.0.0.1:${WP_SERVICE_PORT}" ${SMOKESTREAM_PREFIX}1 1 > ${LOG_DIR}/writer.out 2>&1&
+nohup ${DLOG_ROOT}/distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.RecordGenerator "inet!127.0.0.1:${WP_SERVICE_PORT}" ${SMOKESTREAM_PREFIX}1 1 > ${LOG_DIR}/writer.out 2>&1&
 echo $! > ${LOG_DIR}/writer.pid
 
 # wait for 20 seconds
