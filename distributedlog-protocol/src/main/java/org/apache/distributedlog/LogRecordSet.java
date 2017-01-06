@@ -76,6 +76,7 @@ public class LogRecordSet {
     // Compression Codec
     static final int COMPRESSION_CODEC_NONE = 0x0;
     static final int COMPRESSION_CODEC_LZ4 = 0X1;
+    static final int COMPRESSION_CODEC_ZSTD = 0x2;
 
     public static int numRecords(LogRecord record) throws IOException {
         checkArgument(record.isRecordSet(),

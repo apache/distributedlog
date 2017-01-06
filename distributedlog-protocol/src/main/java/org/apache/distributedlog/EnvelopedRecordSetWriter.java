@@ -20,6 +20,7 @@ package org.apache.distributedlog;
 import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
 import static org.apache.distributedlog.LogRecordSet.COMPRESSION_CODEC_LZ4;
 import static org.apache.distributedlog.LogRecordSet.COMPRESSION_CODEC_NONE;
+import static org.apache.distributedlog.LogRecordSet.COMPRESSION_CODEC_ZSTD;
 import static org.apache.distributedlog.LogRecordSet.HEADER_LEN;
 import static org.apache.distributedlog.LogRecordSet.METADATA_COMPRESSION_MASK;
 import static org.apache.distributedlog.LogRecordSet.METADATA_VERSION_MASK;
@@ -66,6 +67,9 @@ class EnvelopedRecordSetWriter implements LogRecordSet.Writer {
         switch (codec) {
             case LZ4:
                 this.codecCode = COMPRESSION_CODEC_LZ4;
+                break;
+            case ZSTD:
+                this.codecCode = COMPRESSION_CODEC_ZSTD;
                 break;
             default:
                 this.codecCode = COMPRESSION_CODEC_NONE;
@@ -148,7 +152,7 @@ class EnvelopedRecordSetWriter implements LogRecordSet.Writer {
         int dataOffset = HEADER_LEN;
         int dataLen = buffer.size() - HEADER_LEN;
 
-        if (COMPRESSION_CODEC_LZ4 != codecCode) {
+        if (COMPRESSION_CODEC_NONE == codecCode) {
             ByteBuffer recordSetBuffer = ByteBuffer.wrap(data, 0, buffer.size());
             // update count
             recordSetBuffer.putInt(4, count);

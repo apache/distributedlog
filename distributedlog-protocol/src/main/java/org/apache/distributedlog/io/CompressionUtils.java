@@ -24,9 +24,11 @@ public class CompressionUtils {
 
     public static final String LZ4 = "lz4";
     public static final String NONE = "none";
+    public static final String ZSTD = "zstd";
 
     private static final CompressionCodec IDENTITY_CODEC = new IdentityCompressionCodec();
     private static final CompressionCodec LZ4_CODEC = new LZ4CompressionCodec();
+    private static final CompressionCodec ZSTD_CODEC = new ZstdCompressionCodec();
 
     /**
      * Get a cached compression codec instance for the specified type.
@@ -36,6 +38,8 @@ public class CompressionUtils {
     public static CompressionCodec getCompressionCodec(CompressionCodec.Type type) {
         if (type == CompressionCodec.Type.LZ4) {
             return LZ4_CODEC;
+        } else if (type == CompressionCodec.Type.ZSTD) {
+            return ZSTD_CODEC;
         }
         // No Compression
         return IDENTITY_CODEC;
@@ -49,6 +53,8 @@ public class CompressionUtils {
     public static CompressionCodec.Type stringToType(String compressionString) {
         if (compressionString.equals(LZ4)) {
             return CompressionCodec.Type.LZ4;
+        } else if (compressionString.equals(ZSTD)) {
+            return CompressionCodec.Type.ZSTD;
         } else if (compressionString.equals(NONE)) {
             return CompressionCodec.Type.NONE;
         } else {

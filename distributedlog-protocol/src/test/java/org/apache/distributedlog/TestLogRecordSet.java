@@ -106,6 +106,11 @@ public class TestLogRecordSet {
         testWriteRecords(Type.LZ4);
     }
 
+    @Test(timeout = 20000)
+    public void testWriteRecordsZstdCompressed() throws Exception {
+        testWriteRecords(Type.ZSTD);
+    }
+
     void testWriteRecords(Type codec) throws Exception {
         Writer writer = LogRecordSet.newWriter(1024, codec);
         assertEquals("zero user bytes", HEADER_LEN, writer.getNumBytes());
