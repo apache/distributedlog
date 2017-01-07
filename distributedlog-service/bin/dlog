@@ -57,19 +57,19 @@ shift
 
 case "${COMMAND}" in
   local)
-    exec java $OPTS $JMX_ARGS com.twitter.distributedlog.LocalDLMEmulator $@
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.LocalDLMEmulator $@
     ;;
   tool)
-    exec java $OPTS com.twitter.distributedlog.tools.Tool com.twitter.distributedlog.tools.DistributedLogTool $@
+    exec java $OPTS org.apache.distributedlog.tools.Tool org.apache.distributedlog.tools.DistributedLogTool $@
     ;;
   proxy_tool)
-    exec java $OPTS com.twitter.distributedlog.tools.Tool com.twitter.distributedlog.service.tools.ProxyTool $@
+    exec java $OPTS org.apache.distributedlog.tools.Tool org.apache.distributedlog.service.tools.ProxyTool $@
     ;;
   balancer)
-    exec java $OPTS com.twitter.distributedlog.tools.Tool com.twitter.distributedlog.service.balancer.BalancerTool $@
+    exec java $OPTS org.apache.distributedlog.tools.Tool org.apache.distributedlog.service.balancer.BalancerTool $@
     ;;
   admin)
-    exec java $OPTS com.twitter.distributedlog.tools.Tool com.twitter.distributedlog.admin.DistributedLogAdmin $@
+    exec java $OPTS org.apache.distributedlog.tools.Tool org.apache.distributedlog.admin.DistributedLogAdmin $@
     ;;
   zkshell)
     exec java $OPTS org.apache.zookeeper.ZooKeeperMain -server $@

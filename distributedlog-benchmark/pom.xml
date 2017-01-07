@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.twitter</groupId>
+    <groupId>org.apache.distributedlog</groupId>
     <artifactId>distributedlog</artifactId>
     <version>0.4.0-incubating-SNAPSHOT</version>
   </parent>
@@ -27,12 +27,12 @@
   <name>Apache DistributedLog :: Benchmark</name>
   <dependencies>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-client</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-service</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
@@ -42,7 +42,7 @@
       <version>${birdcage.sha}</version>
     </dependency>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-core</artifactId>
       <version>${project.parent.version}</version>
       <scope>test</scope>
@@ -123,7 +123,7 @@
             <version>6.19</version>
           </dependency>
           <dependency>
-            <groupId>com.twitter</groupId>
+            <groupId>org.apache.distributedlog</groupId>
             <artifactId>distributedlog-build-tools</artifactId>
             <version>${project.version}</version>
           </dependency>
