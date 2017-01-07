@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace java com.twitter.distributedlog.service.placement.thrift
+namespace java org.apache.distributedlog.service.placement.thrift
 
 struct StreamLoad {
     1: optional string stream

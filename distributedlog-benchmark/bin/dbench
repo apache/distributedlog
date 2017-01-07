@@ -76,7 +76,7 @@ case "${COMMAND}" in
     --change-interval ${CHANGE_RATE_INTERVAL} \\
     """
     BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_WRITE_ARGS} \\ --mode dlwrite \\"
-    exec java $OPTS $JMX_ARGS com.twitter.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
     ;;
   write)
     BENCH_WRITE_ARGS="""
@@ -88,7 +88,7 @@ case "${COMMAND}" in
     --finagle-name inet!localhost:8000 \\
     """
     BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_WRITE_ARGS} \\ --mode write \\"
-    exec java $OPTS $JMX_ARGS com.twitter.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
     ;;
   read)
     BENCH_READ_ARGS="""
@@ -98,7 +98,7 @@ case "${COMMAND}" in
     --finagle-name inet!localhost:8000 \\
     """
     BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_READ_ARGS} \\ --mode read \\"
-    exec java $OPTS $JMX_ARGS com.twitter.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
     ;;
   help)
     usage

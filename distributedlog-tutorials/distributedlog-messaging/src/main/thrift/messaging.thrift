@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace java com.twitter.distributedlog.thrift.messaging
+namespace java org.apache.distributedlog.thrift.messaging
 
 struct TransformedRecord {
     1: required binary payload

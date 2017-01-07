@@ -20,11 +20,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>distributedlog</artifactId>
-    <groupId>com.twitter</groupId>
+    <groupId>org.apache.distributedlog</groupId>
     <version>0.4.0-incubating-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
-  <groupId>com.twitter</groupId>
+  <groupId>org.apache.distributedlog</groupId>
   <artifactId>distributedlog-mapreduce</artifactId>
   <name>Apache DistributedLog :: Tutorials :: MapReduce Tutorial</name>
   <url>http://maven.apache.org</url>
@@ -34,12 +34,12 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-client</artifactId>
       <version>${project.parent.version}</version>
     </dependency>

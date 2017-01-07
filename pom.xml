@@ -23,7 +23,7 @@
     <artifactId>apache</artifactId>
     <version>17</version>
   </parent>
-  <groupId>com.twitter</groupId>
+  <groupId>org.apache.distributedlog</groupId>
   <artifactId>distributedlog</artifactId>
   <packaging>pom</packaging>
   <version>0.4.0-incubating-SNAPSHOT</version>
@@ -203,6 +203,7 @@
 	    <exclude>OWNERS</exclude>
 	    <exclude>CONFIG.ini</exclude>
             <exclude>**/**.md</exclude>
+            <exclude>scripts/dev/reviewers</exclude>
           </excludes>
         </configuration>
       </plugin>
