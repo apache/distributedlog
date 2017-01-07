@@ -20,7 +20,6 @@ package org.apache.distributedlog.service.stream;
 import static com.google.common.base.Charsets.UTF_8;
 
 import org.apache.distributedlog.AsyncLogWriter;
-import org.apache.distributedlog.BKAsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.acl.AccessControlManager;
