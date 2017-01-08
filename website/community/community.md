@@ -62,6 +62,14 @@ There are many ways to get help from the Apache DistributedLog community. The [m
   </tr>
 </table>
 
+## Slack Channel
+
+There is a Slack channel dedicated to Apache DistributedLog at [https://apachedistributedlog.slack.com/](https://apachedistributedlog.slack.com/). The slack channel can be used for online discussions about Apache DistributedLog as community. Users can get help using DistributedLog, follow developement discussions and connect with the community.
+
+But developers should be careful to move or duplicate all the official or useful discussions to the issue tracking system or dev mailing list.
+
+If you are interested in connecting with the community using Slack channel, you can get invite from [here](https://getdl-slack.herokuapp.com/).
+
 ## Issue Tracker
 
 We use JIRA to track all code related issues: [{{ site.jira_url }}]({{ site.jira_url }}).

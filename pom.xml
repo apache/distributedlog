@@ -109,12 +109,21 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.8</version>
         <configuration>
+          <!-- Avoid for missing javadoc comments to be marked as errors -->
+          <additionalparam>-Xdoclint:none</additionalparam>
           <groups>
             <group>
-              <title>DistributedLog</title>
-              <packages>org.apache.distributedlog.*</packages>
+              <title>Core Library</title>
+              <packages>com.twitter.distributedlog:com.twitter.distributedlog.annotations:com.twitter.distributedlog.callback:com.twitter.distributedlog.exceptions:com.twitter.distributedlog.feature:com.twitter.distributedlog.io:com.twitter.distributedlog.lock:com.twitter.distributedlog.logsegment:com.twitter.distributedlog.metadata:com.twitter.distributedlog.namespace:com.twitter.distributedlog.net:com.twitter.distributedlog.stats:com.twitter.distributedlog.subscription</packages>
+            </group>
+            <group>
+              <title>Proxy Client</title>
+              <packages>com.twitter.distributedlog.client*:com.twitter.distributedlog.service*</packages>
             </group>
           </groups>
+          <excludePackageNames>
+            com.twitter.distributedlog.acl:com.twitter.distributedlog.admin:com.twitter.distributedlog.auditor:com.twitter.distributedlog.basic:com.twitter.distributedlog.benchmark*:com.twitter.distributedlog.bk:com.twitter.distributedlog.ownership:com.twitter.distributedlog.proxy:com.twitter.distributedlog.resolver:com.twitter.distributedlog.service.*:com.twitter.distributedlog.config:com.twitter.distributedlog.function:com.twitter.distributedlog.impl*:com.twitter.distributedlog.injector:com.twitter.distributedlog.kafka:com.twitter.distributedlog.limiter:com.twitter.distributedlog.mapreduce:com.twitter.distributedlog.messaging:com.twitter.distributedlog.rate:com.twitter.distributedlog.readahead:com.twitter.distributedlog.selector:com.twitter.distributedlog.stats:com.twitter.distributedlog.thrift*:com.twitter.distributedlog.tools:com.twitter.distributedlog.util:com.twitter.distributedlog.zk:org.apache.bookkeeper.client:org.apache.bookkeeper.stats 
+          </excludePackageNames>
         </configuration>
         <executions>
           <execution>

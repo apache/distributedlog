@@ -20,7 +20,6 @@ package org.apache.distributedlog.service.stream;
 import static com.google.common.base.Charsets.UTF_8;
 
 import org.apache.distributedlog.AsyncLogWriter;
-import org.apache.distributedlog.BKAsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.acl.AccessControlManager;
@@ -77,7 +76,9 @@ public class HeartbeatOp extends AbstractWriteOp {
             Future<DLSN> writeResult;
             synchronized (txnLock) {
                 txnId = sequencer.nextId();
-                writeResult = ((BKAsyncLogWriter) writer).writeControlRecord(new LogRecord(txnId, HEARTBEAT_DATA));
+                LogRecord hbRecord = new LogRecord(txnId, HEARTBEAT_DATA);
+                hbRecord.setControl();
+                writeResult = writer.write(hbRecord);
             }
             return writeResult.map(new AbstractFunction1<DLSN, WriteResponse>() {
                 @Override
