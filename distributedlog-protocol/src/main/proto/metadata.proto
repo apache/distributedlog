@@ -1,0 +1,118 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+syntax = "proto3";
+
+package distributedlog.proto.metadata;
+
+option java_multiple_files = true;
+option java_package = "org.apache.distributedlog.proto.metadata";
+
+option optimize_for = LITE_RUNTIME;
+
+message KeyValue {
+    bytes key   = 1;
+    bytes value = 2;
+}
+
+enum StreamType {
+    STREAM      = 0;
+}
+
+message EnsembleConfig {
+    int32 ensemble_size         = 1;
+    int32 write_quorum_size     = 2;
+    int32 ack_quorum_size       = 3;
+}
+
+message SizeRollingPolicy {
+    int32 max_logsegment_size   = 1;
+}
+
+message TimeRollingPolicy {
+    int32 rolling_minutes       = 1;
+}
+
+message RollingPolicy {
+    enum Type {
+        TIME    = 0;
+        SIZE    = 1;
+    }
+
+    Type type   = 1;
+    oneof policy {
+        SizeRollingPolicy size_rolling_policy   = 2;
+        TimeRollingPolicy time_rolling_policy   = 3;
+    }
+}
+
+message RetentionPolicy {
+    enum Type {
+        TIME            = 0;
+        EXPLICIT        = 1;
+    }
+    Type type                   = 1;
+    int32 retention_hours       = 2; 
+}
+
+message StreamMetadata {
+    StreamType type = 1; 
+
+    EnsembleConfig ensemble_config      = 2;
+    RollingPolicy rolling_policy        = 3;
+    RetentionPolicy retention_policy    = 4;
+
+    // user defined attributes
+    repeated KeyValue attributes        = 999;
+}
+
+message SegmentMetadata {
+
+    enum TruncationStatus {
+        Active                  = 0;
+        PARTIALLY_TRUNCATED     = 1;
+        TRUNCATED               = 2;
+    }
+
+    int64 log_segment_id                = 1;
+    int64 log_segment_sequence_number   = 2;
+    int64 record_count                  = 3;
+    TruncationStatus truncate_status    = 4;
+
+    // transaction ids
+    int64 first_tx_id                   = 5;
+    int64 last_tx_id                    = 6;
+
+    // time
+    int64 ctime                         = 7;
+    int64 mtime                         = 8;
+    int64 completion_time               = 9;
+
+    // sequence id
+    int64 start_sequence_id             = 10;
+
+    // region id
+    int32 region_id                     = 11;
+
+    // completion state
+    int64 last_entry_id                 = 12;
+    int64 last_slot_id                  = 13;
+
+    // truncation state
+    int64 min_active_entry_id           = 14;
+    int64 min_active_slot_id            = 15;
+}

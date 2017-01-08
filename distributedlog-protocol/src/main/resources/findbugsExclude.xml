@@ -21,6 +21,10 @@
     <Class name="~org\.apache\.distributedlog\.thrift.*" />
   </Match>
   <Match>
+    <!-- generated code, we can't be held responsible for findbugs in it //-->
+    <Class name="~org\.apache\.distributedlog\.proto.*" />
+  </Match>
+  <Match>
     <!-- it is safe to store external bytes reference here. //-->
     <Class name="org.apache.distributedlog.LogRecord" />
     <Bug pattern="EI_EXPOSE_REP2" />
