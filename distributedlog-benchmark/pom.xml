@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.distributedlog</groupId>
     <artifactId>distributedlog</artifactId>
-    <version>0.4.0-incubating-SNAPSHOT</version>
+    <version>0.5.0-incubating-SNAPSHOT</version>
   </parent>
   <artifactId>distributedlog-benchmark</artifactId>
   <name>Apache DistributedLog :: Benchmark</name>
