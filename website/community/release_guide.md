@@ -9,7 +9,7 @@ permalink: /community/release-guide/
 * TOC
 {:toc}
 
-This page documents the procedure to make an Apache DistributedLog release. Creit to the [Beam](http://distributedlog.incubator.apache.org/contribute/release-guide/) project. We've borrow liberally from their documentation.
+This page documents the procedure to make an Apache DistributedLog release. Creit to the [Beam](http://beam.apache.org/contribute/release-guide/) project. We've borrow liberally from their documentation.
 
 ## Introduction
 
@@ -276,19 +276,21 @@ By default, the Javadoc will be generated in `target/site/apidocs/`. Let `${JAVA
 
 Please carefully review the generated Javadoc. Check for completeness and presence of all relevant packages and `package-info.java`; consider adding less relevant packages to the `excludePackageNames` configuration. The index page is generated at `${JAVADOC_ROOT}/index.html`.
 
+Checkout the `asf-site` branch, as follows:
+
+    git checkout asf-site
+
+Copy the generated javadoc files to the asf site, as follows:
+
+    mkdir -p content/docs/${VERSION}/api/java 
+    cp -r target/site/apidocs/* content/docs/${VERSION}/api/java/
+
+
 ### Propose a pull request for website updates
 
 The final step of building the candidate is to propose a website pull request.
 
-Add the new release to the [Apache DistributedLog Releases]({{ site.baseurl }}/use/releases/) page, as follows:
-
-* Update the `<version>` tags in the sample `pom.xml` snippet to the new release.
-* Add the new version to the `Release Notes` section below, along with links to the source code download and the Release Notes in JIRA.
-
-Add the new Javadoc to [API Reference page]({{ site.baseurl }}/user_guide/api/core) page, as follows:
-
-* Copy the generated Javadoc into the website repository: `cp -r ${JAVADOC_ROOT} user_guid/api/core/javadoc/${VERSION}`.
-* Update the Javadoc link on this page to point to the new version.
+Follow the [example pull request](https://github.com/apache/incubator-distributedlog/pull/109) to make the modifications.
 
 Finally, propose a pull request with these changes. (Don’t merge before finalizing the release.)
 
