@@ -11,9 +11,24 @@ layout: default
 Releases
 ========
 
-`0.3.51-RC1` is the latest release.
+`0.4.0-incubating` is the latest release.
 
 You can verify your download by checking its md5 and sha1.
+
+0.4.0-incubating
+~~~~~~~~~~~~~~~~
+
+This is the first Apache release. Download here_.
+
+- `Release Notes`_
+- `Announce Blog Post`_
+
+.. _here: https://dist.apache.org/repos/dist/release/incubator/distributedlog/0.4.0-incubating
+.. _Release Notes: https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12320620&version=12337980
+.. _Announce Blog Post: [link]
+
+
+The releases before Apache Incubating are also listed as below:
 
 0.3.51-RC1
 ~~~~~~~~~~
