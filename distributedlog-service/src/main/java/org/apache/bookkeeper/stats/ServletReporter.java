@@ -25,7 +25,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 /**
- * Starts a jetty server on a configurable port to export stats
+ * Starts a jetty server on a configurable port to export stats.
  */
 public class ServletReporter {
 

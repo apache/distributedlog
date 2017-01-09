@@ -30,7 +30,7 @@ java -cp "${CLASSPATH}" \
      -Dlog4j.configuration=conf/log4j.properties \
      -DstatsHttpPort=9000 -DstatsExport=true \
      -Dserver_shard=0 \
-     com.twitter.distributedlog.service.DistributedLogServerApp \
+     org.apache.distributedlog.service.DistributedLogServerApp \
      --port 8000 \
      --uri "${DISTRIBUTEDLOG_URI}" \
      --conf conf/distributedlog.conf

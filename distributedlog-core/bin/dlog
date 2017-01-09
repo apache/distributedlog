@@ -20,8 +20,10 @@
 
 set -e
 
-DLOG_ROOT=$(git rev-parse --show-toplevel)
-DLOG_HOME="${DLOG_ROOT}"
+BASEDIR=$(dirname "$0")
+DLOG_ROOT="${BASEDIR}/../.."
+
+DLOG_HOME="${DLOG_ROOT}/distributedlog-core"
 
 usage() {
   cat <<EOF
@@ -46,25 +48,21 @@ These variable can also be set in conf/dlogenv.sh
 EOF
 }
 
-cd "${DLOG_ROOT}"
-source ./scripts/common.sh
+source "${DLOG_ROOT}"/scripts/common.sh
 
 # get arguments
 COMMAND=$1
 shift
 
-#Change to DLOG_HOME to support relative paths
-cd "$DLOG_HOME"
-
 case "${COMMAND}" in
   local)
-    exec java $OPTS $JMX_ARGS com.twitter.distributedlog.LocalDLMEmulator $@
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.LocalDLMEmulator $@
     ;;
   tool)
-    exec java $OPTS com.twitter.distributedlog.tools.Tool com.twitter.distributedlog.tools.DistributedLogTool $@
+    exec java $OPTS org.apache.distributedlog.tools.Tool org.apache.distributedlog.tools.DistributedLogTool $@
     ;;
   admin)
-    exec java $OPTS com.twitter.distributedlog.tools.Tool com.twitter.distributedlog.admin.DistributedLogAdmin $@
+    exec java $OPTS org.apache.distributedlog.tools.Tool org.apache.distributedlog.admin.DistributedLogAdmin $@
     ;;
   help)
     usage
