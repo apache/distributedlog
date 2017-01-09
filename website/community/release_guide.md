@@ -9,7 +9,7 @@ permalink: /community/release-guide/
 * TOC
 {:toc}
 
-This page documents the procedure to make an Apache DistributedLog release. Creit to the [Beam](http://beam.apache.org/contribute/release-guide/) project. We've borrow liberally from their documentation.
+This page documents the procedure to make an Apache DistributedLog release. Credit to the [Beam](http://beam.apache.org/contribute/release-guide/) project. We've borrow liberally from their documentation.
 
 ## Introduction
 
@@ -28,12 +28,12 @@ Please remember that publishing software has legal consequences. This guide comp
 The release process consists of several steps:
 
 1. Decide to release
-1. Prepare for the release
-1. Build a release candidate
-1. Vote on the release candidate
-1. If necessary, fix any issues and go back to step 3.
-1. Finalize the release
-1. Promote the release
+2. Prepare for the release
+3. Build a release candidate
+4. Vote on the release candidate
+5. If necessary, fix any issues and go back to step 3.
+6. Finalize the release
+7. Promote the release
 
 **********
 
@@ -48,7 +48,7 @@ In general, the community prefers to have a rotating set of 3-5 Release Managers
 ### Checklist to proceed to the next step
 
 1. Community agrees to release
-1. Community selects a Release Manager
+2. Community selects a Release Manager
 
 **********
 
@@ -96,10 +96,10 @@ You may wish to start `gpg-agent` to unlock your GPG key only once using your pa
 Configure access to the [Apache Nexus repository](http://repository.apache.org/), which enables final deployment of releases to the Maven Central Repository.
 
 1. You log in with your Apache account.
-1. Confirm you have appropriate access by finding `org.apache.distributedlog` under `Staging Profiles`.
-1. Navigate to your `Profile` (top right dropdown menu of the page).
-1. Choose `User Token` from the dropdown, then click `Access User Token`. Copy a snippet of the Maven XML configuration block.
-1. Insert this snippet twice into your global Maven `settings.xml` file, typically `${HOME}/.m2/settings.xml`. The end result should look like this, where `TOKEN_NAME` and `TOKEN_PASSWORD` are your secret tokens:
+2. Confirm you have appropriate access by finding `org.apache.distributedlog` under `Staging Profiles`.
+3. Navigate to your `Profile` (top right dropdown menu of the page).
+4. Choose `User Token` from the dropdown, then click `Access User Token`. Copy a snippet of the Maven XML configuration block.
+5. Insert this snippet twice into your global Maven `settings.xml` file, typically `${HOME}/.m2/settings.xml`. The end result should look like this, where `TOKEN_NAME` and `TOKEN_PASSWORD` are your secret tokens:
 
         <settings>
           <servers>
@@ -125,7 +125,7 @@ Get ready for updating the DistributedLog website by following the [website deve
 When contributors resolve an issue in JIRA, they are tagging it with a release that will contain their changes. With the release currently underway, new issues should be resolved against a subsequent future release. Therefore, you should create a release item for this subsequent release, as follows:
 
 1. In JIRA, navigate to the [`DistributedLog > Administration > Versions`](https://issues.apache.org/jira/plugins/servlet/project-config/DL/versions).
-1. Add a new release: choose the next minor version number compared to the one currently underway, select today’s date as the `Start Date`, and choose `Add`.
+2. Add a new release: choose the next minor version number compared to the one currently underway, select today’s date as the `Start Date`, and choose `Add`.
 
 ### Triage release-blocking issues in JIRA
 
@@ -193,14 +193,14 @@ The rest of this guide assumes that commands are run in the root of a repository
 ### Checklist to proceed to the next step
 
 1. Release Manager’s GPG key is published to `dist.apache.org`
-1. Release Manager’s GPG key is configured in `git` configuration
-1. Release Manager has `org.apache.distributedlog` listed under `Staging Profiles` in Nexus
-1. Release Manager’s Nexus User Token is configured in `settings.xml`
-1. JIRA release item for the subsequent release has been created
-1. There are no release blocking JIRA issues
-1. Release Notes in JIRA have been audited and adjusted
-1. Release branch has been created
-1. Originating branch has the version information updated to the new version
+2. Release Manager’s GPG key is configured in `git` configuration
+3. Release Manager has `org.apache.distributedlog` listed under `Staging Profiles` in Nexus
+4. Release Manager’s Nexus User Token is configured in `settings.xml`
+5. JIRA release item for the subsequent release has been created
+6. There are no release blocking JIRA issues
+7. Release Notes in JIRA have been audited and adjusted
+8. Release branch has been created
+9. Originating branch has the version information updated to the new version
 
 **********
 
@@ -239,23 +239,31 @@ Copy the source release to the dev repository of `dist.apache.org`.
 
         svn co https://dist.apache.org/repos/dist/dev/incubator/distributedlog
 
-1. Make a directory for the new release:
+2. Make a directory for the new release:
 
         mkdir distributedlog/${VERSION}
 
-1. Copy and rename the DistributedLog source distribution, hashes, and GPG signature:
+3. Copy and rename the DistributedLog source distribution, hashes, and GPG signature:
 
-        cp ${DL_ROOT}/target/distributedlog-parent-${VERSION}-source-release.zip distributedlog/${VERSION}/apache-distributedlog-${VERSION}-source-release.zip
-        cp ${DL_ROOT}/target/distributedlog-parent-${VERSION}-source-release.zip.asc distributedlog/${VERSION}/apache-distributedlog-${VERSION}-source-release.zip.asc
-        cp ${DL_ROOT}/target/distributedlog-parent-${VERSION}-source-release.zip.md5 distributedlog/${VERSION}/apache-distributedlog-${VERSION}-source-release.zip.md5
-        cp ${DL_ROOT}/target/distributedlog-parent-${VERSION}-source-release.zip.sha1 distributedlog/${VERSION}/apache-distributedlog-${VERSION}-source-release.zip.sha1
+        cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz
+        cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz.asc distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz.asc
+        cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz.md5 distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz.md5
+        cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz.sha1 distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz.sha1
+        cp ${DL_ROOT}/distributedlog-benchmark/target/distributedlog-benchmark-${VERSION}-bin.tar.gz distributedlog/${VERSION}/distributedlog-benchmark-${VERSION}-bin.tar.gz
+        cp ${DL_ROOT}/distributedlog-benchmark/target/distributedlog-benchmark-${VERSION}-bin.tar.gz.asc distributedlog/${VERSION}/distributedlog-benchmark-${VERSION}-bin.tar.gz.asc
+        cp ${DL_ROOT}/distributedlog-benchmark/target/distributedlog-benchmark-${VERSION}-bin.tar.gz.md5 distributedlog/${VERSION}/distributedlog-benchmark-${VERSION}-bin.tar.gz.md5
+        cp ${DL_ROOT}/distributedlog-benchmark/target/distributedlog-benchmark-${VERSION}-bin.tar.gz.sha1 distributedlog/${VERSION}/distributedlog-benchmark-${VERSION}-bin.tar.gz.sha1
+        cp ${DL_ROOT}/distributedlog-service/target/distributedlog-service-${VERSION}-bin.tar.gz distributedlog/${VERSION}/distributedlog-service-${VERSION}-bin.tar.gz
+        cp ${DL_ROOT}/distributedlog-service/target/distributedlog-service-${VERSION}-bin.tar.gz.asc distributedlog/${VERSION}/distributedlog-service-${VERSION}-bin.tar.gz.asc
+        cp ${DL_ROOT}/distributedlog-service/target/distributedlog-service-${VERSION}-bin.tar.gz.md5 distributedlog/${VERSION}/distributedlog-service-${VERSION}-bin.tar.gz.md5
+        cp ${DL_ROOT}/distributedlog-service/target/distributedlog-service-${VERSION}-bin.tar.gz.sha1 distributedlog/${VERSION}/distributedlog-service-${VERSION}-bin.tar.gz.sha1
 
-1. Add and commit all the files.
+4. Add and commit all the files.
 
         svn add distributedlog/${VERSION}
         svn commit
 
-1. Verify that files are [present](https://dist.apache.org/repos/dist/dev/incubator/distributedlog).
+5. Verify that files are [present](https://dist.apache.org/repos/dist/dev/incubator/distributedlog).
 
 ### Build the API reference
 
