@@ -20,6 +20,9 @@ package org.apache.bookkeeper.stats;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlets.MetricsServlet;
 
+/**
+ * A servlet to report metrics.
+ */
 public class MetricsServletContextListener extends MetricsServlet.ContextListener {
 
     private final MetricRegistry metricRegistry;

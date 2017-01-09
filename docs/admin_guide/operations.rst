@@ -93,7 +93,7 @@ all the features by default.
 
 ::
 
-    featureProviderClass=com.twitter.distributedlog.feature.DynamicConfigurationFeatureProvider
+    featureProviderClass=org.apache.distributedlog.feature.DynamicConfigurationFeatureProvider
 
 
 
@@ -112,7 +112,7 @@ All the features and their availabilities are configured in properties file form
 
 
 You could configure `featureProviderClass` in distributedlog configuration file by setting it to
-`com.twitter.distributedlog.feature.DynamicConfigurationFeatureProvider` to enable file-based feature
+`org.apache.distributedlog.feature.DynamicConfigurationFeatureProvider` to enable file-based feature
 provider. The feature provider will load the features from two files, one is base config file configured
 by `fileFeatureProviderBaseConfigPath`, while the other one is overlay config file configured by
 `fileFeatureProviderOverlayConfigPath`. Current implementation doesn't differentiate these two files
@@ -122,7 +122,7 @@ adjust the availability values in overlay config file.
 
 ::
 
-    featureProviderClass=com.twitter.distributedlog.feature.DynamicConfigurationFeatureProvider
+    featureProviderClass=org.apache.distributedlog.feature.DynamicConfigurationFeatureProvider
     fileFeatureProviderBaseConfigPath=/path/to/base/config
     fileFeatureProviderOverlayConfigPath=/path/to/overlay/config
     // how frequent we reload the config files

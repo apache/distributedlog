@@ -84,8 +84,9 @@ TEMP_BRANCH_PREFIX = 'PR_TOOL'
 RELEASE_BRANCH_PREFIX = ''
 
 DEV_BRANCH_NAME = 'master'
+DEFAULT_FIX_VERSION = os.environ.get("DEFAULT_FIX_VERSION", "0.4.0")
 
-def get_json(url):
+def get_json(url, preview_api = False):
   """
   Returns parsed JSON from an API call to the GitHub API.
   """
@@ -93,6 +94,8 @@ def get_json(url):
     request = urllib2.Request(url)
     if GITHUB_OAUTH_KEY:
       request.add_header('Authorization', 'token {0}'.format(GITHUB_OAUTH_KEY))
+    if preview_api:
+      request.add_header('Accept', 'application/vnd.github.black-cat-preview+json')
     return json.load(urllib2.urlopen(request))
   except urllib2.HTTPError as e:
     if 'X-RateLimit-Remaining' in e.headers and e.headers['X-RateLimit-Remaining'] == '0':
@@ -139,7 +142,7 @@ def clean_up():
     print('Restoring head pointer to {0}'.format(original_head))
     run_cmd(['git', 'checkout', original_head])
 
-  branches = run_cmd(['git', 'branch']).strip().split('\n')
+  branches = run_cmd(['git', 'branch']).replace(" ", "").split('\n')
 
   for branch in filter(lambda x: x.startswith(TEMP_BRANCH_PREFIX), branches):
     print('Deleting local branch {0}'.format(branch))
@@ -290,6 +293,7 @@ def cherry_pick(pr_num, merge_hash, default_branch):
 def fix_version_from_branch(branch, versions):
   # Note: Assumes this is a sorted (newest->oldest) list of un-released versions
   if branch == DEV_BRANCH_NAME:
+    versions = filter(lambda x: x == DEFAULT_FIX_VERSION, versions)
     if len(versions) > 0:
       return versions[0]
     else:
@@ -328,9 +332,10 @@ def resolve_jira_issue(merge_branches, comment, jira_id):
 
   if cur_status == 'Resolved' or cur_status == 'Closed':
     fail('JIRA issue {0} already has status \'{1}\''.format(jira_id, cur_status))
-    print ('=== JIRA {0} ==='.format(jira_id))
-    print ('summary\t\t{0}\nassignee\t{1}\nstatus\t\t{2}\nurl\t\t{3}/{4}\n'.format(
-      cur_summary, cur_assignee, cur_status, JIRA_BASE, jira_id))
+
+  print ('=== JIRA {0} ==='.format(jira_id))
+  print ('summary\t\t{0}\nassignee\t{1}\nstatus\t\t{2}\nurl\t\t{3}/{4}\n'.format(
+    cur_summary, cur_assignee, cur_status, JIRA_BASE, jira_id))
 
   versions = asf_jira.project_versions(CAPITALIZED_PROJECT_NAME)
   versions = sorted(versions, key=lambda x: x.name, reverse=True)
@@ -418,21 +423,40 @@ def get_reviewers(pr_num):
   """
   Gets a candidate list of reviewers that have commented on the PR with '+1' or 'LGTM'
   """
-  approval_msgs = ['+1', 'lgtm']
-
-  pr_comments = get_json('{0}/issues/{1}/comments'.format(GITHUB_API_BASE, pr_num))
-
   reviewers_ids = set()
+
+  approval_msgs = ['+1', 'lgtm']
+  pr_comments = get_json('{0}/issues/{1}/comments'.format(GITHUB_API_BASE, pr_num))
   for comment in pr_comments:
     for approval_msg in approval_msgs:
       if approval_msg in comment['body'].lower():
         reviewers_ids.add(comment['user']['login'])
 
+  approval_review_states = ['approved']
+  pr_reviews = get_json('{0}/pulls/{1}/reviews'.format(GITHUB_API_BASE, pr_num), True)
+  for review in pr_reviews:
+    for approval_state in approval_review_states:
+      if approval_state in review['state'].lower():
+        reviewers_ids.add(review['user']['login'])
+
+  if len(reviewers_ids) == 0:
+    fail("No approvals found in this pull request")
+
+  dir_path = os.path.dirname(os.path.realpath(__file__))
+  with open('{0}/reviewers'.format(dir_path)) as reviewers_data:
+    reviewers = json.load(reviewers_data)
+
   reviewers_emails = []
   for reviewer_id in reviewers_ids:
-    user = get_json('{0}/users/{1}'.format(GITHUB_API_URL, reviewer_id))
     username = None
     useremail = None
+    if reviewers[reviewer_id] is not None:
+      reviewer = reviewers[reviewer_id]
+      username = reviewer['name']
+      useremail = reviewer['email']
+      reviewers_emails += ['{0} <{1}>'.format(username, useremail)]
+      continue
+    user = get_json('{0}/users/{1}'.format(GITHUB_API_URL, reviewer_id))
     if user['email'] is not None:
         useremail = user['email'].strip()
     else:
@@ -506,7 +530,7 @@ def main():
   if modified_title != commit_title:
     print 'I\'ve re-written the title as follows to match the standard format:'
     print 'Original: {0}'.format(commit_title)
-    print 'Modified: {1}'.format(modified_title)
+    print 'Modified: {0}'.format(modified_title)
     result = raw_input('Would you like to use the modified title? (y/n): ')
     if result.lower() == 'y':
       commit_title = modified_title

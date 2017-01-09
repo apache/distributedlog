@@ -31,3 +31,7 @@ This page covers the API usage of `DistributedLog`.
 - `Best Practise`_
 
 .. _Best Practise: ./practice
+
+See the `Java API Reference`_ for more information on individual APIs.
+
+.. _Java API Reference: ../../api/java

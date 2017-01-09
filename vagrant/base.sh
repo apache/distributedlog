@@ -18,39 +18,40 @@
 set -e
 
 if [ -z $(which javac) ]; then
-    apt-get -y update
-    apt-get install -y  --no-install-recommends software-properties-common python-software-properties
-    add-apt-repository -y ppa:webupd8team/java
-    apt-get -y update
+  apt-get -y update
+  apt-get install -y  --no-install-recommends software-properties-common python-software-properties
+  add-apt-repository -y ppa:webupd8team/java
+  apt-get -y update
 
-    # Try to share cache. See Vagrantfile for details
-    mkdir -p /var/cache/oracle-jdk8-installer
-    if [ -e "/tmp/oracle-jdk8-installer-cache/" ]; then
-        find /tmp/oracle-jdk8-installer-cache/ -not -empty -exec cp '{}' /var/cache/oracle-jdk8-installer/ \;
-    fi
+  # Try to share cache. See Vagrantfile for details
+  mkdir -p /var/cache/oracle-jdk8-installer
+  if [ -e "/tmp/oracle-jdk8-installer-cache/" ]; then
+    find /tmp/oracle-jdk8-installer-cache/ -not -empty -exec cp '{}' /var/cache/oracle-jdk8-installer/ \;
+  fi
 
-    /bin/echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-    apt-get -y install --force-yes  --no-install-recommends oracle-java8-installer oracle-java8-set-default
+  /bin/echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+  apt-get -y install --force-yes  --no-install-recommends oracle-java8-installer oracle-java8-set-default maven2
 
-    if [ -e "/tmp/oracle-jdk8-installer-cache/" ]; then
-        cp -R /var/cache/oracle-jdk8-installer/* /tmp/oracle-jdk8-installer-cache
-    fi
+  if [ -e "/tmp/oracle-jdk8-installer-cache/" ]; then
+    cp -R /var/cache/oracle-jdk8-installer/* /tmp/oracle-jdk8-installer-cache
+  fi
 fi
 
 chmod a+rw /opt
 if [ -h /opt/distributedlog-trunk ]; then
-    # reset symlink
-    rm /opt/distributedlog-trunk
+  # reset symlink
+  rm /opt/distributedlog-trunk
 fi
-ln -s /vagrant /opt/distributedlog-trunk
 
+ln -s /vagrant /opt/distributedlog-trunk
 
 # For EC2 nodes, we want to use /mnt, which should have the local disk. On local
 # VMs, we can just create it if it doesn't exist and use it like we'd use
 # /tmp. Eventually, we'd like to also support more directories, e.g. when EC2
 # instances have multiple local disks.
 if [ ! -e /mnt ]; then
-    mkdir /mnt
+  mkdir /mnt
 fi
+
 chmod a+rwx /mnt
 

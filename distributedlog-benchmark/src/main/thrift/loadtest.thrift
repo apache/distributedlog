@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace java com.twitter.distributedlog.benchmark.thrift
+namespace java org.apache.distributedlog.benchmark.thrift
 
 struct Message {
     1: i64 publishTime;

@@ -15,19 +15,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.twitter</groupId>
+    <groupId>org.apache.distributedlog</groupId>
     <artifactId>distributedlog</artifactId>
-    <version>0.4.0-incubating-SNAPSHOT</version>
+    <version>0.5.0-incubating-SNAPSHOT</version>
   </parent>
   <artifactId>distributedlog-service</artifactId>
   <name>Apache DistributedLog :: Proxy Service</name>
   <dependencies>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-client</artifactId>
       <version>${project.parent.version}</version>
       <exclusions>
@@ -38,22 +37,22 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>finagle-ostrich4_2.11</artifactId>
-      <version>${birdcage.sha}</version>
+      <version>${finagle.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>finagle-thriftmux_2.11</artifactId>
-      <version>${birdcage.sha}</version>
+      <version>${finagle.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.twitter</groupId>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-core</artifactId>
       <version>${project.parent.version}</version>
       <scope>test</scope>
@@ -63,32 +62,23 @@
       <groupId>org.apache.zookeeper</groupId>
       <artifactId>zookeeper</artifactId>
       <version>${zookeeper.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>jdiff</groupId>
-      <artifactId>jdiff</artifactId>
-      <version>1.0.9</version>
-    </dependency>
-    <dependency>
-      <groupId>jline</groupId>
-      <artifactId>jline</artifactId>
-      <version>2.14.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.9.11</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.9.5</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency> 
     <dependency>
@@ -111,12 +101,58 @@
       <artifactId>jetty-servlet</artifactId>
       <version>${jetty.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+      <version>${libthrift.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.twitter</groupId>
+      <artifactId>scrooge-core_2.11</artifactId>
+      <version>${scrooge.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-test</artifactId>
+      <version>${curator.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.zookeeper</groupId>
+          <artifactId>zookeeper</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.distributedlog</groupId>
+      <artifactId>distributedlog-protocol</artifactId>
+      <version>${project.parent.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
+        <groupId>com.twitter</groupId>
+        <artifactId>scrooge-maven-plugin</artifactId>
+        <version>${scrooge-maven-plugin.version}</version>
+        <configuration>
+          <language>java</language>
+        </configuration>
+        <executions>
+          <execution>
+            <id>thrift-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>${maven-assembly-plugin.version}</version>
         <configuration>
           <descriptors>
             <descriptor>../src/assemble/bin.xml</descriptor>
@@ -130,6 +166,23 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <argLine>-Xmx3G -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=2G</argLine>
+          <forkMode>always</forkMode>
+          <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>org.apache.distributedlog.TimedOutTestsListener</value>
+            </property>
+          </properties>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -149,6 +202,39 @@
             <configuration>
               <outputDirectory>${basedir}/lib</outputDirectory>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${maven-checkstyle-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${puppycrawl.checkstyle.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.distributedlog</groupId>
+            <artifactId>distributedlog-build-tools</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <configLocation>distributedlog/checkstyle.xml</configLocation>
+          <suppressionsLocation>distributedlog/suppressions.xml</suppressionsLocation>
+          <consoleOutput>true</consoleOutput>
+          <failOnViolation>true</failOnViolation>
+          <includeResources>false</includeResources>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

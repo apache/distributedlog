@@ -139,7 +139,7 @@ Start the write proxy, listening on port 8000.
 ::
 
         // DistributedLogServerApp -p ${service-port} --shard-id ${shard-id} -sp ${stats-port} -u {distributedlog-uri} -mx -c ${conf-file}
-        ./distributedlog-service/bin/dlog com.twitter.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
+        ./distributedlog-service/bin/dlog org.apache.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
 
 
 Create the stream
@@ -162,8 +162,8 @@ Run the `RecordGenerator` to generate records.
 ::
 
         // Write Records into Stream `basic-stream-10` in 1 requests/second
-        // runner run com.twitter.distributedlog.basic.RecordGenerator ${distributedlog-uri} ${stream} ${rate}
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator 'inet!127.0.0.1:8000' basic-stream-10 1
+        // runner run org.apache.distributedlog.basic.RecordGenerator ${distributedlog-uri} ${stream} ${rate}
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.RecordGenerator 'inet!127.0.0.1:8000' basic-stream-10 1
 
 
 Rewind the stream
@@ -174,8 +174,8 @@ Rewind the stream using `StreamRewinder` to read records from 30 seconds ago
 ::
 
         // Rewind `basic-stream-10`
-        // runner run com.twitter.distributedlog.basic.StreamRewinder ${distributedlog-uri} ${stream} ${seconds-to-rewind}
-        ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.StreamRewinder distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-10  30
+        // runner run org.apache.distributedlog.basic.StreamRewinder ${distributedlog-uri} ${stream} ${seconds-to-rewind}
+        ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.StreamRewinder distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-10  30
 
 
 Check the results
