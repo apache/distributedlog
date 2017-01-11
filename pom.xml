@@ -140,15 +140,15 @@
           <groups>
             <group>
               <title>Core Library</title>
-              <packages>com.twitter.distributedlog:com.twitter.distributedlog.annotations:com.twitter.distributedlog.callback:com.twitter.distributedlog.exceptions:com.twitter.distributedlog.feature:com.twitter.distributedlog.io:com.twitter.distributedlog.lock:com.twitter.distributedlog.logsegment:com.twitter.distributedlog.metadata:com.twitter.distributedlog.namespace:com.twitter.distributedlog.net:com.twitter.distributedlog.stats:com.twitter.distributedlog.subscription</packages>
+              <packages>org.apache.distributedlog:org.apache.distributedlog.annotations:org.apache.distributedlog.callback:org.apache.distributedlog.exceptions:org.apache.distributedlog.feature:org.apache.distributedlog.io:org.apache.distributedlog.lock:org.apache.distributedlog.logsegment:org.apache.distributedlog.metadata:org.apache.distributedlog.namespace:org.apache.distributedlog.net:org.apache.distributedlog.stats:org.apache.distributedlog.subscription</packages>
             </group>
             <group>
               <title>Proxy Client</title>
-              <packages>com.twitter.distributedlog.client*:com.twitter.distributedlog.service*</packages>
+              <packages>org.apache.distributedlog.client*:org.apache.distributedlog.service*</packages>
             </group>
           </groups>
           <excludePackageNames>
-            com.twitter.distributedlog.acl:com.twitter.distributedlog.admin:com.twitter.distributedlog.auditor:com.twitter.distributedlog.basic:com.twitter.distributedlog.benchmark*:com.twitter.distributedlog.bk:com.twitter.distributedlog.ownership:com.twitter.distributedlog.proxy:com.twitter.distributedlog.resolver:com.twitter.distributedlog.service.*:com.twitter.distributedlog.config:com.twitter.distributedlog.function:com.twitter.distributedlog.impl*:com.twitter.distributedlog.injector:com.twitter.distributedlog.kafka:com.twitter.distributedlog.limiter:com.twitter.distributedlog.mapreduce:com.twitter.distributedlog.messaging:com.twitter.distributedlog.rate:com.twitter.distributedlog.readahead:com.twitter.distributedlog.selector:com.twitter.distributedlog.stats:com.twitter.distributedlog.thrift*:com.twitter.distributedlog.tools:com.twitter.distributedlog.util:com.twitter.distributedlog.zk:org.apache.bookkeeper.client:org.apache.bookkeeper.stats 
+            org.apache.distributedlog.acl:org.apache.distributedlog.admin:org.apache.distributedlog.auditor:org.apache.distributedlog.basic:org.apache.distributedlog.benchmark*:org.apache.distributedlog.bk:org.apache.distributedlog.ownership:org.apache.distributedlog.proxy:org.apache.distributedlog.resolver:org.apache.distributedlog.service.*:org.apache.distributedlog.config:org.apache.distributedlog.function:org.apache.distributedlog.impl*:org.apache.distributedlog.injector:org.apache.distributedlog.kafka:org.apache.distributedlog.limiter:org.apache.distributedlog.mapreduce:org.apache.distributedlog.messaging:org.apache.distributedlog.rate:org.apache.distributedlog.readahead:org.apache.distributedlog.selector:org.apache.distributedlog.stats:org.apache.distributedlog.thrift*:org.apache.distributedlog.tools:org.apache.distributedlog.util:org.apache.distributedlog.zk:org.apache.bookkeeper.client:org.apache.bookkeeper.stats 
           </excludePackageNames>
         </configuration>
         <executions>
