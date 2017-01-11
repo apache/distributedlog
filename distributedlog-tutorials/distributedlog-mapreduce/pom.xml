@@ -18,13 +18,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>distributedlog_2.11</artifactId>
+    <artifactId>distributedlog_2.10</artifactId>
     <groupId>org.apache.distributedlog</groupId>
     <version>0.4.0-incubating-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
   <groupId>org.apache.distributedlog</groupId>
-  <artifactId>distributedlog-mapreduce_2.11</artifactId>
+  <artifactId>distributedlog-mapreduce_2.10</artifactId>
   <name>Apache DistributedLog :: Tutorials :: MapReduce Tutorial</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -34,12 +34,12 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core_2.11</artifactId>
+      <artifactId>distributedlog-core_2.10</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-client_2.11</artifactId>
+      <artifactId>distributedlog-client_2.10</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>

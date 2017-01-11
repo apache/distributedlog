@@ -19,15 +19,15 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.distributedlog</groupId>
-    <artifactId>distributedlog_2.11</artifactId>
+    <artifactId>distributedlog_2.10</artifactId>
     <version>0.4.0-incubating-SNAPSHOT</version>
   </parent>
-  <artifactId>distributedlog-service_2.11</artifactId>
+  <artifactId>distributedlog-service_2.10</artifactId>
   <name>Apache DistributedLog :: Proxy Service</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-client_2.11</artifactId>
+      <artifactId>distributedlog-client_2.10</artifactId>
       <version>${project.parent.version}</version>
       <exclusions>
         <exclusion>
@@ -38,22 +38,22 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core_2.11</artifactId>
+      <artifactId>distributedlog-core_2.10</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>finagle-ostrich4_2.11</artifactId>
+      <artifactId>finagle-ostrich4_2.10</artifactId>
       <version>${finagle.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>finagle-thriftmux_2.11</artifactId>
+      <artifactId>finagle-thriftmux_2.10</artifactId>
       <version>${finagle.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core_2.11</artifactId>
+      <artifactId>distributedlog-core_2.10</artifactId>
       <version>${project.parent.version}</version>
       <scope>test</scope>
       <type>test-jar</type>
@@ -108,7 +108,7 @@
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>scrooge-core_2.11</artifactId>
+      <artifactId>scrooge-core_2.10</artifactId>
       <version>${scrooge.version}</version>
     </dependency>
     <dependency>
@@ -125,7 +125,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-protocol_2.11</artifactId>
+      <artifactId>distributedlog-protocol_2.10</artifactId>
       <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>

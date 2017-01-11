@@ -19,10 +19,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.distributedlog</groupId>
-    <artifactId>distributedlog_2.11</artifactId>
+    <artifactId>distributedlog_2.10</artifactId>
     <version>0.4.0-incubating-SNAPSHOT</version>
   </parent>
-  <artifactId>distributedlog-core_2.11</artifactId>
+  <artifactId>distributedlog-core_2.10</artifactId>
   <name>Apache DistributedLog :: Core Library</name>
   <dependencies>
     <dependency>
@@ -76,7 +76,7 @@
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>util-core_2.11</artifactId>
+      <artifactId>util-core_2.10</artifactId>
       <version>${finagle.version}</version>
     </dependency>
     <dependency>
@@ -91,7 +91,7 @@
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>scrooge-core_2.11</artifactId>
+      <artifactId>scrooge-core_2.10</artifactId>
       <version>${scrooge.version}</version>
     </dependency>
     <dependency>
@@ -125,7 +125,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-protocol_2.11</artifactId>
+      <artifactId>distributedlog-protocol_2.10</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
@@ -141,7 +141,7 @@
     </dependency> 
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-protocol_2.11</artifactId>
+      <artifactId>distributedlog-protocol_2.10</artifactId>
       <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
