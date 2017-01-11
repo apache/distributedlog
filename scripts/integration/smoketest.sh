@@ -88,10 +88,20 @@ echo $! > ${LOG_DIR}/writer.pid
 sleep 20
 
 # kill the writer
-kill `cat ${LOG_DIR}/writer.pid`
+if [ -f ${LOG_DIR}/writer.pid ]; then
+  writerpid=$(cat ${LOG_DIR}/writer.pid) 
+  if kill -0 $writerpid > /dev/null 2>&1; then
+    kill $writerpid
+  fi
+fi
 
 # stop the reader
-kill `cat ${LOG_DIR}/reader.pid`
+if [ -f ${LOG_DIR}/reader.pid ]; then
+  readerpid=$(cat ${LOG_DIR}/reader.pid) 
+  if kill -0 $readerpid > /dev/null 2>&1; then
+    kill $readerpid
+  fi
+fi
 
 # check the number of records received
 NUM_RECORDS=`cat ${LOG_DIR}/reader.out | grep "record-" | wc -l`
