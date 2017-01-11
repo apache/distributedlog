@@ -20,10 +20,10 @@
   <parent>
     <groupId>org.apache.distributedlog</groupId>
     <artifactId>distributedlog_2.11</artifactId>
-    <version>0.4.0-incubating-SNAPSHOT</version>
+    <version>0.4.0-incubating</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>distributedlog-build-tools</artifactId>
   <name>Apache DistributedLog :: Build Tools</name>
-  <version>0.4.0-incubating-SNAPSHOT</version>
+  <version>0.4.0-incubating</version>
 </project>
