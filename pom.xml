@@ -23,7 +23,7 @@
     <version>17</version>
   </parent>
   <groupId>org.apache.distributedlog</groupId>
-  <artifactId>distributedlog</artifactId>
+  <artifactId>distributedlog_2.11</artifactId>
   <packaging>pom</packaging>
   <version>0.4.0-incubating-SNAPSHOT</version>
   <name>Apache DistributedLog :: Parent</name>

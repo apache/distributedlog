@@ -19,15 +19,15 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.distributedlog</groupId>
-    <artifactId>distributedlog</artifactId>
+    <artifactId>distributedlog_2.11</artifactId>
     <version>0.4.0-incubating-SNAPSHOT</version>
   </parent>
-  <artifactId>distributedlog-service</artifactId>
+  <artifactId>distributedlog-service_2.11</artifactId>
   <name>Apache DistributedLog :: Proxy Service</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-client</artifactId>
+      <artifactId>distributedlog-client_2.11</artifactId>
       <version>${project.parent.version}</version>
       <exclusions>
         <exclusion>
@@ -38,7 +38,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core</artifactId>
+      <artifactId>distributedlog-core_2.11</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
@@ -53,7 +53,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core</artifactId>
+      <artifactId>distributedlog-core_2.11</artifactId>
       <version>${project.parent.version}</version>
       <scope>test</scope>
       <type>test-jar</type>
@@ -125,7 +125,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-protocol</artifactId>
+      <artifactId>distributedlog-protocol_2.11</artifactId>
       <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
