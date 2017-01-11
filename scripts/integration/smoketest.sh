@@ -97,23 +97,29 @@ nohup ${DLOG_ROOT}/distributedlog-tutorials/distributedlog-basic/bin/runner run 
 echo $! > ${LOG_DIR}/writer.pid
 
 # wait for 20 seconds
+echo "sleep 20"
 sleep 20
 
 # kill the writer
+echo "kill the writer"
 if [ -f ${LOG_DIR}/writer.pid ]; then
   writerpid=$(cat ${LOG_DIR}/writer.pid) 
   if kill -0 $writerpid > /dev/null 2>&1; then
+    echo "kill $writerpid"
     kill $writerpid
   fi
 fi
 
-# stop the reader
+# kill the reader
+echo "kill the reader"
 if [ -f ${LOG_DIR}/reader.pid ]; then
   readerpid=$(cat ${LOG_DIR}/reader.pid) 
   if kill -0 $readerpid > /dev/null 2>&1; then
+    echo "kill $readerpid"
     kill $readerpid
   fi
 fi
+ps ax | grep MultiReader | grep java | grep -v grep | awk '{print $1}' | xargs kill -9
 
 # check the number of records received
 NUM_RECORDS=`cat ${LOG_DIR}/reader.out | grep "record-" | wc -l`
@@ -126,7 +132,7 @@ if [ $NUM_RECORDS -lt 18 ]; then
   exit 1
 fi
 
-# stop a write proxy
+# stop the write proxy
 echo "stop the write proxy"
 ${DLOG_ROOT}/distributedlog-service/bin/dlog-daemon.sh stop writeproxy
 
