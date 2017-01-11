@@ -53,7 +53,7 @@ echo $! > ${LOG_DIR}/sandbox.pid
 
 # create namespace
 echo "create namespace"
-${DLOG_ROOT}/distributedlog-service/bin/dlog admin bind -l /ledgers -s 127.0.0.1:${ZK_PORT} -c distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE}
+${DLOG_ROOT}/distributedlog-core/bin/dlog admin bind -l /ledgers -s 127.0.0.1:${ZK_PORT} -c distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE}
 
 if [ $? -ne 0 ]; then
   echo "Failed to create namespace '${NAMESPACE}'."
