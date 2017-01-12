@@ -22,7 +22,7 @@ Load Test
 Overview
 --------
 
-Under distributedlog-benchmark you will find a set of applications intended for generating large amounts of load in a distributedlog custer. These applications are suitable for load testing, performance testing, benchmarking, or even simply smoke testing a distributedlog cluster.
+Under distributedlog-benchmark you will find a set of applications intended for generating large amounts of load in a distributedlog cluster. These applications are suitable for load testing, performance testing, benchmarking, or even simply smoke testing a distributedlog cluster.
 
 The dbench script can run in several modes:
 
