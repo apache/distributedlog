@@ -22,7 +22,7 @@ Load Test
 Overview
 --------
 
-Under distributedlog-benchmark you will find a set of applications intended for generating large amounts of load in a distributedlog custer. These applications are suitable for load testing, performance testing, benchmarking, or even simply smoke testing a distributedlog cluster.
+Under distributedlog-benchmark you will find a set of applications intended for generating large amounts of load in a distributedlog cluster. These applications are suitable for load testing, performance testing, benchmarking, or even simply smoke testing a distributedlog cluster.
 
 The dbench script can run in several modes:
 
@@ -57,7 +57,7 @@ For example to use the proxy write test to generate 10000 requests per second ac
 ::
 
     STREAM_NAME_PREFIX=loadtest_
-    BENCHMARK_DURATION=3600 # seconds
+    BENCHMARK_DURATION=60 # minutes
     DL_NAMESPACE=<dl namespace>
     NUM_STREAMS=10
     INITIAL_RATE=200
@@ -74,7 +74,7 @@ For example to use the core library write test to generate 100MBps across 10 str
 ::
 
     STREAM_NAME_PREFIX=loadtest_
-    BENCHMARK_DURATION=3600 # seconds
+    BENCHMARK_DURATION=60 # minutes
     DL_NAMESPACE=<dl namespace>
     NUM_STREAMS=10
     INITIAL_RATE=1024
@@ -92,7 +92,7 @@ For example to use the core library read test to read from 10 streams on 100 ins
 ::
 
     STREAM_NAME_PREFIX=loadtest_
-    BENCHMARK_DURATION=3600 # seconds
+    BENCHMARK_DURATION=60 # minutes
     DL_NAMESPACE=<dl namespace>
     MAX_STREAM_ID=9
     NUM_READERS_PER_STREAM=5
