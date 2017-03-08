@@ -102,7 +102,7 @@
     <commons-lang3.version>3.3.2</commons-lang3.version>
     <curator.version>3.2.1</curator.version>
     <finagle.version>6.34.0</finagle.version>
-    <guava.version>16.0</guava.version>
+    <guava.version>20.0</guava.version>
     <jetty.version>8.1.19.v20160209</jetty.version>
     <jmock.version>2.8.2</jmock.version>
     <junit.version>4.8.1</junit.version>
