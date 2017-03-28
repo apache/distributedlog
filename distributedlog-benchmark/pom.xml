@@ -19,25 +19,25 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.distributedlog</groupId>
-    <artifactId>distributedlog_2.10</artifactId>
+    <artifactId>distributedlog_2.11</artifactId>
     <version>0.5.0-incubating-SNAPSHOT</version>
   </parent>
-  <artifactId>distributedlog-benchmark_2.10</artifactId>
+  <artifactId>distributedlog-benchmark_2.11</artifactId>
   <name>Apache DistributedLog :: Benchmark</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-client_2.10</artifactId>
+      <artifactId>distributedlog-client_2.11</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-service_2.10</artifactId>
+      <artifactId>distributedlog-service_2.11</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>finagle-ostrich4_2.10</artifactId>
+      <artifactId>finagle-ostrich4_2.11</artifactId>
       <version>${finagle.version}</version>
     </dependency>
     <dependency>
@@ -47,7 +47,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core_2.10</artifactId>
+      <artifactId>distributedlog-core_2.11</artifactId>
       <version>${project.parent.version}</version>
       <scope>test</scope>
       <type>test-jar</type>
