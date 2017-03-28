@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.distributedlog</groupId>
     <artifactId>distributedlog_2.10</artifactId>
-    <version>0.4.0-incubating</version>
+    <version>0.5.0-incubating-SNAPSHOT</version>
   </parent>
   <artifactId>distributedlog-protocol_2.10</artifactId>
   <name>Apache DistributedLog :: Protocol</name>
