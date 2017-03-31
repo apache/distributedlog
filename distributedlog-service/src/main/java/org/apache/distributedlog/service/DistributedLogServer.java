@@ -186,8 +186,8 @@ public class DistributedLogServer {
         }
         Class loadAppraiserClass = Class.forName(loadAppraiserClassStr.or(DEFAULT_LOAD_APPRIASER));
         LoadAppraiser loadAppraiser = (LoadAppraiser) ReflectionUtils.newInstance(loadAppraiserClass);
-        logger.info("Supplied load appraiser class is " + loadAppraiserClassStr.get()
-            + " Instantiated " + loadAppraiser.getClass().getCanonicalName());
+        logger.info("Load appraiser class is " + loadAppraiserClassStr.or("not specified.") + " Instantiated "
+                + loadAppraiser.getClass().getCanonicalName());
 
         StreamConfigProvider streamConfProvider =
                 getStreamConfigProvider(dlConf, converter);

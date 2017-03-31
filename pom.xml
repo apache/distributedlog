@@ -94,7 +94,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- dependencies -->
-    <bookkeeper.version>4.3.6-TWTTR-OSS</bookkeeper.version>
+    <bookkeeper.version>4.3.7-TWTTR-OSS</bookkeeper.version>
     <codahale.metrics.version>3.0.1</codahale.metrics.version>
     <commons-cli.version>1.1</commons-cli.version>
     <commons-codec.version>1.6</commons-codec.version>
@@ -102,7 +102,7 @@
     <commons-lang3.version>3.3.2</commons-lang3.version>
     <curator.version>3.2.1</curator.version>
     <finagle.version>6.34.0</finagle.version>
-    <guava.version>16.0</guava.version>
+    <guava.version>20.0</guava.version>
     <jetty.version>8.1.19.v20160209</jetty.version>
     <jmock.version>2.8.2</jmock.version>
     <junit.version>4.8.1</junit.version>
@@ -114,11 +114,17 @@
     <stats-util.version>0.0.58</stats-util.version>
     <zookeeper.version>3.5.1-alpha</zookeeper.version>
     <!-- plugin dependencies -->
+    <apache-rat-plugin.version>0.7</apache-rat-plugin.version>
+    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
+    <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
+    <findbugs-maven-plugin.version>3.0.3</findbugs-maven-plugin.version>
     <puppycrawl.checkstyle.version>6.19</puppycrawl.checkstyle.version>
     <maven-assembly-plugin.version>2.2.1</maven-assembly-plugin.version>
     <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <maven-jar-plugin.version>2.2</maven-jar-plugin.version>
+    <maven-javadoc-plugin.version>2.8</maven-javadoc-plugin.version>
+    <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <scrooge-maven-plugin.version>3.17.0</scrooge-maven-plugin.version>
   </properties>
@@ -127,22 +133,22 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8</version>
+        <version>${maven-javadoc-plugin.version}</version>
         <configuration>
           <!-- Avoid for missing javadoc comments to be marked as errors -->
           <additionalparam>-Xdoclint:none</additionalparam>
           <groups>
             <group>
               <title>Core Library</title>
-              <packages>com.twitter.distributedlog:com.twitter.distributedlog.annotations:com.twitter.distributedlog.callback:com.twitter.distributedlog.exceptions:com.twitter.distributedlog.feature:com.twitter.distributedlog.io:com.twitter.distributedlog.lock:com.twitter.distributedlog.logsegment:com.twitter.distributedlog.metadata:com.twitter.distributedlog.namespace:com.twitter.distributedlog.net:com.twitter.distributedlog.stats:com.twitter.distributedlog.subscription</packages>
+              <packages>org.apache.distributedlog:org.apache.distributedlog.annotations:org.apache.distributedlog.callback:org.apache.distributedlog.exceptions:org.apache.distributedlog.feature:org.apache.distributedlog.io:org.apache.distributedlog.lock:org.apache.distributedlog.logsegment:org.apache.distributedlog.metadata:org.apache.distributedlog.namespace:org.apache.distributedlog.net:org.apache.distributedlog.stats:org.apache.distributedlog.subscription</packages>
             </group>
             <group>
               <title>Proxy Client</title>
-              <packages>com.twitter.distributedlog.client*:com.twitter.distributedlog.service*</packages>
+              <packages>org.apache.distributedlog.client*:org.apache.distributedlog.service*</packages>
             </group>
           </groups>
           <excludePackageNames>
-            com.twitter.distributedlog.acl:com.twitter.distributedlog.admin:com.twitter.distributedlog.auditor:com.twitter.distributedlog.basic:com.twitter.distributedlog.benchmark*:com.twitter.distributedlog.bk:com.twitter.distributedlog.ownership:com.twitter.distributedlog.proxy:com.twitter.distributedlog.resolver:com.twitter.distributedlog.service.*:com.twitter.distributedlog.config:com.twitter.distributedlog.function:com.twitter.distributedlog.impl*:com.twitter.distributedlog.injector:com.twitter.distributedlog.kafka:com.twitter.distributedlog.limiter:com.twitter.distributedlog.mapreduce:com.twitter.distributedlog.messaging:com.twitter.distributedlog.rate:com.twitter.distributedlog.readahead:com.twitter.distributedlog.selector:com.twitter.distributedlog.stats:com.twitter.distributedlog.thrift*:com.twitter.distributedlog.tools:com.twitter.distributedlog.util:com.twitter.distributedlog.zk:org.apache.bookkeeper.client:org.apache.bookkeeper.stats 
+            org.apache.distributedlog.acl:org.apache.distributedlog.admin:org.apache.distributedlog.auditor:org.apache.distributedlog.basic:org.apache.distributedlog.benchmark*:org.apache.distributedlog.bk:org.apache.distributedlog.ownership:org.apache.distributedlog.proxy:org.apache.distributedlog.resolver:org.apache.distributedlog.service.*:org.apache.distributedlog.config:org.apache.distributedlog.function:org.apache.distributedlog.impl*:org.apache.distributedlog.injector:org.apache.distributedlog.kafka:org.apache.distributedlog.limiter:org.apache.distributedlog.mapreduce:org.apache.distributedlog.messaging:org.apache.distributedlog.rate:org.apache.distributedlog.readahead:org.apache.distributedlog.selector:org.apache.distributedlog.stats:org.apache.distributedlog.thrift*:org.apache.distributedlog.tools:org.apache.distributedlog.util:org.apache.distributedlog.zk:org.apache.bookkeeper.client:org.apache.bookkeeper.stats 
           </excludePackageNames>
         </configuration>
         <executions>
@@ -157,7 +163,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>${maven-assembly-plugin.version}</version>
         <configuration>
 	  <tarLongFileMode>gnu</tarLongFileMode>
           <descriptors>
@@ -168,11 +174,11 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.3</version>
+        <version>${findbugs-maven-plugin.version}</version>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
@@ -181,11 +187,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>${maven-source-plugin.version}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
-            <phase>deploy</phase>
             <goals>
               <goal>jar</goal>
             </goals>
@@ -195,7 +200,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <argLine>-Xmx3G -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=2G</argLine>
@@ -206,7 +211,7 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>0.7</version>
+        <version>${apache-rat-plugin.version}</version>
         <configuration>
           <excludes>
             <exclude>docs/**/*</exclude>
@@ -231,12 +236,12 @@
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.1.0</version>
+        <version>${coveralls-maven-plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
+        <version>${cobertura-maven-plugin.version}</version>
         <configuration>
           <formats>
             <format>html</format>
