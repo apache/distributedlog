@@ -25,7 +25,7 @@
   <groupId>org.apache.distributedlog</groupId>
   <artifactId>distributedlog_2.11</artifactId>
   <packaging>pom</packaging>
-  <version>0.4.0-incubating</version>
+  <version>0.5.0-incubating-SNAPSHOT</version>
   <name>Apache DistributedLog :: Parent</name>
   <description>
     Apache DistributedLog provides a high performance replicated log service.
@@ -43,7 +43,7 @@
     <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-distributedlog.git</connection>
     <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-distributedlog.git</developerConnection>
     <url>https://git-wip-us.apache.org/repos/asf?p=incubator-distributedlog.git;a=summary</url>
-    <tag>v0.4.0-incubating-RC4_2.11</tag>
+    <tag>release-0.4.0-incubating</tag>
   </scm>
   <issueManagement>
     <system>jira</system>
