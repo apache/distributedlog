@@ -51,19 +51,19 @@
       <fileMode>644</fileMode>
     </file>
     <file>
-      <source>../src/main/resources/LICENSE.bin.txt</source>
+      <source>../LICENSE</source>
       <outputDirectory>/</outputDirectory>
       <destName>LICENSE</destName>
       <fileMode>644</fileMode>
     </file>
     <file>
-      <source>../src/main/resources/NOTICE.bin.txt</source>
+      <source>../NOTICE</source>
       <outputDirectory>/</outputDirectory>
       <destName>NOTICE</destName>
       <fileMode>644</fileMode>
     </file>
     <file>
-      <source>../src/main/resources/DISCLAIMER.bin.txt</source>
+      <source>../DISCLAIMER</source>
       <outputDirectory>/</outputDirectory>
       <destName>DISCLAIMER</destName>
       <fileMode>644</fileMode>
