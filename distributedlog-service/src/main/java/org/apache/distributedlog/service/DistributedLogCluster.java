@@ -333,7 +333,7 @@ public class DistributedLogCluster {
             this.zks.stop();
         }
         for (File dir : tmpDirs) {
-            FileUtils.deleteDirectory(dir);
+            FileUtils.forceDeleteOnExit(dir);
         }
     }
 
