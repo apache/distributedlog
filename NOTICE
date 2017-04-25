@@ -1,5 +1,5 @@
 Apache DistributedLog
-Copyright 2016 The Apache Software Foundation
+Copyright 2017 The Apache Software Foundation
 
 Apache DistributedLog is currently undergoing Incubation at the Apache
 Software Foundation.
@@ -10,12 +10,3 @@ The Apache Software Foundation (http://www.apache.org/).
 
 Portions of this software were developed by Twitter.
 Copyright Twitter, 2016
-
-This product contains a modified portion of 'Apache Hadoop', a Java framework that
-allows for the distributed processing of large data sets across clusters of computers
-using simple programming models., which can be obtained at:
-
-  * LICENSE:
-    * LICENSE (Apache License 2.0)
-  * HOMEPAGE:
-    * https://hadoop.apache.org/
