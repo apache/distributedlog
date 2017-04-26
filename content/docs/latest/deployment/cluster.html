@@ -53,7 +53,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <!-- Overview -->
-        <li><a href="/docs/latest/">V0.4.0</a></li>
+        <li><a href="/docs/latest/">V0.5.0-incubating</a></li>
         <!-- Concepts -->
         <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
         <!-- Quick Start -->
@@ -124,6 +124,13 @@
               </a>
             </li>
             
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/latest/api/java">Java</a></li>
           </ul>
         </li>
         <!-- User Guide -->
@@ -909,12 +916,12 @@ You are going to create streams : [stream-0, stream-1, stream-2, stream-3, strea
 </pre>
 <p>Tail read from the 10 streams.</p>
 <pre class="literal-block">
-$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.MultiReader distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace stream-0,stream-1,stream-2,stream-3,stream-4,stream-5,stream-6,stream-7,stream-8,stream-9,stream-10
+$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.MultiReader distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace stream-0,stream-1,stream-2,stream-3,stream-4,stream-5,stream-6,stream-7,stream-8,stream-9,stream-10
 </pre>
 <p>Run record generator over some streams</p>
 <pre class="literal-block">
-$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-0 100
-$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-1 100
+$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-0 100
+$ ./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.RecordGenerator 'zk!127.0.0.1:2181!/messaging/distributedlog/mynamespace/.write_proxy' stream-1 100
 </pre>
 <p>Check the terminal running <cite>MultiReader</cite>. You will see similar output as below:</p>
 <pre class="literal-block">

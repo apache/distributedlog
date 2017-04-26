@@ -53,7 +53,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <!-- Overview -->
-        <li><a href="/docs/latest/">V0.4.0</a></li>
+        <li><a href="/docs/latest/">V0.5.0-incubating</a></li>
         <!-- Concepts -->
         <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
         <!-- Quick Start -->
@@ -124,6 +124,13 @@
               </a>
             </li>
             
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/latest/api/java">Java</a></li>
           </ul>
         </li>
         <!-- User Guide -->
@@ -564,7 +571,7 @@ DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
 the feature provider class name as below. Otherwise it would use <cite>DefaultFeatureProvider</cite>, which disables
 all the features by default.</p>
 <pre class="literal-block">
-featureProviderClass=com.twitter.distributedlog.feature.DynamicConfigurationFeatureProvider
+featureProviderClass=org.apache.distributedlog.feature.DynamicConfigurationFeatureProvider
 </pre>
 </div>
 <div class="section" id="configuration-based-feature-provider">
@@ -577,7 +584,7 @@ cache.write_through=100
 storage.dural_write=0
 </pre>
 <p>You could configure <cite>featureProviderClass</cite> in distributedlog configuration file by setting it to
-<cite>com.twitter.distributedlog.feature.DynamicConfigurationFeatureProvider</cite> to enable file-based feature
+<cite>org.apache.distributedlog.feature.DynamicConfigurationFeatureProvider</cite> to enable file-based feature
 provider. The feature provider will load the features from two files, one is base config file configured
 by <cite>fileFeatureProviderBaseConfigPath</cite>, while the other one is overlay config file configured by
 <cite>fileFeatureProviderOverlayConfigPath</cite>. Current implementation doesn't differentiate these two files
@@ -585,7 +592,7 @@ too much other than the <cite>overlay</cite> config will override the settings i
 to have a base config file for storing the default availability values for your system and dynamically
 adjust the availability values in overlay config file.</p>
 <pre class="literal-block">
-featureProviderClass=com.twitter.distributedlog.feature.DynamicConfigurationFeatureProvider
+featureProviderClass=org.apache.distributedlog.feature.DynamicConfigurationFeatureProvider
 fileFeatureProviderBaseConfigPath=/path/to/base/config
 fileFeatureProviderOverlayConfigPath=/path/to/overlay/config
 // how frequent we reload the config files

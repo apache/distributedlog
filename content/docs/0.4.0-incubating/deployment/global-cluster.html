@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Global Cluster Setup</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/docs/0.4.0-incubating/styles/site.css">
+  <link rel="stylesheet" href="/docs/0.4.0-incubating/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/docs/0.4.0-incubating/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/deployment/global-cluster.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/docs/0.4.0-incubating/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/docs/0.4.0-incubating/">V0.4.0</a></li>
+        <!-- Concepts -->
+        <li><a href="/docs/0.4.0-incubating/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/docs/0.4.0-incubating/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/0.4.0-incubating/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/0.4.0-incubating/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/0.4.0-incubating/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="/docs/0.4.0-incubating/admin_guide/main.html" class="">Admin Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/admin_guide/operations.html" class="">
+                  Operations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/deployment/cluster.html" class="">
+                  Cluster Setup
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/deployment/global-cluster.html" class="active">
+                  Global Cluster Setup
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/admin_guide/performance.html" class="">
+                  Performance Tuning
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/admin_guide/loadtest.html" class="">
+                  Load Test
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/admin_guide/hardware.html" class="">
+                  Hardware
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/admin_guide/monitoring.html" class="">
+                  Monitoring
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/admin_guide/zookeeper.html" class="">
+                  ZooKeeper
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/admin_guide/bookkeeper.html" class="">
+                  BookKeeper
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+
+      
+
+      <li><a href="/docs/0.4.0-incubating/admin_guide/main.html">Admin Guide</a></li>
+      
+      
+      <li class="active">Global Cluster Setup</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="this-page-provides-instructions-on-how-to-run-distributedlog-across-multiple-regions">
+<p class="topic-title first">This page provides instructions on how to run <strong>DistributedLog</strong> across multiple regions.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#cluster-setup-deployment" id="id1">Cluster Setup &amp; Deployment</a><ul>
+<li><a class="reference internal" href="#global-zookeeper" id="id2">Global Zookeeper</a></li>
+<li><a class="reference internal" href="#distributedlog-configuration" id="id3">DistributedLog Configuration</a><ul>
+<li><a class="reference internal" href="#placement-policy" id="id4">Placement Policy</a></li>
+<li><a class="reference internal" href="#connection-timeouts" id="id5">Connection Timeouts</a></li>
+<li><a class="reference internal" href="#quorum-size" id="id6">Quorum Size</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#client-configuration" id="id7">Client Configuration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-steps" id="id8">Additional Steps</a></li>
+</ul>
+</div>
+<div class="section" id="cluster-setup-deployment">
+<h2><a class="toc-backref" href="#id1">Cluster Setup &amp; Deployment</a></h2>
+<p>Setting up <a class="reference external" href="../user_guide/globalreplicatedlog/main">globally replicated DistributedLog</a> is very similar to setting up local DistributedLog.
+The most important change is use a ZooKeeper cluster configured across multiple-regions. Once set up, DistributedLog
+and BookKeeper are configured to use the global ZK cluster for all metadata storage, and the system will more or
+less work. The remaining steps are necessary to ensure things like durability in the face of total region failure.</p>
+<p>The key differences with standard cluster setup are summarized below:</p>
+<ul class="simple">
+<li>The zookeeper cluster must be running across all of the target regions, say A, B, C.</li>
+<li>Region aware placement policy and a few other options must be configured in DL config.</li>
+<li>DistributedLog clients should be configured to talk to all regions.</li>
+</ul>
+<p>We elaborate on these steps in the following sections.</p>
+<div class="section" id="global-zookeeper">
+<h3><a class="toc-backref" href="#id2">Global Zookeeper</a></h3>
+<p>When defining your server and participant lists in zookeeper configuration, a sufficient number of nodes from each
+region must be included.</p>
+<p>Please consult the ZooKeeper documentation for detailed Zookeeper setup instructions.</p>
+</div>
+<div class="section" id="distributedlog-configuration">
+<h3><a class="toc-backref" href="#id3">DistributedLog Configuration</a></h3>
+<p>In multi-region DistributedLog several DL config changes are needed.</p>
+<div class="section" id="placement-policy">
+<h4><a class="toc-backref" href="#id4">Placement Policy</a></h4>
+<p>The region-aware placement policy must be configured. Below, it is configured to place replicas across 3 regions, A, B, and C.</p>
+<pre class="literal-block">
+# placement policy
+bkc.ensemblePlacementPolicy=org.apache.bookkeeper.client.RegionAwareEnsemblePlacementPolicy
+bkc.reppRegionsToWrite=A;B;C
+bkc.reppMinimumRegionsForDurability=2
+bkc.reppEnableDurabilityEnforcementInReplace=true
+bkc.reppEnableValidation=true
+</pre>
+</div>
+<div class="section" id="connection-timeouts">
+<h4><a class="toc-backref" href="#id5">Connection Timeouts</a></h4>
+<p>In global replicated mode, the proxy nodes will be writing to the entire ensemble, which exists in multiple regions.
+If cross-region latency is higher than local region latency (i.e. if its truly cross-region) then it is advisable to
+use a higher BookKeeper client connection tiemout.</p>
+<pre class="literal-block">
+# setting connect timeout to 1 second for global cluster
+bkc.connectTimeoutMillis=1000
+</pre>
+</div>
+<div class="section" id="quorum-size">
+<h4><a class="toc-backref" href="#id6">Quorum Size</a></h4>
+<p>It is advisable to run with a larger ensemble to ensure cluster health in the event of region loss (the ensemble
+will be split across all regions).</p>
+<p>The values of these settings will depend on your operational and durability requirements.</p>
+<pre class="literal-block">
+ensemble-size=9
+write-quorum-size=9
+ack-quorum-size=5
+</pre>
+</div>
+</div>
+<div class="section" id="client-configuration">
+<h3><a class="toc-backref" href="#id7">Client Configuration</a></h3>
+<p>Although not required, it is recommended to configure the write client to use all available regions. Several methods
+in DistributedLogClientBuilder can be used to achieve this.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="n">DistributedLogClientBuilder</span><span class="o">.</span><span class="na">serverSets</span>
+</span><span class="line"><span class="n">DistributedLogClientBuilder</span><span class="o">.</span><span class="na">finagleNameStrs</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>
+<div class="section" id="additional-steps">
+<h2><a class="toc-backref" href="#id8">Additional Steps</a></h2>
+<p>Other clients settings may need to be tuned - for example in the write client, timeouts will likely need to be
+increased.</p>
+<p>Aside from this however, cluster setup is exactly the same as <a class="reference external" href="cluster">single region setup</a>.</p>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/docs/0.4.0-incubating/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

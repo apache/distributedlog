@@ -6,9 +6,59 @@
 </description>
     <link>http://distributedlog.incubator.apache.org/</link>
     <atom:link href="http://distributedlog.incubator.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 20 Sep 2016 17:53:06 +0800</pubDate>
-    <lastBuildDate>Tue, 20 Sep 2016 17:53:06 +0800</lastBuildDate>
+    <pubDate>Wed, 26 Apr 2017 11:45:33 -0700</pubDate>
+    <lastBuildDate>Wed, 26 Apr 2017 11:45:33 -0700</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>The first release of Apache DistributedLog</title>
+        <description>&lt;p&gt;I’m happy to announce that Apache DistributedLog has officially released its first release under the apache umbrella - 0.4.0-incubating.
+This is an exciting milestone for the project, which joined the Apache Software Foundation and the Apache Incubator last year.&lt;/p&gt;
+
+&lt;p&gt;This release publishes the first set of Apache DistributedLog binaries and source code, making them generally available to the community.
+This initial release includes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;distributedlog-core: A core library that provides the log stream storage primitives for accessing the stream store of Apache DistributedLog.&lt;/li&gt;
+  &lt;li&gt;distributedlog-client &amp;amp; distributedlog-service: A proxy service (and its clients) for serving large number of fan-in writes and fan-out reads.&lt;/li&gt;
+  &lt;li&gt;distributedlog-benchmark: A set of programs for smoketesting the setup and benchmarking the performance of Apache DistributedLog.&lt;/li&gt;
+  &lt;li&gt;distributedlog-tutorials: A set of tutorials on how to use Apache DistributedLog in different use cases, e.g pub/sub messaging, replicated state machine and analytics.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The release is available in the &lt;a href=&quot;https://search.maven.org/#search%7Cga%7C1%7Corg.apache.distributedlog&quot;&gt;Maven Central Repository&lt;/a&gt;,
+or can be downloaded from the project’s &lt;a href=&quot;https://distributedlog.incubator.apache.org/docs/latest/start/download&quot;&gt;website&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;As a community, we take every release seriously and try to ensure production readiness.
+The first release is not just about following the Apache release process, i.e. creating a release and getting signoff from the Apache Software
+Foundation–there is also tons of technical progress. The highlights of the first release are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Refactor the codebase to abstract the core metadata and data operations of the stream store into interfaces.
+So we can easily integrate DistributedLog with other metadata stores like etcd, and integrate DistributedLog with other cold data stores like HDFS, S3.&lt;/li&gt;
+  &lt;li&gt;A new read ahead implementation for DistributedLog reader for better handling slow storage nodes.&lt;/li&gt;
+  &lt;li&gt;Provide the stream placement policy on the proxy service. So we can develop and experiment with different placement policies and integrate
+with different auto-scaling mechanisms.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I’d like to encourage everyone to try out this release.&lt;/p&gt;
+
+&lt;p&gt;As always, the DistributedLog community welcomes feedback. Simplifying building real-time applications is always the primary goal of Apache DistributedLog.
+Usability, security, and integration will be our focus for the next several months.  Also, as we grow the community, a rapid cadence of future releases
+is anticipated, perhaps one every 2~3 months.&lt;/p&gt;
+
+&lt;p&gt;If you have any comments or discover any issues, I’d like to invite you to reach out to us
+via &lt;a href=&quot;https://distributedlog.incubator.apache.org/community/#mailing-lists&quot;&gt;user’s mailing list&lt;/a&gt;, &lt;a href=&quot;https://getdl-slack.herokuapp.com/&quot;&gt;slack channel&lt;/a&gt; or
+the &lt;a href=&quot;https://issues.apache.org/jira/browse/DL&quot;&gt;Apache Jira issues&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 25 Apr 2017 03:00:00 -0700</pubDate>
+        <link>http://distributedlog.incubator.apache.org/releases/2017/04/25/the-first-release.html</link>
+        <guid isPermaLink="true">http://distributedlog.incubator.apache.org/releases/2017/04/25/the-first-release.html</guid>
+        
+        
+        <category>releases</category>
+        
+      </item>
     
       <item>
         <title>A Technical Review of Kafka and DistributedLog</title>
@@ -253,9 +303,9 @@ or when the owner of the log stream fails.&lt;/p&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Mon, 19 Sep 2016 18:00:00 +0800</pubDate>
-        <link>http://distributedlog.incubator.apache.org/technical-review/2015/09/19/kafka-vs-distributedlog</link>
-        <guid isPermaLink="true">http://distributedlog.incubator.apache.org/technical-review/2015/09/19/kafka-vs-distributedlog</guid>
+        <pubDate>Mon, 19 Sep 2016 03:00:00 -0700</pubDate>
+        <link>http://distributedlog.incubator.apache.org/technical-review/2016/09/19/kafka-vs-distributedlog.html</link>
+        <guid isPermaLink="true">http://distributedlog.incubator.apache.org/technical-review/2016/09/19/kafka-vs-distributedlog.html</guid>
         
         
         <category>technical-review</category>

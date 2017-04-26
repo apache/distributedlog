@@ -53,7 +53,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <!-- Overview -->
-        <li><a href="/docs/latest/">V0.4.0</a></li>
+        <li><a href="/docs/latest/">V0.5.0-incubating</a></li>
         <!-- Concepts -->
         <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
         <!-- Quick Start -->
@@ -124,6 +124,13 @@
               </a>
             </li>
             
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/latest/api/java">Java</a></li>
           </ul>
         </li>
         <!-- User Guide -->
@@ -493,8 +500,8 @@ distributedlog uri <em>distributedlog://127.0.0.1:7000/messaging/distributedlog<
 <p>Tailing the stream using <cite>TailReader</cite> to wait for new records.</p>
 <pre class="literal-block">
 // Tailing Stream `basic-stream-1`
-// runner run com.twitter.distributedlog.basic.TailReader ${distributedlog-uri} ${stream}
-./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.TailReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
+// runner run org.apache.distributedlog.basic.TailReader ${distributedlog-uri} ${stream}
+./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.TailReader distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
 </pre>
 </div>
 <div class="section" id="id1">
@@ -502,8 +509,8 @@ distributedlog uri <em>distributedlog://127.0.0.1:7000/messaging/distributedlog<
 <p>Run the example to write records to the stream in a console.</p>
 <pre class="literal-block">
 // Write Records into Stream `basic-stream-1`
-// runner run com.twitter.distributedlog.basic.ConsoleWriter ${distributedlog-uri} ${stream}
-./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.ConsoleWriter distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
+// runner run org.apache.distributedlog.basic.ConsoleWriter ${distributedlog-uri} ${stream}
+./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.ConsoleWriter distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-1
 </pre>
 </div>
 <div class="section" id="check-the-results">
@@ -532,9 +539,9 @@ test!
 <cite>ConsoleWriter</cite> is still holding lock on writing to stream <cite>basic-stream-1</cite>.</p>
 <pre class="literal-block">
 Opening log stream basic-stream-1
-Exception in thread &quot;main&quot; com.twitter.distributedlog.exceptions.OwnershipAcquireFailedException: LockPath - /messaging/distributedlog/basic-stream-1/&lt;default&gt;/lock: Lock acquisition failed, the current owner is console-writer
-    at com.twitter.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:570)
-    at com.twitter.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:567)
+Exception in thread &quot;main&quot; org.apache.distributedlog.exceptions.OwnershipAcquireFailedException: LockPath - /messaging/distributedlog/basic-stream-1/&lt;default&gt;/lock: Lock acquisition failed, the current owner is console-writer
+    at org.apache.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:570)
+    at org.apache.distributedlog.lock.ZKSessionLock$8.apply(ZKSessionLock.java:567)
     at com.twitter.util.Future$$anonfun$map$1$$anonfun$apply$8.apply(Future.scala:1041)
     at com.twitter.util.Try$.apply(Try.scala:13)
     at com.twitter.util.Future$.apply(Future.scala:132)
@@ -553,7 +560,7 @@ Exception in thread &quot;main&quot; com.twitter.distributedlog.exceptions.Owner
     at com.twitter.util.Promise.updateIfEmpty(Promise.scala:716)
     at com.twitter.util.Promise.update(Promise.scala:694)
     at com.twitter.util.Promise.setValue(Promise.scala:670)
-    at com.twitter.distributedlog.lock.ZKSessionLock$9.safeRun(ZKSessionLock.java:622)
+    at org.apache.distributedlog.lock.ZKSessionLock$9.safeRun(ZKSessionLock.java:622)
     at org.apache.bookkeeper.util.SafeRunnable.run(SafeRunnable.java:31)
     at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
     at java.util.concurrent.FutureTask.run(FutureTask.java:262)

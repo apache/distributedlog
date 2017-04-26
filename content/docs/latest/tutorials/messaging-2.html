@@ -53,7 +53,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <!-- Overview -->
-        <li><a href="/docs/latest/">V0.4.0</a></li>
+        <li><a href="/docs/latest/">V0.5.0-incubating</a></li>
         <!-- Concepts -->
         <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
         <!-- Quick Start -->
@@ -124,6 +124,13 @@
               </a>
             </li>
             
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/latest/api/java">Java</a></li>
           </ul>
         </li>
         <!-- User Guide -->
@@ -436,7 +443,7 @@ distributedlog uri <em>distributedlog://127.0.0.1:7000/messaging/distributedlog<
 <p>Start the write proxy, listening on port 8000.</p>
 <pre class="literal-block">
 // DistributedLogServerApp -p ${service-port} --shard-id ${shard-id} -sp ${stats-port} -u {distributedlog-uri} -mx -c ${conf-file}
-./distributedlog-service/bin/dlog com.twitter.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
+./distributedlog-service/bin/dlog org.apache.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
 </pre>
 </div>
 <div class="section" id="create-the-stream">
@@ -453,8 +460,8 @@ distributedlog uri <em>distributedlog://127.0.0.1:7000/messaging/distributedlog<
 <p>Tailing the streams using <cite>MultiReader</cite> to wait for new records.</p>
 <pre class="literal-block">
 // Tailing Stream `messaging-stream-{1,5}`
-// runner run com.twitter.distributedlog.basic.MultiReader ${distributedlog-uri} ${stream}[, ${stream}]
-./distributedlog-tutorials/distributedlog-basic/bin/runner run com.twitter.distributedlog.basic.MultiReader distributedlog://127.0.0.1:7000/messaging/distributedlog messaging-stream-1,messaging-stream-2,messaging-stream-3,messaging-stream-4,messaging-stream-5
+// runner run org.apache.distributedlog.basic.MultiReader ${distributedlog-uri} ${stream}[, ${stream}]
+./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.MultiReader distributedlog://127.0.0.1:7000/messaging/distributedlog messaging-stream-1,messaging-stream-2,messaging-stream-3,messaging-stream-4,messaging-stream-5
 </pre>
 </div>
 <div class="section" id="id1">
@@ -462,8 +469,8 @@ distributedlog uri <em>distributedlog://127.0.0.1:7000/messaging/distributedlog<
 <p>Run the example to write records to multiple stream in a console.</p>
 <pre class="literal-block">
 // Write Records into Stream `messaging-stream-{1,5}`
-// runner run com.twitter.distributedlog.messaging.ConsoleProxyRRMultiWriter ${distributedlog-uri} ${stream}[, ${stream}]
-./distributedlog-tutorials/distributedlog-messaging/bin/runner run com.twitter.distributedlog.messaging.ConsoleProxyRRMultiWriter 'inet!127.0.0.1:8000' messaging-stream-1,messaging-stream-2,messaging-stream-3,messaging-stream-4,messaging-stream-5
+// runner run org.apache.distributedlog.messaging.ConsoleProxyRRMultiWriter ${distributedlog-uri} ${stream}[, ${stream}]
+./distributedlog-tutorials/distributedlog-messaging/bin/runner run org.apache.distributedlog.messaging.ConsoleProxyRRMultiWriter 'inet!127.0.0.1:8000' messaging-stream-1,messaging-stream-2,messaging-stream-3,messaging-stream-4,messaging-stream-5
 </pre>
 </div>
 <div class="section" id="check-the-results">
