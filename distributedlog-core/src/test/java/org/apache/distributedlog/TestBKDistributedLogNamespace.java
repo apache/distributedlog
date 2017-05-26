@@ -173,7 +173,7 @@ public class TestBKDistributedLogNamespace extends TestDistributedLogBase {
 
         try {
             namespace.openLog("/ test2");
-            fail("should fail to create invalid stream /test2");
+            fail("should fail to create invalid stream / test2");
         } catch (InvalidStreamNameException isne) {
             // expected
         }

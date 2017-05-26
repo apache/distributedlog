@@ -293,7 +293,7 @@ public class DLUtils {
             throw new InvalidStreamNameException(logName, "Log Name is reserved");
         }
 
-        if (logName.charAt(0) == 47) {
+        if (logName.charAt(0) == '/') {
             validatePathName(logName);
             return logName.substring(1);
         } else {
@@ -307,14 +307,14 @@ public class DLUtils {
             throw new InvalidStreamNameException("Log name cannot be null");
         } else if (logName.length() == 0) {
             throw new InvalidStreamNameException("Log name length must be > 0");
-        } else if (logName.charAt(0) != 47) {
+        } else if (logName.charAt(0) != '/') {
             throw new InvalidStreamNameException("Log name must start with / character");
         } else if (logName.length() != 1) {
-            if (logName.charAt(logName.length() - 1) == 47) {
+            if (logName.charAt(logName.length() - 1) == '/') {
                 throw new InvalidStreamNameException("Log name must not end with / character");
             } else {
                 String reason = null;
-                char lastc = 47;
+                char lastc = '/';
                 char[] chars = logName.toCharArray();
 
                 for (int i = 1; i < chars.length; ++i) {
