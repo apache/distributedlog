@@ -22,35 +22,44 @@
     <artifactId>distributedlog</artifactId>
     <version>0.5.0-incubating-SNAPSHOT</version>
   </parent>
-  <artifactId>distributedlog-benchmark</artifactId>
-  <name>Apache DistributedLog :: Benchmark</name>
+  <artifactId>distributedlog-proxy-client</artifactId>
+  <name>Apache DistributedLog :: Proxy Client</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-proxy-client</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-service</artifactId>
+      <artifactId>distributedlog-protocol</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>finagle-ostrich4_2.11</artifactId>
+      <artifactId>finagle-core_2.11</artifactId>
       <version>${finagle.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
+      <groupId>com.twitter</groupId>
+      <artifactId>finagle-thriftmux_2.11</artifactId>
+      <version>${finagle.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core</artifactId>
-      <version>${project.parent.version}</version>
-      <scope>test</scope>
-      <type>test-jar</type>
+      <groupId>com.twitter</groupId>
+      <artifactId>finagle-serversets_2.11</artifactId>
+      <version>${finagle.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-jdk14</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -58,43 +67,33 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency> 
+    <dependency>
+      <groupId>org.apache.distributedlog</groupId>
+      <artifactId>distributedlog-protocol</artifactId>
+      <version>${project.parent.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
-      <plugin>
-        <groupId>com.twitter</groupId>
-        <artifactId>scrooge-maven-plugin</artifactId>
-        <version>${scrooge-maven-plugin.version}</version>
-        <configuration>
-          <language>java</language>
-        </configuration>
-        <executions>
-          <execution>
-            <id>thrift-sources</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>${maven-assembly-plugin.version}</version>
-        <configuration>
-          <descriptors>
-            <descriptor>../src/assemble/bin.xml</descriptor>
-          </descriptors>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
@@ -103,18 +102,37 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
         <executions>
           <execution>
-            <phase>package</phase>
             <goals>
-              <goal>copy-dependencies</goal>
+              <goal>test-jar</goal>
             </goals>
-            <configuration>
-              <outputDirectory>${basedir}/lib</outputDirectory>
-            </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <argLine>-Xmx3G -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=2G</argLine>
+          <forkMode>always</forkMode>
+          <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>org.apache.distributedlog.TimedOutTestsListener</value>
+            </property>
+          </properties>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -151,16 +169,4 @@
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>twitter-ostrich-provider</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.apache.bookkeeper.stats</groupId>
-          <artifactId>twitter-ostrich-provider</artifactId>
-          <version>${bookkeeper.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 </project>

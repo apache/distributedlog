@@ -22,12 +22,12 @@
     <artifactId>distributedlog</artifactId>
     <version>0.5.0-incubating-SNAPSHOT</version>
   </parent>
-  <artifactId>distributedlog-service</artifactId>
+  <artifactId>distributedlog-proxy-server</artifactId>
   <name>Apache DistributedLog :: Proxy Service</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-client</artifactId>
+      <artifactId>distributedlog-proxy-client</artifactId>
       <version>${project.parent.version}</version>
       <exclusions>
         <exclusion>

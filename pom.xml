@@ -85,8 +85,9 @@
     <module>distributedlog-build-tools</module>
     <module>distributedlog-protocol</module>
     <module>distributedlog-core</module>
-    <module>distributedlog-client</module>
-    <module>distributedlog-service</module>
+    <module>distributedlog-proxy-protocol</module>
+    <module>distributedlog-proxy-client</module>
+    <module>distributedlog-proxy-server</module>
     <module>distributedlog-benchmark</module>
     <module>distributedlog-tutorials</module>
   </modules>

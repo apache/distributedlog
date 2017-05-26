@@ -22,13 +22,29 @@
     <artifactId>distributedlog</artifactId>
     <version>0.5.0-incubating-SNAPSHOT</version>
   </parent>
-  <artifactId>distributedlog-client</artifactId>
-  <name>Apache DistributedLog :: Proxy Client</name>
+  <artifactId>distributedlog-proxy-protocol</artifactId>
+  <name>Apache DistributedLog :: Proxy Protocol</name>
   <dependencies>
     <dependency>
-      <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-protocol</artifactId>
-      <version>${project.parent.version}</version>
+      <groupId>org.apache.bookkeeper.stats</groupId>
+      <artifactId>bookkeeper-stats-api</artifactId>
+      <version>${bookkeeper.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+      <version>${libthrift.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.twitter</groupId>
+      <artifactId>scrooge-core_2.11</artifactId>
+      <version>${scrooge.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
@@ -37,35 +53,18 @@
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>finagle-thriftmux_2.11</artifactId>
+      <artifactId>finagle-thrift_2.11</artifactId>
       <version>${finagle.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>finagle-serversets_2.11</artifactId>
-      <version>${finagle.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-jdk14</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>${commons-lang.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons-lang3.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>${commons-codec.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -73,37 +72,38 @@
       <version>${slf4j.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>test</scope>
+      <groupId>net.jpountz.lz4</groupId>
+      <artifactId>lz4</artifactId>
+      <version>${lz4.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
-    </dependency> 
-    <dependency>
-      <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-protocol</artifactId>
-      <version>${project.parent.version}</version>
-      <type>test-jar</type>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
+        <groupId>com.twitter</groupId>
+        <artifactId>scrooge-maven-plugin</artifactId>
+        <version>${scrooge-maven-plugin.version}</version>
         <configuration>
-          <excludeFilterFile>${basedir}/src/main/resources/findbugsExclude.xml</excludeFilterFile>
+          <language>java</language>
+          <thriftOpts>
+            <thriftOpt>--finagle</thriftOpt>
+          </thriftOpts>
         </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>thrift-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -118,20 +118,10 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
-          <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <argLine>-Xmx3G -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=2G</argLine>
-          <forkMode>always</forkMode>
-          <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
-          <properties>
-            <property>
-              <name>listener</name>
-              <value>org.apache.distributedlog.TimedOutTestsListener</value>
-            </property>
-          </properties>
+          <excludeFilterFile>${basedir}/src/main/resources/findbugsExclude.xml</excludeFilterFile>
         </configuration>
       </plugin>
       <plugin>
