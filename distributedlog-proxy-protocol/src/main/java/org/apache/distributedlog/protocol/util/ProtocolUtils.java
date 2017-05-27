@@ -15,12 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.distributedlog.util;
+package org.apache.distributedlog.protocol.util;
 
 import static com.google.common.base.Charsets.UTF_8;
 
 import org.apache.distributedlog.DLSN;
 import java.util.zip.CRC32;
+import org.apache.distributedlog.exceptions.DLException;
+import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
+import org.apache.distributedlog.thrift.service.ResponseHeader;
 
 /**
  * With CRC embedded in the application, we have to keep track of per api crc. Ideally this
@@ -74,6 +77,28 @@ public class ProtocolUtils {
             return crc.getValue();
         } finally {
             crc.reset();
+        }
+    }
+
+    public static DLException exception(ResponseHeader response) {
+        String errMsg;
+        switch (response.getCode()) {
+            case FOUND:
+                if (response.isSetErrMsg()) {
+                    errMsg = response.getErrMsg();
+                } else {
+                    errMsg = "Request is redirected to " + response.getLocation();
+                }
+                return new OwnershipAcquireFailedException(errMsg, response.getLocation());
+            case SUCCESS:
+                throw new IllegalArgumentException("Can't instantiate an exception for success response.");
+            default:
+                if (response.isSetErrMsg()) {
+                    errMsg = response.getErrMsg();
+                } else {
+                    errMsg = response.getCode().name();
+                }
+                return new DLException(response.getCode().getValue(), errMsg);
         }
     }
 }

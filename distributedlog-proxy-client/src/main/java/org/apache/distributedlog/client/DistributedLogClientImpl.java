@@ -39,9 +39,9 @@ import org.apache.distributedlog.client.routing.RoutingService.RoutingContext;
 import org.apache.distributedlog.client.stats.ClientStats;
 import org.apache.distributedlog.client.stats.OpStats;
 import org.apache.distributedlog.exceptions.DLClientClosedException;
-import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.ServiceUnavailableException;
 import org.apache.distributedlog.exceptions.StreamUnavailableException;
+import org.apache.distributedlog.protocol.util.ProtocolUtils;
 import org.apache.distributedlog.service.DLSocketAddress;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.thrift.service.BulkWriteResponse;
@@ -52,7 +52,6 @@ import org.apache.distributedlog.thrift.service.ServerStatus;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteContext;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.util.ProtocolUtils;
 import com.twitter.finagle.CancelledRequestException;
 import com.twitter.finagle.ConnectionFailedException;
 import com.twitter.finagle.Failure;
@@ -292,7 +291,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                 if (StatusCode.SUCCESS == writeResponse.getHeader().getCode()) {
                     result.setValue(DLSN.deserialize(writeResponse.getDlsn()));
                 } else {
-                    result.setException(DLException.of(writeResponse.getHeader()));
+                    result.setException(ProtocolUtils.exception(writeResponse.getHeader()));
                 }
             }
 
@@ -934,7 +933,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                     // for overcapacity, dont report failure since this normally happens quite a bit
                     case OVER_CAPACITY:
                         logger.debug("Failed to write request to {} : {}", op.stream, header);
-                        op.fail(addr, DLException.of(header));
+                        op.fail(addr, ProtocolUtils.exception(header));
                         break;
                     // for responses that indicate the requests definitely failed,
                     // we should fail them immediately (e.g. TOO_LARGE_RECORD, METADATA_EXCEPTION)
@@ -952,7 +951,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                     // status code NOT_READY is returned if failfast is enabled in the server. don't redirect
                     // since the proxy may still own the stream.
                     case STREAM_NOT_READY:
-                        op.fail(addr, DLException.of(header));
+                        op.fail(addr, ProtocolUtils.exception(header));
                         break;
                     case SERVICE_UNAVAILABLE:
                         handleServiceUnavailable(addr, sc, Optional.of(op));
@@ -1017,7 +1016,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                                          StreamOp op,
                                          ResponseHeader header) {
         if (streamFailfast) {
-            op.fail(addr, DLException.of(header));
+            op.fail(addr, ProtocolUtils.exception(header));
         } else {
             redirect(op, null);
         }

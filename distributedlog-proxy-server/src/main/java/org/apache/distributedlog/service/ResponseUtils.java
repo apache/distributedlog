@@ -51,7 +51,7 @@ public class ResponseUtils {
             if (dle instanceof OwnershipAcquireFailedException) {
                 response.setLocation(((OwnershipAcquireFailedException) dle).getCurrentOwner());
             }
-            response.setCode(dle.getCode());
+            response.setCode(StatusCode.findByValue(dle.getCode()));
             response.setErrMsg(dle.getMessage());
         } else {
             response.setCode(StatusCode.INTERNAL_SERVER_ERROR);

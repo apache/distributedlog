@@ -28,6 +28,7 @@ import org.apache.distributedlog.exceptions.AlreadyClosedException;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.OverCapacityException;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
+import org.apache.distributedlog.exceptions.StatusCode;
 import org.apache.distributedlog.exceptions.StreamNotReadyException;
 import org.apache.distributedlog.exceptions.StreamUnavailableException;
 import org.apache.distributedlog.exceptions.UnexpectedException;
@@ -462,28 +463,28 @@ public class StreamImpl implements Stream {
                     if (cause instanceof DLException) {
                         final DLException dle = (DLException) cause;
                         switch (dle.getCode()) {
-                        case FOUND:
+                        case StatusCode.FOUND:
                             assert(cause instanceof OwnershipAcquireFailedException);
                             countAsException = false;
                             handleExceptionOnStreamOp(op, cause);
                             break;
-                        case ALREADY_CLOSED:
+                        case StatusCode.ALREADY_CLOSED:
                             assert(cause instanceof AlreadyClosedException);
                             op.fail(cause);
                             handleAlreadyClosedException((AlreadyClosedException) cause);
                             break;
                         // exceptions that mostly from client (e.g. too large record)
-                        case NOT_IMPLEMENTED:
-                        case METADATA_EXCEPTION:
-                        case LOG_EMPTY:
-                        case LOG_NOT_FOUND:
-                        case TRUNCATED_TRANSACTION:
-                        case END_OF_STREAM:
-                        case TRANSACTION_OUT_OF_ORDER:
-                        case INVALID_STREAM_NAME:
-                        case TOO_LARGE_RECORD:
-                        case STREAM_NOT_READY:
-                        case OVER_CAPACITY:
+                        case StatusCode.NOT_IMPLEMENTED:
+                        case StatusCode.METADATA_EXCEPTION:
+                        case StatusCode.LOG_EMPTY:
+                        case StatusCode.LOG_NOT_FOUND:
+                        case StatusCode.TRUNCATED_TRANSACTION:
+                        case StatusCode.END_OF_STREAM:
+                        case StatusCode.TRANSACTION_OUT_OF_ORDER:
+                        case StatusCode.INVALID_STREAM_NAME:
+                        case StatusCode.TOO_LARGE_RECORD:
+                        case StatusCode.STREAM_NOT_READY:
+                        case StatusCode.OVER_CAPACITY:
                             op.fail(cause);
                             break;
                         // the DL writer hits exception, simple set the stream to error status

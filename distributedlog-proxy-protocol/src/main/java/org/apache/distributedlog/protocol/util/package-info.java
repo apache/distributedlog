@@ -15,16 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.distributedlog.exceptions;
-
 /**
- * Exceptions are thrown when attempt to read a log stream that doesn't have any records.
+ * defines the protocol related utilities.
  */
-public class LogEmptyException extends DLException {
-
-    private static final long serialVersionUID = -1106184127178002282L;
-
-    public LogEmptyException(String message) {
-        super(StatusCode.LOG_EMPTY, message);
-    }
-}
+package org.apache.distributedlog.protocol.util;

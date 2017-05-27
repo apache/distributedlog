@@ -38,6 +38,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
+      <artifactId>distributedlog-proxy-protocol</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.distributedlog</groupId>
       <artifactId>distributedlog-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
