@@ -240,7 +240,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <module name="MethodNameCheck">
       <!-- Validates identifiers for method names. -->
       <metadata name="altname" value="MethodName"/>
-      <property name="format" value="^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$"/>
+      <property name="format" value="(^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$|Void)"/>
       <property name="severity" value="error"/>
     </module>
 
@@ -271,12 +271,12 @@ page at http://checkstyle.sourceforge.net/config.html -->
     </module>
 
     <module name="MethodTypeParameterName">
-      <property name="format" value="^(((T|K|V|W|X)[0-9]*)|([A-Z][a-z][a-zA-Z]*T))$"/>
+      <property name="format" value="^(((T|K|V|W|X|R)[0-9]*)|([A-Z][a-z][a-zA-Z]*T))$"/>
       <property name="severity" value="error"/>
     </module>
 
     <module name="InterfaceTypeParameterName">
-      <property name="format" value="^(((T|K|V|W|X)[0-9]*)|([A-Z][a-z][a-zA-Z]*T))$"/>
+      <property name="format" value="^(((T|K|V|W|X|R)[0-9]*)|([A-Z][a-z][a-zA-Z]*T))$"/>
       <property name="severity" value="error"/>
     </module>
 

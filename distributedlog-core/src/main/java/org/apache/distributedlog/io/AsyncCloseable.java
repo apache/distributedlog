@@ -17,9 +17,9 @@
  */
 package org.apache.distributedlog.io;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.util.Function;
-import com.twitter.util.Future;
 
 /**
  * A {@code AsyncCloseable} is a source or destination of data that can be closed asynchronously.
@@ -28,26 +28,12 @@ import com.twitter.util.Future;
  */
 public interface AsyncCloseable {
 
-    Function<AsyncCloseable, Future<Void>> CLOSE_FUNC = new Function<AsyncCloseable, Future<Void>>() {
-        @Override
-        public Future<Void> apply(AsyncCloseable closeable) {
-            return closeable.asyncClose();
-        }
-    };
+    Function<AsyncCloseable, CompletableFuture<Void>> CLOSE_FUNC = closeable -> closeable.asyncClose();
 
-    Function<AsyncCloseable, Future<Void>> CLOSE_FUNC_IGNORE_ERRORS = new Function<AsyncCloseable, Future<Void>>() {
-        @Override
-        public Future<Void> apply(AsyncCloseable closeable) {
-            return FutureUtils.ignore(closeable.asyncClose());
-        }
-    };
+    Function<AsyncCloseable, CompletableFuture<Void>> CLOSE_FUNC_IGNORE_ERRORS =
+        closeable -> FutureUtils.ignore(closeable.asyncClose());
 
-    AsyncCloseable NULL = new AsyncCloseable() {
-        @Override
-        public Future<Void> asyncClose() {
-            return Future.Void();
-        }
-    };
+    AsyncCloseable NULL = () -> FutureUtils.Void();
 
     /**
      * Closes this source and releases any system resources associated
@@ -56,5 +42,5 @@ public interface AsyncCloseable {
      *
      * @return future representing the close result.
      */
-    Future<Void> asyncClose();
+    CompletableFuture<Void> asyncClose();
 }

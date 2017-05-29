@@ -105,7 +105,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         HeartbeatOptions hbOptions = new HeartbeatOptions();
         hbOptions.setSendHeartBeatToReader(true);
         // make sure the first log segment of each stream created
-        FutureUtils.result(dlClient.dlClient.heartbeat(name));
+        Await.result(dlClient.dlClient.heartbeat(name));
 
         DistributedLogManager dlm = DLMTestUtil.createNewDLM(name, conf, getUri());
         LogReader reader = dlm.getInputStream(1);
@@ -266,7 +266,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
             Await.result(future, Duration.fromSeconds(10));
             fail("should have failed");
         } catch (DLException dle) {
-            assertEquals(StatusCode.TOO_LARGE_RECORD, dle.getCode());
+            assertEquals(StatusCode.TOO_LARGE_RECORD.getValue(), dle.getCode());
         } catch (Exception ex) {
             failDueToWrongException(ex);
         }
@@ -305,7 +305,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         }
 
         validateFailedAsLogRecordTooLong(futures.get(writeCount));
-        FutureUtils.result(Futures.collect(futures.subList(writeCount + 1, 2 * writeCount + 1)));
+        Await.result(Futures.collect(futures.subList(writeCount + 1, 2 * writeCount + 1)));
         assertEquals(writeCount, succeeded);
     }
 
@@ -325,7 +325,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
         List<Future<DLSN>> futures = dlClient.dlClient.writeBulk(name, writes);
         validateFailedAsLogRecordTooLong(futures.get(0));
-        FutureUtils.result(Futures.collect(futures.subList(1, writeCount + 1)));
+        Await.result(Futures.collect(futures.subList(1, writeCount + 1)));
     }
 
     @Test(timeout = 60000)
@@ -616,7 +616,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
             Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))));
             fail("Should fail with request denied exception");
         } catch (DLException dle) {
-            assertEquals(StatusCode.REQUEST_DENIED, dle.getCode());
+            assertEquals(StatusCode.REQUEST_DENIED.getValue(), dle.getCode());
         }
     }
 

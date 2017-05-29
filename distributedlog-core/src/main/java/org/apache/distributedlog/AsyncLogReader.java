@@ -17,11 +17,10 @@
  */
 package org.apache.distributedlog;
 
-import org.apache.distributedlog.io.AsyncCloseable;
-import com.twitter.util.Future;
-
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import org.apache.distributedlog.io.AsyncCloseable;
 
 public interface AsyncLogReader extends AsyncCloseable {
 
@@ -37,7 +36,7 @@ public interface AsyncLogReader extends AsyncCloseable {
      *
      * @return A promise that when satisfied will contain the Log Record with its DLSN.
      */
-    public Future<LogRecordWithDLSN> readNext();
+    public CompletableFuture<LogRecordWithDLSN> readNext();
 
     /**
      * Read next <i>numEntries</i> entries. The future is only satisfied with non-empty list
@@ -48,7 +47,7 @@ public interface AsyncLogReader extends AsyncCloseable {
      *          num entries
      * @return A promise that when satisfied will contain a non-empty list of records with their DLSN.
      */
-    public Future<List<LogRecordWithDLSN>> readBulk(int numEntries);
+    public CompletableFuture<List<LogRecordWithDLSN>> readBulk(int numEntries);
 
     /**
      * Read next <i>numEntries</i> entries in a given <i>waitTime</i>.
@@ -65,5 +64,5 @@ public interface AsyncLogReader extends AsyncCloseable {
      *          wait time unit
      * @return A promise that when satisfied will contain a non-empty list of records with their DLSN.
      */
-    public Future<List<LogRecordWithDLSN>> readBulk(int numEntries, long waitTime, TimeUnit timeUnit);
+    public CompletableFuture<List<LogRecordWithDLSN>> readBulk(int numEntries, long waitTime, TimeUnit timeUnit);
 }

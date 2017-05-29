@@ -17,20 +17,18 @@
  */
 package org.apache.distributedlog.kafka;
 
-import org.apache.distributedlog.DLSN;
-import org.apache.distributedlog.exceptions.DLInterruptedException;
-import org.apache.distributedlog.util.FutureUtils;
+import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.FutureEventListener;
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.common.TopicPartition;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.apache.distributedlog.DLSN;
+import org.apache.kafka.clients.producer.Callback;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.TopicPartition;
 
 class DLFutureRecordMetadata implements Future<RecordMetadata> {
 
@@ -79,25 +77,26 @@ class DLFutureRecordMetadata implements Future<RecordMetadata> {
     @Override
     public RecordMetadata get() throws InterruptedException, ExecutionException {
         try {
-            FutureUtils.result(dlsnFuture);
+            Await.result(dlsnFuture);
             // TODO: align the DLSN concepts with kafka concepts
             return new RecordMetadata(new TopicPartition(topic, 0), -1L, -1L);
-        } catch (DLInterruptedException e) {
+        } catch (InterruptedException e) {
             throw new InterruptedException("Interrupted on waiting for response");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ExecutionException("Error on waiting for response", e);
         }
     }
 
     @Override
-    public RecordMetadata get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public RecordMetadata get(long timeout, TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException {
         try {
-            FutureUtils.result(dlsnFuture, Duration.apply(timeout, unit));
+            Await.result(dlsnFuture, Duration.apply(timeout, unit));
             // TODO: align the DLSN concepts with kafka concepts
             return new RecordMetadata(new TopicPartition(topic, 0), -1L, -1L);
-        } catch (DLInterruptedException e) {
+        } catch (InterruptedException e) {
             throw new InterruptedException("Interrupted on waiting for response");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ExecutionException("Error on waiting for response", e);
         }
     }

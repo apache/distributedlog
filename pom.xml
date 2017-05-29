@@ -103,11 +103,13 @@
     <commons-lang3.version>3.3.2</commons-lang3.version>
     <curator.version>3.2.1</curator.version>
     <finagle.version>6.34.0</finagle.version>
+    <freebuilder.version>1.12.3</freebuilder.version>
     <guava.version>20.0</guava.version>
     <jetty.version>8.1.19.v20160209</jetty.version>
     <jmock.version>2.8.2</jmock.version>
     <junit.version>4.8.1</junit.version>
     <libthrift.version>0.5.0-1</libthrift.version>
+    <lombok.version>1.16.16</lombok.version>
     <lz4.version>1.2.0</lz4.version>
     <mockito.version>1.9.5</mockito.version>
     <scrooge.version>4.6.0</scrooge.version>
@@ -182,8 +184,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
@@ -232,8 +234,8 @@
             <exclude>**/**.md</exclude>
             <exclude>scripts/dev/reviewers</exclude>
             <exclude>src/main/resources/DISCLAIMER.bin.txt</exclude>            
-            <exclude>**/dependency-reduced-pom.xml</exclude>            
-            <exclude>**/org/apache/distributedlog/thrift/*</exclude>            
+            <exclude>**/dependency-reduced-pom.xml</exclude>
+            <exclude>**/org/apache/distributedlog/thrift/*</exclude>
           </excludes>
         </configuration>
       </plugin>

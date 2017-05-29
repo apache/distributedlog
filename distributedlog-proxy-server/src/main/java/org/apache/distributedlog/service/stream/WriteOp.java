@@ -17,6 +17,8 @@
  */
 package org.apache.distributedlog.service.stream;
 
+import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFuture;
+
 import org.apache.distributedlog.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
@@ -150,7 +152,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
             if (isRecordSet) {
                 record.setRecordSet();
             }
-            writeResult = writer.write(record);
+            writeResult = newTFuture(writer.write(record));
         }
         return writeResult.map(new AbstractFunction1<DLSN, WriteResponse>() {
             @Override

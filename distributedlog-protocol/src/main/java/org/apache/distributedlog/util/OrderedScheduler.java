@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,22 +19,12 @@ package org.apache.distributedlog.util;
 
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.distributedlog.stats.BroadCastStatsLogger;
-import com.twitter.util.ExecutorServiceFuturePool;
-import com.twitter.util.FuturePool;
-import com.twitter.util.Time;
-import com.twitter.util.Timer;
-import com.twitter.util.TimerTask;
-import org.apache.bookkeeper.stats.NullStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.bookkeeper.util.MathUtils;
-import scala.Function0;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -48,39 +38,12 @@ import java.util.concurrent.TimeoutException;
  * Ordered Scheduler. It is thread pool based {@link ScheduledExecutorService}, additionally providing
  * the ability to execute/schedule tasks by <code>key</code>. Hence the tasks submitted by same <i>key</i>
  * will be executed in order.
- * <p>
- * The scheduler is comprised of multiple {@link MonitoredScheduledThreadPoolExecutor}s. Each
- * {@link MonitoredScheduledThreadPoolExecutor} is a single thread executor. Normal task submissions will
+ *
+ * <p>The scheduler is comprised of multiple {@link ScheduledExecutorService}s. Each
+ * {@link ScheduledExecutorService} is a single thread executor. Normal task submissions will
  * be submitted to executors in a random manner to guarantee load balancing. Keyed task submissions (e.g
- * {@link OrderedScheduler#apply(Object, Function0)} will be submitted to a dedicated executor based on
+ * {@link OrderedScheduler#submit(Object, Runnable)} will be submitted to a dedicated executor based on
  * the hash value of submit <i>key</i>.
- *
- * <h3>Metrics</h3>
- *
- * <h4>Per Executor Metrics</h4>
- *
- * Metrics about individual executors are exposed via {@link Builder#perExecutorStatsLogger}
- * under <i>`scope`/`name`-executor-`id`-0</i>. `name` is the scheduler name provided by {@link Builder#name}
- * while `id` is the index of this executor in the pool. And corresponding stats of future pool of
- * that executor are exposed under <i>`scope`/`name`-executor-`id`-0/futurepool</i>.
- * <p>
- * See {@link MonitoredScheduledThreadPoolExecutor} and {@link MonitoredFuturePool} for per executor metrics
- * exposed.
- *
- * <h4>Aggregated Metrics</h4>
- * <ul>
- * <li>task_pending_time: opstats. measuring the characteristics about the time that tasks spent on
- * waiting being executed.
- * <li>task_execution_time: opstats. measuring the characteristics about the time that tasks spent on
- * executing.
- * <li>futurepool/task_pending_time: opstats. measuring the characteristics about the time that tasks spent
- * on waiting in future pool being executed.
- * <li>futurepool/task_execution_time: opstats. measuring the characteristics about the time that tasks spent
- * on executing.
- * <li>futurepool/task_enqueue_time: opstats. measuring the characteristics about the time that tasks spent on
- * submitting to future pool.
- * <li>futurepool/tasks_pending: gauge. how many tasks are pending in this future pool.
- * </ul>
  */
 public class OrderedScheduler implements ScheduledExecutorService {
 
@@ -101,16 +64,11 @@ public class OrderedScheduler implements ScheduledExecutorService {
         private String name = "OrderedScheduler";
         private int corePoolSize = -1;
         private ThreadFactory threadFactory = null;
-        private boolean traceTaskExecution = false;
-        private long traceTaskExecutionWarnTimeUs = Long.MAX_VALUE;
-        private StatsLogger statsLogger = NullStatsLogger.INSTANCE;
-        private StatsLogger perExecutorStatsLogger = NullStatsLogger.INSTANCE;
 
         /**
          * Set the name of this scheduler. It would be used as part of stats scope and thread name.
          *
-         * @param name
-         *          name of the scheduler.
+         * @param name name of the scheduler.
          * @return scheduler builder
          */
         public Builder name(String name) {
@@ -122,7 +80,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
          * Set the number of threads to be used in this scheduler.
          *
          * @param corePoolSize the number of threads to keep in the pool, even
-         *        if they are idle
+         *                     if they are idle
          * @return scheduler builder
          */
         public Builder corePoolSize(int corePoolSize) {
@@ -134,61 +92,11 @@ public class OrderedScheduler implements ScheduledExecutorService {
          * Set the thread factory that the scheduler uses to create a new thread.
          *
          * @param threadFactory the factory to use when the executor
-         *        creates a new thread
+         *                      creates a new thread
          * @return scheduler builder
          */
         public Builder threadFactory(ThreadFactory threadFactory) {
             this.threadFactory = threadFactory;
-            return this;
-        }
-
-        /**
-         * Enable/Disable exposing task execution stats.
-         *
-         * @param trace
-         *          flag to enable/disable exposing task execution stats.
-         * @return scheduler builder
-         */
-        public Builder traceTaskExecution(boolean trace) {
-            this.traceTaskExecution = trace;
-            return this;
-        }
-
-        /**
-         * Enable/Disable logging slow tasks whose execution time is above <code>timeUs</code>.
-         *
-         * @param timeUs
-         *          slow task execution time threshold in us.
-         * @return scheduler builder.
-         */
-        public Builder traceTaskExecutionWarnTimeUs(long timeUs) {
-            this.traceTaskExecutionWarnTimeUs = timeUs;
-            return this;
-        }
-
-        /**
-         * Expose the aggregated stats over <code>statsLogger</code>.
-         *
-         * @param statsLogger
-         *          stats logger to receive aggregated stats.
-         * @return scheduler builder
-         */
-        public Builder statsLogger(StatsLogger statsLogger) {
-            this.statsLogger = statsLogger;
-            return this;
-        }
-
-        /**
-         * Expose stats of individual executors over <code>perExecutorStatsLogger</code>.
-         * Each executor's stats will be exposed under a sub-scope `name`-executor-`id`-0.
-         * `name` is the scheduler name, while `id` is the index of the scheduler in the pool.
-         *
-         * @param perExecutorStatsLogger
-         *          stats logger to receive per executor stats.
-         * @return scheduler builder
-         */
-        public Builder perExecutorStatsLogger(StatsLogger perExecutorStatsLogger) {
-            this.perExecutorStatsLogger = perExecutorStatsLogger;
             return this;
         }
 
@@ -206,68 +114,44 @@ public class OrderedScheduler implements ScheduledExecutorService {
             }
 
             return new OrderedScheduler(
-                    name,
-                    corePoolSize,
-                    threadFactory,
-                    traceTaskExecution,
-                    traceTaskExecutionWarnTimeUs,
-                    statsLogger,
-                    perExecutorStatsLogger);
+                name,
+                corePoolSize,
+                threadFactory);
         }
 
     }
 
     protected final String name;
     protected final int corePoolSize;
-    protected final MonitoredScheduledThreadPoolExecutor[] executors;
-    protected final MonitoredFuturePool[] futurePools;
+    protected final ScheduledExecutorService[] executors;
     protected final Random random;
 
     private OrderedScheduler(String name,
                              int corePoolSize,
-                             ThreadFactory threadFactory,
-                             boolean traceTaskExecution,
-                             long traceTaskExecutionWarnTimeUs,
-                             StatsLogger statsLogger,
-                             StatsLogger perExecutorStatsLogger) {
+                             ThreadFactory threadFactory) {
         this.name = name;
         this.corePoolSize = corePoolSize;
-        this.executors = new MonitoredScheduledThreadPoolExecutor[corePoolSize];
-        this.futurePools = new MonitoredFuturePool[corePoolSize];
+        this.executors = new ScheduledExecutorService[corePoolSize];
         for (int i = 0; i < corePoolSize; i++) {
             ThreadFactory tf = new ThreadFactoryBuilder()
-                    .setNameFormat(name + "-executor-" + i + "-%d")
-                    .setThreadFactory(threadFactory)
-                    .build();
-            StatsLogger broadcastStatsLogger =
-                    BroadCastStatsLogger.masterslave(perExecutorStatsLogger.scope("executor-" + i), statsLogger);
-            executors[i] = new MonitoredScheduledThreadPoolExecutor(
-                    1, tf, broadcastStatsLogger, traceTaskExecution);
-            futurePools[i] = new MonitoredFuturePool(
-                    new ExecutorServiceFuturePool(executors[i]),
-                    broadcastStatsLogger.scope("futurepool"),
-                    traceTaskExecution,
-                    traceTaskExecutionWarnTimeUs);
+                .setNameFormat(name + "-scheduler-" + i + "-%d")
+                .setThreadFactory(threadFactory)
+                .build();
+            executors[i] = Executors.newSingleThreadScheduledExecutor(tf);
         }
         this.random = new Random(System.currentTimeMillis());
     }
 
-    protected MonitoredScheduledThreadPoolExecutor chooseExecutor() {
+    protected ScheduledExecutorService chooseExecutor() {
         return corePoolSize == 1 ? executors[0] : executors[random.nextInt(corePoolSize)];
     }
 
-    protected MonitoredScheduledThreadPoolExecutor chooseExecutor(Object key) {
+    public ScheduledExecutorService chooseExecutor(Object key) {
+        if (null == key) {
+            return chooseExecutor();
+        }
         return corePoolSize == 1 ? executors[0] :
-                executors[MathUtils.signSafeMod(Objects.hashCode(key), corePoolSize)];
-    }
-
-    protected FuturePool chooseFuturePool(Object key) {
-        return corePoolSize == 1 ? futurePools[0] :
-                futurePools[MathUtils.signSafeMod(Objects.hashCode(key), corePoolSize)];
-    }
-
-    protected FuturePool chooseFuturePool() {
-        return corePoolSize == 1 ? futurePools[0] : futurePools[random.nextInt(corePoolSize)];
+            executors[MathUtil.signSafeMod(Objects.hashCode(key), corePoolSize)];
     }
 
     /**
@@ -309,9 +193,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public void shutdown() {
-        for (MonitoredScheduledThreadPoolExecutor executor : executors) {
-            // Unregister gauges
-            executor.unregisterGauges();
+        for (ScheduledExecutorService executor : executors) {
             executor.shutdown();
         }
     }
@@ -322,7 +204,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
     @Override
     public List<Runnable> shutdownNow() {
         List<Runnable> runnables = new ArrayList<Runnable>();
-        for (MonitoredScheduledThreadPoolExecutor executor : executors) {
+        for (ScheduledExecutorService executor : executors) {
             runnables.addAll(executor.shutdownNow());
         }
         return runnables;
@@ -333,7 +215,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public boolean isShutdown() {
-        for (MonitoredScheduledThreadPoolExecutor executor : executors) {
+        for (ScheduledExecutorService executor : executors) {
             if (!executor.isShutdown()) {
                 return false;
             }
@@ -346,7 +228,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public boolean isTerminated() {
-        for (MonitoredScheduledThreadPoolExecutor executor : executors) {
+        for (ScheduledExecutorService executor : executors) {
             if (!executor.isTerminated()) {
                 return false;
             }
@@ -359,8 +241,8 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public boolean awaitTermination(long timeout, TimeUnit unit)
-            throws InterruptedException {
-        for (MonitoredScheduledThreadPoolExecutor executor : executors) {
+        throws InterruptedException {
+        for (ScheduledExecutorService executor : executors) {
             if (!executor.awaitTermination(timeout, unit)) {
                 return false;
             }
@@ -397,7 +279,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
-            throws InterruptedException {
+        throws InterruptedException {
         return chooseExecutor().invokeAll(tasks);
     }
 
@@ -406,7 +288,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
-            throws InterruptedException {
+        throws InterruptedException {
         return chooseExecutor().invokeAll(tasks, timeout, unit);
     }
 
@@ -415,7 +297,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
-            throws InterruptedException, ExecutionException {
+        throws InterruptedException, ExecutionException {
         return chooseExecutor().invokeAny(tasks);
     }
 
@@ -424,7 +306,7 @@ public class OrderedScheduler implements ScheduledExecutorService {
      */
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
-            throws InterruptedException, ExecutionException, TimeoutException {
+        throws InterruptedException, ExecutionException, TimeoutException {
         return chooseExecutor().invokeAny(tasks, timeout, unit);
     }
 
@@ -437,39 +319,6 @@ public class OrderedScheduler implements ScheduledExecutorService {
     }
 
     // Ordered Functions
-
-    /**
-     * Return a future pool used by <code>key</code>.
-     *
-     * @param key
-     *          key to order in the future pool
-     * @return future pool
-     */
-    public FuturePool getFuturePool(Object key) {
-        return chooseFuturePool(key);
-    }
-
-    /**
-     * Execute the <code>function</code> in the executor that assigned by <code>key</code>.
-     *
-     * @see com.twitter.util.Future
-     * @param key key of the <i>function</i> to run
-     * @param function function to run
-     * @return future representing the result of the <i>function</i>
-     */
-    public <T> com.twitter.util.Future<T> apply(Object key, Function0<T> function) {
-        return chooseFuturePool(key).apply(function);
-    }
-
-    /**
-     * Execute the <code>function</code> by the scheduler. It would be submitted to any executor randomly.
-     *
-     * @param function function to run
-     * @return future representing the result of the <i>function</i>
-     */
-    public <T> com.twitter.util.Future<T> apply(Function0<T> function) {
-        return chooseFuturePool().apply(function);
-    }
 
     public ScheduledFuture<?> schedule(Object key, Runnable command, long delay, TimeUnit unit) {
         return chooseExecutor(key).schedule(command, delay, unit);
@@ -485,6 +334,18 @@ public class OrderedScheduler implements ScheduledExecutorService {
 
     public Future<?> submit(Object key, Runnable command) {
         return chooseExecutor(key).submit(command);
+    }
+
+    public <T> CompletableFuture<T> submit(Object key, Callable<T> callable) {
+        CompletableFuture<T> future = FutureUtils.createFuture();
+        chooseExecutor(key).submit(() -> {
+            try {
+                future.complete(callable.call());
+            } catch (Exception e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
     }
 
 }

@@ -18,7 +18,7 @@
 package org.apache.distributedlog.util;
 
 import com.google.common.annotations.Beta;
-import com.twitter.util.Future;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Util class represents a transaction
@@ -82,7 +82,7 @@ public interface Transaction<OpResult> {
      *
      * @return future representing the result of transaction execution.
      */
-    Future<Void> execute();
+    CompletableFuture<Void> execute();
 
     /**
      * Abort current transaction. If this is called and the transaction haven't been executed by

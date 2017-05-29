@@ -17,12 +17,10 @@
  */
 package org.apache.distributedlog;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.io.AsyncAbortable;
 import org.apache.distributedlog.io.AsyncCloseable;
-import com.twitter.util.Future;
-
-import java.io.Closeable;
-import java.util.List;
 
 public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
 
@@ -40,7 +38,7 @@ public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
      * @return A Future which contains a DLSN if the record was successfully written
      * or an exception if the write fails
      */
-    public Future<DLSN> write(LogRecord record);
+    public CompletableFuture<DLSN> write(LogRecord record);
 
     /**
      * Write log records to the stream in bulk. Each future in the list represents the result of
@@ -51,7 +49,7 @@ public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
      * @return A Future which contains a list of Future DLSNs if the record was successfully written
      * or an exception if the operation fails.
      */
-    public Future<List<Future<DLSN>>> writeBulk(List<LogRecord> record);
+    public CompletableFuture<List<CompletableFuture<DLSN>>> writeBulk(List<LogRecord> record);
 
     /**
      * Truncate the log until <i>dlsn</i>.
@@ -61,7 +59,7 @@ public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
      * @return A Future indicates whether the operation succeeds or not, or an exception
      * if the truncation fails.
      */
-    public Future<Boolean> truncate(DLSN dlsn);
+    public CompletableFuture<Boolean> truncate(DLSN dlsn);
 
     /**
      * Get the name of the stream this writer writes data to

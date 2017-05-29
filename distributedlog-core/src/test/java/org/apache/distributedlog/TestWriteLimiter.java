@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import scala.runtime.BoxedUnit;
 
 public class TestWriteLimiter {
     static final Logger LOG = LoggerFactory.getLogger(TestWriteLimiter.class);

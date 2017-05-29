@@ -17,8 +17,9 @@
  */
 package org.apache.distributedlog.io;
 
-import com.twitter.util.Function;
-import com.twitter.util.Future;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import org.apache.distributedlog.util.FutureUtils;
 
 /**
  * An {@code Abortable} is a source or destination of data that can be aborted.
@@ -32,19 +33,9 @@ import com.twitter.util.Future;
  */
 public interface AsyncAbortable {
 
-    Function<AsyncAbortable, Future<Void>> ABORT_FUNC = new Function<AsyncAbortable, Future<Void>>() {
-        @Override
-        public Future<Void> apply(AsyncAbortable abortable) {
-            return abortable.asyncAbort();
-        }
-    };
+    Function<AsyncAbortable, CompletableFuture<Void>> ABORT_FUNC = abortable -> abortable.asyncAbort();
 
-    AsyncAbortable NULL = new AsyncAbortable() {
-        @Override
-        public Future<Void> asyncAbort() {
-            return Future.Void();
-        }
-    };
+    AsyncAbortable NULL = () -> FutureUtils.Void();
 
     /**
      * Aborts the object and releases any resources associated with it.
@@ -53,5 +44,5 @@ public interface AsyncAbortable {
      *
      * @return future represents the abort result
      */
-    Future<Void> asyncAbort();
+    CompletableFuture<Void> asyncAbort();
 }

@@ -62,6 +62,8 @@ import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import org.apache.distributedlog.namespace.NamespaceDriver;
+import org.apache.distributedlog.util.FutureEventListener;
+import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
@@ -108,8 +110,6 @@ import org.apache.distributedlog.impl.metadata.BKDLConfig;
 import org.apache.distributedlog.metadata.MetadataUpdater;
 import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
 import org.apache.distributedlog.util.SchedulerUtils;
-import com.twitter.util.Await;
-import com.twitter.util.FutureEventListener;
 
 import static com.google.common.base.Charsets.UTF_8;
 
@@ -957,7 +957,7 @@ public class DistributedLogTool extends Tool {
         }
 
         private void printHeader(DistributedLogManager dlm) throws Exception {
-            DLSN firstDlsn = Await.result(dlm.getFirstDLSNAsync());
+            DLSN firstDlsn = FutureUtils.result(dlm.getFirstDLSNAsync());
             boolean endOfStreamMarked = dlm.isEndOfStreamMarked();
             DLSN lastDlsn = dlm.getLastDLSN();
             long firstTxnId = dlm.getFirstTxId();
@@ -1121,7 +1121,7 @@ public class DistributedLogTool extends Tool {
         }
 
         long countToLastRecord(DistributedLogManager dlm) throws Exception {
-            return Await.result(dlm.getLogRecordCountAsync(startDLSN)).longValue();
+            return FutureUtils.result(dlm.getLogRecordCountAsync(startDLSN)).longValue();
         }
 
         @Override
@@ -1439,7 +1439,7 @@ public class DistributedLogTool extends Tool {
                 AsyncLogReader reader;
                 Object startOffset;
                 try {
-                    DLSN lastDLSN = Await.result(dlm.getLastDLSNAsync());
+                    DLSN lastDLSN = FutureUtils.result(dlm.getLastDLSNAsync());
                     System.out.println("Last DLSN : " + lastDLSN);
                     if (null == fromDLSN) {
                         reader = dlm.getAsyncLogReader(fromTxnId);
@@ -1468,7 +1468,7 @@ public class DistributedLogTool extends Tool {
 
         private void dumpRecords(AsyncLogReader reader) throws Exception {
             int numRead = 0;
-            LogRecord record = Await.result(reader.readNext());
+            LogRecord record = FutureUtils.result(reader.readNext());
             while (record != null) {
                 // dump the record
                 dumpRecord(record);
@@ -1476,7 +1476,7 @@ public class DistributedLogTool extends Tool {
                 if (numRead >= count) {
                     break;
                 }
-                record = Await.result(reader.readNext());
+                record = FutureUtils.result(reader.readNext());
             }
             if (numRead == 0) {
                 System.out.println("No records.");
@@ -2645,14 +2645,14 @@ public class DistributedLogTool extends Tool {
             DistributedLogManager dlm = namespace.openLog(streamName);
             try {
                 long totalRecords = dlm.getLogRecordCount();
-                long recordsAfterTruncate = Await.result(dlm.getLogRecordCountAsync(dlsn));
+                long recordsAfterTruncate = FutureUtils.result(dlm.getLogRecordCountAsync(dlsn));
                 long recordsToTruncate = totalRecords - recordsAfterTruncate;
                 if (!getForce() && !IOUtils.confirmPrompt("Do you want to truncate " + streamName + " at dlsn " + dlsn + " (" + recordsToTruncate + " records)?")) {
                     return 0;
                 } else {
                     AsyncLogWriter writer = dlm.startAsyncLogSegmentNonPartitioned();
                     try {
-                        if (!Await.result(writer.truncate(dlsn))) {
+                        if (!FutureUtils.result(writer.truncate(dlsn))) {
                             System.out.println("Failed to truncate.");
                         }
                         return 0;
@@ -2818,7 +2818,7 @@ public class DistributedLogTool extends Tool {
                 DistributedLogManager dlm = namespace.openLog(s);
                 final CountDownLatch countDownLatch = new CountDownLatch(1);
                 dlm.getSubscriptionsStore().deleteSubscriber(subscriberId)
-                    .addEventListener(new FutureEventListener<Boolean>() {
+                    .whenComplete(new FutureEventListener<Boolean>() {
                         @Override
                         public void onFailure(Throwable cause) {
                             System.out.println("Failed to delete subscriber for stream " + s);

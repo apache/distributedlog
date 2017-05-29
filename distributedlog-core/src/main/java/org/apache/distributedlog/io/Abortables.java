@@ -18,16 +18,16 @@
 package org.apache.distributedlog.io;
 
 import com.google.common.collect.Lists;
-import org.apache.distributedlog.function.VoidFunctions;
-import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.util.Future;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import javax.annotation.Nullable;
+import org.apache.distributedlog.function.VoidFunctions;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for working with {@link Abortable} objects.
@@ -40,10 +40,10 @@ public final class Abortables {
 
     private Abortables() {}
 
-    public static Future<Void> asyncAbort(@Nullable AsyncAbortable abortable,
-                                          boolean swallowIOException) {
+    public static CompletableFuture<Void> asyncAbort(@Nullable AsyncAbortable abortable,
+                                                     boolean swallowIOException) {
         if (null == abortable) {
-            return Future.Void();
+            return FutureUtils.Void();
         } else if (swallowIOException) {
             return FutureUtils.ignore(abortable.asyncAbort());
         } else {
@@ -108,7 +108,7 @@ public final class Abortables {
             return;
         }
         try {
-            FutureUtils.result(abortable.asyncAbort());
+            Utils.ioResult(abortable.asyncAbort());
         } catch (IOException ioe) {
             if (swallowIOException) {
                 logger.warn("IOException thrown while aborting Abortable {} : ", abortable, ioe);
@@ -165,7 +165,7 @@ public final class Abortables {
      *          abortables to abort
      * @return future represents the abort future
      */
-    public static Future<Void> abortSequence(ExecutorService executorService,
+    public static CompletableFuture<Void> abortSequence(ExecutorService executorService,
                                              AsyncAbortable... abortables) {
         List<AsyncAbortable> abortableList = Lists.newArrayListWithExpectedSize(abortables.length);
         for (AsyncAbortable abortable : abortables) {
@@ -176,8 +176,9 @@ public final class Abortables {
             }
         }
         return FutureUtils.processList(
-                abortableList,
-                AsyncAbortable.ABORT_FUNC,
-                executorService).map(VoidFunctions.LIST_TO_VOID_FUNC);
+            abortableList,
+            AsyncAbortable.ABORT_FUNC,
+            executorService
+        ).thenApply(VoidFunctions.LIST_TO_VOID_FUNC);
     }
 }

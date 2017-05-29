@@ -17,33 +17,24 @@
  */
 package org.apache.distributedlog.rate;
 
-import com.twitter.util.Duration;
-import com.twitter.util.Function0;
-import com.twitter.util.TimerTask;
-import com.twitter.util.Timer;
-import com.twitter.util.Time;
 import java.util.concurrent.CopyOnWriteArrayList;
-import scala.runtime.BoxedUnit;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
-public class MovingAverageRateFactory {
+public class MovingAverageRateFactory implements Runnable {
 
     private static final int DEFAULT_INTERVAL_SECS = 1;
 
-    private final Timer timer;
-    private final TimerTask timerTask;
+    private final ScheduledExecutorService scheduler;
+    private final ScheduledFuture<?> scheduledFuture;
     private final CopyOnWriteArrayList<SampledMovingAverageRate> avgs;
 
-    public MovingAverageRateFactory(Timer timer) {
+    public MovingAverageRateFactory(ScheduledExecutorService scheduler) {
         this.avgs = new CopyOnWriteArrayList<SampledMovingAverageRate>();
-        this.timer = timer;
-        Function0<BoxedUnit> sampleTask = new Function0<BoxedUnit>() {
-            public BoxedUnit apply() {
-                sampleAll();
-                return null;
-            }
-        };
-        this.timerTask = timer.schedulePeriodically(
-            Time.now(), Duration.fromSeconds(DEFAULT_INTERVAL_SECS), sampleTask);
+        this.scheduler = scheduler;
+        this.scheduledFuture = this.scheduler.scheduleAtFixedRate(
+            this, DEFAULT_INTERVAL_SECS, DEFAULT_INTERVAL_SECS, TimeUnit.SECONDS);
     }
 
     public MovingAverageRate create(int intervalSecs) {
@@ -53,13 +44,16 @@ public class MovingAverageRateFactory {
     }
 
     public void close() {
-        timerTask.cancel();
+        scheduledFuture.cancel(true);
         avgs.clear();
     }
 
+    @Override
+    public void run() {
+        sampleAll();
+    }
+
     private void sampleAll() {
-        for (SampledMovingAverageRate avg : avgs) {
-            avg.sample();
-        }
+        avgs.forEach(SampledMovingAverageRate::sample);
     }
 }

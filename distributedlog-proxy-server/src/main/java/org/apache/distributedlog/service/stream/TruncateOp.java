@@ -17,6 +17,8 @@
  */
 package org.apache.distributedlog.service.stream;
 
+import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFuture;
+
 import org.apache.distributedlog.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.acl.AccessControlManager;
@@ -32,7 +34,6 @@ import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.runtime.AbstractFunction1;
 
 /**
  * Operation to truncate a log stream.
@@ -72,12 +73,7 @@ public class TruncateOp extends AbstractWriteOp {
             logger.error("Truncate: Stream Name Mismatch in the Stream Map {}, {}", stream, writer.getStreamName());
             return Future.exception(new IllegalStateException("The stream mapping is incorrect, fail the request"));
         }
-        return writer.truncate(dlsn).map(new AbstractFunction1<Boolean, WriteResponse>() {
-            @Override
-            public WriteResponse apply(Boolean v1) {
-                return ResponseUtils.writeSuccess();
-            }
-        });
+        return newTFuture(writer.truncate(dlsn).thenApply((value) -> ResponseUtils.writeSuccess()));
     }
 
     @Override

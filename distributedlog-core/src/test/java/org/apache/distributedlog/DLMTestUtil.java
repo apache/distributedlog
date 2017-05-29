@@ -17,6 +17,8 @@
  */
 package org.apache.distributedlog;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.impl.logsegment.BKLogSegmentEntryWriter;
 import org.apache.distributedlog.logsegment.LogSegmentEntryStore;
@@ -28,9 +30,6 @@ import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.PermitLimiter;
 import org.apache.distributedlog.util.RetryPolicyUtils;
 import org.apache.distributedlog.util.Utils;
-import com.twitter.util.Await;
-import com.twitter.util.Duration;
-import com.twitter.util.Future;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.LedgerHandle;
 import org.apache.bookkeeper.conf.ServerConfiguration;
@@ -78,7 +77,7 @@ public class DLMTestUtil {
             new HashMap<Long, LogSegmentMetadata>(children.size());
         for (String child : children) {
             LogSegmentMetadata segment =
-                    FutureUtils.result(LogSegmentMetadata.read(zkc, ledgerPath + "/" + child));
+                    Utils.ioResult(LogSegmentMetadata.read(zkc, ledgerPath + "/" + child));
             LOG.info("Read segment {} : {}", child, segment);
             segments.put(segment.getLogSegmentSequenceNumber(), segment);
         }
@@ -113,7 +112,7 @@ public class DLMTestUtil {
             List<LogSegmentMetadata> logSegmentList = dlm.getLogSegments();
             LogSegmentMetadata lastSegment = logSegmentList.get(logSegmentList.size() - 1);
             LogSegmentEntryStore entryStore = dlm.getNamespaceDriver().getLogSegmentEntryStore(NamespaceDriver.Role.READER);
-            Utils.close(FutureUtils.result(entryStore.openRandomAccessReader(lastSegment, true)));
+            Utils.close(Utils.ioResult(entryStore.openRandomAccessReader(lastSegment, true)));
         } finally {
             dlm.close();
         }
@@ -313,12 +312,12 @@ public class DLMTestUtil {
         for (int i = 0; i < controlEntries; ++i) {
             LogRecord record = DLMTestUtil.getLargeLogRecordInstance(txid);
             record.setControl();
-            Await.result(out.write(record));
+            Utils.ioResult(out.write(record));
             txid += txidStep;
         }
         for (int i = 0; i < userEntries; ++i) {
             LogRecord record = DLMTestUtil.getLargeLogRecordInstance(txid);
-            Await.result(out.write(record));
+            Utils.ioResult(out.write(record));
             txid += txidStep;
         }
         Utils.close(out);
@@ -339,7 +338,7 @@ public class DLMTestUtil {
             throws Exception {
         BKDistributedLogManager dlm = (BKDistributedLogManager) manager;
         BKLogWriteHandler writeHandler = dlm.createWriteHandler(false);
-        FutureUtils.result(writeHandler.lockHandler());
+        Utils.ioResult(writeHandler.lockHandler());
         // Start a log segment with a given ledger seq number.
         BookKeeperClient bkc = getBookKeeperClient(dlm);
         LedgerHandle lh = bkc.get().createLedger(conf.getEnsembleSize(), conf.getWriteQuorumSize(),
@@ -377,12 +376,12 @@ public class DLMTestUtil {
             for (long j = 1; j <= segmentSize; j++) {
                 writer.write(DLMTestUtil.getLogRecordInstance(txid++));
             }
-            FutureUtils.result(writer.flushAndCommit());
+            Utils.ioResult(writer.flushAndCommit());
         }
         if (completeLogSegment) {
-            FutureUtils.result(writeHandler.completeAndCloseLogSegment(writer));
+            Utils.ioResult(writeHandler.completeAndCloseLogSegment(writer));
         }
-        FutureUtils.result(writeHandler.unlockHandler());
+        Utils.ioResult(writeHandler.unlockHandler());
     }
 
     public static void injectLogSegmentWithLastDLSN(DistributedLogManager manager, DistributedLogConfiguration conf,
@@ -390,7 +389,7 @@ public class DLMTestUtil {
                                                     boolean recordWrongLastDLSN) throws Exception {
         BKDistributedLogManager dlm = (BKDistributedLogManager) manager;
         BKLogWriteHandler writeHandler = dlm.createWriteHandler(false);
-        FutureUtils.result(writeHandler.lockHandler());
+        Utils.ioResult(writeHandler.lockHandler());
         // Start a log segment with a given ledger seq number.
         BookKeeperClient bkc = getBookKeeperClient(dlm);
         LedgerHandle lh = bkc.get().createLedger(conf.getEnsembleSize(), conf.getWriteQuorumSize(),
@@ -425,14 +424,14 @@ public class DLMTestUtil {
         long txid = startTxID;
         DLSN wrongDLSN = null;
         for (long j = 1; j <= segmentSize; j++) {
-            DLSN dlsn = Await.result(writer.asyncWrite(DLMTestUtil.getLogRecordInstance(txid++)));
+            DLSN dlsn = Utils.ioResult(writer.asyncWrite(DLMTestUtil.getLogRecordInstance(txid++)));
             if (j == (segmentSize - 1)) {
                 wrongDLSN = dlsn;
             }
         }
         assertNotNull(wrongDLSN);
         if (recordWrongLastDLSN) {
-            FutureUtils.result(writer.asyncClose());
+            Utils.ioResult(writer.asyncClose());
             writeHandler.completeAndCloseLogSegment(
                     writeHandler.inprogressZNodeName(writer.getLogSegmentId(), writer.getStartTxId(), writer.getLogSegmentSequenceNumber()),
                     writer.getLogSegmentSequenceNumber(),
@@ -443,9 +442,9 @@ public class DLMTestUtil {
                     wrongDLSN.getEntryId(),
                     wrongDLSN.getSlotId());
         } else {
-            FutureUtils.result(writeHandler.completeAndCloseLogSegment(writer));
+            Utils.ioResult(writeHandler.completeAndCloseLogSegment(writer));
         }
-        FutureUtils.result(writeHandler.unlockHandler());
+        Utils.ioResult(writeHandler.unlockHandler());
     }
 
     public static void updateSegmentMetadata(ZooKeeperClient zkc, LogSegmentMetadata segment) throws Exception {
@@ -469,18 +468,18 @@ public class DLMTestUtil {
         return conf;
     }
 
-    public static <T> void validateFutureFailed(Future<T> future, Class exClass) {
+    public static <T> void validateFutureFailed(CompletableFuture<T> future, Class exClass) {
         try {
-            Await.result(future);
+            Utils.ioResult(future);
         } catch (Exception ex) {
             LOG.info("Expected: {} Actual: {}", exClass.getName(), ex.getClass().getName());
             assertTrue("exceptions types equal", exClass.isInstance(ex));
         }
     }
 
-    public static <T> T validateFutureSucceededAndGetResult(Future<T> future) throws Exception {
+    public static <T> T validateFutureSucceededAndGetResult(CompletableFuture<T> future) throws Exception {
         try {
-            return Await.result(future, Duration.fromSeconds(10));
+            return Utils.ioResult(future, 10, TimeUnit.SECONDS);
         } catch (Exception ex) {
             fail("unexpected exception " + ex.getClass().getName());
             throw ex;

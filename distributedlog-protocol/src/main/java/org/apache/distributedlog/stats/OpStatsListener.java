@@ -18,10 +18,13 @@
 package org.apache.distributedlog.stats;
 
 import com.google.common.base.Stopwatch;
-import com.twitter.util.FutureEventListener;
-import org.apache.bookkeeper.stats.OpStatsLogger;
 import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.distributedlog.util.FutureEventListener;
 
+/**
+ * A {@link FutureEventListener} monitors the stats for a given operation.
+ */
 public class OpStatsListener<T> implements FutureEventListener<T> {
     OpStatsLogger opStatsLogger;
     Stopwatch stopwatch;

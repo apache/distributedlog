@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Ticker;
+import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.impl.logsegment.BKLogSegmentEntryWriter;
 import org.apache.distributedlog.injector.AsyncFailureInjector;
@@ -33,10 +34,10 @@ import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import org.apache.distributedlog.namespace.NamespaceDriver;
 import org.apache.distributedlog.util.ConfUtils;
+import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.PermitLimiter;
 import org.apache.distributedlog.util.SchedulerUtils;
-import com.twitter.util.Future;
 import org.apache.bookkeeper.client.LedgerHandle;
 import org.apache.bookkeeper.feature.SettableFeatureProvider;
 import org.apache.bookkeeper.shims.zk.ZooKeeperServerShim;
@@ -181,14 +182,14 @@ public class TestDistributedLogBase {
                 .build();
         AsyncCloseable resourcesCloseable = new AsyncCloseable() {
             @Override
-            public Future<Void> asyncClose() {
+            public CompletableFuture<Void> asyncClose() {
                 LOG.info("Shutting down the scheduler");
                 SchedulerUtils.shutdownScheduler(scheduler, 1, TimeUnit.SECONDS);
                 LOG.info("Shut down the scheduler");
                 LOG.info("Closing the namespace");
                 namespace.close();
                 LOG.info("Closed the namespace");
-                return Future.Void();
+                return FutureUtils.Void();
             }
         };
         AsyncFailureInjector failureInjector = AsyncRandomFailureInjector.newBuilder()

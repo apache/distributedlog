@@ -15,25 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.distributedlog.function;
+package org.apache.distributedlog.util;
 
-import org.apache.distributedlog.LogSegmentMetadata;
-import org.apache.bookkeeper.versioning.Versioned;
-import scala.Function1;
-import scala.runtime.AbstractFunction1;
-
-import java.util.List;
+import java.util.concurrent.CompletionException;
+import java.util.function.BiConsumer;
 
 /**
- * Function to get the versioned value from {@link org.apache.bookkeeper.versioning.Versioned}
+ * Provide similar interface (as twitter future) over java future.
  */
-public class GetVersionedValueFunction<T> extends AbstractFunction1<Versioned<T>, T> {
+public interface FutureEventListener<T> extends BiConsumer<T, Throwable> {
 
-    public static final Function1<Versioned<List<LogSegmentMetadata>>, List<LogSegmentMetadata>>
-            GET_LOGSEGMENT_LIST_FUNC = new GetVersionedValueFunction<List<LogSegmentMetadata>>();
+  void onSuccess(T value);
 
-    @Override
-    public T apply(Versioned<T> versionedValue) {
-        return versionedValue.getValue();
+  void onFailure(Throwable cause);
+
+  @Override
+  default void accept(T t, Throwable throwable) {
+    if (null != throwable) {
+      if (throwable instanceof CompletionException && null != throwable.getCause()) {
+        onFailure(throwable.getCause());
+      } else {
+        onFailure(throwable);
+      }
+      return;
     }
+    onSuccess(t);
+  }
 }

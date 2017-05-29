@@ -27,9 +27,9 @@ import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.benchmark.utils.ShiftableRateLimiter;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.util.FutureEventListener;
 import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.SchedulerUtils;
-import com.twitter.util.FutureEventListener;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public class DLWriterWorker implements Worker {
                             FutureUtils.result(writer.asyncClose());
                         }
                         latch.countDown();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         LOG.error("Failed to intialize writer for stream : {}", streamName, e);
                     }
 
@@ -148,7 +148,7 @@ public class DLWriterWorker implements Worker {
         if (streamWriters.get(idx) == writer) {
             try {
                 FutureUtils.result(writer.asyncClose());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.error("Failed to close writer for stream {}.", idx);
             }
             AsyncLogWriter newWriter = null;
@@ -185,7 +185,7 @@ public class DLWriterWorker implements Worker {
         SchedulerUtils.shutdownScheduler(this.executorService, 2, TimeUnit.MINUTES);
         SchedulerUtils.shutdownScheduler(this.rescueService, 2, TimeUnit.MINUTES);
         for (AsyncLogWriter writer : streamWriters) {
-            FutureUtils.result(writer.asyncClose());
+            org.apache.distributedlog.util.Utils.ioResult(writer.asyncClose());
         }
         for (DistributedLogManager dlm : dlms) {
             dlm.close();
@@ -225,7 +225,7 @@ public class DLWriterWorker implements Worker {
                     LOG.error("Error on generating message : ", e);
                     break;
                 }
-                writer.write(new LogRecord(requestMillis, data)).addEventListener(new FutureEventListener<DLSN>() {
+                writer.write(new LogRecord(requestMillis, data)).whenComplete(new FutureEventListener<DLSN>() {
                     @Override
                     public void onSuccess(DLSN value) {
                         requestStat.registerSuccessfulEvent(System.currentTimeMillis() - requestMillis);

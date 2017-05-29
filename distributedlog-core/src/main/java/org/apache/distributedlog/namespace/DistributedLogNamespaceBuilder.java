@@ -224,14 +224,9 @@ public class DistributedLogNamespaceBuilder {
         StatsLogger perLogStatsLogger = normalizePerLogStatsLogger(_statsLogger, _perLogStatsLogger, _conf);
 
         // build the scheduler
-        StatsLogger schedulerStatsLogger = _statsLogger.scope("factory").scope("thread_pool");
         OrderedScheduler scheduler = OrderedScheduler.newBuilder()
                 .name("DLM-" + normalizedUri.getPath())
                 .corePoolSize(_conf.getNumWorkerThreads())
-                .statsLogger(schedulerStatsLogger)
-                .perExecutorStatsLogger(schedulerStatsLogger)
-                .traceTaskExecution(_conf.getEnableTaskExecutionStats())
-                .traceTaskExecutionWarnTimeUs(_conf.getTaskExecutionWarnTimeMicros())
                 .build();
 
         // initialize the namespace driver

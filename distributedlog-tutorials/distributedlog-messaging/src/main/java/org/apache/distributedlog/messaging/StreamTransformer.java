@@ -17,19 +17,7 @@
  */
 package org.apache.distributedlog.messaging;
 
-import org.apache.distributedlog.*;
-import org.apache.distributedlog.exceptions.LogEmptyException;
-import org.apache.distributedlog.exceptions.LogNotFoundException;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.thrift.messaging.TransformedRecord;
-import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.util.Duration;
-import com.twitter.util.FutureEventListener;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocolFactory;
-import org.apache.thrift.transport.TIOStreamTransport;
+import static com.google.common.base.Charsets.UTF_8;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,8 +25,24 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Charsets.UTF_8;
+import org.apache.distributedlog.AsyncLogReader;
+import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.LogRecord;
+import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.exceptions.LogEmptyException;
+import org.apache.distributedlog.exceptions.LogNotFoundException;
+import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.thrift.messaging.TransformedRecord;
+import org.apache.distributedlog.util.FutureEventListener;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocolFactory;
+import org.apache.thrift.transport.TIOStreamTransport;
 
 /**
  * Transform one stream to another stream. And apply transformation
@@ -102,7 +106,7 @@ public class StreamTransformer {
         try {
             readLoop(srcDlm, srcDlsn, targetWriter, replicationTransformer);
         } finally {
-            FutureUtils.result(targetWriter.asyncClose(), Duration.apply(5, TimeUnit.SECONDS));
+            FutureUtils.result(targetWriter.asyncClose(), 5, TimeUnit.SECONDS);
             targetDlm.close();
             srcDlm.close();
             namespace.close();
@@ -131,7 +135,7 @@ public class StreamTransformer {
             @Override
             public void onSuccess(LogRecordWithDLSN record) {
                 if (record.getDlsn().compareTo(fromDLSN) <= 0) {
-                    reader.readNext().addEventListener(this);
+                    reader.readNext().whenComplete(this);
                     return;
                 }
                 System.out.println("Received record " + record.getDlsn());
@@ -146,13 +150,13 @@ public class StreamTransformer {
                     e.printStackTrace(System.err);
                     keepAliveLatch.countDown();
                 }
-                reader.readNext().addEventListener(this);
+                reader.readNext().whenComplete(this);
             }
         };
-        reader.readNext().addEventListener(readListener);
+        reader.readNext().whenComplete(readListener);
 
         keepAliveLatch.await();
-        FutureUtils.result(reader.asyncClose(), Duration.apply(5, TimeUnit.SECONDS));
+        FutureUtils.result(reader.asyncClose(), 5, TimeUnit.SECONDS);
     }
 
     private static void transform(final AsyncLogWriter writer,
@@ -170,7 +174,7 @@ public class StreamTransformer {
         transformedRecord.write(protocolFactory.getProtocol(new TIOStreamTransport(baos)));
         byte[] data = baos.toByteArray();
         writer.write(new LogRecord(record.getSequenceId(), data))
-                .addEventListener(new FutureEventListener<DLSN>() {
+                .whenComplete(new FutureEventListener<DLSN>() {
             @Override
             public void onFailure(Throwable cause) {
                 System.err.println("Encountered error on writing records to stream " + writer.getStreamName());

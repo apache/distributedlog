@@ -66,8 +66,8 @@ public class TestBKLogWriteHandler extends TestDistributedLogBase {
         FailpointUtils.setFailpoint(FailpointUtils.FailPointName.FP_StartLogSegmentOnAssignLogSegmentSequenceNumber,
                 FailpointUtils.FailPointActions.FailPointAction_Throw);
         try {
-            AsyncLogWriter writer =  FutureUtils.result(dlm.openAsyncLogWriter());
-            FutureUtils.result(writer.write(DLMTestUtil.getLogRecordInstance(1L)));
+            AsyncLogWriter writer =  Utils.ioResult(dlm.openAsyncLogWriter());
+            Utils.ioResult(writer.write(DLMTestUtil.getLogRecordInstance(1L)));
             fail("Should fail opening the writer");
         } catch (IOException ioe) {
             // expected
@@ -82,7 +82,7 @@ public class TestBKLogWriteHandler extends TestDistributedLogBase {
         LedgerAllocatorPool allocatorPool = (LedgerAllocatorPool) allocator;
         assertEquals(0, allocatorPool.obtainMapSize());
 
-        AsyncLogWriter writer = FutureUtils.result(dlm.openAsyncLogWriter());
+        AsyncLogWriter writer = Utils.ioResult(dlm.openAsyncLogWriter());
         writer.write(DLMTestUtil.getLogRecordInstance(1L));
         Utils.close(writer);
     }

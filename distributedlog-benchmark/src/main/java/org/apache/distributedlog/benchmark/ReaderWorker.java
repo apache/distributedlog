@@ -100,7 +100,8 @@ public class ReaderWorker implements Worker {
     final Counter invalidRecordsCounter;
     final Counter outOfOrderSequenceIdCounter;
 
-    class StreamReader implements FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
+    class StreamReader implements
+        org.apache.distributedlog.util.FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
 
         final int streamIdx;
         final String streamName;
@@ -184,7 +185,7 @@ public class ReaderWorker implements Worker {
             if (!running) {
                 return;
             }
-            logReaders[streamIdx].readBulk(10).addEventListener(this);
+            logReaders[streamIdx].readBulk(10).whenComplete(this);
         }
 
         @Override
@@ -369,7 +370,7 @@ public class ReaderWorker implements Worker {
         if (logReaders[idx] != null) {
             try {
                 FutureUtils.result(logReaders[idx].asyncClose());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.warn("Failed on closing stream reader {} : ", streamName, e);
             }
             logReaders[idx] = null;
@@ -434,7 +435,7 @@ public class ReaderWorker implements Worker {
         this.running = false;
         for (AsyncLogReader reader : logReaders) {
             if (null != reader) {
-                FutureUtils.result(reader.asyncClose());
+                org.apache.distributedlog.util.Utils.ioResult(reader.asyncClose());
             }
         }
         for (DistributedLogManager dlm : dlms) {

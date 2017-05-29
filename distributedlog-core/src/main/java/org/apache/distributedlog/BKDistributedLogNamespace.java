@@ -149,8 +149,8 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             throws InvalidStreamNameException, IOException {
         checkState();
         validateName(logName);
-        URI uri = FutureUtils.result(driver.getLogMetadataStore().createLog(logName));
-        FutureUtils.result(driver.getLogStreamMetadataStore(WRITER).getLog(uri, logName, true, true));
+        URI uri = Utils.ioResult(driver.getLogMetadataStore().createLog(logName));
+        Utils.ioResult(driver.getLogStreamMetadataStore(WRITER).getLog(uri, logName, true, true));
     }
 
     @Override
@@ -158,7 +158,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             throws InvalidStreamNameException, LogNotFoundException, IOException {
         checkState();
         validateName(logName);
-        Optional<URI> uri = FutureUtils.result(driver.getLogMetadataStore().getLogLocation(logName));
+        Optional<URI> uri = Utils.ioResult(driver.getLogMetadataStore().getLogLocation(logName));
         if (!uri.isPresent()) {
             throw new LogNotFoundException("Log " + logName + " isn't found.");
         }
@@ -187,7 +187,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
             throws InvalidStreamNameException, IOException {
         checkState();
         validateName(logName);
-        Optional<URI> uri = FutureUtils.result(driver.getLogMetadataStore().getLogLocation(logName));
+        Optional<URI> uri = Utils.ioResult(driver.getLogMetadataStore().getLogLocation(logName));
         if (!uri.isPresent()) {
             throw new LogNotFoundException("Log " + logName + " isn't found.");
         }
@@ -202,10 +202,10 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     public boolean logExists(String logName)
         throws IOException, IllegalArgumentException {
         checkState();
-        Optional<URI> uri = FutureUtils.result(driver.getLogMetadataStore().getLogLocation(logName));
+        Optional<URI> uri = Utils.ioResult(driver.getLogMetadataStore().getLogLocation(logName));
         if (uri.isPresent()) {
             try {
-                FutureUtils.result(driver.getLogStreamMetadataStore(WRITER)
+                Utils.ioResult(driver.getLogStreamMetadataStore(WRITER)
                         .logExists(uri.get(), logName));
                 return true;
             } catch (LogNotFoundException lnfe) {
@@ -219,7 +219,7 @@ public class BKDistributedLogNamespace implements DistributedLogNamespace {
     @Override
     public Iterator<String> getLogs() throws IOException {
         checkState();
-        return FutureUtils.result(driver.getLogMetadataStore().getLogs());
+        return Utils.ioResult(driver.getLogMetadataStore().getLogs());
     }
 
     @Override

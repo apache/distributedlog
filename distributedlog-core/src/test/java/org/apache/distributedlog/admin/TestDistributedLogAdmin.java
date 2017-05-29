@@ -18,7 +18,7 @@
 package org.apache.distributedlog.admin;
 
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.TestZooKeeperClientBuilder;
@@ -26,6 +26,7 @@ import org.apache.distributedlog.annotations.DistributedLogAnnotations;
 import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
@@ -46,9 +47,6 @@ import org.apache.distributedlog.TestDistributedLogBase;
 import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.metadata.DryrunLogSegmentMetadataStoreUpdater;
 import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
-import com.twitter.util.Await;
-import com.twitter.util.Duration;
-import com.twitter.util.Future;
 
 import static org.junit.Assert.*;
 
@@ -117,7 +115,7 @@ public class TestDistributedLogAdmin extends TestDistributedLogBase {
         long expectedTxId = 1L;
         DLSN lastDLSN = DLSN.InitialDLSN;
         for (int i = 0; i < 4 * 10; i++) {
-            LogRecordWithDLSN record = Await.result(reader.readNext());
+            LogRecordWithDLSN record = Utils.ioResult(reader.readNext());
             assertNotNull(record);
             DLMTestUtil.verifyLogRecord(record);
             assertEquals(expectedTxId, record.getTransactionId());
@@ -133,9 +131,9 @@ public class TestDistributedLogAdmin extends TestDistributedLogBase {
         LOG.info("Injected bad log segment '3'");
 
         // there isn't records should be read
-        Future<LogRecordWithDLSN> readFuture = reader.readNext();
+        CompletableFuture<LogRecordWithDLSN> readFuture = reader.readNext();
         try {
-            LogRecordWithDLSN record = Await.result(readFuture);
+            LogRecordWithDLSN record = Utils.ioResult(readFuture);
             fail("Should fail reading next record "
                     + record
                     + " when there is a corrupted log segment");
@@ -151,7 +149,7 @@ public class TestDistributedLogAdmin extends TestDistributedLogBase {
 
         try {
             reader = readDLM.getAsyncLogReader(lastDLSN);
-            Await.result(reader.readNext());
+            Utils.ioResult(reader.readNext());
             fail("Should fail reading next when there is a corrupted log segment");
         } catch (UnexpectedException ue) {
             // expected
@@ -166,18 +164,18 @@ public class TestDistributedLogAdmin extends TestDistributedLogBase {
         // be able to read more after fix
         reader = readDLM.getAsyncLogReader(lastDLSN);
         // skip the first record
-        Await.result(reader.readNext());
+        Utils.ioResult(reader.readNext());
         readFuture = reader.readNext();
 
         expectedTxId = 51L;
-        LogRecord record = Await.result(readFuture);
+        LogRecord record = Utils.ioResult(readFuture);
         assertNotNull(record);
         DLMTestUtil.verifyLogRecord(record);
         assertEquals(expectedTxId, record.getTransactionId());
         expectedTxId++;
 
         for (int i = 1; i < 10; i++) {
-            record = Await.result(reader.readNext());
+            record = Utils.ioResult(reader.readNext());
             assertNotNull(record);
             DLMTestUtil.verifyLogRecord(record);
             assertEquals(expectedTxId, record.getTransactionId());

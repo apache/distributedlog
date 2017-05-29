@@ -18,11 +18,8 @@
 package org.apache.distributedlog.subscription;
 
 import java.io.Closeable;
-
-import scala.runtime.BoxedUnit;
-
+import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.DLSN;
-import com.twitter.util.Future;
 
 public interface SubscriptionStateStore extends Closeable {
     /**
@@ -30,7 +27,7 @@ public interface SubscriptionStateStore extends Closeable {
      *
      * @return future represents the last commit position
      */
-    public Future<DLSN> getLastCommitPosition();
+    public CompletableFuture<DLSN> getLastCommitPosition();
 
     /**
      * Advances the position associated with the subscriber
@@ -38,5 +35,5 @@ public interface SubscriptionStateStore extends Closeable {
      * @param newPosition - new commit position
      * @return future represents the advance result
      */
-    public Future<BoxedUnit> advanceCommitPosition(DLSN newPosition);
+    public CompletableFuture<Void> advanceCommitPosition(DLSN newPosition);
 }

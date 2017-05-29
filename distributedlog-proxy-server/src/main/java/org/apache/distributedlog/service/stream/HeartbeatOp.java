@@ -18,6 +18,7 @@
 package org.apache.distributedlog.service.stream;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFuture;
 
 import org.apache.distributedlog.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
@@ -78,7 +79,7 @@ public class HeartbeatOp extends AbstractWriteOp {
                 txnId = sequencer.nextId();
                 LogRecord hbRecord = new LogRecord(txnId, HEARTBEAT_DATA);
                 hbRecord.setControl();
-                writeResult = writer.write(hbRecord);
+                writeResult = newTFuture(writer.write(hbRecord));
             }
             return writeResult.map(new AbstractFunction1<DLSN, WriteResponse>() {
                 @Override

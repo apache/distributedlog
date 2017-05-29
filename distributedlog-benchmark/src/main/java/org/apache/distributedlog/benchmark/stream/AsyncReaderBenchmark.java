@@ -112,7 +112,7 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 openReaderStats.registerSuccessfulEvent(elapsedMs);
                 logger.info("It took {} ms to position the reader to transaction id = {}, dlsn = {}",
                         lastTxId, lastDLSN);
-            } catch (IOException ioe) {
+            } catch (Exception ioe) {
                 openReaderStats.registerFailedEvent(stopwatch.elapsed(TimeUnit.MICROSECONDS));
                 logger.warn("Failed to create reader for stream {} reading from tx id = {}, dlsn = {}.",
                         new Object[] { streamName, lastTxId, lastDLSN });
@@ -141,7 +141,7 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                         lastDLSN = lastRecord.getDlsn();
                     }
                     stopwatch.reset();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     logger.warn("Encountered reading record from stream {} : ", streamName, e);
                     reader = null;
                     break;

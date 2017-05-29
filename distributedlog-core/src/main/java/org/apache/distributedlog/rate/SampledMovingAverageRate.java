@@ -17,24 +17,35 @@
  */
 package org.apache.distributedlog.rate;
 
-import com.twitter.common.stats.Rate;
-import com.twitter.util.TimerTask;
-import com.twitter.util.Timer;
-import com.twitter.util.Time;
+import com.google.common.base.Ticker;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.lang3.tuple.Pair;
 
 class SampledMovingAverageRate implements MovingAverageRate {
-    private final Rate rate;
+
+    private static final long NANOS_PER_SEC = TimeUnit.SECONDS.toNanos(1);
+
     private final AtomicLong total;
+    private final Ticker ticker;
+    private final double scaleFactor;
+    private final LinkedBlockingDeque<Pair<Long, Long>> samples;
 
     private double value;
 
     public SampledMovingAverageRate(int intervalSecs) {
-        this.total = new AtomicLong(0);
-        this.rate = Rate.of("Ignore", total)
-            .withWindowSize(intervalSecs)
-            .build();
+        this(intervalSecs, 1, Ticker.systemTicker());
+    }
+
+    SampledMovingAverageRate(int intervalSecs,
+                             double scaleFactor,
+                             Ticker ticker) {
         this.value = 0;
+        this.total = new AtomicLong(0);
+        this.scaleFactor = scaleFactor;
+        this.ticker = ticker;
+        this.samples = new LinkedBlockingDeque<>(intervalSecs);
     }
 
     @Override
@@ -53,6 +64,29 @@ class SampledMovingAverageRate implements MovingAverageRate {
     }
 
     void sample() {
-        value = rate.doSample();
+        value = doSample();
+    }
+
+    private double doSample() {
+        long newSample = total.get();
+        long newTimestamp = ticker.read();
+
+        double rate = 0;
+        if (!samples.isEmpty()) {
+            Pair<Long, Long> oldestSample = samples.peekLast();
+
+            double dy = newSample - oldestSample.getRight();
+            double dt = newTimestamp - oldestSample.getLeft();
+
+            rate = (dt == 0) ? 0 : (NANOS_PER_SEC * scaleFactor * dy) / dt;
+        }
+
+        if (samples.remainingCapacity() == 0) {
+            samples.removeLast();
+        } else {
+            samples.addFirst(Pair.of(newTimestamp, newSample));
+        }
+
+        return rate;
     }
 }

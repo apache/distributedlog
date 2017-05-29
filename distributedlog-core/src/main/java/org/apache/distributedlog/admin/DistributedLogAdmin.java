@@ -19,6 +19,12 @@ package org.apache.distributedlog.admin;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import org.apache.bookkeeper.util.IOUtils;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.distributedlog.DistributedLogManager;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.LogSegmentMetadata;
@@ -42,14 +48,6 @@ import org.apache.distributedlog.tools.DistributedLogTool;
 import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.SchedulerUtils;
-import com.twitter.util.Await;
-import com.twitter.util.Function;
-import com.twitter.util.Future;
-import org.apache.bookkeeper.stats.NullStatsLogger;
-import org.apache.bookkeeper.util.IOUtils;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +97,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
                                                                    final MetadataUpdater metadataUpdater,
                                                                    final String streamName,
                                                                    final boolean verbose,
-                                                                   final boolean interactive) throws IOException {
+                                                                   final boolean interactive) throws Exception {
         DistributedLogManager dlm = namespace.openLog(streamName);
         try {
             List<LogSegmentMetadata> segments = dlm.getLogSegments();
@@ -197,7 +195,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
                                                  final MetadataUpdater metadataUpdater,
                                                  final OrderedScheduler scheduler,
                                                  final boolean verbose,
-                                                 final boolean interactive) throws IOException {
+                                                 final boolean interactive) throws Exception {
         checkAndRepairDLNamespace(uri, namespace, metadataUpdater, scheduler, verbose, interactive, 1);
     }
 
@@ -207,7 +205,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
                                                  final OrderedScheduler scheduler,
                                                  final boolean verbose,
                                                  final boolean interactive,
-                                                 final int concurrency) throws IOException {
+                                                 final int concurrency) throws Exception {
         Preconditions.checkArgument(concurrency > 0, "Invalid concurrency " + concurrency + " found.");
         // 0. getting streams under a given uri.
         Iterator<String> streamsIter = namespace.getLogs();
@@ -274,7 +272,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
                         LOG.info("Checking stream {}.", stream);
                         candidate = checkStream(namespace, stream, scheduler);
                         LOG.info("Checked stream {} - {}.", stream, candidate);
-                    } catch (IOException e) {
+                    } catch (Throwable e) {
                         LOG.error("Error on checking stream {} : ", stream, e);
                         doneLatch.countDown();
                         break;
@@ -322,14 +320,14 @@ public class DistributedLogAdmin extends DistributedLogTool {
             if (segments.isEmpty()) {
                 return null;
             }
-            List<Future<LogSegmentCandidate>> futures =
-                    new ArrayList<Future<LogSegmentCandidate>>(segments.size());
+            List<CompletableFuture<LogSegmentCandidate>> futures =
+                    new ArrayList<CompletableFuture<LogSegmentCandidate>>(segments.size());
             for (LogSegmentMetadata segment : segments) {
                 futures.add(checkLogSegment(namespace, streamName, segment, scheduler));
             }
             List<LogSegmentCandidate> segmentCandidates;
             try {
-                segmentCandidates = Await.result(Future.collect(futures));
+                segmentCandidates = FutureUtils.result(FutureUtils.collect(futures));
             } catch (Exception e) {
                 throw new IOException("Failed on checking stream " + streamName, e);
             }
@@ -348,13 +346,13 @@ public class DistributedLogAdmin extends DistributedLogTool {
         }
     }
 
-    private static Future<LogSegmentCandidate> checkLogSegment(
+    private static CompletableFuture<LogSegmentCandidate> checkLogSegment(
             final DistributedLogNamespace namespace,
             final String streamName,
             final LogSegmentMetadata metadata,
             final OrderedScheduler scheduler) {
         if (metadata.isInProgress()) {
-            return Future.value(null);
+            return FutureUtils.value(null);
         }
 
         final LogSegmentEntryStore entryStore = namespace.getNamespaceDriver()
@@ -370,7 +368,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
                 new AtomicInteger(0),
                 scheduler,
                 entryStore
-        ).map(new Function<LogRecordWithDLSN, LogSegmentCandidate>() {
+        ).thenApply(new Function<LogRecordWithDLSN, LogSegmentCandidate>() {
             @Override
             public LogSegmentCandidate apply(LogRecordWithDLSN record) {
                 if (null != record &&
@@ -388,7 +386,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     private static boolean repairStream(MetadataUpdater metadataUpdater,
                                         StreamCandidate streamCandidate,
                                         boolean verbose,
-                                        boolean interactive) throws IOException {
+                                        boolean interactive) throws Exception {
         if (verbose) {
             System.out.println("Stream " + streamCandidate.streamName + " : ");
             for (LogSegmentCandidate segmentCandidate : streamCandidate.segmentCandidates) {
@@ -863,7 +861,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
         protected ZKAccessControl getZKAccessControl(ZooKeeperClient zkc, String zkPath) throws Exception {
             ZKAccessControl accessControl;
             try {
-                accessControl = Await.result(ZKAccessControl.read(zkc, zkPath, null));
+                accessControl = FutureUtils.result(ZKAccessControl.read(zkc, zkPath, null));
             } catch (KeeperException.NoNodeException nne) {
                 accessControl = new ZKAccessControl(new AccessControlEntry(), zkPath);
             }

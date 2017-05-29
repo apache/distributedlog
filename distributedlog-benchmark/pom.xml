@@ -32,7 +32,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-service</artifactId>
+      <artifactId>distributedlog-proxy-server</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>

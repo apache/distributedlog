@@ -218,8 +218,6 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         this.scheduler = OrderedScheduler.newBuilder()
                 .corePoolSize(numThreads)
                 .name("DistributedLogService-Executor")
-                .traceTaskExecution(true)
-                .statsLogger(statsLogger.scope("scheduler"))
                 .build();
 
         // Timer, kept separate to ensure reliability of timeouts.
@@ -261,7 +259,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
         // Resource limiting
         this.timer = new ScheduledThreadPoolTimer(1, "timer", true);
-        this.movingAvgFactory = new MovingAverageRateFactory(timer);
+        this.movingAvgFactory = new MovingAverageRateFactory(scheduler);
         this.windowedRps = movingAvgFactory.create(MOVING_AVERAGE_WINDOW_SECS);
         this.windowedBps = movingAvgFactory.create(MOVING_AVERAGE_WINDOW_SECS);
         this.limiter = new ServiceRequestLimiter(

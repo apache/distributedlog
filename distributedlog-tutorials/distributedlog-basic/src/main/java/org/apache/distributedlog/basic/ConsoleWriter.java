@@ -17,18 +17,21 @@
  */
 package org.apache.distributedlog.basic;
 
-import org.apache.distributedlog.*;
+import static com.google.common.base.Charsets.UTF_8;
+
+import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.util.FutureEventListener;
 import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.util.Duration;
-import com.twitter.util.FutureEventListener;
-import jline.ConsoleReader;
-
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Charsets.UTF_8;
+import jline.ConsoleReader;
 
 /**
  * Writer write records from console
@@ -73,7 +76,7 @@ public class ConsoleWriter {
                 String line;
                 while ((line = reader.readLine(PROMPT_MESSAGE)) != null) {
                     writer.write(new LogRecord(System.currentTimeMillis(), line.getBytes(UTF_8)))
-                            .addEventListener(new FutureEventListener<DLSN>() {
+                            .whenComplete(new FutureEventListener<DLSN>() {
                                 @Override
                                 public void onFailure(Throwable cause) {
                                     System.out.println("Encountered error on writing data");
@@ -89,7 +92,7 @@ public class ConsoleWriter {
                 }
             } finally {
                 if (null != writer) {
-                    FutureUtils.result(writer.asyncClose(), Duration.apply(5, TimeUnit.SECONDS));
+                    FutureUtils.result(writer.asyncClose(), 5, TimeUnit.SECONDS);
                 }
             }
         } finally {

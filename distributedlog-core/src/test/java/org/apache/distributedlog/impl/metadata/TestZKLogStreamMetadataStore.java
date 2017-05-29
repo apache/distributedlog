@@ -129,7 +129,7 @@ public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
     public void testCheckLogMetadataPathsWithAllocator() throws Exception {
         String logRootPath = "/" + testName.getMethodName();
         List<Versioned<byte[]>> metadatas =
-                FutureUtils.result(checkLogMetadataPaths(
+                Utils.ioResult(checkLogMetadataPaths(
                         zkc.get(), logRootPath, true));
         assertEquals("Should have 8 paths",
                 8, metadatas.size());
@@ -143,7 +143,7 @@ public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
     public void testCheckLogMetadataPathsWithoutAllocator() throws Exception {
         String logRootPath = "/" + testName.getMethodName();
         List<Versioned<byte[]>> metadatas =
-                FutureUtils.result(checkLogMetadataPaths(
+                Utils.ioResult(checkLogMetadataPaths(
                         zkc.get(), logRootPath, false));
         assertEquals("Should have 7 paths",
                 7, metadatas.size());
@@ -169,12 +169,12 @@ public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
         }
 
         LogMetadataForWriter logMetadata =
-                FutureUtils.result(getLog(uri, logName, logIdentifier, zkc, ownAllocator, true));
+                Utils.ioResult(getLog(uri, logName, logIdentifier, zkc, ownAllocator, true));
 
         final String logRootPath = getLogRootPath(uri, logName, logIdentifier);
 
         List<Versioned<byte[]>> metadatas =
-                FutureUtils.result(checkLogMetadataPaths(zkc.get(), logRootPath, ownAllocator));
+                Utils.ioResult(checkLogMetadataPaths(zkc.get(), logRootPath, ownAllocator));
 
         if (ownAllocator) {
             assertEquals("Should have 8 paths : ownAllocator = " + ownAllocator,
@@ -301,7 +301,7 @@ public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
     public void testCreateLogMetadataWithCreateIfNotExistsSetToFalse() throws Exception {
         String logName = testName.getMethodName();
         String logIdentifier = "<default>";
-        FutureUtils.result(getLog(uri, logName, logIdentifier, zkc, true, false));
+        Utils.ioResult(getLog(uri, logName, logIdentifier, zkc, true, false));
     }
 
     @Test(timeout = 60000)

@@ -20,7 +20,7 @@ package org.apache.distributedlog.auditor;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.SettableFuture;
+import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.BookKeeperClient;
 import org.apache.distributedlog.BookKeeperClientBuilder;
 import org.apache.distributedlog.DistributedLogConfiguration;
@@ -45,6 +45,7 @@ import org.apache.bookkeeper.proto.BookkeeperInternalCallbacks;
 import org.apache.bookkeeper.zookeeper.BoundExponentialBackoffRetryPolicy;
 import org.apache.bookkeeper.zookeeper.RetryPolicy;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.distributedlog.util.FutureUtils;
 import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
@@ -169,7 +170,7 @@ public class DLAuditor {
         LedgerManager lm = BookKeeperAccessor.getLedgerManager(bkc.get());
 
         final Set<Long> ledgers = new HashSet<Long>();
-        final SettableFuture<Void> doneFuture = SettableFuture.create();
+        final CompletableFuture<Void> doneFuture = FutureUtils.createFuture();
 
         BookkeeperInternalCallbacks.Processor<Long> collector =
                 new BookkeeperInternalCallbacks.Processor<Long>() {
@@ -195,9 +196,9 @@ public class DLAuditor {
             @Override
             public void processResult(int rc, String path, Object ctx) {
                 if (BKException.Code.OK == rc) {
-                    doneFuture.set(null);
+                    doneFuture.complete(null);
                 } else {
-                    doneFuture.setException(BKException.create(rc));
+                    doneFuture.completeExceptionally(BKException.create(rc));
                 }
             }
         };
@@ -504,7 +505,7 @@ public class DLAuditor {
 
         LedgerManager lm = BookKeeperAccessor.getLedgerManager(bkc.get());
 
-        final SettableFuture<Void> doneFuture = SettableFuture.create();
+        final CompletableFuture<Void> doneFuture = FutureUtils.createFuture();
         final BookKeeper bk = bkc.get();
 
         BookkeeperInternalCallbacks.Processor<Long> collector =
@@ -544,9 +545,9 @@ public class DLAuditor {
             @Override
             public void processResult(int rc, String path, Object ctx) {
                 if (BKException.Code.OK == rc) {
-                    doneFuture.set(null);
+                    doneFuture.complete(null);
                 } else {
-                    doneFuture.setException(BKException.create(rc));
+                    doneFuture.completeExceptionally(BKException.create(rc));
                 }
             }
         };

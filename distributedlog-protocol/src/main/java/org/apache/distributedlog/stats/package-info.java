@@ -15,27 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.distributedlog.function;
-
-import scala.runtime.AbstractFunction1;
-
 /**
- * Map Function return default value
+ * Stats Related Utils.
  */
-public class DefaultValueMapFunction<T, R> extends AbstractFunction1<T, R> {
-
-    public static <T, R> DefaultValueMapFunction<T, R> of(R defaultValue) {
-        return new DefaultValueMapFunction<T, R>(defaultValue);
-    }
-
-    private final R defaultValue;
-
-    private DefaultValueMapFunction(R defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    @Override
-    public R apply(T any) {
-        return defaultValue;
-    }
-}
+package org.apache.distributedlog.stats;

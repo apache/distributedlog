@@ -17,7 +17,7 @@
  */
 package org.apache.distributedlog.io;
 
-import com.twitter.util.Future;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A {@code AsyncDeleteable} is a source or destination of data that can be deleted asynchronously.
@@ -30,5 +30,5 @@ public interface AsyncDeleteable {
      *
      * @return future representing the deletion result.
      */
-    Future<Void> delete();
+    CompletableFuture<Void> delete();
 }

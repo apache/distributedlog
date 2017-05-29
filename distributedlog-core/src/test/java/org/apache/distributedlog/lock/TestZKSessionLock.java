@@ -17,6 +17,7 @@
  */
 package org.apache.distributedlog.lock;
 
+import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.DLMTestUtil;
 import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.ZooKeeperClient;
@@ -26,12 +27,12 @@ import org.apache.distributedlog.ZooKeeperClusterTestCase;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import org.apache.distributedlog.lock.ZKSessionLock.State;
 import org.apache.distributedlog.util.FailpointUtils;
+import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
-import com.twitter.util.Await;
-import com.twitter.util.Promise;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.util.SafeRunnable;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.distributedlog.util.Utils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
@@ -43,7 +44,6 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.runtime.BoxedUnit;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -149,9 +149,9 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         String node2 = getLockIdFromPath(createLockNodeV2(zk, lockPath, clientId));
         String node3 = getLockIdFromPath(createLockNodeV3(zk, lockPath, clientId));
 
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node1)));
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node2)));
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node3)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node1)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node2)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node3)));
 
         // Bad Lock Node Name
         String node4 = getLockIdFromPath(createLockNodeWithBadNodeName(zk, lockPath, clientId, "member"));
@@ -160,15 +160,15 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         String node7 = getLockIdFromPath(createLockNodeWithBadNodeName(zk, lockPath, clientId, "member_badnode_badnode_badnode"));
         String node8 = getLockIdFromPath(createLockNodeWithBadNodeName(zk, lockPath, clientId, "member_badnode_badnode_badnode_badnode"));
 
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node4)));
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node5)));
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node6)));
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node7)));
-        assertEquals(lockId, Await.result(asyncParseClientID(zk, lockPath, node8)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node4)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node5)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node6)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node7)));
+        assertEquals(lockId, Utils.ioResult(asyncParseClientID(zk, lockPath, node8)));
 
         // Malformed Node Name
         String node9 = getLockIdFromPath(createLockNodeWithBadNodeName(zk, lockPath, clientId, "member_malformed_s12345678_999999"));
-        assertEquals(Pair.of("malformed", 12345678L), Await.result(asyncParseClientID(zk, lockPath, node9)));
+        assertEquals(Pair.of("malformed", 12345678L), Utils.ioResult(asyncParseClientID(zk, lockPath, node9)));
     }
 
     @Test(timeout = 60000)
@@ -256,7 +256,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals("counter should not be increased in different epochs", 1, counter.get());
 
         // lock action would not be executed in same epoch and promise would be satisfied with exception
-        Promise<BoxedUnit> promise = new Promise<BoxedUnit>();
+        CompletableFuture<Void> promise = new CompletableFuture<Void>();
         lock.executeLockAction(lock.getEpoch().get() + 1, new LockAction() {
             @Override
             public void execute() {
@@ -269,7 +269,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
             }
         }, promise);
         try {
-            Await.result(promise);
+            Utils.ioResult(promise);
             fail("Should satisfy promise with epoch changed exception.");
         } catch (EpochChangedException ece) {
             // expected
@@ -457,7 +457,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock.getLockState());
         List<String> children = getLockWaiters(zkc, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+        assertEquals(lock.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
 
         // lock should fail on a success lock
         try {
@@ -469,7 +469,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock.getLockState());
         children = getLockWaiters(zkc, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+        assertEquals(lock.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
 
         // unlock
         lock.unlock();
@@ -546,7 +546,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock0.getLockState());
         List<String> children = getLockWaiters(zkc0, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
 
         try {
             lock1.tryLock(timeout, TimeUnit.MILLISECONDS);
@@ -559,7 +559,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLOSED, lock1.getLockState());
         children = getLockWaiters(zkc0, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
 
         lock0.unlock();
         // verification after unlock lock0
@@ -574,7 +574,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock2.getLockState());
         children = getLockWaiters(zkc, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock2.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+        assertEquals(lock2.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
 
         lock2.unlock();
     }
@@ -649,7 +649,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock0.getLockState());
         List<String> children = getLockWaiters(zkc0, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
 
         final CountDownLatch lock1DoneLatch = new CountDownLatch(1);
 
@@ -687,7 +687,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock1.getLockState());
         children = getLockWaiters(zkc, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+        assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
 
         lock1.unlock();
     }
@@ -719,7 +719,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock.getLockState());
         List<String> children = getLockWaiters(zkc, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+        assertEquals(lock.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
 
         ZooKeeperClientUtils.expireSession(zkc, zkServers, sessionTimeoutMs);
         expiredLatch.await();
@@ -806,7 +806,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock0.getLockState());
         List<String> children = getLockWaiters(zkc0, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
 
         final ZKSessionLock lock1 = new ZKSessionLock(zkc, lockPath, clientId1, lockStateExecutor);
         final CountDownLatch lock1DoneLatch = new CountDownLatch(1);
@@ -830,9 +830,9 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
 
         assertEquals(2, children.size());
         assertEquals(State.CLAIMED, lock0.getLockState());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
         awaitState(State.WAITING, lock1);
-        assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
+        assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
 
         // expire lock1
         ZooKeeperClientUtils.expireSession(zkc, zkServers, sessionTimeoutMs);
@@ -843,7 +843,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLOSED, lock1.getLockState());
         children = getLockWaiters(zkc0, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
     }
 
     public void awaitState(State state, ZKSessionLock lock) throws InterruptedException {
@@ -891,7 +891,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLOSED, lock1_0.getLockState());
         List<String> children = getLockWaiters(zkc0, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
 
         // lock1_1 would wait the ownership
         final ZKSessionLock lock1_1 = new ZKSessionLock(zkc, lockPath, clientId, lockStateExecutor);
@@ -917,9 +917,9 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
 
         assertEquals(2, children.size());
         assertEquals(State.CLAIMED, lock0.getLockState());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
         awaitState(State.WAITING, lock1_1);
-        assertEquals(lock1_1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
+        assertEquals(lock1_1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
 
         if (isUnlock) {
             lock0.unlock();
@@ -938,7 +938,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         assertEquals(State.CLAIMED, lock1_1.getLockState());
         children = getLockWaiters(zkc, lockPath);
         assertEquals(1, children.size());
-        assertEquals(lock1_1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+        assertEquals(lock1_1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
 
         lock1_1.unlock();
     }
@@ -1040,9 +1040,9 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
 
         assertEquals(2, children.size());
         assertEquals(State.CLAIMED, lock0_0.getLockState());
-        assertEquals(lock0_0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0_0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
         awaitState(State.WAITING, lock1);
-        assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
+        assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
 
         final CountDownLatch lock0DoneLatch = new CountDownLatch(1);
         final AtomicReference<String> ownerFromLock0 = new AtomicReference<String>(null);
@@ -1058,9 +1058,9 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
             children = getLockWaiters(zkc, lockPath);
             assertEquals(2, children.size());
             assertEquals(State.CLAIMED, lock0_0.getLockState());
-            assertEquals(lock0_0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+            assertEquals(lock0_0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
             assertEquals(State.WAITING, lock1.getLockState());
-            assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
+            assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
         } else {
             lock0Thread = new Thread(new Runnable() {
                 @Override
@@ -1087,11 +1087,11 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
 
             assertEquals(3, children.size());
             assertEquals(State.CLAIMED, lock0_0.getLockState());
-            assertEquals(lock0_0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+            assertEquals(lock0_0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
             awaitState(State.WAITING, lock1);
-            assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
+            assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(1))));
             awaitState(State.WAITING, lock0_1);
-            assertEquals(lock0_1.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(2))));
+            assertEquals(lock0_1.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(2))));
         }
 
         if (isUnlock) {
@@ -1114,7 +1114,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
             children = getLockWaiters(zkc, lockPath);
             assertEquals(1, children.size());
             assertEquals(State.CLAIMED, lock1.getLockState());
-            assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+            assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
         } else {
             assertNotNull(lock0Thread);
             if (!isUnlock) {
@@ -1128,14 +1128,14 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
                 children = getLockWaiters(zkc, lockPath);
                 assertEquals(1, children.size());
                 assertEquals(State.CLAIMED, lock1.getLockState());
-                assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+                assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
             } else {
                 children = getLockWaiters(zkc, lockPath);
                 assertEquals(2, children.size());
                 assertEquals(State.CLAIMED, lock1.getLockState());
-                assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
+                assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc.get(), lockPath, children.get(0))));
                 assertEquals(State.WAITING, lock0_1.getLockState());
-                assertEquals(lock0_1.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(1))));
+                assertEquals(lock0_1.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(1))));
             }
         }
 
@@ -1148,7 +1148,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
             children = getLockWaiters(zkc, lockPath);
             assertEquals(1, children.size());
             assertEquals(State.CLAIMED, lock0_1.getLockState());
-            assertEquals(lock0_1.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+            assertEquals(lock0_1.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
         }
     }
 
@@ -1186,15 +1186,15 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
         List<String> children = getLockWaiters(zkc0, lockPath);
         assertEquals(1, children.size());
         assertEquals(State.CLAIMED, lock0.getLockState());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
 
         lock1.tryLock(timeout, TimeUnit.MILLISECONDS);
         children = getLockWaiters(zkc0, lockPath);
         assertEquals(2, children.size());
         assertEquals(State.CLAIMED, lock0.getLockState());
-        assertEquals(lock0.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+        assertEquals(lock0.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
         assertEquals(State.CLAIMED, lock1.getLockState());
-        assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(1))));
+        assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(1))));
 
         if (isUnlock) {
             lock0.unlock();
@@ -1202,7 +1202,7 @@ public class TestZKSessionLock extends ZooKeeperClusterTestCase {
             children = getLockWaiters(zkc0, lockPath);
             assertEquals(1, children.size());
             assertEquals(State.CLAIMED, lock1.getLockState());
-            assertEquals(lock1.getLockId(), Await.result(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
+            assertEquals(lock1.getLockId(), Utils.ioResult(asyncParseClientID(zkc0.get(), lockPath, children.get(0))));
             lock1.unlock();
         } else {
             ZooKeeperClientUtils.expireSession(zkc0, zkServers, sessionTimeoutMs);

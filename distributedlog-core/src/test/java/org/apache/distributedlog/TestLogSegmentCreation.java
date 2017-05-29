@@ -22,7 +22,8 @@ import java.util.List;
 
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import com.twitter.util.Await;
+import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.util.Utils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +69,7 @@ public class TestLogSegmentCreation extends TestDistributedLogBase {
         writer2.closeAndComplete();
 
         try {
-            Await.result(writer1.write(DLMTestUtil.getLogRecordInstance(numSegments + 1)));
+            Utils.ioResult(writer1.write(DLMTestUtil.getLogRecordInstance(numSegments + 1)));
             fail("Should fail on writing new log records.");
         } catch (Throwable t) {
             LOG.error("Failed to write entry : ", t);

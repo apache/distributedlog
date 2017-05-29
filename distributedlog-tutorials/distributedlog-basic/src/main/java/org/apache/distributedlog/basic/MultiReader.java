@@ -22,11 +22,11 @@ import org.apache.distributedlog.exceptions.LogEmptyException;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import com.twitter.util.FutureEventListener;
 import org.apache.commons.lang.StringUtils;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
+import org.apache.distributedlog.util.FutureEventListener;
 
 import static com.google.common.base.Charsets.UTF_8;
 
@@ -67,7 +67,7 @@ public class MultiReader {
 
         for (DistributedLogManager dlm : managers) {
             final DistributedLogManager manager = dlm;
-            dlm.getLastLogRecordAsync().addEventListener(new FutureEventListener<LogRecordWithDLSN>() {
+            dlm.getLastLogRecordAsync().whenComplete(new FutureEventListener<LogRecordWithDLSN>() {
                 @Override
                 public void onFailure(Throwable cause) {
                     if (cause instanceof LogNotFoundException) {
@@ -99,7 +99,7 @@ public class MultiReader {
                                  final DLSN dlsn,
                                  final CountDownLatch keepAliveLatch) {
         System.out.println("Wait for records from " + dlm.getStreamName() + " starting from " + dlsn);
-        dlm.openAsyncLogReader(dlsn).addEventListener(new FutureEventListener<AsyncLogReader>() {
+        dlm.openAsyncLogReader(dlsn).whenComplete(new FutureEventListener<AsyncLogReader>() {
             @Override
             public void onFailure(Throwable cause) {
                 System.err.println("Encountered error on reading records from stream " + dlm.getStreamName());
@@ -131,10 +131,10 @@ public class MultiReader {
                 System.out.println("\"\"\"");
                 System.out.println(new String(record.getPayload(), UTF_8));
                 System.out.println("\"\"\"");
-                reader.readNext().addEventListener(this);
+                reader.readNext().whenComplete(this);
             }
         };
-        reader.readNext().addEventListener(readListener);
+        reader.readNext().whenComplete(readListener);
     }
 
 }

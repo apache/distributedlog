@@ -15,7 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.distributedlog.util;
+
 /**
- * ReadAhead Mechanism for distributedlog streaming reads
+ * Permit.
  */
-package org.apache.distributedlog.readahead;
+@FunctionalInterface
+public interface Permit {
+
+    void release();
+
+}
