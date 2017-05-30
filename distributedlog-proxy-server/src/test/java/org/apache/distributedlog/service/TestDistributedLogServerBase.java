@@ -266,7 +266,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
             Await.result(future, Duration.fromSeconds(10));
             fail("should have failed");
         } catch (DLException dle) {
-            assertEquals(StatusCode.TOO_LARGE_RECORD, dle.getCode());
+            assertEquals(StatusCode.TOO_LARGE_RECORD.getValue(), dle.getCode());
         } catch (Exception ex) {
             failDueToWrongException(ex);
         }
@@ -616,7 +616,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
             Await.result(dlClient.dlClient.write(name, ByteBuffer.wrap("1".getBytes(UTF_8))));
             fail("Should fail with request denied exception");
         } catch (DLException dle) {
-            assertEquals(StatusCode.REQUEST_DENIED, dle.getCode());
+            assertEquals(StatusCode.REQUEST_DENIED.getValue(), dle.getCode());
         }
     }
 
