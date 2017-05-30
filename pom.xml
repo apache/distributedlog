@@ -232,8 +232,8 @@
             <exclude>**/**.md</exclude>
             <exclude>scripts/dev/reviewers</exclude>
             <exclude>src/main/resources/DISCLAIMER.bin.txt</exclude>            
-            <exclude>**/dependency-reduced-pom.xml</exclude>            
-            <exclude>**/org/apache/distributedlog/thrift/*</exclude>            
+            <exclude>**/dependency-reduced-pom.xml</exclude>
+            <exclude>**/org/apache/distributedlog/thrift/*</exclude>
           </excludes>
         </configuration>
       </plugin>
