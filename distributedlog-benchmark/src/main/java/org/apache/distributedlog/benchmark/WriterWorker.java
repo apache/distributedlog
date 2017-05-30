@@ -28,6 +28,7 @@ import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.io.CompressionCodec;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
+import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.util.SchedulerUtils;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.StatsReceiver;
@@ -278,7 +279,7 @@ public class WriterWorker implements Worker {
                 exceptionsLogger.getCounter(cause.getClass().getName()).inc();
                 if (cause instanceof DLException) {
                     DLException dle = (DLException) cause;
-                    dlErrorCodeLogger.getCounter(dle.getCode().toString()).inc();
+                    dlErrorCodeLogger.getCounter(StatusCode.findByValue(dle.getCode()).toString()).inc();
                 }
             }
         }

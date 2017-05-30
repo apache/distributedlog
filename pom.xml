@@ -85,8 +85,9 @@
     <module>distributedlog-build-tools</module>
     <module>distributedlog-protocol</module>
     <module>distributedlog-core</module>
-    <module>distributedlog-client</module>
-    <module>distributedlog-service</module>
+    <module>distributedlog-proxy-protocol</module>
+    <module>distributedlog-proxy-client</module>
+    <module>distributedlog-proxy-server</module>
     <module>distributedlog-benchmark</module>
     <module>distributedlog-tutorials</module>
   </modules>
@@ -230,6 +231,8 @@
             <exclude>**/**.md</exclude>
             <exclude>scripts/dev/reviewers</exclude>
             <exclude>src/main/resources/DISCLAIMER.bin.txt</exclude>            
+            <exclude>**/dependency-reduced-pom.xml</exclude>
+            <exclude>**/org/apache/distributedlog/thrift/*</exclude>
           </excludes>
         </configuration>
       </plugin>
