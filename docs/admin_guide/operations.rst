@@ -158,7 +158,7 @@ A CLI is provided for inspecting DistributedLog streams and metadata.
    or command is the full name of a class with a defined main() method.
 
    Environment variables:
-       DLOG_LOG_CONF        Log4j configuration file (default $HOME/src/distributedlog/distributedlog-service/conf/log4j.properties)
+       DLOG_LOG_CONF        Log4j configuration file (default $HOME/src/distributedlog/distributedlog-proxy-server/conf/log4j.properties)
        DLOG_EXTRA_OPTS      Extra options to be passed to the jvm
        DLOG_EXTRA_CLASSPATH Add extra paths to the dlog classpath
 

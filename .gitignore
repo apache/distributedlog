@@ -27,3 +27,6 @@ logs/
 
 # vagrant
 .vagrant
+
+# shade plugins
+*dependency-reduced-pom.xml
