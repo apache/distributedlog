@@ -84,7 +84,7 @@ TEMP_BRANCH_PREFIX = 'PR_TOOL'
 RELEASE_BRANCH_PREFIX = ''
 
 DEV_BRANCH_NAME = 'master'
-DEFAULT_FIX_VERSION = os.environ.get("DEFAULT_FIX_VERSION", "0.4.0")
+DEFAULT_FIX_VERSION = os.environ.get("DEFAULT_FIX_VERSION", "0.5.0")
 
 def get_json(url, preview_api = False):
   """
