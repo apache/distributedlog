@@ -25,23 +25,23 @@ JMX_PORT=$3
 log_dir=/opt/distributedlog-trunk/dist/release
 cd $log_dir
 
-cp $log_dir/distributedlog-service/conf/zookeeper.conf.template $log_dir/distributedlog-service/conf/zookeeper-$ZKID.properties
-echo "initLimit=5" >> $log_dir/distributedlog-service/conf/zookeeper-$ZKID.properties
-echo "syncLimit=2" >> $log_dir/distributedlog-service/conf/zookeeper-$ZKID.properties
-echo "quorumListenOnAllIPs=true" >> $log_dir/distributedlog-service/conf/zookeeper-$ZKID.properties
+cp $log_dir/distributedlog-proxy-server/conf/zookeeper.conf.template $log_dir/distributedlog-proxy-server/conf/zookeeper-$ZKID.properties
+echo "initLimit=5" >> $log_dir/distributedlog-proxy-server/conf/zookeeper-$ZKID.properties
+echo "syncLimit=2" >> $log_dir/distributedlog-proxy-server/conf/zookeeper-$ZKID.properties
+echo "quorumListenOnAllIPs=true" >> $log_dir/distributedlog-proxy-server/conf/zookeeper-$ZKID.properties
 sed  '/server.1/d' \
-  ./distributedlog-service/conf/bookie.conf.template > ./distributedlog-service/conf/zookeeper-$ZKID.conf
+  ./distributedlog-proxy-server/conf/bookie.conf.template > ./distributedlog-proxy-server/conf/zookeeper-$ZKID.conf
 for i in $(seq 1 $NUM_ZK); do
-  echo "server.${i}=zk${i}:2888:3888" >>$log_dir/distributedlog-service/conf/zookeeper-$ZKID.properties
+  echo "server.${i}=zk${i}:2888:3888" >>$log_dir/distributedlog-proxy-server/conf/zookeeper-$ZKID.properties
 done
 
 mkdir -p /tmp/data/zookeeper
 echo "$ZKID" > /tmp/data/zookeeper/myid
 
 echo "Killing ZooKeeper"
-./distributedlog-service/bin/dlog-daemon.sh stop zookeeper || true
+./distributedlog-proxy-server/bin/dlog-daemon.sh stop zookeeper || true
 sleep 5
 
 echo "Starting ZooKeeper"
-echo "./distributedlog-service/bin/dlog-daemon.sh start zookeeper $log_dir/distributedlog-service/conf/zookeeper-$ZKID.properties"
-./distributedlog-service/bin/dlog-daemon.sh start zookeeper $log_dir/distributedlog-service/conf/zookeeper-$ZKID.properties
+echo "./distributedlog-proxy-server/bin/dlog-daemon.sh start zookeeper $log_dir/distributedlog-proxy-server/conf/zookeeper-$ZKID.properties"
+./distributedlog-proxy-server/bin/dlog-daemon.sh start zookeeper $log_dir/distributedlog-proxy-server/conf/zookeeper-$ZKID.properties

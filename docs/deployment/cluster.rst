@@ -35,7 +35,7 @@ To build DistributedLog, run:
 
 
 Or run `./scripts/snapshot` to build the release packages from current source. The released
-packages contain the binaries for running `distributedlog-service`, `distributedlog-benchmark`
+packages contain the binaries for running `distributedlog-proxy-server`, `distributedlog-benchmark`
 and `distributedlog-tutorials`.
 
 NOTE: we run the following instructions from distributedlog source code after
@@ -54,7 +54,7 @@ Create a `zookeeper.conf` from the `zookeeper.conf.template`.
 
 .. code-block:: bash
 
-    $ cp distributedlog-service/conf/zookeeper.conf.template distributedlog-service/conf/zookeeper.conf
+    $ cp distributedlog-proxy-server/conf/zookeeper.conf.template distributedlog-proxy-server/conf/zookeeper.conf
 
 Configure the settings in `zookeeper.conf`. By default, it will use `/tmp/data/zookeeper` for storing
 the zookeeper data. Let's create the data directories for zookeeper.
@@ -73,14 +73,14 @@ Start the zookeeper daemon using `dlog-daemon.sh`.
 
 .. code-block:: bash
 
-    $ ./distributedlog-service/bin/dlog-daemon.sh start zookeeper ${DL_HOME}/distributedlog-service/conf/zookeeper.conf
+    $ ./distributedlog-proxy-server/bin/dlog-daemon.sh start zookeeper ${DL_HOME}/distributedlog-proxy-server/conf/zookeeper.conf
 
 You could verify the zookeeper setup using `zkshell`.
 
 .. code-block:: bash
 
-    // ./distributedlog-service/bin/dlog zkshell ${zkservers}
-    $ ./distributedlog-service/bin/dlog zkshell localhost:2181
+    // ./distributedlog-proxy-server/bin/dlog zkshell ${zkservers}
+    $ ./distributedlog-proxy-server/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
     JLine support is enabled
@@ -109,9 +109,9 @@ bookkeeper cluster locally. Let's make three copies of `bookie.conf.template`.
 
 .. code-block:: bash
 
-    $ cp distributedlog-service/conf/bookie.conf.template distributedlog-service/conf/bookie-1.conf
-    $ cp distributedlog-service/conf/bookie.conf.template distributedlog-service/conf/bookie-2.conf
-    $ cp distributedlog-service/conf/bookie.conf.template distributedlog-service/conf/bookie-3.conf
+    $ cp distributedlog-proxy-server/conf/bookie.conf.template distributedlog-proxy-server/conf/bookie-1.conf
+    $ cp distributedlog-proxy-server/conf/bookie.conf.template distributedlog-proxy-server/conf/bookie-2.conf
+    $ cp distributedlog-proxy-server/conf/bookie.conf.template distributedlog-proxy-server/conf/bookie-3.conf
 
 Configure the settings in the bookie configuraiont files.
 
@@ -141,7 +141,7 @@ So using `zkshell` to create the `zkLedgersRootPath`.
 
 ::
 
-    $ ./distributedlog-service/bin/dlog zkshell localhost:2181
+    $ ./distributedlog-proxy-server/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
     JLine support is enabled
@@ -162,7 +162,7 @@ If the `zkLedgersRootPath`, run `metaformat` to format the bookkeeper metadata.
 
 ::
 
-    $ BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-1.conf ./distributedlog-service/bin/dlog bkshell metaformat
+    $ BOOKIE_CONF=${DL_HOME}/distributedlog-proxy-server/conf/bookie-1.conf ./distributedlog-proxy-server/bin/dlog bkshell metaformat
     Are you sure to format bookkeeper metadata ? (Y or N) Y
 
 Add Bookies
@@ -259,9 +259,9 @@ Once the disk directories are configured correctly in the configuration file, us
 
 ::
 
-    BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-1.conf ./distributedlog-service/bin/dlog bkshell bookieformat
-    BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-2.conf ./distributedlog-service/bin/dlog bkshell bookieformat
-    BOOKIE_CONF=${DL_HOME}/distributedlog-service/conf/bookie-3.conf ./distributedlog-service/bin/dlog bkshell bookieformat
+    BOOKIE_CONF=${DL_HOME}/distributedlog-proxy-server/conf/bookie-1.conf ./distributedlog-proxy-server/bin/dlog bkshell bookieformat
+    BOOKIE_CONF=${DL_HOME}/distributedlog-proxy-server/conf/bookie-2.conf ./distributedlog-proxy-server/bin/dlog bkshell bookieformat
+    BOOKIE_CONF=${DL_HOME}/distributedlog-proxy-server/conf/bookie-3.conf ./distributedlog-proxy-server/bin/dlog bkshell bookieformat
 
 
 Start bookie
@@ -271,16 +271,16 @@ Start the bookie using `dlog-daemon.sh`.
 
 ::
 
-    SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-1.conf
-    SERVICE_PORT=3182 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-2.conf
-    SERVICE_PORT=3183 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-3.conf
+    SERVICE_PORT=3181 ./distributedlog-proxy-server/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-proxy-server/conf/bookie-1.conf
+    SERVICE_PORT=3182 ./distributedlog-proxy-server/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-proxy-server/conf/bookie-2.conf
+    SERVICE_PORT=3183 ./distributedlog-proxy-server/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-proxy-server/conf/bookie-3.conf
 
 Verify whether the bookie is setup correctly. You could simply check whether the bookie is showed up in
 zookeeper `zkLedgersRootPath`/available znode.
 
 ::
 
-    $ ./distributedlog-service/bin/dlog zkshell localhost:2181
+    $ ./distributedlog-proxy-server/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
     JLine support is enabled
@@ -310,9 +310,9 @@ Stop the bookie using `dlog-daemon.sh`.
 
 ::
 
-    $ ./distributedlog-service/bin/dlog-daemon.sh stop bookie
+    $ ./distributedlog-proxy-server/bin/dlog-daemon.sh stop bookie
     // Example:
-    $ SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh stop bookie
+    $ SERVICE_PORT=3181 ./distributedlog-proxy-server/bin/dlog-daemon.sh stop bookie
     doing stop bookie ...
     stopping bookie
     Shutdown is in progress... Please wait...
@@ -325,13 +325,13 @@ Start the bookie in `readonly` mode.
 
 ::
 
-    $ SERVICE_PORT=3181 ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-service/conf/bookie-1.conf --readonly
+    $ SERVICE_PORT=3181 ./distributedlog-proxy-server/bin/dlog-daemon.sh start bookie --conf ${DL_HOME}/distributedlog-proxy-server/conf/bookie-1.conf --readonly
 
 Verify if the bookie is running in `readonly` mode.
 
 ::
 
-    $ ./distributedlog-service/bin/dlog zkshell localhost:2181
+    $ ./distributedlog-proxy-server/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
     JLine support is enabled
@@ -379,7 +379,7 @@ bookkeeper cluster we just created above.
 
 ::
 
-    $ distributedlog-service/bin/dlog admin bind \\
+    $ distributedlog-proxy-server/bin/dlog admin bind \\
         -dlzr 127.0.0.1:2181 \\
         -dlzw 127.0.0.1:2181 \\
         -s 127.0.0.1:2181 \\
@@ -419,16 +419,16 @@ Different from bookkeeper, DistributedLog tries not to configure any environment
 in configuration files. Any environment related settings are stored and configured via `namespace binding`.
 The configuration file should contain non-environment related settings.
 
-There is a `write_proxy.conf` template file available under `distributedlog-service` module.
+There is a `write_proxy.conf` template file available under `distributedlog-proxy-server` module.
 
 Run write proxy
 +++++++++++++++
 
-A write proxy could be started using `dlog-daemon.sh` script under `distributedlog-service`.
+A write proxy could be started using `dlog-daemon.sh` script under `distributedlog-proxy-server`.
 
 ::
 
-    WP_SHARD_ID=${WP_SHARD_ID} WP_SERVICE_PORT=${WP_SERVICE_PORT} WP_STATS_PORT=${WP_STATS_PORT} ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
+    WP_SHARD_ID=${WP_SHARD_ID} WP_SERVICE_PORT=${WP_SERVICE_PORT} WP_STATS_PORT=${WP_STATS_PORT} ./distributedlog-proxy-server/bin/dlog-daemon.sh start writeproxy
 
 - `WP_SHARD_ID`: A non-negative integer. You don't need to guarantee uniqueness of shard id, as it is just an
   indicator to the client for routing the requests. If you are running the `write proxy` using a cluster scheduler
@@ -436,7 +436,7 @@ A write proxy could be started using `dlog-daemon.sh` script under `distributedl
 - `WP_SERVICE_PORT`: The port that write proxy listens on.
 - `WP_STATS_PORT`: The port that write proxy exposes stats to a http endpoint.
 
-Please check `distributedlog-service/conf/dlogenv.sh` for more environment variables on configuring write proxy.
+Please check `distributedlog-proxy-server/conf/dlogenv.sh` for more environment variables on configuring write proxy.
 
 - `WP_CONF_FILE`: The path to the write proxy configuration file.
 - `WP_NAMESPACE`: The distributedlog namespace that the write proxy is serving for.
@@ -445,9 +445,9 @@ For example, we start 3 write proxies locally and point to the namespace created
 
 ::
 
-    $ WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=20001 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
-    $ WP_SHARD_ID=2 WP_SERVICE_PORT=4182 WP_STATS_PORT=20002 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
-    $ WP_SHARD_ID=3 WP_SERVICE_PORT=4183 WP_STATS_PORT=20003 ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
+    $ WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=20001 ./distributedlog-proxy-server/bin/dlog-daemon.sh start writeproxy
+    $ WP_SHARD_ID=2 WP_SERVICE_PORT=4182 WP_STATS_PORT=20002 ./distributedlog-proxy-server/bin/dlog-daemon.sh start writeproxy
+    $ WP_SHARD_ID=3 WP_SERVICE_PORT=4183 WP_STATS_PORT=20003 ./distributedlog-proxy-server/bin/dlog-daemon.sh start writeproxy
 
 The write proxy will announce itself to the zookeeper path `.write_proxy` under the dl namespace path.
 
@@ -455,7 +455,7 @@ We could verify that the write proxy is running correctly by checking the zookee
 
 ::
 
-    $ ./distributedlog-service/bin/dlog zkshell localhost:2181
+    $ ./distributedlog-proxy-server/bin/dlog zkshell localhost:2181
     Connecting to localhost:2181
     Welcome to ZooKeeper!
     JLine support is enabled
@@ -480,7 +480,7 @@ Removing a write proxy is pretty straightforward by just killing the process.
 
 ::
 
-    WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=10001 ./distributedlog-service/bin/dlog-daemon.sh stop writeproxy
+    WP_SHARD_ID=1 WP_SERVICE_PORT=4181 WP_STATS_PORT=10001 ./distributedlog-proxy-server/bin/dlog-daemon.sh stop writeproxy
 
 
 Adding a new write proxy is just adding a new host and starting the write proxy
@@ -501,7 +501,7 @@ Create 10 streams.
 
 ::
     
-    $ ./distributedlog-service/bin/dlog tool create -u distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace -r stream- -e 0-10
+    $ ./distributedlog-proxy-server/bin/dlog tool create -u distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace -r stream- -e 0-10
     You are going to create streams : [stream-0, stream-1, stream-2, stream-3, stream-4, stream-5, stream-6, stream-7, stream-8, stream-9, stream-10] (Y or N) Y
 
 

@@ -55,10 +55,10 @@ To build bookkeeper, run:
     $ cd bookkeeper 
     $ mvn clean package assembly:single -DskipTests
 
-However, since `bookkeeper-server` is one of the dependency of `distributedlog-service`.
-You could simply run bookkeeper using same set of scripts provided in `distributedlog-service`.
+However, since `bookkeeper-server` is one of the dependency of `distributedlog-proxy-server`.
+You could simply run bookkeeper using same set of scripts provided in `distributedlog-proxy-server`.
 In the following sections, we will describe how to run bookkeeper using the scripts provided in
-`distributedlog-service`.
+`distributedlog-proxy-server`.
 
 Run from distributedlog source
 ------------------------------
@@ -76,7 +76,7 @@ First of all, build DistributedLog:
 Configuration
 +++++++++++++
 
-The configuration file `bookie.conf` under `distributedlog-service/conf` is a template of production
+The configuration file `bookie.conf` under `distributedlog-proxy-server/conf` is a template of production
 configuration to run a bookie node. Most of the configuration settings are good for production usage.
 You might need to configure following settings according to your environment and hardware platform.
 
@@ -191,21 +191,21 @@ It is recommended to configure following settings to align with the cpu cores of
 Run 
 +++
 
-As `bookkeeper-server` is shipped as part of `distributedlog-service`, you could use the `dlog-daemon.sh`
+As `bookkeeper-server` is shipped as part of `distributedlog-proxy-server`, you could use the `dlog-daemon.sh`
 script to start `bookie` as daemon thread.
 
 Start the bookie:
 
 .. code-block:: bash
 
-    $ ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf /path/to/bookie/conf
+    $ ./distributedlog-proxy-server/bin/dlog-daemon.sh start bookie --conf /path/to/bookie/conf
 
 
 Stop the bookie:
 
 .. code-block:: bash
 
-    $ ./distributedlog-service/bin/dlog-daemon.sh stop bookie
+    $ ./distributedlog-proxy-server/bin/dlog-daemon.sh stop bookie
 
 
 Please check bookkeeper_ website for more details.

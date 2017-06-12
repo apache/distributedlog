@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-for module in distributedlog-benchmark distributedlog-client distributedlog-core distributedlog-protocol distributedlog-service distributedlog-tutorials/distributedlog-basic distributedlog-tutorials/distributedlog-kafka distributedlog-tutorials/distributedlog-messaging distributedlog-tutorials/distributedlog-mapreduce; do
+for module in distributedlog-benchmark distributedlog-proxy-client distributedlog-core distributedlog-protocol distributedlog-proxy-server distributedlog-tutorials/distributedlog-basic distributedlog-tutorials/distributedlog-kafka distributedlog-tutorials/distributedlog-messaging distributedlog-tutorials/distributedlog-mapreduce; do
     echo "Repackaging module ${module}"
     if [[ -d "${module}/src/main/java/com/twitter/distributedlog" ]]; then
         mkdir -p ${module}/src/main/java/org/apache/distributedlog
