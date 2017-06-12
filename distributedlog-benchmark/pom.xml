@@ -27,7 +27,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-client</artifactId>
+      <artifactId>distributedlog-proxy-client</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
