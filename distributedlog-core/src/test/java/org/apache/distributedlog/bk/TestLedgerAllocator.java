@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.BookKeeperClient;
 import org.apache.distributedlog.BookKeeperClientBuilder;
 import org.apache.distributedlog.TestZooKeeperClientBuilder;
-import org.apache.distributedlog.annotations.DistributedLogAnnotations;
+import org.apache.distributedlog.common.annotations.DistributedLogAnnotations;
 import org.apache.distributedlog.bk.SimpleLedgerAllocator.AllocationException;
 import org.apache.distributedlog.bk.SimpleLedgerAllocator.Phase;
 import org.apache.distributedlog.DistributedLogConfiguration;

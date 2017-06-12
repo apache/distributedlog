@@ -23,7 +23,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import org.apache.distributedlog.logsegment.LogSegmentFilter;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 
 import java.util.List;

@@ -29,7 +29,7 @@ import org.apache.distributedlog.ZooKeeperClientBuilder;
 import org.apache.distributedlog.exceptions.AlreadyClosedException;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
 import org.apache.distributedlog.impl.metadata.BKDLConfig;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.bookkeeper.zookeeper.BoundExponentialBackoffRetryPolicy;

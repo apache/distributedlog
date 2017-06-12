@@ -34,8 +34,8 @@ import org.apache.distributedlog.DistributedLogManager;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.util.FutureEventListener;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureEventListener;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
 

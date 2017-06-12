@@ -19,7 +19,7 @@ package org.apache.distributedlog.lock;
 
 import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.exceptions.LockingException;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 
 /**
  * An implementation of {@link DistributedLock} which does nothing.

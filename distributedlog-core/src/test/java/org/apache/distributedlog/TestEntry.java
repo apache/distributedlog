@@ -17,7 +17,6 @@
  */
 package org.apache.distributedlog;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.Entry.Reader;
@@ -26,8 +25,8 @@ import org.apache.distributedlog.exceptions.LogRecordTooLongException;
 import org.apache.distributedlog.io.Buffer;
 import org.apache.distributedlog.io.CompressionCodec;
 import org.apache.bookkeeper.stats.NullStatsLogger;
-import org.apache.distributedlog.util.FutureEventListener;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureEventListener;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Assert;
 import org.junit.Test;

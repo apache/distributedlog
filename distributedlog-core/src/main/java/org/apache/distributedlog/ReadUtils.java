@@ -32,8 +32,8 @@ import org.apache.distributedlog.selector.FirstDLSNNotLessThanSelector;
 import org.apache.distributedlog.selector.FirstTxIdNotLessThanSelector;
 import org.apache.distributedlog.selector.LastRecordSelector;
 import org.apache.distributedlog.selector.LogRecordSelector;
-import org.apache.distributedlog.util.FutureEventListener;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureEventListener;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

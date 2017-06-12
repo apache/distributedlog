@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import org.apache.distributedlog.annotations.DistributedLogAnnotations;
+import org.apache.distributedlog.common.annotations.DistributedLogAnnotations;
 import org.apache.distributedlog.config.ConcurrentBaseConfiguration;
 import org.apache.distributedlog.config.ConcurrentConstConfiguration;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
@@ -39,7 +39,7 @@ import org.apache.distributedlog.exceptions.BKTransmitException;
 import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.io.CompressionCodec;
-import org.apache.distributedlog.util.FutureEventListener;
+import org.apache.distributedlog.common.util.FutureEventListener;
 import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeperAccessor;
@@ -67,7 +67,7 @@ import org.apache.distributedlog.lock.DistributedLock;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import org.apache.distributedlog.util.FailpointUtils;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.SimplePermitLimiter;
 
 import junit.framework.Assert;

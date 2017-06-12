@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.Utils;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class LockWaiter {
      * Return the future representing the waiting result.
      *
      * <p>If the future is interrupted
-     * (e.g. {@link org.apache.distributedlog.util.FutureUtils#within(CompletableFuture, long, TimeUnit, Throwable, OrderedScheduler, Object)}),
+     * (e.g. {@link FutureUtils#within(CompletableFuture, long, TimeUnit, Throwable, OrderedScheduler, Object)}),
      * the waiter will automatically clean up its waiting state.
      *
      * @return the future representing the acquire result.

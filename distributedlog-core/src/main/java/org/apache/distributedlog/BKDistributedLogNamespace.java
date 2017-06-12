@@ -31,7 +31,6 @@ import org.apache.distributedlog.logsegment.LogSegmentMetadataCache;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.NamespaceDriver;
 import org.apache.distributedlog.util.ConfUtils;
-import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.MonitoredScheduledThreadPoolExecutor;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.PermitLimiter;

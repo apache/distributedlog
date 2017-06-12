@@ -42,8 +42,8 @@ import org.apache.distributedlog.service.config.ServerConfiguration;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.stream.limiter.StreamRequestLimiter;
 import org.apache.distributedlog.service.streamset.Partition;
-import org.apache.distributedlog.stats.BroadCastStatsLogger;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.stats.BroadCastStatsLogger;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.TimeSequencer;
 import org.apache.distributedlog.util.Utils;
@@ -557,7 +557,7 @@ public class StreamImpl implements Stream {
         final Stopwatch stopwatch = Stopwatch.createStarted();
         final Promise<Boolean> acquirePromise = new Promise<Boolean>();
         manager.openAsyncLogWriter().whenCompleteAsync(
-            new org.apache.distributedlog.util.FutureEventListener<AsyncLogWriter>() {
+            new org.apache.distributedlog.common.util.FutureEventListener<AsyncLogWriter>() {
 
             @Override
             public void onSuccess(AsyncLogWriter w) {
@@ -857,7 +857,7 @@ public class StreamImpl implements Stream {
             scheduler,
             name
         ).whenCompleteAsync(
-            new org.apache.distributedlog.util.FutureEventListener<Void>() {
+            new org.apache.distributedlog.common.util.FutureEventListener<Void>() {
                 @Override
                 public void onSuccess(Void value) {
                     postClose(uncache);

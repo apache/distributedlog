@@ -18,7 +18,7 @@
 package org.apache.distributedlog.bk;
 
 import java.util.concurrent.CompletableFuture;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.Transaction;
 import org.apache.distributedlog.util.Transaction.OpListener;
 import org.apache.bookkeeper.client.LedgerHandle;

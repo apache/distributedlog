@@ -35,6 +35,7 @@ import com.google.common.io.Closeables;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.distributedlog.DistributedLogConstants;
 import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.exceptions.BKTransmitException;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
 import org.apache.distributedlog.exceptions.UnexpectedException;

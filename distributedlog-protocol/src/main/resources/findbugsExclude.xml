@@ -33,17 +33,4 @@
     <Method name="getData" />
     <Bug pattern="EI_EXPOSE_REP" />
   </Match>
-  <Match>
-    <Class name="org.apache.distributedlog.util.FutureUtils"/>
-    <Bug pattern="NP_NULL_PARAM_DEREF_NONVIRTUAL" />
-  </Match>
-  <Match>
-    <Class name="org.apache.distributedlog.util.FutureUtils$2"/>
-    <Bug pattern="NP_NONNULL_PARAM_VIOLATION" />
-  </Match>
-  <Match>
-    <Class name="org.apache.distributedlog.util.FutureUtils"/>
-    <Method name="Void" />
-    <Bug pattern="NM_METHOD_NAMING_CONVENTION" />
-  </Match>
 </FindBugsFilter>

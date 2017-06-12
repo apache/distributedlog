@@ -19,7 +19,7 @@ package org.apache.distributedlog.io;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 
 /**
  * A {@code AsyncCloseable} is a source or destination of data that can be closed asynchronously.

@@ -18,7 +18,7 @@
 package org.apache.distributedlog;
 
 import java.util.concurrent.CompletableFuture;
-import org.apache.distributedlog.util.FutureEventListener;
+import org.apache.distributedlog.common.util.FutureEventListener;
 import org.apache.distributedlog.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

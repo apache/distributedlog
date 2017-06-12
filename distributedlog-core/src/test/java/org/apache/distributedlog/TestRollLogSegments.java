@@ -26,8 +26,7 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.distributedlog.feature.CoreFeatureKeys;
 import org.apache.distributedlog.impl.logsegment.BKLogSegmentEntryReader;
 import org.apache.distributedlog.util.FailpointUtils;
-import org.apache.distributedlog.util.FutureEventListener;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureEventListener;
 import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.LedgerHandle;
@@ -36,7 +35,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.distributedlog.annotations.DistributedLogAnnotations.FlakyTest;
+import org.apache.distributedlog.common.annotations.DistributedLogAnnotations.FlakyTest;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static org.junit.Assert.*;

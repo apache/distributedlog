@@ -35,7 +35,7 @@ import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.SchedulerUtils;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.StatsReceiver;
@@ -101,7 +101,7 @@ public class ReaderWorker implements Worker {
     final Counter outOfOrderSequenceIdCounter;
 
     class StreamReader implements
-        org.apache.distributedlog.util.FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
+        org.apache.distributedlog.common.util.FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
 
         final int streamIdx;
         final String streamName;

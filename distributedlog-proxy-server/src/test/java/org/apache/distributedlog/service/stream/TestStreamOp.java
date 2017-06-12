@@ -32,7 +32,7 @@ import org.apache.distributedlog.service.config.ServerConfiguration;
 import org.apache.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.Sequencer;
 import com.twitter.util.Await;
 import java.nio.ByteBuffer;

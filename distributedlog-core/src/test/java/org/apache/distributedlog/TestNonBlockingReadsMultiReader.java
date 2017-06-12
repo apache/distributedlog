@@ -19,7 +19,6 @@ package org.apache.distributedlog;
 
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
-import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Test;
 

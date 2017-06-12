@@ -18,8 +18,7 @@
 package org.apache.distributedlog;
 
 import org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion;
-import org.apache.distributedlog.util.FutureEventListener;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureEventListener;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Test;
 import org.slf4j.Logger;

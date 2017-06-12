@@ -22,7 +22,6 @@ import org.apache.distributedlog.bk.LedgerAllocatorPool;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
 import org.apache.distributedlog.util.FailpointUtils;
-import org.apache.distributedlog.util.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Rule;
 import org.junit.Test;

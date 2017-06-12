@@ -44,7 +44,7 @@ import org.apache.distributedlog.metadata.LogMetadata;
 import org.apache.distributedlog.metadata.LogMetadataForReader;
 import org.apache.distributedlog.metadata.LogMetadataForWriter;
 import org.apache.distributedlog.util.DLUtils;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.util.SchedulerUtils;
 import org.apache.distributedlog.zk.LimitedPermitManager;
 import org.apache.distributedlog.util.OrderedScheduler;

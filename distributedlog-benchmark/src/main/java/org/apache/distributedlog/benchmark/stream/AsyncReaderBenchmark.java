@@ -23,7 +23,7 @@ import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogManager;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.util.FutureUtils;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

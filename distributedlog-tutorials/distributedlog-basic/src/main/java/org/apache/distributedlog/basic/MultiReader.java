@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
-import org.apache.distributedlog.util.FutureEventListener;
+import org.apache.distributedlog.common.util.FutureEventListener;
 
 import static com.google.common.base.Charsets.UTF_8;
 
