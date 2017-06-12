@@ -636,16 +636,4 @@ public class Utils {
         return path.substring(0, lastIndex);
     }
 
-    /**
-     * Validate the provided {@code logName}.
-     *
-     * @param logName name of the log
-     * @throws InvalidStreamNameException if the name of the log is not valid.
-     */
-    public static void validateLogName(String logName) throws InvalidStreamNameException {
-
-    }
-
-
-
 }
