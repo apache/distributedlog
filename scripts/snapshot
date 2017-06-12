@@ -29,18 +29,18 @@ find . -name lib | xargs rm -r
 rm -rf dist/*
 
 # create the layout
-for module in distributedlog-service distributedlog-benchmark distributedlog-tutorials/distributedlog-basic distributedlog-tutorials/distributedlog-messaging; do
+for module in distributedlog-proxy-server distributedlog-benchmark distributedlog-tutorials/distributedlog-basic distributedlog-tutorials/distributedlog-messaging; do
   mkdir -p "dist/release/${module}"/{bin,conf,lib}
 done
 
 # build the package
 mvn clean install -Ptwitter-ostrich-provider -DskipTests
 
-# build the distributedlog-service
-cp -rf distributedlog-service/bin/* dist/release/distributedlog-service/bin
-cp -rf distributedlog-service/conf/* dist/release/distributedlog-service/conf
-cp -rf distributedlog-service/lib/* dist/release/distributedlog-service/lib
-cp -rf distributedlog-service/target/distributedlog-service-*.jar dist/release/distributedlog-service/lib
+# build the distributedlog-proxy-server
+cp -rf distributedlog-proxy-server/bin/* dist/release/distributedlog-proxy-server/bin
+cp -rf distributedlog-proxy-server/conf/* dist/release/distributedlog-proxy-server/conf
+cp -rf distributedlog-proxy-server/lib/* dist/release/distributedlog-proxy-server/lib
+cp -rf distributedlog-proxy-server/target/distributedlog-proxy-server-*.jar dist/release/distributedlog-proxy-server/lib
 cp -rf vagrant dist/release/
 cp -rf scripts dist/release/
 
@@ -64,7 +64,7 @@ cp -rf distributedlog-tutorials/distributedlog-messaging/target/distributedlog-m
 
 # release
 cd dist/release
-zip -r "distributedlog-all-${GITSHA}.zip" distributedlog-service distributedlog-benchmark distributedlog-tutorials > /dev/null
-zip -r "distributedlog-service-${GITSHA}.zip" distributedlog-service >/dev/null
+zip -r "distributedlog-all-${GITSHA}.zip" distributedlog-proxy-server distributedlog-benchmark distributedlog-tutorials > /dev/null
+zip -r "distributedlog-proxy-server-${GITSHA}.zip" distributedlog-proxy-server >/dev/null
 zip -r "distributedlog-benchmark-${GITSHA}.zip" distributedlog-benchmark >/dev/null
 zip -r "distributedlog-tutorials-${GITSHA}.zip" distributedlog-tutorials >/dev/null

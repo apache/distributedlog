@@ -35,13 +35,13 @@ Step 2: Start ZooKeeper & BookKeeper
 
 DistributedLog uses `ZooKeeper` as the metadata store and `BookKeeper` as the log segment store. So
 you need to first start a zookeeper server and a few bookies if you don't already have one. You can
-use the `dlog` script in `distributedlog-service` package to get a standalone bookkeeper sandbox. It
+use the `dlog` script in `distributedlog-proxy-server` package to get a standalone bookkeeper sandbox. It
 starts a zookeeper server and `N` bookies (N is 3 by default).
 
 ::
 
     // Start the local sandbox instance at port `7000`
-    > ./distributedlog-service/bin/dlog local 7000
+    > ./distributedlog-proxy-server/bin/dlog local 7000
     DistributedLog Sandbox is running now. You could access distributedlog://127.0.0.1:7000
 
 
@@ -54,7 +54,7 @@ streams. The zkServer for the local sandbox is `127.0.0.1:7000` and the bookkeep
 
 ::
 
-    > ./distributedlog-service/bin/dlog admin bind -l /ledgers -s 127.0.0.1:7000 -c distributedlog://127.0.0.1:7000/messaging/my_namespace
+    > ./distributedlog-proxy-server/bin/dlog admin bind -l /ledgers -s 127.0.0.1:7000 -c distributedlog://127.0.0.1:7000/messaging/my_namespace
     No bookkeeper is bound to distributedlog://127.0.0.1:7000/messaging/my_namespace
     Created binding on distributedlog://127.0.0.1:7000/messaging/my_namespace.
 
@@ -69,14 +69,14 @@ Let's create 5 log streams, prefixed with `messaging-stream-`.
 
 ::
 
-    > ./distributedlog-service/bin/dlog tool create -u distributedlog://127.0.0.1:7000/messaging/my_namespace -r messaging-stream- -e 1-5
+    > ./distributedlog-proxy-server/bin/dlog tool create -u distributedlog://127.0.0.1:7000/messaging/my_namespace -r messaging-stream- -e 1-5
 
 
 We can now see the streams if we run the `list` command from the tool.
 
 ::
     
-    > ./distributedlog-service/bin/dlog tool list -u distributedlog://127.0.0.1:7000/messaging/my_namespace
+    > ./distributedlog-proxy-server/bin/dlog tool list -u distributedlog://127.0.0.1:7000/messaging/my_namespace
     Streams under distributedlog://127.0.0.1:7000/messaging/my_namespace :
     --------------------------------
     messaging-stream-1
@@ -94,13 +94,13 @@ Now, lets start a write proxy server that serves writes to distributedlog namesp
 
 ::
     
-    > ./distributedlog-service/bin/dlog-daemon.sh start writeproxy -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/my_namespace -mx -c `pwd`/distributedlog-service/conf/distributedlog_proxy.conf
+    > ./distributedlog-proxy-server/bin/dlog-daemon.sh start writeproxy -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/my_namespace -mx -c `pwd`/distributedlog-proxy-server/conf/distributedlog_proxy.conf
 
 From 0.3.51-RC1 and onwards, use the below command to start the write proxy
 
 ::
 
-   > WP_SHARD_ID=1 WP_SERVICE_PORT=8000 WP_STATS_PORT=8001 WP_NAMESPACE='distributedlog://127.0.0.1:7000/messaging/my_namespace' ./distributedlog-service/bin/dlog-daemon.sh start writeproxy
+   > WP_SHARD_ID=1 WP_SERVICE_PORT=8000 WP_STATS_PORT=8001 WP_NAMESPACE='distributedlog://127.0.0.1:7000/messaging/my_namespace' ./distributedlog-proxy-server/bin/dlog-daemon.sh start writeproxy
 
 Step 6: Tail reading records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

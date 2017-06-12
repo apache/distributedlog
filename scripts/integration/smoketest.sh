@@ -41,7 +41,7 @@ SMOKESTREAM_PREFIX="smoketest-stream-"
 
 # start the sandbox
 echo "start sandbox"
-nohup ${DLOG_ROOT}/distributedlog-service/bin/dlog local ${ZK_PORT} > ${LOG_DIR}/sandbox.out 2>&1&
+nohup ${DLOG_ROOT}/distributedlog-proxy-server/bin/dlog local ${ZK_PORT} > ${LOG_DIR}/sandbox.out 2>&1&
 
 if [ $? -ne 0 ]; then
   echo "Failed to start sandbox"
@@ -60,7 +60,7 @@ fi
 
 # create streams
 echo "create streams"
-${DLOG_ROOT}/distributedlog-service/bin/dlog tool create -u distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE} -r ${SMOKESTREAM_PREFIX} -e 1-5 -f
+${DLOG_ROOT}/distributedlog-proxy-server/bin/dlog tool create -u distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE} -r ${SMOKESTREAM_PREFIX} -e 1-5 -f
 
 if [ $? -ne 0 ]; then
   echo "Failed to create streams prefixed with '${SMOKESTREAM_PREFIX}'."
@@ -69,7 +69,7 @@ fi
 
 # list streams
 echo "list streams"
-STREAM_OUTPUT=$(${DLOG_ROOT}/distributedlog-service/bin/dlog tool list -u distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE} | grep "${SMOKESTREAM_PREFIX}")
+STREAM_OUTPUT=$(${DLOG_ROOT}/distributedlog-proxy-server/bin/dlog tool list -u distributedlog://127.0.0.1:${ZK_PORT}/messaging/${NAMESPACE} | grep "${SMOKESTREAM_PREFIX}")
 
 echo "Create streams : ${STREAM_OUTPUT}."
 
@@ -82,7 +82,7 @@ done
 
 # start a write proxy
 echo "start a write proxy"
-${DLOG_ROOT}/distributedlog-service/bin/dlog-daemon.sh start writeproxy
+${DLOG_ROOT}/distributedlog-proxy-server/bin/dlog-daemon.sh start writeproxy
 
 # tail the streams
 echo "tail the streams"
@@ -132,7 +132,7 @@ fi
 
 # stop the write proxy
 echo "stop the write proxy"
-${DLOG_ROOT}/distributedlog-service/bin/dlog-daemon.sh stop writeproxy
+${DLOG_ROOT}/distributedlog-proxy-server/bin/dlog-daemon.sh stop writeproxy
 
 # stop the sandbox
 echo "stop the sandbox"
