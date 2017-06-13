@@ -17,10 +17,12 @@
  */
 package org.apache.distributedlog;
 
+import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.bk.LedgerAllocator;
 import org.apache.distributedlog.bk.LedgerAllocatorPool;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.util.FailpointUtils;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Rule;
@@ -57,7 +59,7 @@ public class TestBKLogWriteHandler extends TestDistributedLogBase {
         confLocal.setLedgerAllocatorPoolName("test-allocator-pool");
 
         BKDistributedLogNamespace namespace = (BKDistributedLogNamespace)
-                DistributedLogNamespaceBuilder.newBuilder()
+                NamespaceBuilder.newBuilder()
                         .conf(confLocal)
                         .uri(uri)
                         .build();

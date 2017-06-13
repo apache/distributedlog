@@ -25,12 +25,13 @@ import org.apache.bookkeeper.util.IOUtils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.LogSegmentMetadata;
 import org.apache.distributedlog.ReadUtils;
 import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.impl.acl.ZKAccessControl;
 import org.apache.distributedlog.exceptions.DLIllegalStateException;
@@ -41,13 +42,12 @@ import org.apache.distributedlog.metadata.DLMetadata;
 import org.apache.distributedlog.metadata.DryrunLogSegmentMetadataStoreUpdater;
 import org.apache.distributedlog.metadata.MetadataUpdater;
 import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.NamespaceDriver;
 import org.apache.distributedlog.thrift.AccessControlEntry;
 import org.apache.distributedlog.tools.DistributedLogTool;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
-import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +93,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
      *          is confirmation needed before executing actual action.
      * @throws IOException
      */
-    public static void fixInprogressSegmentWithLowerSequenceNumber(final DistributedLogNamespace namespace,
+    public static void fixInprogressSegmentWithLowerSequenceNumber(final Namespace namespace,
                                                                    final MetadataUpdater metadataUpdater,
                                                                    final String streamName,
                                                                    final boolean verbose,
@@ -191,7 +191,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     public static void checkAndRepairDLNamespace(final URI uri,
-                                                 final DistributedLogNamespace namespace,
+                                                 final Namespace namespace,
                                                  final MetadataUpdater metadataUpdater,
                                                  final OrderedScheduler scheduler,
                                                  final boolean verbose,
@@ -200,7 +200,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     public static void checkAndRepairDLNamespace(final URI uri,
-                                                 final DistributedLogNamespace namespace,
+                                                 final Namespace namespace,
                                                  final MetadataUpdater metadataUpdater,
                                                  final OrderedScheduler scheduler,
                                                  final boolean verbose,
@@ -245,7 +245,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     private static Map<String, StreamCandidate> checkStreams(
-            final DistributedLogNamespace namespace,
+            final Namespace namespace,
             final Collection<String> streams,
             final OrderedScheduler scheduler,
             final int concurrency) throws IOException {
@@ -311,7 +311,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     private static StreamCandidate checkStream(
-            final DistributedLogNamespace namespace,
+            final Namespace namespace,
             final String streamName,
             final OrderedScheduler scheduler) throws IOException {
         DistributedLogManager dlm = namespace.openLog(streamName);
@@ -347,7 +347,7 @@ public class DistributedLogAdmin extends DistributedLogTool {
     }
 
     private static CompletableFuture<LogSegmentCandidate> checkLogSegment(
-            final DistributedLogNamespace namespace,
+            final Namespace namespace,
             final String streamName,
             final LogSegmentMetadata metadata,
             final OrderedScheduler scheduler) {

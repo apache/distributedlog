@@ -17,6 +17,8 @@
  */
 package org.apache.distributedlog;
 
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Test;
 import org.slf4j.Logger;

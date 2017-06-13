@@ -22,21 +22,21 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.common.zookeeper.ServerSet;
-import org.apache.distributedlog.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogReader;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogRecordSet;
 import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.benchmark.thrift.Message;
 import org.apache.distributedlog.client.serverset.DLZkServerSet;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
-import org.apache.distributedlog.common.util.FutureUtils;
-import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.finagle.thrift.ClientId$;
@@ -75,7 +75,7 @@ public class ReaderWorker implements Worker {
     final int endStreamId;
     final ScheduledExecutorService executorService;
     final ExecutorService callbackExecutor;
-    final DistributedLogNamespace namespace;
+    final Namespace namespace;
     final DistributedLogManager[] dlms;
     final AsyncLogReader[] logReaders;
     final StreamReader[] streamReaders;
@@ -101,7 +101,7 @@ public class ReaderWorker implements Worker {
     final Counter outOfOrderSequenceIdCounter;
 
     class StreamReader implements
-        org.apache.distributedlog.common.util.FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
+        org.apache.distributedlog.common.concurrent.FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
 
         final int streamIdx;
         final String streamName;
@@ -306,7 +306,7 @@ public class ReaderWorker implements Worker {
         }
 
         // construct the factory
-        this.namespace = DistributedLogNamespaceBuilder.newBuilder()
+        this.namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .statsLogger(statsLogger.scope("dl"))

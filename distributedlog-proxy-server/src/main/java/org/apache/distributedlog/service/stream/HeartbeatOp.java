@@ -20,7 +20,7 @@ package org.apache.distributedlog.service.stream;
 import static com.google.common.base.Charsets.UTF_8;
 import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFuture;
 
-import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.acl.AccessControlManager;
@@ -28,7 +28,7 @@ import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.RequestDeniedException;
 import org.apache.distributedlog.service.ResponseUtils;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.util.Sequencer;
+import org.apache.distributedlog.common.util.Sequencer;
 import com.twitter.util.Future;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.Counter;

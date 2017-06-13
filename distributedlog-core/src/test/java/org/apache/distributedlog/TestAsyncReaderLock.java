@@ -27,16 +27,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.exceptions.LockCancelledException;
 import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.lock.LockClosedException;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.namespace.NamespaceDriver;
 import org.apache.distributedlog.subscription.SubscriptionsStore;
-import org.apache.distributedlog.common.util.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -248,7 +250,7 @@ public class TestAsyncReaderLock extends TestDistributedLogBase {
         String name = runtime.getMethodName();
         URI uri = createDLMURI("/" + name);
         ensureURICreated(uri);
-        DistributedLogNamespace ns0 = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace ns0 = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .build();
@@ -258,7 +260,7 @@ public class TestAsyncReaderLock extends TestDistributedLogBase {
         writer.write(DLMTestUtil.getLogRecordInstance(2L));
         writer.closeAndComplete();
 
-        DistributedLogNamespace ns1 = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace ns1 = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .build();
@@ -439,7 +441,7 @@ public class TestAsyncReaderLock extends TestDistributedLogBase {
         localConf.setNumWorkerThreads(2);
         localConf.setLockTimeout(Long.MAX_VALUE);
 
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(localConf).uri(uri).clientId("main").build();
 
         DistributedLogManager dlm0 = namespace.openLog(name);
@@ -450,15 +452,15 @@ public class TestAsyncReaderLock extends TestDistributedLogBase {
         AtomicReference<DLSN> currentDLSN = new AtomicReference<DLSN>(DLSN.InitialDLSN);
 
         String clientId1 = "reader1";
-        DistributedLogNamespace namespace1 = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace1 = NamespaceBuilder.newBuilder()
                 .conf(localConf).uri(uri).clientId(clientId1).build();
         DistributedLogManager dlm1 = namespace1.openLog(name);
         String clientId2 = "reader2";
-        DistributedLogNamespace namespace2 = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace2 = NamespaceBuilder.newBuilder()
                 .conf(localConf).uri(uri).clientId(clientId2).build();
         DistributedLogManager dlm2 = namespace2.openLog(name);
         String clientId3 = "reader3";
-        DistributedLogNamespace namespace3 = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace3 = NamespaceBuilder.newBuilder()
                 .conf(localConf).uri(uri).clientId(clientId3).build();
         DistributedLogManager dlm3 = namespace3.openLog(name);
 

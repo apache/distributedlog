@@ -19,7 +19,7 @@ package org.apache.distributedlog.feature;
 
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.common.annotations.DistributedLogAnnotations;
-import org.apache.distributedlog.config.PropertiesWriter;
+import org.apache.distributedlog.common.config.PropertiesWriter;
 import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.junit.Ignore;

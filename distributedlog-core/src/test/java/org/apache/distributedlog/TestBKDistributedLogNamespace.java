@@ -22,21 +22,23 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.collect.Sets;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
+import org.apache.distributedlog.api.LogWriter;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.callback.NamespaceListener;
 import org.apache.distributedlog.exceptions.AlreadyClosedException;
 import org.apache.distributedlog.exceptions.InvalidStreamNameException;
 import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.exceptions.ZKException;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.util.DLUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -89,7 +91,7 @@ public class TestBKDistributedLogNamespace extends TestDistributedLogBase {
         newConf.addConfiguration(conf);
         newConf.setCreateStreamIfNotExists(false);
         String streamName = "test-stream";
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(newConf).uri(uri).build();
         DistributedLogManager dlm = namespace.openLog(streamName);
         LogWriter writer;
@@ -119,7 +121,7 @@ public class TestBKDistributedLogNamespace extends TestDistributedLogBase {
 
         URI uri = createDLMURI("/" + runtime.getMethodName());
 
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf).uri(uri).build();
 
         try {
@@ -196,7 +198,7 @@ public class TestBKDistributedLogNamespace extends TestDistributedLogBase {
     public void testNamespaceListener() throws Exception {
         URI uri = createDLMURI("/" + runtime.getMethodName());
         zooKeeperClient.get().create(uri.getPath(), new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf).uri(uri).build();
         final CountDownLatch[] latches = new CountDownLatch[3];
         for (int i = 0; i < 3; i++) {
@@ -239,7 +241,7 @@ public class TestBKDistributedLogNamespace extends TestDistributedLogBase {
         newConf.addConfiguration(conf);
         newConf.setCreateStreamIfNotExists(true);
         newConf.setZkAclId(un);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(newConf).uri(uri).build();
         DistributedLogManager dlm = namespace.openLog(streamName);
         LogWriter writer = dlm.startLogSegmentNonPartitioned();
@@ -371,7 +373,7 @@ public class TestBKDistributedLogNamespace extends TestDistributedLogBase {
     @Test(timeout = 60000)
     public void testUseNamespaceAfterCloseShouldFailFast() throws Exception {
         URI uri = createDLMURI("/" + runtime.getMethodName());
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
             .conf(conf)
             .uri(uri)
             .build();

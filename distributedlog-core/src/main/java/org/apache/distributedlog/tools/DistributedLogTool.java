@@ -55,15 +55,15 @@ import java.util.regex.Pattern;
 import com.google.common.base.Preconditions;
 import org.apache.distributedlog.BKDistributedLogNamespace;
 import org.apache.distributedlog.Entry;
-import org.apache.distributedlog.MetadataAccessor;
+import org.apache.distributedlog.api.MetadataAccessor;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.callback.NamespaceListener;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.namespace.NamespaceDriver;
-import org.apache.distributedlog.common.util.FutureEventListener;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
@@ -88,16 +88,16 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.RateLimiter;
-import org.apache.distributedlog.AsyncLogReader;
-import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.BookKeeperClient;
 import org.apache.distributedlog.BookKeeperClientBuilder;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.DistributedLogConstants;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
-import org.apache.distributedlog.LogReader;
+import org.apache.distributedlog.api.LogReader;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.LogSegmentMetadata;
@@ -109,7 +109,7 @@ import org.apache.distributedlog.bk.LedgerAllocatorUtils;
 import org.apache.distributedlog.impl.metadata.BKDLConfig;
 import org.apache.distributedlog.metadata.MetadataUpdater;
 import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
-import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 
 import static com.google.common.base.Charsets.UTF_8;
 
@@ -163,7 +163,7 @@ public class DistributedLogTool extends Tool {
         protected URI uri;
         protected String zkAclId = null;
         protected boolean force = false;
-        protected DistributedLogNamespace namespace = null;
+        protected Namespace namespace = null;
 
         protected PerDLCommand(String name, String description) {
             super(name, description);
@@ -252,9 +252,9 @@ public class DistributedLogTool extends Tool {
             this.force = force;
         }
 
-        protected DistributedLogNamespace getNamespace() throws IOException {
+        protected Namespace getNamespace() throws IOException {
             if (null == this.namespace) {
-                this.namespace = DistributedLogNamespaceBuilder.newBuilder()
+                this.namespace = NamespaceBuilder.newBuilder()
                         .uri(getUri())
                         .conf(getConf())
                         .build();
@@ -464,7 +464,7 @@ public class DistributedLogTool extends Tool {
             return 0;
         }
 
-        protected void printStreams(DistributedLogNamespace namespace) throws Exception {
+        protected void printStreams(Namespace namespace) throws Exception {
             Iterator<String> streams = namespace.getLogs();
             System.out.println("Streams under " + getUri() + " : ");
             System.out.println("--------------------------------");
@@ -536,7 +536,7 @@ public class DistributedLogTool extends Tool {
             System.out.println("");
         }
 
-        protected void watchAndReportChanges(DistributedLogNamespace namespace) throws Exception {
+        protected void watchAndReportChanges(Namespace namespace) throws Exception {
             namespace.registerNamespaceListener(this);
         }
     }
@@ -783,7 +783,7 @@ public class DistributedLogTool extends Tool {
             return truncateStreams(getNamespace());
         }
 
-        private int truncateStreams(final DistributedLogNamespace namespace) throws Exception {
+        private int truncateStreams(final Namespace namespace) throws Exception {
             Iterator<String> streamCollection = namespace.getLogs();
             final List<String> streams = new ArrayList<String>();
             while (streamCollection.hasNext()) {
@@ -827,7 +827,7 @@ public class DistributedLogTool extends Tool {
             return 0;
         }
 
-        private void truncateStreams(DistributedLogNamespace namespace, List<String> streams,
+        private void truncateStreams(Namespace namespace, List<String> streams,
                                      int tid, int numStreamsPerThreads) throws IOException {
             int startIdx = tid * numStreamsPerThreads;
             int endIdx = Math.min(streams.size(), (tid + 1) * numStreamsPerThreads);
@@ -2641,7 +2641,7 @@ public class DistributedLogTool extends Tool {
             return truncateStream(getNamespace(), getStreamName(), dlsn);
         }
 
-        private int truncateStream(final DistributedLogNamespace namespace, String streamName, DLSN dlsn) throws Exception {
+        private int truncateStream(final Namespace namespace, String streamName, DLSN dlsn) throws Exception {
             DistributedLogManager dlm = namespace.openLog(streamName);
             try {
                 long totalRecords = dlm.getLogRecordCount();
@@ -2764,7 +2764,7 @@ public class DistributedLogTool extends Tool {
             return deleteSubscriber(getNamespace());
         }
 
-        private int deleteSubscriber(final DistributedLogNamespace namespace) throws Exception {
+        private int deleteSubscriber(final Namespace namespace) throws Exception {
             Iterator<String> streamCollection = namespace.getLogs();
             final List<String> streams = new ArrayList<String>();
             while (streamCollection.hasNext()) {
@@ -2809,7 +2809,7 @@ public class DistributedLogTool extends Tool {
             return 0;
         }
 
-        private void deleteSubscriber(DistributedLogNamespace namespace, List<String> streams,
+        private void deleteSubscriber(Namespace namespace, List<String> streams,
                                       int tid, int numStreamsPerThreads) throws Exception {
             int startIdx = tid * numStreamsPerThreads;
             int endIdx = Math.min(streams.size(), (tid + 1) * numStreamsPerThreads);

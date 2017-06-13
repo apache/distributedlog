@@ -37,7 +37,7 @@ import org.apache.distributedlog.service.streamset.IdentityStreamPartitionConver
 import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
 import org.apache.distributedlog.thrift.service.DistributedLogService;
 import org.apache.distributedlog.util.ConfUtils;
-import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 import com.twitter.finagle.Stack;
 import com.twitter.finagle.ThriftMuxServer$;
 import com.twitter.finagle.builder.Server;

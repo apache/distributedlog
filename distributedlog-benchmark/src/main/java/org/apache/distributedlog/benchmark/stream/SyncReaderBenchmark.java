@@ -18,10 +18,10 @@
 package org.apache.distributedlog.benchmark.stream;
 
 import com.google.common.base.Stopwatch;
-import org.apache.distributedlog.DistributedLogManager;
-import org.apache.distributedlog.LogReader;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
 import org.apache.distributedlog.LogRecord;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.api.namespace.Namespace;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.Counter;
@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Benchmark on {@link org.apache.distributedlog.LogReader} reading from a stream.
+ * Benchmark on {@link LogReader} reading from a stream.
  */
 public class SyncReaderBenchmark extends AbstractReaderBenchmark {
 
@@ -40,7 +40,7 @@ public class SyncReaderBenchmark extends AbstractReaderBenchmark {
     public SyncReaderBenchmark() {}
 
     @Override
-    protected void benchmark(DistributedLogNamespace namespace, String streamName, StatsLogger statsLogger) {
+    protected void benchmark(Namespace namespace, String streamName, StatsLogger statsLogger) {
         DistributedLogManager dlm = null;
         while (null == dlm) {
             try {

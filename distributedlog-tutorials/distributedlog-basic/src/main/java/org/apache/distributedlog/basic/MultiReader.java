@@ -18,15 +18,17 @@
 package org.apache.distributedlog.basic;
 
 import org.apache.distributedlog.*;
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.exceptions.LogEmptyException;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.commons.lang.StringUtils;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
-import org.apache.distributedlog.common.util.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
 
 import static com.google.common.base.Charsets.UTF_8;
 
@@ -48,7 +50,7 @@ public class MultiReader {
 
         URI uri = URI.create(dlUriStr);
         DistributedLogConfiguration conf = new DistributedLogConfiguration();
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .build();

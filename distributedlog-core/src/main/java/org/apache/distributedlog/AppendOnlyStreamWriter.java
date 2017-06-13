@@ -21,8 +21,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.exceptions.UnexpectedException;
-import org.apache.distributedlog.common.util.FutureEventListener;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

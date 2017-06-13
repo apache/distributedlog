@@ -21,12 +21,12 @@ import static com.google.common.base.Charsets.UTF_8;
 
 import com.google.common.base.Stopwatch;
 import org.apache.distributedlog.BookKeeperClientBuilder;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogSegmentMetadata;
 import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.impl.metadata.BKDLConfig;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +47,7 @@ public class LedgerReadBenchmark extends AbstractReaderBenchmark {
     private static final Logger logger = LoggerFactory.getLogger(AsyncReaderBenchmark.class);
 
     @Override
-    protected void benchmark(DistributedLogNamespace namespace, String logName, StatsLogger statsLogger) {
+    protected void benchmark(Namespace namespace, String logName, StatsLogger statsLogger) {
         DistributedLogManager dlm = null;
         while (null == dlm) {
             try {

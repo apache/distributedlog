@@ -20,12 +20,12 @@ package org.apache.distributedlog.impl.metadata;
 import com.google.common.collect.Lists;
 import org.apache.distributedlog.DLMTestUtil;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.MetadataAccessor;
+import org.apache.distributedlog.api.MetadataAccessor;
 import org.apache.distributedlog.TestZooKeeperClientBuilder;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.metadata.DLMetadata;
 import org.apache.distributedlog.metadata.LogMetadataForWriter;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.DistributedLogConstants;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.ZooKeeperClient;
@@ -310,7 +310,7 @@ public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
 
         DLMetadata.create(new BKDLConfig(zkServers, "/ledgers")).update(uri);
 
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
             .conf(new DistributedLogConfiguration())
             .uri(uri)
             .build();

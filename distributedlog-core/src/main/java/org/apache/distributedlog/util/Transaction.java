@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -44,7 +44,7 @@ public interface Transaction<OpResult> {
     }
 
     /**
-     * Listener on the result of an {@link org.apache.distributedlog.util.Transaction.Op}.
+     * Listener on the result of an {@link Transaction.Op}.
      *
      * @param <OpResult>
      */
@@ -77,7 +77,7 @@ public interface Transaction<OpResult> {
 
     /**
      * Execute the current transaction. If the transaction succeed, all operations will be
-     * committed (via {@link org.apache.distributedlog.util.Transaction.Op#commit(Object)}.
+     * committed (via {@link Transaction.Op#commit(Object)}.
      * Otherwise, all operations will be aborted (via {@link Op#abort(Throwable, Object)}).
      *
      * @return future representing the result of transaction execution.

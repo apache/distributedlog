@@ -20,6 +20,8 @@ package org.apache.distributedlog;
 import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

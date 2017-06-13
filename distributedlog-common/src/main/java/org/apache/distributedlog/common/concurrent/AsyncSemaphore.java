@@ -23,7 +23,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Supplier;
 import javax.annotation.concurrent.GuardedBy;
-import org.apache.distributedlog.common.util.FutureUtils;
 import org.apache.distributedlog.common.util.Permit;
 
 /**

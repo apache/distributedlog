@@ -30,8 +30,8 @@ import org.apache.distributedlog.LogRecordSet;
 import org.apache.distributedlog.io.CompressionCodec.Type;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
-import org.apache.distributedlog.common.util.FutureEventListener;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 
 /**
  * Write multiple record atomically

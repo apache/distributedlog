@@ -29,6 +29,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
+import org.apache.distributedlog.api.LogWriter;
+import org.apache.distributedlog.api.MetadataAccessor;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.exceptions.AlreadyTruncatedTransactionException;
 import org.apache.distributedlog.exceptions.BKTransmitException;
 import org.apache.distributedlog.exceptions.LogEmptyException;
@@ -55,8 +62,7 @@ import org.apache.distributedlog.exceptions.TransactionIdOutOfOrderException;
 import org.apache.distributedlog.metadata.LogMetadata;
 import org.apache.distributedlog.metadata.MetadataUpdater;
 import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.subscription.SubscriptionsStore;
 
 import static org.junit.Assert.*;
@@ -457,12 +463,12 @@ public class TestBKDistributedLogManager extends TestDistributedLogBase {
         dlm.close();
 
         URI uri = createDLMURI("/" + name);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf).uri(uri).build();
         assertTrue(namespace.logExists(name));
         assertFalse(namespace.logExists("non-existent-log"));
         URI nonExistentUri = createDLMURI("/" + "non-existent-ns");
-        DistributedLogNamespace nonExistentNS = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace nonExistentNS = NamespaceBuilder.newBuilder()
                 .conf(conf).uri(nonExistentUri).build();
         assertFalse(nonExistentNS.logExists(name));
 
@@ -984,7 +990,7 @@ public class TestBKDistributedLogManager extends TestDistributedLogBase {
         String baseName = testNames.getMethodName();
         String streamName = "\0blah";
         URI uri = createDLMURI("/" + baseName);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf).uri(uri).build();
 
         DistributedLogManager dlm = null;

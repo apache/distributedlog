@@ -27,14 +27,14 @@ import com.google.common.hash.Hashing;
 import com.twitter.common.zookeeper.ServerSet;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.DistributedLogConstants;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogSegmentMetadata;
 import org.apache.distributedlog.callback.LogSegmentListener;
 import org.apache.distributedlog.callback.NamespaceListener;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
 import org.apache.distributedlog.client.serverset.DLZkServerSet;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.Stat;
 import com.twitter.finagle.stats.StatsReceiver;
@@ -71,7 +71,7 @@ public class MonitorService implements NamespaceListener {
 
     private static final Logger logger = LoggerFactory.getLogger(MonitorService.class);
 
-    private DistributedLogNamespace dlNamespace = null;
+    private Namespace dlNamespace = null;
     private MonitorServiceClient dlClient = null;
     private DLZkServerSet[] zkServerSets = null;
     private final ScheduledExecutorService executorService =
@@ -411,7 +411,7 @@ public class MonitorService implements NamespaceListener {
         // stats
         statsProvider.getStatsLogger("monitor").registerGauge("num_streams", numOfStreamsGauge);
         logger.info("Construct dl namespace @ {}", dlUri);
-        dlNamespace = DistributedLogNamespaceBuilder.newBuilder()
+        dlNamespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(dlUri)
                 .build();

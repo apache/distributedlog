@@ -20,6 +20,8 @@ package org.apache.distributedlog;
 import com.google.common.base.Optional;
 import com.google.common.base.Ticker;
 import org.apache.distributedlog.acl.AccessControlManager;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.callback.NamespaceListener;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.AlreadyClosedException;
@@ -28,13 +30,11 @@ import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.injector.AsyncFailureInjector;
 import org.apache.distributedlog.io.AsyncCloseable;
 import org.apache.distributedlog.logsegment.LogSegmentMetadataCache;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.namespace.NamespaceDriver;
 import org.apache.distributedlog.util.ConfUtils;
-import org.apache.distributedlog.util.MonitoredScheduledThreadPoolExecutor;
 import org.apache.distributedlog.util.OrderedScheduler;
-import org.apache.distributedlog.util.PermitLimiter;
-import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.common.util.PermitLimiter;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.stats.StatsLogger;
@@ -51,7 +51,7 @@ import static org.apache.distributedlog.namespace.NamespaceDriver.Role.WRITER;
 import static org.apache.distributedlog.util.DLUtils.validateName;
 
 /**
- * BKDistributedLogNamespace is the default implementation of {@link DistributedLogNamespace}. It uses
+ * BKDistributedLogNamespace is the default implementation of {@link Namespace}. It uses
  * zookeeper for metadata storage and bookkeeper for data storage.
  * <h3>Metrics</h3>
  *
@@ -73,8 +73,6 @@ import static org.apache.distributedlog.util.DLUtils.validateName;
  * <ul>
  * <li> `scope`/factory/thread_pool/* : stats about the ordered scheduler used by this namespace.
  * See {@link OrderedScheduler}.
- * <li> `scope`/factory/readahead_thread_pool/* : stats about the readahead thread pool executor
- * used by this namespace. See {@link MonitoredScheduledThreadPoolExecutor}.
  * <li> `scope`/writeLimiter/* : stats about the global write limiter used by this namespace.
  * See {@link PermitLimiter}.
  * </ul>
@@ -83,7 +81,7 @@ import static org.apache.distributedlog.util.DLUtils.validateName;
  *
  * All the core stats about reader and writer are exposed under current scope via {@link BKDistributedLogManager}.
  */
-public class BKDistributedLogNamespace implements DistributedLogNamespace {
+public class BKDistributedLogNamespace implements Namespace {
     static final Logger LOG = LoggerFactory.getLogger(BKDistributedLogNamespace.class);
 
     private final String clientId;

@@ -32,15 +32,17 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.distributedlog.DistributedLogConstants;
 import org.apache.distributedlog.ZooKeeperClient;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.exceptions.BKTransmitException;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
 import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.apache.distributedlog.exceptions.ZKException;
-import org.apache.distributedlog.function.VoidFunctions;
+import org.apache.distributedlog.common.functions.VoidFunctions;
+import org.apache.distributedlog.io.AsyncAbortable;
 import org.apache.distributedlog.io.AsyncCloseable;
 import org.apache.bookkeeper.meta.ZkVersion;
 import org.apache.bookkeeper.versioning.Versioned;
@@ -54,6 +56,7 @@ import org.apache.zookeeper.data.Stat;
 /**
  * Basic Utilities.
  */
+@Slf4j
 public class Utils {
 
     /**
@@ -665,6 +668,9 @@ public class Utils {
             + BKException.getMessage(transmitResult), transmitResult);
     }
 
+    /**
+     * A specific version of {@link FutureUtils#result(CompletableFuture)} to handle known exception issues.
+     */
     public static <T> T ioResult(CompletableFuture<T> result) throws IOException {
         return FutureUtils.result(
             result,
@@ -685,6 +691,10 @@ public class Utils {
             });
     }
 
+    /**
+     * A specific version of {@link FutureUtils#result(CompletableFuture, long, TimeUnit)}
+     * to handle known exception issues.
+     */
     public static <T> T ioResult(CompletableFuture<T> result, long timeout, TimeUnit timeUnit)
             throws IOException, TimeoutException {
         return FutureUtils.result(
@@ -706,6 +716,31 @@ public class Utils {
             },
             timeout,
             timeUnit);
+    }
+
+    /**
+     * Abort async <i>abortable</i>
+     *
+     * @param abortable the {@code AsyncAbortable} object to be aborted, or null, in which case this method
+     *                  does nothing.
+     * @param swallowIOException if true, don't propagate IO exceptions thrown by the {@code abort} methods
+     * @throws IOException if {@code swallowIOException} is false and {@code abort} throws an {@code IOException}
+     */
+    public static void abort(@Nullable AsyncAbortable abortable,
+                             boolean swallowIOException)
+            throws IOException {
+        if (null == abortable) {
+            return;
+        }
+        try {
+            ioResult(abortable.asyncAbort());
+        } catch (Exception ioe) {
+            if (swallowIOException) {
+                log.warn("IOException thrown while aborting Abortable {} : ", abortable, ioe);
+            } else {
+                throw ioe;
+            }
+        }
     }
 
 }

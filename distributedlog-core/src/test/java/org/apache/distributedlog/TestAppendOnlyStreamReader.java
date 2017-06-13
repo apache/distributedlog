@@ -17,10 +17,9 @@
  */
 package org.apache.distributedlog;
 
-import java.io.ByteArrayInputStream;
-import java.net.URI;
 import java.util.Arrays;
 
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;

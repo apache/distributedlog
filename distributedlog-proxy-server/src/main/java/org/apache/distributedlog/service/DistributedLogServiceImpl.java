@@ -25,6 +25,7 @@ import com.twitter.common.net.InetSocketAddressHelper;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.acl.AccessControlManager;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.client.resolver.DefaultRegionResolver;
 import org.apache.distributedlog.client.resolver.RegionResolver;
 import org.apache.distributedlog.client.routing.RoutingService;
@@ -35,10 +36,9 @@ import org.apache.distributedlog.exceptions.ServiceUnavailableException;
 import org.apache.distributedlog.exceptions.StreamUnavailableException;
 import org.apache.distributedlog.exceptions.TooManyStreamsException;
 import org.apache.distributedlog.feature.AbstractFeatureProvider;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.rate.MovingAverageRate;
-import org.apache.distributedlog.rate.MovingAverageRateFactory;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
+import org.apache.distributedlog.common.rate.MovingAverageRate;
+import org.apache.distributedlog.common.rate.MovingAverageRateFactory;
 import org.apache.distributedlog.service.config.ServerConfiguration;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.placement.LeastLoadPlacementPolicy;
@@ -76,7 +76,7 @@ import org.apache.distributedlog.thrift.service.WriteContext;
 import org.apache.distributedlog.thrift.service.WriteResponse;
 import org.apache.distributedlog.util.ConfUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
-import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Function;
@@ -116,7 +116,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
 
     private final ServerConfiguration serverConfig;
     private final DistributedLogConfiguration dlConfig;
-    private final DistributedLogNamespace dlNamespace;
+    private final Namespace dlNamespace;
     private final int serverRegionId;
     private final PlacementPolicy placementPolicy;
     private ServerStatus serverStatus = ServerStatus.WRITE_AND_ACCEPT;
@@ -199,7 +199,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
         }
 
         // Build the namespace
-        this.dlNamespace = DistributedLogNamespaceBuilder.newBuilder()
+        this.dlNamespace = NamespaceBuilder.newBuilder()
                 .conf(dlConf)
                 .uri(uri)
                 .statsLogger(statsLogger)
@@ -781,7 +781,7 @@ public class DistributedLogServiceImpl implements DistributedLogService.ServiceI
     }
 
     @VisibleForTesting
-    public DistributedLogNamespace getDistributedLogNamespace() {
+    public Namespace getDistributedLogNamespace() {
         return dlNamespace;
     }
 

@@ -19,6 +19,7 @@ package org.apache.distributedlog;
 
 import java.io.IOException;
 import java.util.List;
+import org.apache.distributedlog.api.LogWriter;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.util.Utils;
 

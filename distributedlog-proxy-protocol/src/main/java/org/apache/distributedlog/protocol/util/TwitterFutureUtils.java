@@ -24,7 +24,7 @@ import com.twitter.util.Return;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 
 /**
  * Utils for Twitter's {@link com.twitter.util.Future}.

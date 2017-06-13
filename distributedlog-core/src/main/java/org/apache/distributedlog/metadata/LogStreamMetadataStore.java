@@ -22,7 +22,7 @@ import com.google.common.base.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.lock.DistributedLock;
 import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
-import org.apache.distributedlog.util.PermitManager;
+import org.apache.distributedlog.common.util.PermitManager;
 import org.apache.distributedlog.util.Transaction;
 
 import java.io.Closeable;

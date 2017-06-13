@@ -22,7 +22,7 @@ import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.apache.distributedlog.util.FailpointUtils;
 import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.TestDistributedLogBase;
-import org.apache.distributedlog.common.util.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.Utils;
 import org.apache.distributedlog.ZooKeeperClient;

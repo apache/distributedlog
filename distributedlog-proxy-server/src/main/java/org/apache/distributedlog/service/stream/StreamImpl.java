@@ -21,9 +21,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import java.util.concurrent.CompletableFuture;
-import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.AlreadyClosedException;
 import org.apache.distributedlog.exceptions.DLException;
@@ -34,7 +34,7 @@ import org.apache.distributedlog.exceptions.StreamNotReadyException;
 import org.apache.distributedlog.exceptions.StreamUnavailableException;
 import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.apache.distributedlog.io.Abortables;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.protocol.util.TwitterFutureUtils;
 import org.apache.distributedlog.service.FatalErrorHandler;
 import org.apache.distributedlog.service.ServerFeatureKeys;
@@ -43,7 +43,7 @@ import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.stream.limiter.StreamRequestLimiter;
 import org.apache.distributedlog.service.streamset.Partition;
 import org.apache.distributedlog.common.stats.BroadCastStatsLogger;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.TimeSequencer;
 import org.apache.distributedlog.util.Utils;
@@ -127,7 +127,7 @@ public class StreamImpl implements Stream {
     private final StreamRequestLimiter limiter;
     private final DynamicDistributedLogConfiguration dynConf;
     private final DistributedLogConfiguration dlConfig;
-    private final DistributedLogNamespace dlNamespace;
+    private final Namespace dlNamespace;
     private final String clientId;
     private final OrderedScheduler scheduler;
     private final ReentrantReadWriteLock closeLock = new ReentrantReadWriteLock();
@@ -170,7 +170,7 @@ public class StreamImpl implements Stream {
                DynamicDistributedLogConfiguration streamConf,
                FeatureProvider featureProvider,
                StreamConfigProvider streamConfigProvider,
-               DistributedLogNamespace dlNamespace,
+               Namespace dlNamespace,
                OrderedScheduler scheduler,
                FatalErrorHandler fatalErrorHandler,
                HashedWheelTimer requestTimer,
@@ -557,7 +557,7 @@ public class StreamImpl implements Stream {
         final Stopwatch stopwatch = Stopwatch.createStarted();
         final Promise<Boolean> acquirePromise = new Promise<Boolean>();
         manager.openAsyncLogWriter().whenCompleteAsync(
-            new org.apache.distributedlog.common.util.FutureEventListener<AsyncLogWriter>() {
+            new org.apache.distributedlog.common.concurrent.FutureEventListener<AsyncLogWriter>() {
 
             @Override
             public void onSuccess(AsyncLogWriter w) {
@@ -857,7 +857,7 @@ public class StreamImpl implements Stream {
             scheduler,
             name
         ).whenCompleteAsync(
-            new org.apache.distributedlog.common.util.FutureEventListener<Void>() {
+            new org.apache.distributedlog.common.concurrent.FutureEventListener<Void>() {
                 @Override
                 public void onSuccess(Void value) {
                     postClose(uncache);

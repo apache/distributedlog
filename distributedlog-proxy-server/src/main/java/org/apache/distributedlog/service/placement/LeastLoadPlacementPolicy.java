@@ -18,7 +18,7 @@
 package org.apache.distributedlog.service.placement;
 
 import org.apache.distributedlog.client.routing.RoutingService;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.api.namespace.Namespace;
 import com.twitter.util.Duration;
 import com.twitter.util.Function;
 import com.twitter.util.Future;
@@ -52,7 +52,7 @@ public class LeastLoadPlacementPolicy extends PlacementPolicy {
     private Map<String, String> streamToServer = new HashMap<String, String>();
 
     public LeastLoadPlacementPolicy(LoadAppraiser loadAppraiser, RoutingService routingService,
-                                    DistributedLogNamespace namespace, PlacementStateManager placementStateManager,
+                                    Namespace namespace, PlacementStateManager placementStateManager,
                                     Duration refreshInterval, StatsLogger statsLogger) {
         super(loadAppraiser, routingService, namespace, placementStateManager, refreshInterval, statsLogger);
         statsLogger.registerGauge("placement/load.diff", new Gauge<Number>() {

@@ -26,8 +26,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.streamset.Partition;
 import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
@@ -67,7 +67,7 @@ public class TestStreamManager {
                 mockStreamFactory,
                 mockPartitionConverter,
                 mockStreamConfigProvider,
-                mock(DistributedLogNamespace.class));
+                mock(Namespace.class));
 
         assertFalse(streamManager.isAcquired("stream1"));
         assertEquals(0, streamManager.numAcquired());
@@ -117,7 +117,7 @@ public class TestStreamManager {
             (DynamicDistributedLogConfiguration) any(),
             (StreamManager) any())
         ).thenReturn(mockStream);
-        DistributedLogNamespace dlNamespace = mock(DistributedLogNamespace.class);
+        Namespace dlNamespace = mock(Namespace.class);
         ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
 
         StreamManager streamManager = new StreamManagerImpl(

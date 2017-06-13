@@ -31,15 +31,21 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
+import org.apache.distributedlog.api.LogWriter;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.common.annotations.DistributedLogAnnotations;
-import org.apache.distributedlog.config.ConcurrentBaseConfiguration;
-import org.apache.distributedlog.config.ConcurrentConstConfiguration;
+import org.apache.distributedlog.common.config.ConcurrentBaseConfiguration;
+import org.apache.distributedlog.common.config.ConcurrentConstConfiguration;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.BKTransmitException;
 import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.io.CompressionCodec;
-import org.apache.distributedlog.common.util.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
 import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeperAccessor;
@@ -64,10 +70,9 @@ import org.apache.distributedlog.exceptions.OverCapacityException;
 import org.apache.distributedlog.exceptions.ReadCancelledException;
 import org.apache.distributedlog.exceptions.WriteException;
 import org.apache.distributedlog.lock.DistributedLock;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.util.FailpointUtils;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.SimplePermitLimiter;
 
 import junit.framework.Assert;
@@ -832,7 +837,7 @@ public class TestAsyncReaderWriter extends TestDistributedLogBase {
 
         URI uri = createDLMURI("/" + name);
         ensureURICreated(uri);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(confLocal).uri(uri).build();
         final DistributedLogManager[] dlms = new DistributedLogManager[count];
         final TestReader[] readers = new TestReader[count];
@@ -1139,10 +1144,10 @@ public class TestAsyncReaderWriter extends TestDistributedLogBase {
         URI uri = createDLMURI("/" + name);
         ensureURICreated(uri);
 
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(confLocal).uri(uri).clientId("gabbagoo").build();
         DistributedLogManager dlm = namespace.openLog(name);
-        DistributedLogNamespace namespace1 = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace1 = NamespaceBuilder.newBuilder()
                 .conf(confLocal).uri(uri).clientId("tortellini").build();
         DistributedLogManager dlm1 = namespace1.openLog(name);
 
@@ -1967,7 +1972,7 @@ public class TestAsyncReaderWriter extends TestDistributedLogBase {
 
         URI uri = createDLMURI("/" + name);
         ensureURICreated(uri);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(confLocal).uri(uri).build();
 
         // use the pool

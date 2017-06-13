@@ -19,16 +19,16 @@ package org.apache.distributedlog.basic;
 
 import static com.google.common.base.Charsets.UTF_8;
 
-import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.DistributedLogConstants;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogRecord;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.common.util.FutureEventListener;
-import org.apache.distributedlog.common.util.FutureUtils;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import jline.ConsoleReader;
@@ -56,7 +56,7 @@ public class ConsoleWriter {
         conf.setOutputBufferSize(0);
         conf.setPeriodicFlushFrequencyMilliSeconds(0);
         conf.setLockTimeout(DistributedLogConstants.LOCK_IMMEDIATE);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .regionId(DistributedLogConstants.LOCAL_REGION_ID)
