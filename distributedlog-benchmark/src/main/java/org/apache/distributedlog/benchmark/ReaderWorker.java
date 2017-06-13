@@ -101,7 +101,8 @@ public class ReaderWorker implements Worker {
     final Counter outOfOrderSequenceIdCounter;
 
     class StreamReader implements
-        org.apache.distributedlog.common.concurrent.FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
+        org.apache.distributedlog.common.concurrent.FutureEventListener<List<LogRecordWithDLSN>>,
+        Runnable, Gauge<Number> {
 
         final int streamIdx;
         final String streamName;
