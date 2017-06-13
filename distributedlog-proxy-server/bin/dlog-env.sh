@@ -24,7 +24,7 @@ if [[ -z "${DISTRIBUTEDLOG_URI}" ]]; then
   exit 1
 fi
 
-# add the jars from current dir to the class path (should be distributedlog-service)
+# add the jars from current dir to the class path (should be distributedlog-proxy-server)
 for i in ./*.jar; do
   CLASSPATH="$i:${CLASSPATH}"
 done

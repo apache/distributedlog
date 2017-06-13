@@ -76,6 +76,41 @@ You can add the following dependencies to your `pom.xml` to include Apache Distr
 
   <!-- use core library to access DL storage -->
   <dependency>
+    <groupId>org.apache.distributedlog</groupId>
+    <artifactId>distributedlog-core_2.11</artifactId>
+    <version>{{ site.DL_VERSION_STABLE }}</version>
+  </dependency>
+  <!-- use thin proxy client to access DL via write proxy -->
+  <dependency>
+    <groupId>org.apache.distributedlog</groupId>
+    <artifactId>distributedlog-proxy-client_2.11</artifactId>
+    <version>{{ site.DL_VERSION_STABLE }}</version>
+  </dependency>
+
+
+Version: 0.4.0 (the package is repackaged from com.twitter to org.apache.distributedlog)
+
+.. code-block:: xml
+
+  <!-- use core library to access DL storage -->
+  <dependency>
+    <groupId>org.apache.distributedlog</groupId>
+    <artifactId>distributedlog-core_2.11</artifactId>
+    <version>{{ site.DL_VERSION_STABLE }}</version>
+  </dependency>
+  <!-- use thin proxy client to access DL via write proxy -->
+  <dependency>
+    <groupId>org.apache.distributedlog</groupId>
+    <artifactId>distributedlog-client_2.11</artifactId>
+    <version>{{ site.DL_VERSION_STABLE }}</version>
+  </dependency>
+
+Version: 0.3.x
+
+.. code-block:: xml
+
+  <!-- use core library to access DL storage -->
+  <dependency>
     <groupId>com.twitter</groupId>
     <artifactId>distributedlog-core_2.11</artifactId>
     <version>{{ site.DL_VERSION_STABLE }}</version>

@@ -32,10 +32,10 @@ zookeeper version `3.4.8`.
 Run ZooKeeper from distributedlog source
 ----------------------------------------
 
-Since `zookeeper` is one of the dependency of `distributedlog-service`. You could simply
-run `zookeeper` servers using same set of scripts provided in `distributedlog-service`.
+Since `zookeeper` is one of the dependency of `distributedlog-proxy-server`. You could simply
+run `zookeeper` servers using same set of scripts provided in `distributedlog-proxy-server`.
 In the following sections, we will describe how to run zookeeper using the scripts provided
-in `distributedlog-service`.
+in `distributedlog-proxy-server`.
 
 Build
 +++++
@@ -49,7 +49,7 @@ First of all, build DistributedLog:
 Configuration
 +++++++++++++
 
-The configuration file `zookeeper.conf.template` under `distributedlog-service/conf` is a template of
+The configuration file `zookeeper.conf.template` under `distributedlog-proxy-server/conf` is a template of
 production configuration to run a zookeeper node. Most of the configuration settings are good for
 production usage. You might need to configure following settings according to your environment and
 hardware platform.
@@ -84,20 +84,20 @@ It is recommended to put `dataLogDir` under a separated disk from others for per
 Run
 +++
 
-As `zookeeper` is shipped as part of `distributedlog-service`, you could use the `dlog-daemon.sh`
+As `zookeeper` is shipped as part of `distributedlog-proxy-server`, you could use the `dlog-daemon.sh`
 script to start `zookeeper` as daemon thread.
 
 Start the zookeeper:
 
 .. code-block:: bash
 
-    $ ./distributedlog-service/bin/dlog-daemon.sh start zookeeper /path/to/zookeeper.conf
+    $ ./distributedlog-proxy-server/bin/dlog-daemon.sh start zookeeper /path/to/zookeeper.conf
 
 Stop the zookeeper:
 
 .. code-block:: bash
 
-    $ ./distributedlog-service/bin/dlog-daemon.sh stop zookeeper
+    $ ./distributedlog-proxy-server/bin/dlog-daemon.sh stop zookeeper
 
 Please check zookeeper_ website for more details.
 

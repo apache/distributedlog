@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.apache.distributedlog.namespace.NamespaceDriver.Role.WRITER;
-import static org.apache.distributedlog.util.DLUtils.validateName;
+import static org.apache.distributedlog.util.DLUtils.validateAndNormalizeName;
 
 /**
  * BKDistributedLogNamespace is the default implementation of {@link Namespace}. It uses
@@ -145,7 +145,7 @@ public class BKDistributedLogNamespace implements Namespace {
     public void createLog(String logName)
             throws InvalidStreamNameException, IOException {
         checkState();
-        validateName(logName);
+        logName = validateAndNormalizeName(logName);
         URI uri = Utils.ioResult(driver.getLogMetadataStore().createLog(logName));
         Utils.ioResult(driver.getLogStreamMetadataStore(WRITER).getLog(uri, logName, true, true));
     }
@@ -154,7 +154,7 @@ public class BKDistributedLogNamespace implements Namespace {
     public void deleteLog(String logName)
             throws InvalidStreamNameException, LogNotFoundException, IOException {
         checkState();
-        validateName(logName);
+        logName = validateAndNormalizeName(logName);
         Optional<URI> uri = Utils.ioResult(driver.getLogMetadataStore().getLogLocation(logName));
         if (!uri.isPresent()) {
             throw new LogNotFoundException("Log " + logName + " isn't found.");
@@ -183,7 +183,7 @@ public class BKDistributedLogNamespace implements Namespace {
                                          Optional<StatsLogger> perStreamStatsLogger)
             throws InvalidStreamNameException, IOException {
         checkState();
-        validateName(logName);
+        logName = validateAndNormalizeName(logName);
         Optional<URI> uri = Utils.ioResult(driver.getLogMetadataStore().getLogLocation(logName));
         if (!uri.isPresent()) {
             throw new LogNotFoundException("Log " + logName + " isn't found.");
@@ -253,7 +253,7 @@ public class BKDistributedLogNamespace implements Namespace {
         throws InvalidStreamNameException, IOException {
         // Make sure the name is well formed
         checkState();
-        validateName(nameOfLogStream);
+        nameOfLogStream = validateAndNormalizeName(nameOfLogStream);
 
         DistributedLogConfiguration mergedConfiguration = new DistributedLogConfiguration();
         mergedConfiguration.addConfiguration(conf);
