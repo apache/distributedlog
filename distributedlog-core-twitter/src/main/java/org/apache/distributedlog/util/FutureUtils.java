@@ -18,14 +18,7 @@
 package org.apache.distributedlog.util;
 
 import com.google.common.base.Stopwatch;
-import org.apache.distributedlog.DistributedLogConstants;
-import org.apache.distributedlog.exceptions.BKTransmitException;
-import org.apache.distributedlog.exceptions.LockingException;
-import org.apache.distributedlog.ZooKeeperClient;
-import org.apache.distributedlog.exceptions.DLInterruptedException;
-import org.apache.distributedlog.exceptions.UnexpectedException;
-import org.apache.distributedlog.exceptions.ZKException;
-import org.apache.distributedlog.stats.OpStatsListener;
+import com.google.common.collect.Lists;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Function;
@@ -36,14 +29,8 @@ import com.twitter.util.Promise;
 import com.twitter.util.Return;
 import com.twitter.util.Throw;
 import com.twitter.util.Try;
-import org.apache.bookkeeper.client.BKException;
-import org.apache.bookkeeper.stats.OpStatsLogger;
-import org.apache.zookeeper.KeeperException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import scala.runtime.AbstractFunction1;
-import scala.runtime.BoxedUnit;
-
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,14 +38,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.client.BKException;
+import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.distributedlog.stats.OpStatsListener;
+import org.apache.zookeeper.KeeperException;
+import org.apache.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.ZooKeeperClient;
+import org.apache.distributedlog.exceptions.BKTransmitException;
+import org.apache.distributedlog.exceptions.DLInterruptedException;
+import org.apache.distributedlog.exceptions.LockingException;
+import org.apache.distributedlog.exceptions.UnexpectedException;
+import org.apache.distributedlog.exceptions.ZKException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import scala.runtime.AbstractFunction1;
+import scala.runtime.BoxedUnit;
 
 /**
- * Utilities to process future
+ * Utilities to process future.
  */
 public class FutureUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FutureUtils.class);
 
+    /**
+     * A future listener that is supposed to run in ordered scheduler.
+     */
     public static class OrderedFutureEventListener<R>
             implements FutureEventListener<R> {
 
@@ -102,6 +107,9 @@ public class FutureUtils {
         }
     }
 
+    /**
+     * A future listener is running a specific executor.
+     */
     public static class FutureEventListenerRunnable<R>
             implements FutureEventListener<R> {
 
@@ -275,7 +283,7 @@ public class FutureUtils {
      */
     public static int bkResultCode(Throwable throwable) {
         if (throwable instanceof BKException) {
-            return ((BKException)throwable).getCode();
+            return ((BKException) throwable).getCode();
         }
         return BKException.Code.UnexpectedConditionException;
     }
@@ -293,6 +301,7 @@ public class FutureUtils {
 
     /**
      * Wait for the result for a given <i>duration</i>.
+     *
      * <p>If the result is not ready within `duration`, an IOException will thrown wrapping with
      * corresponding {@link com.twitter.util.TimeoutException}.
      *
@@ -410,6 +419,7 @@ public class FutureUtils {
 
     /**
      * Satisfy the <i>promise</i> with provide value in an ordered scheduler.
+     *
      * <p>If the promise was already satisfied, nothing will be changed.
      *
      * @param promise promise to satisfy
@@ -431,6 +441,7 @@ public class FutureUtils {
 
     /**
      * Satisfy the <i>promise</i> with provide value.
+     *
      * <p>If the promise was already satisfied, nothing will be changed.
      *
      * @param promise promise to satisfy
@@ -450,7 +461,7 @@ public class FutureUtils {
      * Satisfy the <i>promise</i> with provided <i>cause</i> in an ordered scheduler.
      *
      * @param promise promise to satisfy
-     * @param throwable cause to satisfy
+     * @param cause cause to satisfy
      * @param scheduler the scheduler to satisfy the promise
      * @param key submit key of the ordered scheduler
      */
@@ -493,7 +504,7 @@ public class FutureUtils {
     }
 
     /**
-     * Ignore exception from the <i>future</i> and log <i>errorMsg</i> on exceptions
+     * Ignore exception from the <i>future</i> and log <i>errorMsg</i> on exceptions.
      *
      * @param future the original future
      * @param errorMsg the error message to log on exceptions
@@ -529,6 +540,57 @@ public class FutureUtils {
         return new BKTransmitException("Failed to write to bookkeeper; Error is ("
             + transmitResult + ") "
             + BKException.getMessage(transmitResult), transmitResult);
+    }
+
+    public static <T> CompletableFuture<T> newJFuture(Promise<T> promise) {
+        CompletableFuture<T> jFuture = org.apache.distributedlog.common.concurrent.FutureUtils.createFuture();
+        jFuture.whenComplete((value, cause) -> {
+            if (null != cause) {
+                if (cause instanceof CompletionException) {
+                    promise.setException(cause.getCause());
+                } else {
+                    promise.setException(cause);
+                }
+            } else {
+                promise.setValue(value);
+            }
+        });
+        return jFuture;
+    }
+
+    public static <T> Future<T> newTFuture(CompletableFuture<T> jFuture) {
+        Promise<T> promise = new Promise<>();
+        jFuture.whenComplete((value, cause) -> {
+            if (null != cause) {
+                if (cause instanceof CompletionException) {
+                    promise.setException(cause.getCause());
+                } else {
+                    promise.setException(cause);
+                }
+            } else {
+                promise.setValue(value);
+            }
+        });
+        return promise;
+    }
+
+    public static <T> Future<List<Future<T>>> newTFutureList(
+            CompletableFuture<List<CompletableFuture<T>>> jFutureList) {
+        Promise<List<Future<T>>> promise = new Promise<>();
+        jFutureList.whenComplete((value, cause) -> {
+            if (null != cause) {
+                if (cause instanceof CompletionException) {
+                    promise.setException(cause.getCause());
+                } else {
+                    promise.setException(cause);
+                }
+            } else {
+                promise.setValue(Lists.transform(
+                    value,
+                    future -> newTFuture(future)));
+            }
+        });
+        return promise;
     }
 
 }

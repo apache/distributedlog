@@ -17,25 +17,13 @@
  */
 package org.apache.distributedlog.namespace;
 
-import com.google.common.base.Preconditions;
-import org.apache.distributedlog.BKDistributedLogNamespace;
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
-import org.apache.distributedlog.feature.CoreFeatureKeys;
-import org.apache.distributedlog.injector.AsyncFailureInjector;
-import org.apache.distributedlog.injector.AsyncRandomFailureInjector;
-import org.apache.distributedlog.util.ConfUtils;
-import org.apache.distributedlog.util.DLUtils;
-import org.apache.distributedlog.util.OrderedScheduler;
-import org.apache.distributedlog.util.SimplePermitLimiter;
-import org.apache.bookkeeper.feature.Feature;
 import org.apache.bookkeeper.feature.FeatureProvider;
-import org.apache.bookkeeper.feature.SettableFeatureProvider;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -49,16 +37,21 @@ import java.net.URI;
  */
 public class DistributedLogNamespaceBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(DistributedLogNamespaceBuilder.class);
-
     public static DistributedLogNamespaceBuilder newBuilder() {
         return new DistributedLogNamespaceBuilder();
     }
 
-    private final NamespaceBuilder builder = NamespaceBuilder.newBuilder();
+    private final NamespaceBuilder builder;
 
     // private constructor
-    private DistributedLogNamespaceBuilder() {}
+    private DistributedLogNamespaceBuilder() {
+        this(NamespaceBuilder.newBuilder());
+    }
+
+    @VisibleForTesting
+    DistributedLogNamespaceBuilder(NamespaceBuilder builder) {
+        this.builder = builder;
+    }
 
     /**
      * DistributedLog Configuration used for the namespace.
@@ -73,7 +66,7 @@ public class DistributedLogNamespaceBuilder {
     }
 
     /**
-     * Dynamic DistributedLog Configuration used for the namespace
+     * Dynamic DistributedLog Configuration used for the namespace.
      *
      * @param dynConf dynamic distributedlog configuration
      * @return namespace builder
@@ -97,7 +90,7 @@ public class DistributedLogNamespaceBuilder {
     }
 
     /**
-     * Stats Logger used for stats collection
+     * Stats Logger used for stats collection.
      *
      * @param statsLogger
      *          stats logger
@@ -133,7 +126,7 @@ public class DistributedLogNamespaceBuilder {
     }
 
     /**
-     * Client Id used for accessing the namespace
+     * Client Id used for accessing the namespace.
      *
      * @param clientId
      *          client id used for accessing the namespace
@@ -162,8 +155,8 @@ public class DistributedLogNamespaceBuilder {
                                                           StatsLogger perLogStatsLogger,
                                                           DistributedLogConfiguration conf) {
         StatsLogger normalizedPerLogStatsLogger = perLogStatsLogger;
-        if (perLogStatsLogger == NullStatsLogger.INSTANCE &&
-                conf.getEnablePerStreamStat()) {
+        if (perLogStatsLogger == NullStatsLogger.INSTANCE
+            && conf.getEnablePerStreamStat()) {
             normalizedPerLogStatsLogger = statsLogger.scope("stream");
         }
         return normalizedPerLogStatsLogger;
@@ -179,6 +172,6 @@ public class DistributedLogNamespaceBuilder {
      */
     public DistributedLogNamespace build()
             throws IllegalArgumentException, NullPointerException, IOException {
-
+        return new DistributedLogNamespaceImpl(this.builder.build());
     }
 }

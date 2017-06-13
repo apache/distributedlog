@@ -37,7 +37,7 @@ import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.lock.LockClosedException;
 import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.namespace.NamespaceDriver;
-import org.apache.distributedlog.subscription.SubscriptionsStore;
+import org.apache.distributedlog.api.subscription.SubscriptionsStore;
 import org.apache.distributedlog.common.concurrent.FutureEventListener;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Rule;

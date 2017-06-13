@@ -17,6 +17,7 @@
  */
 package org.apache.distributedlog;
 
+import com.twitter.util.Future;
 import org.apache.distributedlog.io.AsyncCloseable;
 
 import java.io.Closeable;
@@ -28,21 +29,21 @@ import java.util.List;
  *
  * <h3>Lifecycle of a Reader</h3>
  *
- * A reader is a <i>sequential</i> reader that read records from a DL log starting
+ * <p>A reader is a <i>sequential</i> reader that read records from a DL log starting
  * from a given position. The position could be a <i>DLSN</i> (via {@link DistributedLogManager#getInputStream(DLSN)}
  * or a <i>Transaction ID</i> (via {@link DistributedLogManager#getInputStream(long)}.
- * <p>
- * After the reader is open, it could call {@link #readNext(boolean)} or {@link #readBulk(boolean, int)}
+ *
+ * <p>After the reader is open, it could call {@link #readNext(boolean)} or {@link #readBulk(boolean, int)}
  * to read records out the log from provided position.
- * <p>
- * Closing the reader (via {@link #close()} will release all the resources occupied
+ *
+ * <p>Closing the reader (via {@link #close()} will release all the resources occupied
  * by this reader instance.
- * <p>
- * Exceptions could be thrown during reading records. Once the exception is thrown,
+ *
+ * <p>Exceptions could be thrown during reading records. Once the exception is thrown,
  * the reader is set to an error state and it isn't usable anymore. It is the application's
  * responsibility to handle the exceptions and re-create readers if necessary.
- * <p>
- * Example:
+ *
+ * <p>Example:
  * <pre>
  * DistributedLogManager dlm = ...;
  * long nextTxId = ...;
@@ -66,7 +67,7 @@ import java.util.List;
  *
  * <h3>Read Records</h3>
  *
- * Reading records from an <i>endless</i> log in `synchronous` way isn't as
+ * <p>Reading records from an <i>endless</i> log in `synchronous` way isn't as
  * trivial as in `asynchronous` way (via {@link AsyncLogReader}. Because it
  * lacks of callback mechanism. LogReader introduces a flag `nonBlocking` on
  * controlling the <i>waiting</i> behavior on `synchronous` reads.
@@ -77,8 +78,8 @@ import java.util.List;
  * before returning read calls. While <i>NonBlocking</i> (nonBlocking = true)
  * means the reads will only check readahead cache and return whatever records
  * available in the readahead cache.
- * <p>
- * The <i>waiting</i> period varies in <i>blocking</i> mode. If the reader is
+ *
+ * <p>The <i>waiting</i> period varies in <i>blocking</i> mode. If the reader is
  * catching up with writer (there are records in the log), the read call will
  * wait until records are read and returned. If the reader is caught up with
  * writer (there are no more records in the log at read time), the read call
@@ -87,14 +88,14 @@ import java.util.List;
  * records available in the readahead cache. In other words, if a reader sees
  * no record on blocking reads, it means the reader is `caught-up` with the
  * writer.
- * <p>
- * <i>Blocking</i> and <i>NonBlocking</i> modes are useful for building replicated
+ *
+ * <p><i>Blocking</i> and <i>NonBlocking</i> modes are useful for building replicated
  * state machines. Applications could use <i>blocking</i> reads till caught up
  * with latest data. Once they are caught up with latest data, they could start
  * serving their service and turn to <i>non-blocking</i> read mode and tail read
  * data from the logs.
- * <p>
- * See examples below.
+ *
+ * <p>See examples below.
  *
  * <h4>Read Single Record</h4>
  *
@@ -132,7 +133,7 @@ import java.util.List;
  * int N = 10;
  *
  * // keep reading N records in blocking way until no records available in the log
- * List<LogRecord> records = reader.readBulk(false, N);
+ * List&lt;LogRecord&gt; records = reader.readBulk(false, N);
  * while (!records.isEmpty()) {
  *     // process the list of records
  *     ...
@@ -154,22 +155,21 @@ import java.util.List;
  *
  * </pre>
  *
- * <p>
- * NOTE: Extending {@link AsyncCloseable}: BKSyncLogReader is implemented based on BKAsyncLogReader, exposing
+ * <p>NOTE: Extending {@link AsyncCloseable}: BKSyncLogReader is implemented based on BKAsyncLogReader, exposing
  * the {@link AsyncCloseable} interface so the reader could be closed asynchronously
  *
  * @see AsyncLogReader
  */
-public interface LogReader extends Closeable, AsyncCloseable {
+public interface LogReader extends Closeable {
 
     /**
      * Read the next log record from the stream.
-     * <p>
-     * If <i>nonBlocking</i> is set to true, the call returns immediately by just polling
+     *
+     * <p>If <i>nonBlocking</i> is set to true, the call returns immediately by just polling
      * records from read ahead cache. It would return <i>null</i> if there isn't any records
      * available in the read ahead cache.
-     * <p>
-     * If <i>nonBlocking</i> is set to false, it would does blocking call. The call will
+     *
+     * <p>If <i>nonBlocking</i> is set to false, it would does blocking call. The call will
      * block until return a record if there are records in the stream (aka catching up).
      * Otherwise it would wait up to {@link DistributedLogConfiguration#getReadAheadWaitTime()}
      * milliseconds and return null if there isn't any more records in the stream.
@@ -179,10 +179,10 @@ public interface LogReader extends Closeable, AsyncCloseable {
      * @return an operation from the stream or null if at end of stream
      * @throws IOException if there is an error reading from the stream
      */
-    public LogRecordWithDLSN readNext(boolean nonBlocking) throws IOException;
+    LogRecordWithDLSN readNext(boolean nonBlocking) throws IOException;
 
     /**
-     * Read the next <i>numLogRecords</i> log records from the stream
+     * Read the next <i>numLogRecords</i> log records from the stream.
      *
      * @param nonBlocking should the read make blocking calls to the backend or rely on the
      * readAhead cache
@@ -191,5 +191,14 @@ public interface LogReader extends Closeable, AsyncCloseable {
      * @throws IOException if there is an error reading from the stream
      * @see #readNext(boolean)
      */
-    public List<LogRecordWithDLSN> readBulk(boolean nonBlocking, int numLogRecords) throws IOException;
+    List<LogRecordWithDLSN> readBulk(boolean nonBlocking, int numLogRecords) throws IOException;
+
+    /**
+     * Closes this source and releases any system resources associated
+     * with it. If the source is already closed then invoking this
+     * method has no effect.
+     *
+     * @return future representing the close result.
+     */
+    Future<Void> asyncClose();
 }

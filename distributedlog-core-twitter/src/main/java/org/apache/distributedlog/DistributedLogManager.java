@@ -17,16 +17,13 @@
  */
 package org.apache.distributedlog;
 
-import org.apache.distributedlog.callback.LogSegmentListener;
-import org.apache.distributedlog.io.AsyncCloseable;
-import org.apache.distributedlog.namespace.NamespaceDriver;
-import org.apache.distributedlog.subscription.SubscriptionStateStore;
-import org.apache.distributedlog.subscription.SubscriptionsStore;
 import com.twitter.util.Future;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+import org.apache.distributedlog.callback.LogSegmentListener;
+import org.apache.distributedlog.namespace.NamespaceDriver;
+import org.apache.distributedlog.subscription.SubscriptionsStore;
 
 /**
  * A DistributedLogManager is responsible for managing a single place of storing
@@ -35,20 +32,21 @@ import java.util.List;
  * each conceptual place of storage corresponds to exactly one instance of
  * this class, which is created when the EditLog is first opened.
  */
-public interface DistributedLogManager extends AsyncCloseable, Closeable {
+public interface DistributedLogManager extends Closeable {
 
     /**
-     * Get the name of the stream managed by this log manager
+     * Get the name of the stream managed by this log manager.
+     *
      * @return streamName
      */
-    public String getStreamName();
+    String getStreamName();
 
     /**
      * Get the namespace driver used by this manager.
      *
      * @return the namespace driver
      */
-    public NamespaceDriver getNamespaceDriver();
+    NamespaceDriver getNamespaceDriver();
 
     /**
      * Get log segments.
@@ -56,7 +54,7 @@ public interface DistributedLogManager extends AsyncCloseable, Closeable {
      * @return log segments
      * @throws IOException
      */
-    public List<LogSegmentMetadata> getLogSegments() throws IOException;
+    List<LogSegmentMetadata> getLogSegments() throws IOException;
 
     /**
      * Register <i>listener</i> on log segment updates of this stream.
@@ -64,7 +62,7 @@ public interface DistributedLogManager extends AsyncCloseable, Closeable {
      * @param listener
      *          listener to receive update log segment list.
      */
-    public void registerListener(LogSegmentListener listener) throws IOException ;
+    void registerListener(LogSegmentListener listener) throws IOException;
 
     /**
      * Unregister <i>listener</i> on log segment updates from this stream.
@@ -72,55 +70,55 @@ public interface DistributedLogManager extends AsyncCloseable, Closeable {
      * @param listener
      *          listener to receive update log segment list.
      */
-    public void unregisterListener(LogSegmentListener listener);
+    void unregisterListener(LogSegmentListener listener);
 
     /**
      * Open async log writer to write records to the log stream.
      *
      * @return result represents the open result
      */
-    public Future<AsyncLogWriter> openAsyncLogWriter();
+    Future<AsyncLogWriter> openAsyncLogWriter();
 
     /**
-     * Begin writing to the log stream identified by the name
+     * Begin writing to the log stream identified by the name.
      *
      * @return the writer interface to generate log records
      */
-    public LogWriter startLogSegmentNonPartitioned() throws IOException;
+    LogWriter startLogSegmentNonPartitioned() throws IOException;
 
     /**
-     * Begin writing to the log stream identified by the name
+     * Begin writing to the log stream identified by the name.
      *
      * @return the writer interface to generate log records
      */
     // @Deprecated
-    public AsyncLogWriter startAsyncLogSegmentNonPartitioned() throws IOException;
+    AsyncLogWriter startAsyncLogSegmentNonPartitioned() throws IOException;
 
     /**
-     * Begin appending to the end of the log stream which is being treated as a sequence of bytes
+     * Begin appending to the end of the log stream which is being treated as a sequence of bytes.
      *
      * @return the writer interface to generate log records
      */
-    public AppendOnlyStreamWriter getAppendOnlyStreamWriter() throws IOException;
+    AppendOnlyStreamWriter getAppendOnlyStreamWriter() throws IOException;
 
     /**
-     * Get a reader to read a log stream as a sequence of bytes
+     * Get a reader to read a log stream as a sequence of bytes.
      *
      * @return the writer interface to generate log records
      */
-    public AppendOnlyStreamReader getAppendOnlyStreamReader() throws IOException;
+    AppendOnlyStreamReader getAppendOnlyStreamReader() throws IOException;
 
     /**
-     * Get the input stream starting with fromTxnId for the specified log
+     * Get the input stream starting with fromTxnId for the specified log.
      *
      * @param fromTxnId - the first transaction id we want to read
      * @return the stream starting with transaction fromTxnId
      * @throws IOException if a stream cannot be found.
      */
-    public LogReader getInputStream(long fromTxnId)
+    LogReader getInputStream(long fromTxnId)
         throws IOException;
 
-    public LogReader getInputStream(DLSN fromDLSN) throws IOException;
+    LogReader getInputStream(DLSN fromDLSN) throws IOException;
 
     /**
      * Open an async log reader to read records from a log starting from <code>fromTxnId</code>.
@@ -129,24 +127,24 @@ public interface DistributedLogManager extends AsyncCloseable, Closeable {
      *          transaction id to start reading from
      * @return async log reader
      */
-    public Future<AsyncLogReader> openAsyncLogReader(long fromTxnId);
+    Future<AsyncLogReader> openAsyncLogReader(long fromTxnId);
 
     /**
-     * Open an async log reader to read records from a log starting from <code>fromDLSN</code>
+     * Open an async log reader to read records from a log starting from <code>fromDLSN</code>.
      *
      * @param fromDLSN
      *          dlsn to start reading from
      * @return async log reader
      */
-    public Future<AsyncLogReader> openAsyncLogReader(DLSN fromDLSN);
+    Future<AsyncLogReader> openAsyncLogReader(DLSN fromDLSN);
 
     // @Deprecated
-    public AsyncLogReader getAsyncLogReader(long fromTxnId) throws IOException;
+    AsyncLogReader getAsyncLogReader(long fromTxnId) throws IOException;
 
     // @Deprecated
-    public AsyncLogReader getAsyncLogReader(DLSN fromDLSN) throws IOException;
+    AsyncLogReader getAsyncLogReader(DLSN fromDLSN) throws IOException;
 
-    public Future<AsyncLogReader> getAsyncLogReaderWithLock(DLSN fromDLSN);
+    Future<AsyncLogReader> getAsyncLogReaderWithLock(DLSN fromDLSN);
 
     /**
      * Get a log reader with lock starting from <i>fromDLSN</i> and using <i>subscriberId</i>.
@@ -159,21 +157,21 @@ public interface DistributedLogManager extends AsyncCloseable, Closeable {
      *          subscriber id
      * @return async log reader
      */
-    public Future<AsyncLogReader> getAsyncLogReaderWithLock(DLSN fromDLSN, String subscriberId);
+    Future<AsyncLogReader> getAsyncLogReaderWithLock(DLSN fromDLSN, String subscriberId);
 
     /**
      * Get a log reader using <i>subscriberId</i> with lock. The reader will start reading from
      * its last commit position recorded in subscription store. If no last commit position found
      * in subscription store, it would start reading from head of the stream.
      *
-     * If the two readers tried to open using same subscriberId, one would succeed, while the other
+     * <p>If the two readers tried to open using same subscriberId, one would succeed, while the other
      * will be blocked until it gets the lock.
      *
      * @param subscriberId
      *          subscriber id
      * @return async log reader
      */
-    public Future<AsyncLogReader> getAsyncLogReaderWithLock(String subscriberId);
+    Future<AsyncLogReader> getAsyncLogReaderWithLock(String subscriberId);
 
     /**
      * Get the {@link DLSN} of first log record whose transaction id is not less than <code>transactionId</code>.
@@ -182,109 +180,111 @@ public interface DistributedLogManager extends AsyncCloseable, Closeable {
      *          transaction id
      * @return dlsn of first log record whose transaction id is not less than transactionId.
      */
-    public Future<DLSN> getDLSNNotLessThanTxId(long transactionId);
+    Future<DLSN> getDLSNNotLessThanTxId(long transactionId);
 
     /**
-     * Get the last log record in the stream
+     * Get the last log record in the stream.
      *
      * @return the last log record in the stream
      * @throws IOException if a stream cannot be found.
      */
-    public LogRecordWithDLSN getLastLogRecord()
+    LogRecordWithDLSN getLastLogRecord()
         throws IOException;
 
     /**
-     * Get the earliest Transaction Id available in the log
+     * Get the earliest Transaction Id available in the log.
      *
      * @return earliest transaction id
      * @throws IOException
      */
-    public long getFirstTxId() throws IOException;
+    long getFirstTxId() throws IOException;
 
     /**
-     * Get Latest Transaction Id in the log
+     * Get Latest Transaction Id in the log.
      *
      * @return latest transaction id
      * @throws IOException
      */
-    public long getLastTxId() throws IOException;
+    long getLastTxId() throws IOException;
 
     /**
-     * Get Latest DLSN in the log
+     * Get Latest DLSN in the log.
      *
      * @return last dlsn
      * @throws IOException
      */
-    public DLSN getLastDLSN() throws IOException;
+    DLSN getLastDLSN() throws IOException;
 
     /**
-     * Get Latest log record with DLSN in the log - async
+     * Get Latest log record with DLSN in the log - async.
      *
      * @return latest log record with DLSN
      */
-    public Future<LogRecordWithDLSN> getLastLogRecordAsync();
+    Future<LogRecordWithDLSN> getLastLogRecordAsync();
 
     /**
-     * Get Latest Transaction Id in the log - async
+     * Get Latest Transaction Id in the log - async.
      *
      * @return latest transaction id
      */
-    public Future<Long> getLastTxIdAsync();
+    Future<Long> getLastTxIdAsync();
 
     /**
      * Get first DLSN in the log.
      *
      * @return first dlsn in the stream
      */
-    public Future<DLSN> getFirstDLSNAsync();
+    Future<DLSN> getFirstDLSNAsync();
 
     /**
-     * Get Latest DLSN in the log - async
+     * Get Latest DLSN in the log - async.
      *
      * @return latest transaction id
      */
-    public Future<DLSN> getLastDLSNAsync();
+    Future<DLSN> getLastDLSNAsync();
 
     /**
-     * Get the number of log records in the active portion of the log
-     * Any log segments that have already been truncated will not be included
+     * Get the number of log records in the active portion of the log.
+     *
+     * <p>Any log segments that have already been truncated will not be included.
      *
      * @return number of log records
      * @throws IOException
      */
-    public long getLogRecordCount() throws IOException;
+    long getLogRecordCount() throws IOException;
 
     /**
      * Get the number of log records in the active portion of the log - async.
-     * Any log segments that have already been truncated will not be included
+     *
+     * <p>Any log segments that have already been truncated will not be included
      *
      * @return future number of log records
      * @throws IOException
      */
-    public Future<Long> getLogRecordCountAsync(final DLSN beginDLSN);
+    Future<Long> getLogRecordCountAsync(final DLSN beginDLSN);
 
     /**
      * Run recovery on the log.
      *
      * @throws IOException
      */
-    public void recover() throws IOException;
+    void recover() throws IOException;
 
     /**
      * Check if an end of stream marker was added to the stream
-     * A stream with an end of stream marker cannot be appended to
+     * A stream with an end of stream marker cannot be appended to.
      *
      * @return true if the marker was added to the stream, false otherwise
      * @throws IOException
      */
-    public boolean isEndOfStreamMarked() throws IOException;
+    boolean isEndOfStreamMarked() throws IOException;
 
     /**
      * Delete the log.
      *
      * @throws IOException if the deletion fails
      */
-    public void delete() throws IOException;
+    void delete() throws IOException;
 
     /**
      * The DistributedLogManager may archive/purge any logs for transactionId
@@ -296,13 +296,22 @@ public interface DistributedLogManager extends AsyncCloseable, Closeable {
      * @param minTxIdToKeep the earliest txid that must be retained
      * @throws IOException if purging fails
      */
-    public void purgeLogsOlderThan(long minTxIdToKeep) throws IOException;
+    void purgeLogsOlderThan(long minTxIdToKeep) throws IOException;
 
     /**
      * Get the subscriptions store provided by the distributedlog manager.
      *
      * @return subscriptions store manages subscriptions for current stream.
      */
-    public SubscriptionsStore getSubscriptionsStore();
+    SubscriptionsStore getSubscriptionsStore();
+
+    /**
+     * Closes this source and releases any system resources associated
+     * with it. If the source is already closed then invoking this
+     * method has no effect.
+     *
+     * @return future representing the close result.
+     */
+    Future<Void> asyncClose();
 
 }

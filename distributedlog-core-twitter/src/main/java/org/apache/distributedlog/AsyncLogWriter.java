@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,21 +17,20 @@
  */
 package org.apache.distributedlog;
 
-import org.apache.distributedlog.io.AsyncAbortable;
-import org.apache.distributedlog.io.AsyncCloseable;
 import com.twitter.util.Future;
-
-import java.io.Closeable;
 import java.util.List;
 
-public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
+/**
+ * A writer that appends log records asynchronously.
+ */
+public interface AsyncLogWriter {
 
     /**
      * Get the last committed transaction id.
      *
      * @return last committed transaction id.
      */
-    public long getLastTxId();
+    long getLastTxId();
 
     /**
      * Write a log record to the stream.
@@ -40,7 +39,7 @@ public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
      * @return A Future which contains a DLSN if the record was successfully written
      * or an exception if the write fails
      */
-    public Future<DLSN> write(LogRecord record);
+    Future<DLSN> write(LogRecord record);
 
     /**
      * Write log records to the stream in bulk. Each future in the list represents the result of
@@ -51,7 +50,7 @@ public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
      * @return A Future which contains a list of Future DLSNs if the record was successfully written
      * or an exception if the operation fails.
      */
-    public Future<List<Future<DLSN>>> writeBulk(List<LogRecord> record);
+    Future<List<Future<DLSN>>> writeBulk(List<LogRecord> record);
 
     /**
      * Truncate the log until <i>dlsn</i>.
@@ -61,10 +60,28 @@ public interface AsyncLogWriter extends AsyncCloseable, AsyncAbortable {
      * @return A Future indicates whether the operation succeeds or not, or an exception
      * if the truncation fails.
      */
-    public Future<Boolean> truncate(DLSN dlsn);
+    Future<Boolean> truncate(DLSN dlsn);
 
     /**
-     * Get the name of the stream this writer writes data to
+     * Get the name of the stream this writer writes data to.
      */
-    public String getStreamName();
+    String getStreamName();
+
+    /**
+     * Closes this source and releases any system resources associated
+     * with it. If the source is already closed then invoking this
+     * method has no effect.
+     *
+     * @return future representing the close result.
+     */
+    Future<Void> asyncClose();
+
+    /**
+     * Aborts the object and releases any resources associated with it.
+     * If the object is already aborted then invoking this method has no
+     * effect.
+     *
+     * @return future represents the abort result
+     */
+    Future<Void> asyncAbort();
 }

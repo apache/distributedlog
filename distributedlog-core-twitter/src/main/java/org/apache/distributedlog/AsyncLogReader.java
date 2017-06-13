@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,27 +17,28 @@
  */
 package org.apache.distributedlog;
 
-import org.apache.distributedlog.io.AsyncCloseable;
 import com.twitter.util.Future;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public interface AsyncLogReader extends AsyncCloseable {
+/**
+ * A log reader to read records in asynchronous way.
+ */
+public interface AsyncLogReader {
 
     /**
      * Get stream name that the reader reads from.
      *
      * @return stream name.
      */
-    public String getStreamName();
+    String getStreamName();
 
     /**
-     * Read the next record from the log stream
+     * Read the next record from the log stream.
      *
      * @return A promise that when satisfied will contain the Log Record with its DLSN.
      */
-    public Future<LogRecordWithDLSN> readNext();
+    Future<LogRecordWithDLSN> readNext();
 
     /**
      * Read next <i>numEntries</i> entries. The future is only satisfied with non-empty list
@@ -48,12 +49,12 @@ public interface AsyncLogReader extends AsyncCloseable {
      *          num entries
      * @return A promise that when satisfied will contain a non-empty list of records with their DLSN.
      */
-    public Future<List<LogRecordWithDLSN>> readBulk(int numEntries);
+    Future<List<LogRecordWithDLSN>> readBulk(int numEntries);
 
     /**
      * Read next <i>numEntries</i> entries in a given <i>waitTime</i>.
-     * <p>
-     * The future is satisfied when either reads <i>numEntries</i> entries or reaches <i>waitTime</i>.
+     *
+     * <p>The future is satisfied when either reads <i>numEntries</i> entries or reaches <i>waitTime</i>.
      * The only exception is if there isn't any new entries written within <i>waitTime</i>, it would
      * wait until new entries are available.
      *
@@ -65,5 +66,14 @@ public interface AsyncLogReader extends AsyncCloseable {
      *          wait time unit
      * @return A promise that when satisfied will contain a non-empty list of records with their DLSN.
      */
-    public Future<List<LogRecordWithDLSN>> readBulk(int numEntries, long waitTime, TimeUnit timeUnit);
+    Future<List<LogRecordWithDLSN>> readBulk(int numEntries, long waitTime, TimeUnit timeUnit);
+
+    /**
+     * Closes this source and releases any system resources associated
+     * with it. If the source is already closed then invoking this
+     * method has no effect.
+     *
+     * @return future representing the close result.
+     */
+    Future<Void> asyncClose();
 }

@@ -29,7 +29,7 @@ import org.apache.distributedlog.LogSegmentMetadata;
 import org.apache.distributedlog.callback.LogSegmentListener;
 import org.apache.distributedlog.io.AsyncCloseable;
 import org.apache.distributedlog.namespace.NamespaceDriver;
-import org.apache.distributedlog.subscription.SubscriptionsStore;
+import org.apache.distributedlog.api.subscription.SubscriptionsStore;
 
 /**
  * A DistributedLogManager is responsible for managing a single place of storing

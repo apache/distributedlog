@@ -63,7 +63,7 @@ import org.apache.distributedlog.metadata.LogMetadata;
 import org.apache.distributedlog.metadata.MetadataUpdater;
 import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
 import org.apache.distributedlog.api.namespace.NamespaceBuilder;
-import org.apache.distributedlog.subscription.SubscriptionsStore;
+import org.apache.distributedlog.api.subscription.SubscriptionsStore;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
