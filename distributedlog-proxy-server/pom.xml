@@ -135,7 +135,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-protocol</artifactId>
+      <artifactId>distributedlog-common</artifactId>
       <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
@@ -189,7 +189,7 @@
           <properties>
             <property>
               <name>listener</name>
-              <value>org.apache.distributedlog.TimedOutTestsListener</value>
+              <value>org.apache.distributedlog.common.util.TimedOutTestsListener</value>
             </property>
           </properties>
         </configuration>

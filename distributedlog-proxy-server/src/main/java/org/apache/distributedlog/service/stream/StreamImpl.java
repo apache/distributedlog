@@ -20,9 +20,10 @@ package org.apache.distributedlog.service.stream;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
-import org.apache.distributedlog.AsyncLogWriter;
+import java.util.concurrent.CompletableFuture;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.AlreadyClosedException;
 import org.apache.distributedlog.exceptions.DLException;
@@ -33,15 +34,16 @@ import org.apache.distributedlog.exceptions.StreamNotReadyException;
 import org.apache.distributedlog.exceptions.StreamUnavailableException;
 import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.apache.distributedlog.io.Abortables;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.protocol.util.TwitterFutureUtils;
 import org.apache.distributedlog.service.FatalErrorHandler;
 import org.apache.distributedlog.service.ServerFeatureKeys;
 import org.apache.distributedlog.service.config.ServerConfiguration;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.stream.limiter.StreamRequestLimiter;
 import org.apache.distributedlog.service.streamset.Partition;
-import org.apache.distributedlog.stats.BroadCastStatsLogger;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.stats.BroadCastStatsLogger;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.OrderedScheduler;
 import org.apache.distributedlog.util.TimeSequencer;
 import org.apache.distributedlog.util.Utils;
@@ -50,7 +52,6 @@ import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;
-import com.twitter.util.TimeoutException;
 import com.twitter.util.Timer;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -126,7 +127,7 @@ public class StreamImpl implements Stream {
     private final StreamRequestLimiter limiter;
     private final DynamicDistributedLogConfiguration dynConf;
     private final DistributedLogConfiguration dlConfig;
-    private final DistributedLogNamespace dlNamespace;
+    private final Namespace dlNamespace;
     private final String clientId;
     private final OrderedScheduler scheduler;
     private final ReentrantReadWriteLock closeLock = new ReentrantReadWriteLock();
@@ -169,7 +170,7 @@ public class StreamImpl implements Stream {
                DynamicDistributedLogConfiguration streamConf,
                FeatureProvider featureProvider,
                StreamConfigProvider streamConfigProvider,
-               DistributedLogNamespace dlNamespace,
+               Namespace dlNamespace,
                OrderedScheduler scheduler,
                FatalErrorHandler fatalErrorHandler,
                HashedWheelTimer requestTimer,
@@ -555,8 +556,8 @@ public class StreamImpl implements Stream {
     Future<Boolean> acquireStream() {
         final Stopwatch stopwatch = Stopwatch.createStarted();
         final Promise<Boolean> acquirePromise = new Promise<Boolean>();
-        manager.openAsyncLogWriter().addEventListener(
-            FutureUtils.OrderedFutureEventListener.of(new FutureEventListener<AsyncLogWriter>() {
+        manager.openAsyncLogWriter().whenCompleteAsync(
+            new org.apache.distributedlog.common.concurrent.FutureEventListener<AsyncLogWriter>() {
 
             @Override
             public void onSuccess(AsyncLogWriter w) {
@@ -568,7 +569,7 @@ public class StreamImpl implements Stream {
                 onAcquireStreamFailure(cause, stopwatch, acquirePromise);
             }
 
-        }, scheduler, getStreamName()));
+        }, scheduler.chooseExecutor(getStreamName()));
         return acquirePromise;
     }
 
@@ -662,7 +663,7 @@ public class StreamImpl implements Stream {
             pendingOpsCounter.dec();
         }
         Abortables.asyncAbort(oldWriter, true);
-        FutureUtils.setValue(acquirePromise, success);
+        TwitterFutureUtils.setValue(acquirePromise, success);
     }
 
     //
@@ -802,7 +803,7 @@ public class StreamImpl implements Stream {
                 logger.info("Removed cached stream {}.", getStreamName());
             }
         }
-        FutureUtils.setValue(closePromise, null);
+        TwitterFutureUtils.setValue(closePromise, null);
     }
 
     /**
@@ -825,7 +826,7 @@ public class StreamImpl implements Stream {
         }
         logger.info("Closing stream {} ...", name);
         // Close the writers to release the locks before failing the requests
-        Future<Void> closeWriterFuture;
+        CompletableFuture<Void> closeWriterFuture;
         if (abort) {
             closeWriterFuture = Abortables.asyncAbort(writer, true);
         } else {
@@ -839,25 +840,38 @@ public class StreamImpl implements Stream {
             closeWaitDuration = Duration.fromMilliseconds(writerCloseTimeoutMs);
         }
 
-        FutureUtils.stats(
+        CompletableFuture<Void> maskedFuture = FutureUtils.createFuture();
+        FutureUtils.proxyTo(
+            FutureUtils.stats(
                 closeWriterFuture,
                 writerCloseStatLogger,
                 Stopwatch.createStarted()
-        ).masked().within(futureTimer, closeWaitDuration)
-                .addEventListener(FutureUtils.OrderedFutureEventListener.of(
-                new FutureEventListener<Void>() {
-                    @Override
-                    public void onSuccess(Void value) {
-                        postClose(uncache);
+            ),
+            maskedFuture);
+
+        FutureUtils.within(
+            maskedFuture,
+            closeWaitDuration.inMillis(),
+            TimeUnit.MILLISECONDS,
+            new java.util.concurrent.TimeoutException("Timeout on closing"),
+            scheduler,
+            name
+        ).whenCompleteAsync(
+            new org.apache.distributedlog.common.concurrent.FutureEventListener<Void>() {
+                @Override
+                public void onSuccess(Void value) {
+                    postClose(uncache);
+                }
+
+                @Override
+                public void onFailure(Throwable cause) {
+                    if (cause instanceof java.util.concurrent.TimeoutException) {
+                        writerCloseTimeoutCounter.inc();
                     }
-                    @Override
-                    public void onFailure(Throwable cause) {
-                        if (cause instanceof TimeoutException) {
-                            writerCloseTimeoutCounter.inc();
-                        }
-                        postClose(uncache);
-                    }
-                }, scheduler, name));
+                }
+            },
+            scheduler.chooseExecutor(name)
+        );
         return closePromise;
     }
 

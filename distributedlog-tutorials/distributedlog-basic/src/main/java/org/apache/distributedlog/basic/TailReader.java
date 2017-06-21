@@ -17,20 +17,22 @@
  */
 package org.apache.distributedlog.basic;
 
-import org.apache.distributedlog.*;
-import org.apache.distributedlog.exceptions.LogEmptyException;
-import org.apache.distributedlog.exceptions.LogNotFoundException;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.util.Duration;
-import com.twitter.util.FutureEventListener;
+import static com.google.common.base.Charsets.UTF_8;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Charsets.UTF_8;
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.exceptions.LogEmptyException;
+import org.apache.distributedlog.exceptions.LogNotFoundException;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 
 /**
  * A reader is tailing a log
@@ -50,7 +52,7 @@ public class TailReader {
 
         URI uri = URI.create(dlUriStr);
         DistributedLogConfiguration conf = new DistributedLogConfiguration();
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .build();
@@ -100,13 +102,13 @@ public class TailReader {
                 System.out.println("\"\"\"");
                 System.out.println(new String(record.getPayload(), UTF_8));
                 System.out.println("\"\"\"");
-                reader.readNext().addEventListener(this);
+                reader.readNext().whenComplete(this);
             }
         };
-        reader.readNext().addEventListener(readListener);
+        reader.readNext().whenComplete(readListener);
 
         keepAliveLatch.await();
-        FutureUtils.result(reader.asyncClose(), Duration.apply(5, TimeUnit.SECONDS));
+        FutureUtils.result(reader.asyncClose(), 5, TimeUnit.SECONDS);
     }
 
 }

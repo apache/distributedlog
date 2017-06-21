@@ -63,8 +63,7 @@ public class ZKPlacementStateManager implements PlacementStateManager {
         serverLoadPath = uri.getPath() + SERVER_LOAD_DIR;
     }
 
-    private void createServerLoadPathIfNoExists(byte[] data)
-        throws ZooKeeperClient.ZooKeeperConnectionException, KeeperException, InterruptedException {
+    private void createServerLoadPathIfNoExists(byte[] data) throws KeeperException, IOException {
         try {
             Utils.zkCreateFullPathOptimistic(
                 zkClient, serverLoadPath, data, zkClient.getDefaultACL(), CreateMode.PERSISTENT);
@@ -152,7 +151,7 @@ public class ZKPlacementStateManager implements PlacementStateManager {
                 watching = false;
                 watch(callback);
             }
-        } catch (ZooKeeperClient.ZooKeeperConnectionException | InterruptedException | KeeperException e) {
+        } catch (InterruptedException | IOException | KeeperException e) {
             logger.error("Watch of Ownership failed", e);
             watching = false;
             watch(callback);

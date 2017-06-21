@@ -18,8 +18,8 @@
 package org.apache.distributedlog.service.stream;
 
 import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.service.FatalErrorHandler;
 import org.apache.distributedlog.service.config.ServerConfiguration;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
@@ -40,7 +40,7 @@ public class StreamFactoryImpl implements StreamFactory {
     private final FeatureProvider featureProvider;
     private final StreamConfigProvider streamConfigProvider;
     private final StreamPartitionConverter streamPartitionConverter;
-    private final DistributedLogNamespace dlNamespace;
+    private final Namespace dlNamespace;
     private final OrderedScheduler scheduler;
     private final FatalErrorHandler fatalErrorHandler;
     private final HashedWheelTimer requestTimer;
@@ -53,7 +53,7 @@ public class StreamFactoryImpl implements StreamFactory {
         FeatureProvider featureProvider,
         StreamConfigProvider streamConfigProvider,
         StreamPartitionConverter streamPartitionConverter,
-        DistributedLogNamespace dlNamespace,
+        Namespace dlNamespace,
         OrderedScheduler scheduler,
         FatalErrorHandler fatalErrorHandler,
         HashedWheelTimer requestTimer) {

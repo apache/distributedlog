@@ -26,8 +26,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.client.routing.RoutingService;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import com.twitter.util.Await;
 import com.twitter.util.Duration;
 import com.twitter.util.Future;
@@ -55,7 +55,7 @@ public class TestLeastLoadPlacementPolicy {
         int numSevers = new Random().nextInt(20) + 1;
         int numStreams = new Random().nextInt(200) + 1;
         RoutingService mockRoutingService = mock(RoutingService.class);
-        DistributedLogNamespace mockNamespace = mock(DistributedLogNamespace.class);
+        Namespace mockNamespace = mock(Namespace.class);
         LeastLoadPlacementPolicy leastLoadPlacementPolicy = new LeastLoadPlacementPolicy(
             new EqualLoadAppraiser(),
             mockRoutingService,
@@ -81,7 +81,7 @@ public class TestLeastLoadPlacementPolicy {
         int numStreams = new Random().nextInt(200) + 1;
         RoutingService mockRoutingService = mock(RoutingService.class);
         when(mockRoutingService.getHosts()).thenReturn(generateSocketAddresses(numSevers));
-        DistributedLogNamespace mockNamespace = mock(DistributedLogNamespace.class);
+        Namespace mockNamespace = mock(Namespace.class);
         try {
             when(mockNamespace.getLogs()).thenReturn(generateStreams(numStreams).iterator());
         } catch (IOException e) {
@@ -112,7 +112,7 @@ public class TestLeastLoadPlacementPolicy {
     /* use AtomicInteger to have a final object in answer method */
         final AtomicInteger maxLoad = new AtomicInteger(Integer.MIN_VALUE);
         RoutingService mockRoutingService = mock(RoutingService.class);
-        DistributedLogNamespace mockNamespace = mock(DistributedLogNamespace.class);
+        Namespace mockNamespace = mock(Namespace.class);
         LoadAppraiser mockLoadAppraiser = mock(LoadAppraiser.class);
         when(mockLoadAppraiser.getStreamLoad(anyString())).then(new Answer<Future<StreamLoad>>() {
             @Override

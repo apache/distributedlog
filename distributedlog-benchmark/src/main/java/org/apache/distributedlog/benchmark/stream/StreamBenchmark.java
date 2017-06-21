@@ -18,8 +18,8 @@
 package org.apache.distributedlog.benchmark.stream;
 
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import java.io.File;
 import java.net.URI;
 import org.apache.bookkeeper.stats.NullStatsProvider;
@@ -107,8 +107,8 @@ public abstract class StreamBenchmark {
         statsProvider.start(conf);
         // run the benchmark
         StatsLogger statsLogger = statsProvider.getStatsLogger("dl");
-        DistributedLogNamespace namespace =
-                DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace =
+                NamespaceBuilder.newBuilder()
                         .conf(conf)
                         .uri(uri)
                         .statsLogger(statsLogger)
@@ -121,7 +121,7 @@ public abstract class StreamBenchmark {
         }
     }
 
-    protected abstract void benchmark(DistributedLogNamespace namespace,
+    protected abstract void benchmark(Namespace namespace,
                                       String logName,
                                       StatsLogger statsLogger);
 

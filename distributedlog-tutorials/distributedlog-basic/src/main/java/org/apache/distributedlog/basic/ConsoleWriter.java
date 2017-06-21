@@ -17,18 +17,21 @@
  */
 package org.apache.distributedlog.basic;
 
-import org.apache.distributedlog.*;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.util.Duration;
-import com.twitter.util.FutureEventListener;
-import jline.ConsoleReader;
+import static com.google.common.base.Charsets.UTF_8;
 
+import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.LogRecord;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Charsets.UTF_8;
+import jline.ConsoleReader;
 
 /**
  * Writer write records from console
@@ -53,7 +56,7 @@ public class ConsoleWriter {
         conf.setOutputBufferSize(0);
         conf.setPeriodicFlushFrequencyMilliSeconds(0);
         conf.setLockTimeout(DistributedLogConstants.LOCK_IMMEDIATE);
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .regionId(DistributedLogConstants.LOCAL_REGION_ID)
@@ -73,7 +76,7 @@ public class ConsoleWriter {
                 String line;
                 while ((line = reader.readLine(PROMPT_MESSAGE)) != null) {
                     writer.write(new LogRecord(System.currentTimeMillis(), line.getBytes(UTF_8)))
-                            .addEventListener(new FutureEventListener<DLSN>() {
+                            .whenComplete(new FutureEventListener<DLSN>() {
                                 @Override
                                 public void onFailure(Throwable cause) {
                                     System.out.println("Encountered error on writing data");
@@ -89,7 +92,7 @@ public class ConsoleWriter {
                 }
             } finally {
                 if (null != writer) {
-                    FutureUtils.result(writer.asyncClose(), Duration.apply(5, TimeUnit.SECONDS));
+                    FutureUtils.result(writer.asyncClose(), 5, TimeUnit.SECONDS);
                 }
             }
         } finally {

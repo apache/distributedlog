@@ -21,11 +21,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.ServiceUnavailableException;
 import org.apache.distributedlog.exceptions.StreamUnavailableException;
 import org.apache.distributedlog.exceptions.UnexpectedException;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.service.config.StreamConfigProvider;
 import org.apache.distributedlog.service.streamset.Partition;
 import org.apache.distributedlog.service.streamset.PartitionMap;
@@ -86,7 +86,7 @@ public class StreamManagerImpl implements StreamManager {
     private final String clientId;
     private boolean closed = false;
     private final StreamFactory streamFactory;
-    private final DistributedLogNamespace dlNamespace;
+    private final Namespace dlNamespace;
 
     public StreamManagerImpl(String clientId,
                              DistributedLogConfiguration dlConfig,
@@ -94,7 +94,7 @@ public class StreamManagerImpl implements StreamManager {
                              StreamFactory streamFactory,
                              StreamPartitionConverter partitionConverter,
                              StreamConfigProvider streamConfigProvider,
-                             DistributedLogNamespace dlNamespace) {
+                             Namespace dlNamespace) {
         this.clientId = clientId;
         this.executorService = executorService;
         this.streamFactory = streamFactory;

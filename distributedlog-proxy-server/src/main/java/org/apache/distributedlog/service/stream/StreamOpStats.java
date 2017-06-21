@@ -18,7 +18,7 @@
 package org.apache.distributedlog.service.stream;
 
 import org.apache.distributedlog.service.streamset.Partition;
-import org.apache.distributedlog.stats.BroadCastStatsLogger;
+import org.apache.distributedlog.common.stats.BroadCastStatsLogger;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;

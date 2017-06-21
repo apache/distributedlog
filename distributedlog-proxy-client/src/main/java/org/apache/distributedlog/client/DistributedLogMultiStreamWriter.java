@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.distributedlog.LogRecord.MAX_LOGRECORDSET_SIZE;
 import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
+import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newJFuture;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Ticker;
@@ -440,7 +441,7 @@ public class DistributedLogMultiStreamWriter implements Runnable {
         }
         Promise<DLSN> writePromise = new Promise<DLSN>();
         try {
-            recordSetWriter.writeRecord(buffer, writePromise);
+            recordSetWriter.writeRecord(buffer, newJFuture(writePromise));
         } catch (LogRecordTooLongException e) {
             return Future.exception(e);
         } catch (WriteException e) {
