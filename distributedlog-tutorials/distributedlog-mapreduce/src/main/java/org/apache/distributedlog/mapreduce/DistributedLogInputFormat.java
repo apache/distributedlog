@@ -19,13 +19,13 @@ package org.apache.distributedlog.mapreduce;
 
 import com.google.common.collect.Lists;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.LogSegmentMetadata;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.impl.BKNamespaceDriver;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeperAccessor;
@@ -59,7 +59,7 @@ public class DistributedLogInputFormat
     protected Configuration conf;
     protected DistributedLogConfiguration dlConf;
     protected URI dlUri;
-    protected DistributedLogNamespace namespace;
+    protected Namespace namespace;
     protected String streamName;
     protected DistributedLogManager dlm;
 
@@ -71,7 +71,7 @@ public class DistributedLogInputFormat
         dlUri = URI.create(configuration.get(DL_URI, ""));
         streamName = configuration.get(DL_STREAM, "");
         try {
-            namespace = DistributedLogNamespaceBuilder.newBuilder()
+            namespace = NamespaceBuilder.newBuilder()
                     .conf(dlConf)
                     .uri(dlUri)
                     .build();

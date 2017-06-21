@@ -26,23 +26,23 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Optional;
-import org.apache.distributedlog.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogReader;
 import org.apache.distributedlog.DLMTestUtil;
 import org.apache.distributedlog.DLSN;
-import org.apache.distributedlog.DistributedLogManager;
-import org.apache.distributedlog.LogReader;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.TestZooKeeperClientBuilder;
 import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.acl.AccessControlManager;
-import org.apache.distributedlog.annotations.DistributedLogAnnotations;
+import org.apache.distributedlog.common.annotations.DistributedLogAnnotations;
 import org.apache.distributedlog.client.routing.LocalRoutingService;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.impl.acl.ZKAccessControl;
 import org.apache.distributedlog.impl.metadata.BKDLConfig;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.service.stream.StreamManagerImpl;
 import org.apache.distributedlog.thrift.AccessControlEntry;
 import org.apache.distributedlog.thrift.service.BulkWriteResponse;
@@ -50,7 +50,7 @@ import org.apache.distributedlog.thrift.service.HeartbeatOptions;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteContext;
 import org.apache.distributedlog.util.FailpointUtils;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.thrift.ClientId$;
 import com.twitter.util.Await;
@@ -105,7 +105,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         HeartbeatOptions hbOptions = new HeartbeatOptions();
         hbOptions.setSendHeartBeatToReader(true);
         // make sure the first log segment of each stream created
-        FutureUtils.result(dlClient.dlClient.heartbeat(name));
+        Await.result(dlClient.dlClient.heartbeat(name));
 
         DistributedLogManager dlm = DLMTestUtil.createNewDLM(name, conf, getUri());
         LogReader reader = dlm.getInputStream(1);
@@ -305,7 +305,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
         }
 
         validateFailedAsLogRecordTooLong(futures.get(writeCount));
-        FutureUtils.result(Futures.collect(futures.subList(writeCount + 1, 2 * writeCount + 1)));
+        Await.result(Futures.collect(futures.subList(writeCount + 1, 2 * writeCount + 1)));
         assertEquals(writeCount, succeeded);
     }
 
@@ -325,7 +325,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
 
         List<Future<DLSN>> futures = dlClient.dlClient.writeBulk(name, writes);
         validateFailedAsLogRecordTooLong(futures.get(0));
-        FutureUtils.result(Futures.collect(futures.subList(1, writeCount + 1)));
+        Await.result(Futures.collect(futures.subList(1, writeCount + 1)));
     }
 
     @Test(timeout = 60000)
@@ -601,7 +601,7 @@ public abstract class TestDistributedLogServerBase extends DistributedLogServerT
                 .connectionTimeoutMs(60000)
                 .sessionTimeoutMs(60000)
                 .build();
-        DistributedLogNamespace dlNamespace = dlServer.dlServer.getLeft().getDistributedLogNamespace();
+        Namespace dlNamespace = dlServer.dlServer.getLeft().getDistributedLogNamespace();
         BKDLConfig bkdlConfig = BKDLConfig.resolveDLConfig(zkc, getUri());
         String zkPath = getUri().getPath() + "/" + bkdlConfig.getACLRootPath() + "/" + name;
         ZKAccessControl accessControl = new ZKAccessControl(ace, zkPath);

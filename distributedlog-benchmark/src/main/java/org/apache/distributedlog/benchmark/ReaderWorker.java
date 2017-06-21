@@ -22,21 +22,21 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.twitter.common.zookeeper.ServerSet;
-import org.apache.distributedlog.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogReader;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogRecordSet;
 import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.benchmark.thrift.Message;
 import org.apache.distributedlog.client.serverset.DLZkServerSet;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
-import org.apache.distributedlog.util.FutureUtils;
-import org.apache.distributedlog.util.SchedulerUtils;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.finagle.thrift.ClientId$;
@@ -75,7 +75,7 @@ public class ReaderWorker implements Worker {
     final int endStreamId;
     final ScheduledExecutorService executorService;
     final ExecutorService callbackExecutor;
-    final DistributedLogNamespace namespace;
+    final Namespace namespace;
     final DistributedLogManager[] dlms;
     final AsyncLogReader[] logReaders;
     final StreamReader[] streamReaders;
@@ -100,7 +100,9 @@ public class ReaderWorker implements Worker {
     final Counter invalidRecordsCounter;
     final Counter outOfOrderSequenceIdCounter;
 
-    class StreamReader implements FutureEventListener<List<LogRecordWithDLSN>>, Runnable, Gauge<Number> {
+    class StreamReader implements
+        org.apache.distributedlog.common.concurrent.FutureEventListener<List<LogRecordWithDLSN>>,
+        Runnable, Gauge<Number> {
 
         final int streamIdx;
         final String streamName;
@@ -184,7 +186,7 @@ public class ReaderWorker implements Worker {
             if (!running) {
                 return;
             }
-            logReaders[streamIdx].readBulk(10).addEventListener(this);
+            logReaders[streamIdx].readBulk(10).whenComplete(this);
         }
 
         @Override
@@ -305,7 +307,7 @@ public class ReaderWorker implements Worker {
         }
 
         // construct the factory
-        this.namespace = DistributedLogNamespaceBuilder.newBuilder()
+        this.namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .statsLogger(statsLogger.scope("dl"))
@@ -369,7 +371,7 @@ public class ReaderWorker implements Worker {
         if (logReaders[idx] != null) {
             try {
                 FutureUtils.result(logReaders[idx].asyncClose());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.warn("Failed on closing stream reader {} : ", streamName, e);
             }
             logReaders[idx] = null;
@@ -434,7 +436,7 @@ public class ReaderWorker implements Worker {
         this.running = false;
         for (AsyncLogReader reader : logReaders) {
             if (null != reader) {
-                FutureUtils.result(reader.asyncClose());
+                org.apache.distributedlog.util.Utils.ioResult(reader.asyncClose());
             }
         }
         for (DistributedLogManager dlm : dlms) {

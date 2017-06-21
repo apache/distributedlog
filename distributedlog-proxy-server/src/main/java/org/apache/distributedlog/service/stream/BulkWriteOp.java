@@ -17,7 +17,9 @@
  */
 package org.apache.distributedlog.service.stream;
 
-import org.apache.distributedlog.AsyncLogWriter;
+import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFutureList;
+
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.acl.AccessControlManager;
@@ -33,7 +35,7 @@ import org.apache.distributedlog.thrift.service.BulkWriteResponse;
 import org.apache.distributedlog.thrift.service.ResponseHeader;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.util.Sequencer;
+import org.apache.distributedlog.common.util.Sequencer;
 import com.twitter.util.ConstFuture;
 import com.twitter.util.Future;
 import com.twitter.util.Future$;
@@ -157,7 +159,7 @@ public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements 
         Future<List<Future<DLSN>>> futureList;
         synchronized (txnLock) {
             records = asRecordList(buffers, sequencer);
-            futureList = writer.writeBulk(records);
+            futureList = newTFutureList(writer.writeBulk(records));
         }
 
         // Collect into a list of tries to make it easier to extract exception or DLSN.

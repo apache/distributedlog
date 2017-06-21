@@ -22,7 +22,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.acl.DefaultAccessControlManager;
@@ -32,9 +32,9 @@ import org.apache.distributedlog.service.config.ServerConfiguration;
 import org.apache.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.util.Sequencer;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.common.util.Sequencer;
 import com.twitter.util.Await;
-import com.twitter.util.Future;
 import java.nio.ByteBuffer;
 import org.apache.bookkeeper.feature.SettableFeature;
 import org.apache.bookkeeper.stats.NullStatsLogger;
@@ -79,7 +79,7 @@ public class TestStreamOp {
     @Test(timeout = 60000)
     public void testResponseSucceededThenFailed() throws Exception {
         AsyncLogWriter writer = mock(AsyncLogWriter.class);
-        when(writer.write((LogRecord) any())).thenReturn(Future.value(new DLSN(1, 2, 3)));
+        when(writer.write((LogRecord) any())).thenReturn(FutureUtils.value(new DLSN(1, 2, 3)));
         when(writer.getStreamName()).thenReturn("test");
         WriteOp writeOp = getWriteOp();
         writeOp.execute(writer, new Sequencer() {

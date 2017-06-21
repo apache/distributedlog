@@ -50,7 +50,6 @@ import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteContext;
 import org.apache.distributedlog.thrift.service.WriteResponse;
 import org.apache.distributedlog.util.ConfUtils;
-import org.apache.distributedlog.util.FutureUtils;
 import com.twitter.util.Await;
 import com.twitter.util.Future;
 import java.net.URI;
@@ -446,7 +445,8 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             assertTrue("Write should not fail before closing",
                     futureList.get(i).isDefined());
             WriteResponse response = Await.result(futureList.get(i));
-            assertTrue("Op should fail with " + StatusCode.WRITE_CANCELLED_EXCEPTION,
+            assertTrue("Op should fail with " + StatusCode.WRITE_CANCELLED_EXCEPTION
+                    + " but " + response.getHeader().getCode() + " is received.",
                     StatusCode.BK_TRANSMIT_ERROR == response.getHeader().getCode()
                         || StatusCode.WRITE_EXCEPTION == response.getHeader().getCode()
                         || StatusCode.WRITE_CANCELLED_EXCEPTION == response.getHeader().getCode());
@@ -500,7 +500,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         }
         assertTrue("Stream " + streamName + " should be cached",
                 streamManager.getCachedStreams().containsKey(streamName));
-        List<WriteResponse> resultList = FutureUtils.result(Future.collect(futureList));
+        List<WriteResponse> resultList = Await.result(Future.collect(futureList));
         for (WriteResponse wr : resultList) {
             assertEquals(DLSN.InvalidDLSN, DLSN.deserialize(wr.getDlsn()));
         }
@@ -689,7 +689,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             HeartbeatOptions hbOptions = new HeartbeatOptions();
             hbOptions.setSendHeartBeatToReader(true);
             // make sure the first log segment of each stream created
-            FutureUtils.result(localService.heartbeatWithOptions(streamName, new WriteContext(), hbOptions));
+            Await.result(localService.heartbeatWithOptions(streamName, new WriteContext(), hbOptions));
             for (int j = 0; j < numWrites; j++) {
                 futureList.add(localService.write(streamName, createRecord(i * numWrites + j)));
             }
@@ -741,7 +741,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
             HeartbeatOptions hbOptions = new HeartbeatOptions();
             hbOptions.setSendHeartBeatToReader(true);
             // make sure the first log segment of each stream created
-            FutureUtils.result(localService.heartbeatWithOptions(streamName, new WriteContext(), hbOptions));
+            Await.result(localService.heartbeatWithOptions(streamName, new WriteContext(), hbOptions));
             for (int j = 0; j < numWrites; j++) {
                 futureList.add(localService.write(streamName, createRecord(i * numWrites + j)));
             }
@@ -803,7 +803,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
 
         service.startPlacementPolicy();
 
-        WriteResponse response = FutureUtils.result(service.getOwner("stream-1", new WriteContext()));
+        WriteResponse response = Await.result(service.getOwner("stream-1", new WriteContext()));
         assertEquals(StatusCode.FOUND, response.getHeader().getCode());
         assertEquals(service.getServiceAddress().toString(),
                 response.getHeader().getLocation());
@@ -824,7 +824,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         assertNull(stream.getLastException());
 
         // the stream is acquired
-        response = FutureUtils.result(service.getOwner("stream-2", new WriteContext()));
+        response = Await.result(service.getOwner("stream-2", new WriteContext()));
         assertEquals(StatusCode.FOUND, response.getHeader().getCode());
         assertEquals(service.getServiceAddress().toString(),
                 response.getHeader().getLocation());

@@ -19,17 +19,17 @@ package org.apache.distributedlog.benchmark;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogRecord;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.benchmark.utils.ShiftableRateLimiter;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.util.FutureUtils;
-import org.apache.distributedlog.util.SchedulerUtils;
-import com.twitter.util.FutureEventListener;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.common.util.SchedulerUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class DLWriterWorker implements Worker {
     final ScheduledExecutorService rescueService;
     final ShiftableRateLimiter rateLimiter;
     final Random random;
-    final DistributedLogNamespace namespace;
+    final Namespace namespace;
     final List<DistributedLogManager> dlms;
     final List<AsyncLogWriter> streamWriters;
     final int numStreams;
@@ -98,7 +98,7 @@ public class DLWriterWorker implements Worker {
         this.rescueService = Executors.newSingleThreadScheduledExecutor();
         this.random = new Random(System.currentTimeMillis());
 
-        this.namespace = DistributedLogNamespaceBuilder.newBuilder()
+        this.namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .statsLogger(statsLogger.scope("dl"))
@@ -120,7 +120,7 @@ public class DLWriterWorker implements Worker {
                             FutureUtils.result(writer.asyncClose());
                         }
                         latch.countDown();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         LOG.error("Failed to intialize writer for stream : {}", streamName, e);
                     }
 
@@ -148,7 +148,7 @@ public class DLWriterWorker implements Worker {
         if (streamWriters.get(idx) == writer) {
             try {
                 FutureUtils.result(writer.asyncClose());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.error("Failed to close writer for stream {}.", idx);
             }
             AsyncLogWriter newWriter = null;
@@ -185,7 +185,7 @@ public class DLWriterWorker implements Worker {
         SchedulerUtils.shutdownScheduler(this.executorService, 2, TimeUnit.MINUTES);
         SchedulerUtils.shutdownScheduler(this.rescueService, 2, TimeUnit.MINUTES);
         for (AsyncLogWriter writer : streamWriters) {
-            FutureUtils.result(writer.asyncClose());
+            org.apache.distributedlog.util.Utils.ioResult(writer.asyncClose());
         }
         for (DistributedLogManager dlm : dlms) {
             dlm.close();
@@ -225,7 +225,7 @@ public class DLWriterWorker implements Worker {
                     LOG.error("Error on generating message : ", e);
                     break;
                 }
-                writer.write(new LogRecord(requestMillis, data)).addEventListener(new FutureEventListener<DLSN>() {
+                writer.write(new LogRecord(requestMillis, data)).whenComplete(new FutureEventListener<DLSN>() {
                     @Override
                     public void onSuccess(DLSN value) {
                         requestStat.registerSuccessfulEvent(System.currentTimeMillis() - requestMillis);

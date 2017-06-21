@@ -17,22 +17,21 @@
  */
 package org.apache.distributedlog.basic;
 
+import static com.google.common.base.Charsets.UTF_8;
+
 import com.google.common.collect.Lists;
+import com.twitter.finagle.thrift.ClientId$;
+import com.twitter.util.Await;
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecordSet;
 import org.apache.distributedlog.io.CompressionCodec.Type;
 import org.apache.distributedlog.service.DistributedLogClient;
 import org.apache.distributedlog.service.DistributedLogClientBuilder;
-import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.finagle.thrift.ClientId$;
-import com.twitter.util.Future;
-import com.twitter.util.FutureEventListener;
-import com.twitter.util.Promise;
-
-import java.nio.ByteBuffer;
-import java.util.List;
-
-import static com.google.common.base.Charsets.UTF_8;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 
 /**
  * Write multiple record atomically
@@ -60,12 +59,12 @@ public class AtomicWriter {
                 .build();
 
         final LogRecordSet.Writer recordSetWriter = LogRecordSet.newWriter(16 * 1024, Type.NONE);
-        List<Future<DLSN>> writeFutures = Lists.newArrayListWithExpectedSize(messages.length);
+        List<CompletableFuture<DLSN>> writeFutures = Lists.newArrayListWithExpectedSize(messages.length);
         for (String msg : messages) {
             final String message = msg;
             ByteBuffer msgBuf = ByteBuffer.wrap(msg.getBytes(UTF_8));
-            Promise<DLSN> writeFuture = new Promise<DLSN>();
-            writeFuture.addEventListener(new FutureEventListener<DLSN>() {
+            CompletableFuture<DLSN> writeFuture = FutureUtils.createFuture();
+            writeFuture.whenComplete(new FutureEventListener<DLSN>() {
                 @Override
                 public void onFailure(Throwable cause) {
                     System.out.println("Encountered error on writing data");
@@ -81,9 +80,9 @@ public class AtomicWriter {
             recordSetWriter.writeRecord(msgBuf, writeFuture);
             writeFutures.add(writeFuture);
         }
-        FutureUtils.result(
+        Await.result(
             client.writeRecordSet(streamName, recordSetWriter)
-                .addEventListener(new FutureEventListener<DLSN>() {
+                .addEventListener(new com.twitter.util.FutureEventListener<DLSN>() {
                     @Override
                     public void onFailure(Throwable cause) {
                         recordSetWriter.abortTransmit(cause);
@@ -101,7 +100,7 @@ public class AtomicWriter {
                     }
                 })
         );
-        FutureUtils.result(Future.collect(writeFutures));
+        FutureUtils.result(FutureUtils.collect(writeFutures));
         client.close();
     }
 }

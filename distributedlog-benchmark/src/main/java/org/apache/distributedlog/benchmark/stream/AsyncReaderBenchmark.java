@@ -18,12 +18,12 @@
 package org.apache.distributedlog.benchmark.stream;
 
 import com.google.common.base.Stopwatch;
-import org.apache.distributedlog.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogReader;
 import org.apache.distributedlog.DLSN;
-import org.apache.distributedlog.DistributedLogManager;
+import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.LogRecordWithDLSN;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.util.FutureUtils;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,14 +34,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Benchmark on {@link org.apache.distributedlog.AsyncLogReader} reading from a stream.
+ * Benchmark on {@link AsyncLogReader} reading from a stream.
  */
 public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
 
     private static final Logger logger = LoggerFactory.getLogger(AsyncReaderBenchmark.class);
 
     @Override
-    protected void benchmark(DistributedLogNamespace namespace, String logName, StatsLogger statsLogger) {
+    protected void benchmark(Namespace namespace, String logName, StatsLogger statsLogger) {
         DistributedLogManager dlm = null;
         while (null == dlm) {
             try {
@@ -112,7 +112,7 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                 openReaderStats.registerSuccessfulEvent(elapsedMs);
                 logger.info("It took {} ms to position the reader to transaction id = {}, dlsn = {}",
                         lastTxId, lastDLSN);
-            } catch (IOException ioe) {
+            } catch (Exception ioe) {
                 openReaderStats.registerFailedEvent(stopwatch.elapsed(TimeUnit.MICROSECONDS));
                 logger.warn("Failed to create reader for stream {} reading from tx id = {}, dlsn = {}.",
                         new Object[] { streamName, lastTxId, lastDLSN });
@@ -141,7 +141,7 @@ public class AsyncReaderBenchmark extends AbstractReaderBenchmark {
                         lastDLSN = lastRecord.getDlsn();
                     }
                     stopwatch.reset();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     logger.warn("Encountered reading record from stream {} : ", streamName, e);
                     reader = null;
                     break;

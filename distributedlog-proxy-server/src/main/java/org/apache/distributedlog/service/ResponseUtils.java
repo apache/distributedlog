@@ -17,6 +17,7 @@
  */
 package org.apache.distributedlog.service;
 
+import java.util.concurrent.CompletionException;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import org.apache.distributedlog.thrift.service.BulkWriteResponse;
@@ -53,6 +54,8 @@ public class ResponseUtils {
             }
             response.setCode(StatusCode.findByValue(dle.getCode()));
             response.setErrMsg(dle.getMessage());
+        } else if (t instanceof CompletionException) {
+            return exceptionToHeader(t.getCause());
         } else {
             response.setCode(StatusCode.INTERNAL_SERVER_ERROR);
             response.setErrMsg("Internal server error : " + t.getMessage());

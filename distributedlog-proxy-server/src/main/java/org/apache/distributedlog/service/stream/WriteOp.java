@@ -17,7 +17,9 @@
  */
 package org.apache.distributedlog.service.stream;
 
-import org.apache.distributedlog.AsyncLogWriter;
+import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFuture;
+
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.acl.AccessControlManager;
@@ -31,7 +33,7 @@ import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
 import org.apache.distributedlog.thrift.service.ResponseHeader;
 import org.apache.distributedlog.thrift.service.StatusCode;
 import org.apache.distributedlog.thrift.service.WriteResponse;
-import org.apache.distributedlog.util.Sequencer;
+import org.apache.distributedlog.common.util.Sequencer;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import java.nio.ByteBuffer;
@@ -150,7 +152,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
             if (isRecordSet) {
                 record.setRecordSet();
             }
-            writeResult = writer.write(record);
+            writeResult = newTFuture(writer.write(record));
         }
         return writeResult.map(new AbstractFunction1<DLSN, WriteResponse>() {
             @Override

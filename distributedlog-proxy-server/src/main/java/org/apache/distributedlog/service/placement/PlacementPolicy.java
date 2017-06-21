@@ -17,8 +17,8 @@
  */
 package org.apache.distributedlog.service.placement;
 
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.client.routing.RoutingService;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
 import org.apache.distributedlog.service.DLSocketAddress;
 import com.twitter.util.Duration;
 import com.twitter.util.Function0;
@@ -53,14 +53,14 @@ public abstract class PlacementPolicy {
 
     protected final LoadAppraiser loadAppraiser;
     protected final RoutingService routingService;
-    protected final DistributedLogNamespace namespace;
+    protected final Namespace namespace;
     protected final PlacementStateManager placementStateManager;
     private final Duration refreshInterval;
     protected final OpStatsLogger placementCalcStats;
     private Timer placementRefreshTimer;
 
     public PlacementPolicy(LoadAppraiser loadAppraiser, RoutingService routingService,
-                           DistributedLogNamespace namespace, PlacementStateManager placementStateManager,
+                           Namespace namespace, PlacementStateManager placementStateManager,
                            Duration refreshInterval, StatsLogger statsLogger) {
         this.loadAppraiser = loadAppraiser;
         this.routingService = routingService;

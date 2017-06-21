@@ -18,13 +18,13 @@
 package org.apache.distributedlog.service.stream;
 
 import com.google.common.base.Stopwatch;
-import org.apache.distributedlog.AsyncLogWriter;
+import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.exceptions.ChecksumFailedException;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import org.apache.distributedlog.service.ResponseUtils;
 import org.apache.distributedlog.thrift.service.ResponseHeader;
-import org.apache.distributedlog.util.Sequencer;
+import org.apache.distributedlog.common.util.Sequencer;
 import com.twitter.util.Future;
 import com.twitter.util.FutureEventListener;
 import com.twitter.util.Promise;

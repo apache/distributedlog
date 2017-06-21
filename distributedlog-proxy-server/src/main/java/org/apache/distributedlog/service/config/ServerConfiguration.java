@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.DistributedLogConstants;
+import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.service.streamset.IdentityStreamPartitionConverter;
 import org.apache.distributedlog.service.streamset.StreamPartitionConverter;
 import org.apache.bookkeeper.util.ReflectionUtils;
@@ -160,7 +161,7 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Set the region id used to instantiate DistributedLogNamespace.
+     * Set the region id used to instantiate Namespace.
      *
      * @param regionId
      *          region id
@@ -172,9 +173,9 @@ public class ServerConfiguration extends CompositeConfiguration {
     }
 
     /**
-     * Get the region id used to instantiate {@link org.apache.distributedlog.namespace.DistributedLogNamespace}.
+     * Get the region id used to instantiate {@link Namespace}.
      *
-     * @return region id used to instantiate DistributedLogNamespace
+     * @return region id used to instantiate Namespace
      */
     public int getRegionId() {
         return getInt(SERVER_REGION_ID, SERVER_REGION_ID_DEFAULT);
@@ -216,7 +217,7 @@ public class ServerConfiguration extends CompositeConfiguration {
     /**
      * Get the shard id of this server.
      *
-     * <p>It would be used to instantiate the client id used for DistributedLogNamespace.
+     * <p>It would be used to instantiate the client id used for Namespace.
      *
      * @return shard id of this server.
      */

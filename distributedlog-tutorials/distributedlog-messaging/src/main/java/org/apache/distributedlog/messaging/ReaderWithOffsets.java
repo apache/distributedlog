@@ -17,22 +17,27 @@
  */
 package org.apache.distributedlog.messaging;
 
-import org.apache.distributedlog.*;
-import org.apache.distributedlog.namespace.DistributedLogNamespace;
-import org.apache.distributedlog.namespace.DistributedLogNamespaceBuilder;
-import org.apache.distributedlog.util.FutureUtils;
-import com.twitter.util.Duration;
-import com.twitter.util.FutureEventListener;
-import org.iq80.leveldb.DB;
-import org.iq80.leveldb.Options;
+import static com.google.common.base.Charsets.UTF_8;
+import static org.iq80.leveldb.impl.Iq80DBFactory.*;
 
 import java.io.File;
 import java.net.URI;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static com.google.common.base.Charsets.UTF_8;
-import static org.iq80.leveldb.impl.Iq80DBFactory.*;
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.DLSN;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.LogRecordWithDLSN;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.iq80.leveldb.DB;
+import org.iq80.leveldb.Options;
 
 /**
  * Reader with offsets
@@ -54,7 +59,7 @@ public class ReaderWithOffsets {
 
         URI uri = URI.create(dlUriStr);
         DistributedLogConfiguration conf = new DistributedLogConfiguration();
-        DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        Namespace namespace = NamespaceBuilder.newBuilder()
                 .conf(conf)
                 .uri(uri)
                 .build();
@@ -120,13 +125,13 @@ public class ReaderWithOffsets {
                 System.out.println(new String(record.getPayload(), UTF_8));
                 System.out.println("\"\"\"");
                 lastDLSN.set(record.getDlsn());
-                reader.readNext().addEventListener(this);
+                reader.readNext().whenComplete(this);
             }
         };
-        reader.readNext().addEventListener(readListener);
+        reader.readNext().whenComplete(readListener);
 
         keepAliveLatch.await();
-        FutureUtils.result(reader.asyncClose(), Duration.apply(5, TimeUnit.SECONDS));
+        FutureUtils.result(reader.asyncClose(), 5, TimeUnit.SECONDS);
     }
 
 }
