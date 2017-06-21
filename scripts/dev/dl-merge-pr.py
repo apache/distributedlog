@@ -84,7 +84,7 @@ TEMP_BRANCH_PREFIX = 'PR_TOOL'
 RELEASE_BRANCH_PREFIX = ''
 
 DEV_BRANCH_NAME = 'master'
-DEFAULT_FIX_VERSION = os.environ.get("DEFAULT_FIX_VERSION", "0.4.0")
+DEFAULT_FIX_VERSION = os.environ.get("DEFAULT_FIX_VERSION", "0.5.0")
 
 def get_json(url, preview_api = False):
   """
@@ -450,7 +450,7 @@ def get_reviewers(pr_num):
   for reviewer_id in reviewers_ids:
     username = None
     useremail = None
-    if reviewers[reviewer_id] is not None:
+    if reviewer_id in reviewers:
       reviewer = reviewers[reviewer_id]
       username = reviewer['name']
       useremail = reviewer['email']
