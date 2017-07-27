@@ -156,14 +156,14 @@ public class ReaderWorker implements Worker {
             long e2eLatency = curTimeMillis - msg.getPublishTime();
             long deliveryLatency = curTimeMillis - record.getTransactionId();
             if (e2eLatency >= 0) {
-                e2eStat.registerSuccessfulEvent(e2eLatency);
+                e2eStat.registerSuccessfulEvent(e2eLatency, TimeUnit.MILLISECONDS);
             } else {
-                negativeE2EStat.registerSuccessfulEvent(-e2eLatency);
+                negativeE2EStat.registerSuccessfulEvent(-e2eLatency, TimeUnit.MILLISECONDS);
             }
             if (deliveryLatency >= 0) {
-                deliveryStat.registerSuccessfulEvent(deliveryLatency);
+                deliveryStat.registerSuccessfulEvent(deliveryLatency, TimeUnit.MILLISECONDS);
             } else {
-                negativeDeliveryStat.registerSuccessfulEvent(-deliveryLatency);
+                negativeDeliveryStat.registerSuccessfulEvent(-deliveryLatency, TimeUnit.MILLISECONDS);
             }
 
             prevDLSN = record.getDlsn();
@@ -200,12 +200,14 @@ public class ReaderWorker implements Worker {
                     new FutureEventListener<Boolean>() {
                         @Override
                         public void onSuccess(Boolean value) {
-                            truncationStat.registerSuccessfulEvent(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+                            truncationStat.registerSuccessfulEvent(
+                              stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
                         }
 
                         @Override
                         public void onFailure(Throwable cause) {
-                            truncationStat.registerFailedEvent(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+                            truncationStat.registerFailedEvent(
+                              stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
                             LOG.error("Failed to truncate stream {} to {} : ",
                                     new Object[]{streamName, dlsnToTruncate, cause});
                         }

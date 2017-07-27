@@ -96,7 +96,8 @@ public abstract class AbstractStreamOp<Response> implements StreamOp {
                 .addEventListener(new FutureEventListener<Response>() {
             @Override
             public void onSuccess(Response response) {
-                opStatsLogger.registerSuccessfulEvent(stopwatch.elapsed(TimeUnit.MICROSECONDS));
+                opStatsLogger.registerSuccessfulEvent(
+                  stopwatch.elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
                 setResponse(response);
             }
             @Override
@@ -119,7 +120,8 @@ public abstract class AbstractStreamOp<Response> implements StreamOp {
             OwnershipAcquireFailedException oafe = (OwnershipAcquireFailedException) cause;
             fail(ResponseUtils.ownerToHeader(oafe.getCurrentOwner()));
         } else {
-            opStatsLogger.registerFailedEvent(stopwatch.elapsed(TimeUnit.MICROSECONDS));
+            opStatsLogger.registerFailedEvent(
+              stopwatch.elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
             fail(ResponseUtils.exceptionToHeader(cause));
         }
     }

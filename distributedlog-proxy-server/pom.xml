@@ -272,4 +272,11 @@
       </dependencies>
     </profile>
   </profiles>
+  <repositories>
+    <repository>
+      <id>twitter-repo</id>
+      <name>Twitter Maven Repo</name>
+      <url>http://maven.twttr.com</url>
+    </repository>
+  </repositories>
 </project>

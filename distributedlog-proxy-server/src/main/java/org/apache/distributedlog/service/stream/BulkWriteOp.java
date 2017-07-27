@@ -122,16 +122,19 @@ public class BulkWriteOp extends AbstractStreamOp<BulkWriteResponse> implements 
             @Override
             public void onSuccess(BulkWriteResponse response) {
                 if (response.getHeader().getCode() == StatusCode.SUCCESS) {
-                    latencyStat.registerSuccessfulEvent(stopwatch().elapsed(TimeUnit.MICROSECONDS));
+                    latencyStat.registerSuccessfulEvent(
+                      stopwatch().elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
                     bytes.add(size);
                     bulkWriteBytes.add(size);
                 } else {
-                    latencyStat.registerFailedEvent(stopwatch().elapsed(TimeUnit.MICROSECONDS));
+                    latencyStat.registerFailedEvent(
+                      stopwatch().elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
                 }
             }
             @Override
             public void onFailure(Throwable cause) {
-                latencyStat.registerFailedEvent(stopwatch().elapsed(TimeUnit.MICROSECONDS));
+                latencyStat.registerFailedEvent(
+                  stopwatch().elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
             }
         });
     }

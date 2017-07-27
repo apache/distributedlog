@@ -654,9 +654,11 @@ public class StreamImpl implements Stream {
                                             Stopwatch stopwatch,
                                             Promise<Boolean> acquirePromise) {
         if (success) {
-            streamAcquireStat.registerSuccessfulEvent(stopwatch.elapsed(TimeUnit.MICROSECONDS));
+            streamAcquireStat.registerSuccessfulEvent(
+              stopwatch.elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
         } else {
-            streamAcquireStat.registerFailedEvent(stopwatch.elapsed(TimeUnit.MICROSECONDS));
+            streamAcquireStat.registerFailedEvent(
+              stopwatch.elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
         }
         for (StreamOp op : oldPendingOps) {
             executeOp(op, success);

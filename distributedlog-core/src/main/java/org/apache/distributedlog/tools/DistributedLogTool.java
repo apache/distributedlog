@@ -1727,6 +1727,7 @@ public class DistributedLogTool extends Tool {
         abstract protected int runBKCmd(ZooKeeperClient zkc, BookKeeperClient bkc) throws Exception;
     }
 
+    /**
     static class RecoverCommand extends PerBKCommand {
 
         final List<Long> ledgers = new ArrayList<Long>();
@@ -2035,6 +2036,7 @@ public class DistributedLogTool extends Tool {
             return "recover [options] <bookiesSrc>";
         }
     }
+    **/
 
     /**
      * Per Ledger Command, which parse common options for per ledger. e.g. ledger id.
@@ -2854,7 +2856,7 @@ public class DistributedLogTool extends Tool {
         addCommand(new ListCommand());
         addCommand(new ReadLastConfirmedCommand());
         addCommand(new ReadEntriesCommand());
-        addCommand(new RecoverCommand());
+        // addCommand(new RecoverCommand());
         addCommand(new RecoverLedgerCommand());
         addCommand(new ShowCommand());
         addCommand(new TruncateCommand());
