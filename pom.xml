@@ -171,7 +171,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>${maven-assembly-plugin.version}</version>
         <configuration>
-	  <tarLongFileMode>gnu</tarLongFileMode>
+          <tarLongFileMode>gnu</tarLongFileMode>
           <descriptors>
             <descriptor>src/assemble/src.xml</descriptor>
           </descriptors>
@@ -230,12 +230,12 @@
             <exclude>ChangeLog</exclude>
             <exclude>**/README.md</exclude>
             <exclude>**/apidocs/*</exclude>
-	    <exclude>GROUPS</exclude>
-	    <exclude>OWNERS</exclude>
-	    <exclude>CONFIG.ini</exclude>
+            <exclude>GROUPS</exclude>
+            <exclude>OWNERS</exclude>
+            <exclude>CONFIG.ini</exclude>
             <exclude>**/**.md</exclude>
             <exclude>scripts/dev/reviewers</exclude>
-            <exclude>src/main/resources/DISCLAIMER.bin.txt</exclude>            
+            <exclude>src/main/resources/DISCLAIMER.bin.txt</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>**/org/apache/distributedlog/thrift/*</exclude>
           </excludes>
@@ -260,4 +260,11 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <id>twitter-repo</id>
+      <name>Twitter Maven Repo</name>
+      <url>http://maven.twttr.com</url>
+    </repository>
+  </repositories>
 </project>

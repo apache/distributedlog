@@ -1665,7 +1665,7 @@ public class DistributedLogTool extends Tool {
                 System.out.println("Skip inprogress log segment " + segment);
                 return;
             }
-            LedgerHandle lh = bkAdmin.openLedger(segment.getLogSegmentId(), true);
+            LedgerHandle lh = bkAdmin.openLedger(segment.getLogSegmentId());
             long lac = lh.getLastAddConfirmed();
             Enumeration<LedgerEntry> entries = lh.readEntries(lac, lac);
             if (!entries.hasMoreElements()) {
