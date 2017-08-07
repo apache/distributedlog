@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Apache DistributedLog (incubating)</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/docs/latest/styles/site.css">
+  <link rel="stylesheet" href="/docs/latest/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/docs/latest/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/monitoring.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/docs/latest/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/docs/latest/">V0.5.0-incubating</a></li>
+        <!-- Concepts -->
+        <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/docs/latest/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/latest/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/docs/latest/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/latest/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/docs/latest/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/docs/latest/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/docs/latest/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/docs/latest/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/docs/latest/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/docs/latest/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/docs/latest/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/docs/latest/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="/docs/latest/admin_guide/main.html" class="">Admin Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/operations.html" class="">
+                  Operations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/deployment/cluster.html" class="">
+                  Cluster Setup
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/deployment/global-cluster.html" class="">
+                  Global Cluster Setup
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/performance.html" class="">
+                  Performance Tuning
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/loadtest.html" class="">
+                  Load Test
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/hardware.html" class="">
+                  Hardware
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/monitoring.html" class="active">
+                  Monitoring
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/zookeeper.html" class="">
+                  ZooKeeper
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/bookkeeper.html" class="">
+                  BookKeeper
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+
+      
+
+      <li><a href="/docs/latest/admin_guide/main.html">Admin Guide</a></li>
+      
+      
+      <li class="active">Monitoring</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="monitoring">
+<p class="topic-title first">Monitoring</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id4">Monitoring</a><ul>
+<li><a class="reference internal" href="#stats-provider" id="id5">Stats Provider</a><ul>
+<li><a class="reference internal" href="#stats-logger" id="id6">Stats Logger</a><ul>
+<li><a class="reference internal" href="#counters" id="id7">Counters</a></li>
+<li><a class="reference internal" href="#gauges" id="id8">Gauges</a></li>
+<li><a class="reference internal" href="#metrics-opstats" id="id9">Metrics (OpStats)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#available-stats-providers" id="id10">Available Stats Providers</a><ul>
+<li><a class="reference internal" href="#twitter-science-stats" id="id11">Twitter Science Stats</a></li>
+<li><a class="reference internal" href="#twitter-ostrich-stats" id="id12">Twitter Ostrich Stats</a></li>
+<li><a class="reference internal" href="#twitter-finagle-metrics" id="id13">Twitter Finagle Metrics</a></li>
+<li><a class="reference internal" href="#codahale-metrics" id="id14">Codahale Metrics</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#enable-stats-provider-on-bookie-servers" id="id15">Enable Stats Provider on Bookie Servers</a></li>
+<li><a class="reference internal" href="#metrics" id="id16">Metrics</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id4">Monitoring</a></h2>
+<p>DistributedLog uses the stats library provided by Apache BookKeeper for reporting metrics in
+both the server and the client. This can be configured to report stats using pluggable stats
+provider to integrate with your monitoring system.</p>
+<div class="section" id="stats-provider">
+<h3><a class="toc-backref" href="#id5">Stats Provider</a></h3>
+<p><cite>StatsProvider</cite> is a provider that provides different kinds of stats logger for different scopes.
+The provider is also responsible for reporting its managed metrics.</p>
+<pre class="literal-block">
+// Create the stats provider
+StatsProvider statsProvider = ...;
+// Start the stats provider
+statsProvider.start(conf);
+// Stop the stats provider
+statsProvider.stop();
+</pre>
+<div class="section" id="stats-logger">
+<h4><a class="toc-backref" href="#id6">Stats Logger</a></h4>
+<p>A scoped <cite>StatsLogger</cite> is a stats logger that records 3 kinds of statistics
+under a given <cite>scope</cite>.</p>
+<p>A <cite>StatsLogger</cite> could be either created by obtaining from stats provider with
+the scope name:</p>
+<pre class="literal-block">
+StatsProvider statsProvider = ...;
+StatsLogger statsLogger = statsProvider.scope(&quot;test-scope&quot;);
+</pre>
+<p>Or created by obtaining from a stats logger with a sub scope name:</p>
+<pre class="literal-block">
+StatsLogger rootStatsLogger = ...;
+StatsLogger subStatsLogger = rootStatsLogger.scope(&quot;sub-scope&quot;);
+</pre>
+<p>All the metrics in a stats provider are managed in a hierarchical of scopes.</p>
+<pre class="literal-block">
+// all stats recorded by `rootStatsLogger` are under 'root'
+StatsLogger rootStatsLogger = statsProvider.scope(&quot;root&quot;);
+// all stats recorded by 'subStatsLogger1` are under 'root/scope1'
+StatsLogger subStatsLogger1 = statsProvider.scope(&quot;scope1&quot;);
+// all stats recorded by 'subStatsLogger2` are under 'root/scope2'
+StatsLogger subStatsLogger2 = statsProvider.scope(&quot;scope2&quot;);
+</pre>
+<div class="section" id="counters">
+<h5><a class="toc-backref" href="#id7">Counters</a></h5>
+<p>A <cite>Counter</cite> is a cumulative metric that represents a single numerical value. A <strong>counter</strong>
+is typically used to count requests served, tasks completed, errors occurred, etc. Counters
+should not be used to expose current counts of items whose number can also go down, e.g.
+the number of currently running tasks. Use <cite>Gauges</cite> for this use case.</p>
+<p>To change a counter, use:</p>
+<pre class="literal-block">
+StatsLogger statsLogger = ...;
+Counter births = statsLogger.getCounter(&quot;births&quot;);
+// increment the counter
+births.inc();
+// decrement the counter
+births.dec();
+// change the counter by delta
+births.add(-10);
+// reset the counter
+births.reset();
+</pre>
+</div>
+<div class="section" id="gauges">
+<h5><a class="toc-backref" href="#id8">Gauges</a></h5>
+<p>A <cite>Gauge</cite> is a metric that represents a single numerical value that can arbitrarily go up and down.</p>
+<p>Gauges are typically used for measured values like temperatures or current memory usage, but also
+&quot;counts&quot; that can go up and down, like the number of running tasks.</p>
+<p>To define a gauge, stick the following code somewhere in the initialization:</p>
+<pre class="literal-block">
+final AtomicLong numPendingRequests = new AtomicLong(0L);
+StatsLogger statsLogger = ...;
+statsLogger.registerGauge(
+    &quot;num_pending_requests&quot;,
+    new Gauge&lt;Number&gt;() {
+        &#64;Override
+        public Number getDefaultValue() {
+            return 0;
+        }
+        &#64;Override
+        public Number getSample() {
+            return numPendingRequests.get();
+        }
+    });
+</pre>
+<p>The gauge must always return a numerical value when sampling.</p>
+</div>
+<div class="section" id="metrics-opstats">
+<h5><a class="toc-backref" href="#id9">Metrics (OpStats)</a></h5>
+<p>A <cite>OpStats</cite> is a set of metrics that represents the statistics of an <cite>operation</cite>. Those metrics
+include <cite>success</cite> or <cite>failure</cite> of the operations and its distribution (also known as <cite>Histogram</cite>).
+It is usually used for timing.</p>
+<pre class="literal-block">
+StatsLogger statsLogger = ...;
+OpStatsLogger writeStats = statsLogger.getOpStatsLogger(&quot;writes&quot;);
+long writeLatency = ...;
+
+// register success op
+writeStats.registerSuccessfulEvent(writeLatency);
+
+// register failure op
+writeStats.registerFailedEvent(writeLatency);
+</pre>
+</div>
+</div>
+</div>
+<div class="section" id="available-stats-providers">
+<h3><a class="toc-backref" href="#id10">Available Stats Providers</a></h3>
+<p>All the available stats providers are listed as below:</p>
+<ul class="simple">
+<li>Twitter Science Stats (deprecated)</li>
+<li>Twitter Ostrich Stats (deprecated)</li>
+<li>Twitter Finagle Stats</li>
+<li>Codahale Stats</li>
+</ul>
+<div class="section" id="twitter-science-stats">
+<h4><a class="toc-backref" href="#id11">Twitter Science Stats</a></h4>
+<p>Use following dependency to enable Twitter science stats provider.</p>
+<pre class="literal-block">
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.bookkeeper.stats&lt;/groupId&gt;
+  &lt;artifactId&gt;twitter-science-provider&lt;/artifactId&gt;
+  &lt;version&gt;${bookkeeper.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+<p>Construct the stats provider for clients.</p>
+<pre class="literal-block">
+StatsProvider statsProvider = new TwitterStatsProvider();
+DistributedLogConfiguration conf = ...;
+
+// starts the stats provider (optional)
+statsProvider.start(conf);
+
+// all the dl related stats are exposed under &quot;dlog&quot;
+StatsLogger statsLogger = statsProvider.getStatsLogger(&quot;dlog&quot;);
+DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+    .uri(...)
+    .conf(conf)
+    .statsLogger(statsLogger)
+    .build();
+
+...
+
+// stop the stats provider (optional)
+statsProvider.stop();
+</pre>
+<p>Expose the stats collected by the stats provider by configuring following settings:</p>
+<pre class="literal-block">
+// enable exporting the stats
+statsExport=true
+// exporting the stats at port 8080
+statsHttpPort=8080
+</pre>
+<p>If exporting stats is enabled, all the stats are exported by the http endpoint.
+You could curl the http endpoint to check the stats.</p>
+<pre class="literal-block">
+curl -s &lt;host&gt;:8080/vars
+</pre>
+<p>check <a class="reference external" href="https://github.com/twitter/commons/tree/master/src/java/com/twitter/common/stats">ScienceStats</a> for more details.</p>
+</div>
+<div class="section" id="twitter-ostrich-stats">
+<h4><a class="toc-backref" href="#id12">Twitter Ostrich Stats</a></h4>
+<p>Use following dependency to enable Twitter ostrich stats provider.</p>
+<pre class="literal-block">
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.bookkeeper.stats&lt;/groupId&gt;
+  &lt;artifactId&gt;twitter-ostrich-provider&lt;/artifactId&gt;
+  &lt;version&gt;${bookkeeper.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+<p>Construct the stats provider for clients.</p>
+<pre class="literal-block">
+StatsProvider statsProvider = new TwitterOstrichProvider();
+DistributedLogConfiguration conf = ...;
+
+// starts the stats provider (optional)
+statsProvider.start(conf);
+
+// all the dl related stats are exposed under &quot;dlog&quot;
+StatsLogger statsLogger = statsProvider.getStatsLogger(&quot;dlog&quot;);
+DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+    .uri(...)
+    .conf(conf)
+    .statsLogger(statsLogger)
+    .build();
+
+...
+
+// stop the stats provider (optional)
+statsProvider.stop();
+</pre>
+<p>Expose the stats collected by the stats provider by configuring following settings:</p>
+<pre class="literal-block">
+// enable exporting the stats
+statsExport=true
+// exporting the stats at port 8080
+statsHttpPort=8080
+</pre>
+<p>If exporting stats is enabled, all the stats are exported by the http endpoint.
+You could curl the http endpoint to check the stats.</p>
+<pre class="literal-block">
+curl -s &lt;host&gt;:8080/stats.txt
+</pre>
+<p>check <a class="reference external" href="https://github.com/twitter/ostrich">Ostrich</a> for more details.</p>
+</div>
+<div class="section" id="twitter-finagle-metrics">
+<h4><a class="toc-backref" href="#id13">Twitter Finagle Metrics</a></h4>
+<p>Use following dependency to enable bridging finagle stats receiver to bookkeeper's stats provider.
+All the stats exposed by the stats provider will be collected by finagle stats receiver and exposed
+by Twitter's admin service.</p>
+<pre class="literal-block">
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.bookkeeper.stats&lt;/groupId&gt;
+  &lt;artifactId&gt;twitter-finagle-provider&lt;/artifactId&gt;
+  &lt;version&gt;${bookkeeper.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+<p>Construct the stats provider for clients.</p>
+<pre class="literal-block">
+StatsReceiver statsReceiver = ...; // finagle stats receiver
+StatsProvider statsProvider = new FinagleStatsProvider(statsReceiver);
+DistributedLogConfiguration conf = ...;
+
+// the stats provider does nothing on start.
+statsProvider.start(conf);
+
+// all the dl related stats are exposed under &quot;dlog&quot;
+StatsLogger statsLogger = statsProvider.getStatsLogger(&quot;dlog&quot;);
+DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+    .uri(...)
+    .conf(conf)
+    .statsLogger(statsLogger)
+    .build();
+
+...
+
+// the stats provider does nothing on stop.
+statsProvider.stop();
+</pre>
+<p>check <a class="reference external" href="https://twitter.github.io/twitter-server/Migration.html">finagle metrics library</a> for more details on how to expose the stats.</p>
+</div>
+<div class="section" id="codahale-metrics">
+<h4><a class="toc-backref" href="#id14">Codahale Metrics</a></h4>
+<p>Use following dependency to enable Twitter ostrich stats provider.</p>
+<pre class="literal-block">
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.bookkeeper.stats&lt;/groupId&gt;
+  &lt;artifactId&gt;codahale-metrics-provider&lt;/artifactId&gt;
+  &lt;version&gt;${bookkeeper.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+<p>Construct the stats provider for clients.</p>
+<pre class="literal-block">
+StatsProvider statsProvider = new CodahaleMetricsProvider();
+DistributedLogConfiguration conf = ...;
+
+// starts the stats provider (optional)
+statsProvider.start(conf);
+
+// all the dl related stats are exposed under &quot;dlog&quot;
+StatsLogger statsLogger = statsProvider.getStatsLogger(&quot;dlog&quot;);
+DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+    .uri(...)
+    .conf(conf)
+    .statsLogger(statsLogger)
+    .build();
+
+...
+
+// stop the stats provider (optional)
+statsProvider.stop();
+</pre>
+<p>Expose the stats collected by the stats provider in different ways by configuring following settings.
+Check <a class="reference external" href="https://dropwizard.github.io/metrics/3.1.0/">Codehale</a> on how to configuring report endpoints.</p>
+<pre class="literal-block">
+// How frequent report the stats
+codahaleStatsOutputFrequencySeconds=...
+// The prefix string of codahale stats
+codahaleStatsPrefix=...
+
+//
+// Report Endpoints
+//
+
+// expose the stats to Graphite
+codahaleStatsGraphiteEndpoint=...
+// expose the stats to CSV files
+codahaleStatsCSVEndpoint=...
+// expose the stats to Slf4j logging
+codahaleStatsSlf4jEndpoint=...
+// expose the stats to JMX endpoint
+codahaleStatsJmxEndpoint=...
+</pre>
+<p>check <a class="reference external" href="https://dropwizard.github.io/metrics/3.1.0/">Codehale</a> for more details.</p>
+</div>
+</div>
+<div class="section" id="enable-stats-provider-on-bookie-servers">
+<h3><a class="toc-backref" href="#id15">Enable Stats Provider on Bookie Servers</a></h3>
+<p>The stats provider used by <em>Bookie Servers</em> is configured by setting the following option.</p>
+<pre class="literal-block">
+// class of stats provider
+statsProviderClass=&quot;org.apache.bookkeeper.stats.CodahaleMetricsProvider&quot;
+</pre>
+</div>
+<div class="section" id="metrics">
+<h3><a class="toc-backref" href="#id16">Metrics</a></h3>
+<p>Check the <a class="reference external" href="../user_guide/references/metrics">Metrics</a> reference page for the metrics exposed by DistributedLog.</p>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/docs/latest/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

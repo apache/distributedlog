@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Apache DistributedLog (incubating)</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/docs/0.4.0-incubating/styles/site.css">
+  <link rel="stylesheet" href="/docs/0.4.0-incubating/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/docs/0.4.0-incubating/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/user_guide/implementation/storage.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/docs/0.4.0-incubating/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/docs/0.4.0-incubating/">V0.4.0</a></li>
+        <!-- Concepts -->
+        <li><a href="/docs/0.4.0-incubating/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/docs/0.4.0-incubating/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/0.4.0-incubating/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/0.4.0-incubating/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/0.4.0-incubating/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="/docs/0.4.0-incubating/user_guide/main.html" class="">User Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/basics/introduction.html" class="">
+                  Introduction
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/considerations/main.html" class="">
+                  Considerations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/architecture/main.html" class="">
+                  Architecture
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/api/main.html" class="">
+                  API
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/api/core.html" class="active">
+                        Core Library API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/api/proxy.html" class="active">
+                        Proxy Client API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/api/practice.html" class="active">
+                        Best Practise
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/configuration/main.html" class="">
+                  Configuration
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/configuration/core.html" class="active">
+                        Core Library Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/configuration/proxy.html" class="active">
+                        Write Proxy Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/configuration/client.html" class="active">
+                        Client Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/configuration/perlog.html" class="active">
+                        Per Stream Configuration
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/design/main.html" class="">
+                  Detail Design
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/globalreplicatedlog/main.html" class="">
+                  Global Replicated Log
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/implementation/main.html" class="">
+                  Implementation
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/implementation/storage.html" class="active">
+                        Storage
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/0.4.0-incubating/user_guide/references/main.html" class="">
+                  References
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/references/metrics.html" class="active">
+                        Metrics
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/0.4.0-incubating/user_guide/references/features.html" class="active">
+                        Available Features
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+      <li><a href="/docs/0.4.0-incubating/user_guide/main.html">User Guide</a></li>
+      
+
+      
+
+      <li><a href="/docs/0.4.0-incubating/user_guide/implementation/main.html">Implementation</a></li>
+      
+      
+      <li class="active">Storage</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="storage">
+<p class="topic-title first">Storage</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id2">Storage</a><ul>
+<li><a class="reference internal" href="#ensemble-placement-policy" id="id3">Ensemble Placement Policy</a><ul>
+<li><a class="reference internal" href="#how-does-ensembleplacementpolicy-work" id="id4">How does EnsemblePlacementPolicy work?</a><ul>
+<li><a class="reference internal" href="#initialization-and-uninitialization" id="id5">Initialization and uninitialization</a></li>
+<li><a class="reference internal" href="#how-to-choose-bookies-to-place" id="id6">How to choose bookies to place</a><ul>
+<li><a class="reference internal" href="#network-topology" id="id7">Network Topology</a></li>
+<li><a class="reference internal" href="#rackaware-and-regionaware" id="id8">RackAware and RegionAware</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-to-choose-bookies-to-do-speculative-reads" id="id9">How to choose bookies to do speculative reads?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-to-enable-different-ensembleplacementpolicy" id="id10">How to enable different EnsemblePlacementPolicy?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id2">Storage</a></h2>
+<p>This describes some implementation details of storage layer.</p>
+<div class="section" id="ensemble-placement-policy">
+<h3><a class="toc-backref" href="#id3">Ensemble Placement Policy</a></h3>
+<p><cite>EnsemblePlacementPolicy</cite> encapsulates the algorithm that bookkeeper client uses to select a number of bookies from the
+cluster as an ensemble for storing data. The algorithm is typically based on the data input as well as the network
+topology properties.</p>
+<p>By default, BookKeeper offers a <cite>RackawareEnsemblePlacementPolicy</cite> for placing the data across racks within a
+datacenter, and a <cite>RegionAwareEnsemblePlacementPolicy</cite> for placing the data across multiple datacenters.</p>
+<div class="section" id="how-does-ensembleplacementpolicy-work">
+<h4><a class="toc-backref" href="#id4">How does EnsemblePlacementPolicy work?</a></h4>
+<p>The interface of <cite>EnsemblePlacementPolicy</cite> is described as below.</p>
+<pre class="literal-block">
+public interface EnsemblePlacementPolicy {
+
+    /**
+     * Initialize the policy.
+     *
+     * &#64;param conf client configuration
+     * &#64;param optionalDnsResolver dns resolver
+     * &#64;param hashedWheelTimer timer
+     * &#64;param featureProvider feature provider
+     * &#64;param statsLogger stats logger
+     * &#64;param alertStatsLogger stats logger for alerts
+     */
+    public EnsemblePlacementPolicy initialize(ClientConfiguration conf,
+                                              Optional&lt;DNSToSwitchMapping&gt; optionalDnsResolver,
+                                              HashedWheelTimer hashedWheelTimer,
+                                              FeatureProvider featureProvider,
+                                              StatsLogger statsLogger,
+                                              AlertStatsLogger alertStatsLogger);
+
+    /**
+     * Uninitialize the policy
+     */
+    public void uninitalize();
+
+    /**
+     * A consistent view of the cluster (what bookies are available as writable, what bookies are available as
+     * readonly) is updated when any changes happen in the cluster.
+     *
+     * &#64;param writableBookies
+     *          All the bookies in the cluster available for write/read.
+     * &#64;param readOnlyBookies
+     *          All the bookies in the cluster available for readonly.
+     * &#64;return the dead bookies during this cluster change.
+     */
+    public Set&lt;BookieSocketAddress&gt; onClusterChanged(Set&lt;BookieSocketAddress&gt; writableBookies,
+                                                     Set&lt;BookieSocketAddress&gt; readOnlyBookies);
+
+    /**
+     * Choose &lt;i&gt;numBookies&lt;/i&gt; bookies for ensemble. If the count is more than the number of available
+     * nodes, {&#64;link BKNotEnoughBookiesException} is thrown.
+     *
+     * &#64;param ensembleSize
+     *          Ensemble Size
+     * &#64;param writeQuorumSize
+     *          Write Quorum Size
+     * &#64;param excludeBookies
+     *          Bookies that should not be considered as targets.
+     * &#64;return list of bookies chosen as targets.
+     * &#64;throws BKNotEnoughBookiesException if not enough bookies available.
+     */
+    public ArrayList&lt;BookieSocketAddress&gt; newEnsemble(int ensembleSize, int writeQuorumSize, int ackQuorumSize,
+                                                      Set&lt;BookieSocketAddress&gt; excludeBookies) throws BKNotEnoughBookiesException;
+
+    /**
+     * Choose a new bookie to replace &lt;i&gt;bookieToReplace&lt;/i&gt;. If no bookie available in the cluster,
+     * {&#64;link BKNotEnoughBookiesException} is thrown.
+     *
+     * &#64;param bookieToReplace
+     *          bookie to replace
+     * &#64;param excludeBookies
+     *          bookies that should not be considered as candidate.
+     * &#64;return the bookie chosen as target.
+     * &#64;throws BKNotEnoughBookiesException
+     */
+    public BookieSocketAddress replaceBookie(int ensembleSize, int writeQuorumSize, int ackQuorumSize,
+                                             Collection&lt;BookieSocketAddress&gt; currentEnsemble, BookieSocketAddress bookieToReplace,
+                                             Set&lt;BookieSocketAddress&gt; excludeBookies) throws BKNotEnoughBookiesException;
+
+    /**
+     * Reorder the read sequence of a given write quorum &lt;i&gt;writeSet&lt;/i&gt;.
+     *
+     * &#64;param ensemble
+     *          Ensemble to read entries.
+     * &#64;param writeSet
+     *          Write quorum to read entries.
+     * &#64;param bookieFailureHistory
+     *          Observed failures on the bookies
+     * &#64;return read sequence of bookies
+     */
+    public List&lt;Integer&gt; reorderReadSequence(ArrayList&lt;BookieSocketAddress&gt; ensemble,
+                                             List&lt;Integer&gt; writeSet, Map&lt;BookieSocketAddress, Long&gt; bookieFailureHistory);
+
+
+    /**
+     * Reorder the read last add confirmed sequence of a given write quorum &lt;i&gt;writeSet&lt;/i&gt;.
+     *
+     * &#64;param ensemble
+     *          Ensemble to read entries.
+     * &#64;param writeSet
+     *          Write quorum to read entries.
+     * &#64;param bookieFailureHistory
+     *          Observed failures on the bookies
+     * &#64;return read sequence of bookies
+     */
+    public List&lt;Integer&gt; reorderReadLACSequence(ArrayList&lt;BookieSocketAddress&gt; ensemble,
+                                            List&lt;Integer&gt; writeSet, Map&lt;BookieSocketAddress, Long&gt; bookieFailureHistory);
+}
+</pre>
+<p>The methods in this interface covers three parts - 1) initialization and uninitialization; 2) how to choose bookies to
+place data; and 3) how to choose bookies to do speculative reads.</p>
+<div class="section" id="initialization-and-uninitialization">
+<h5><a class="toc-backref" href="#id5">Initialization and uninitialization</a></h5>
+<p>The ensemble placement policy is constructed by jvm reflection during constructing bookkeeper client. After the
+<cite>EnsemblePlacementPolicy</cite> is constructed, bookkeeper client will call <cite>#initialize</cite> to initialize the placement policy.</p>
+<p>The <cite>#initialize</cite> method takes a few resources from bookkeeper for instantiating itself. These resources include:</p>
+<ol class="arabic simple">
+<li><cite>ClientConfiguration</cite> : The client configuration that used for constructing the bookkeeper client. The implementation of the placement policy could obtain its settings from this configuration.</li>
+<li><cite>DNSToSwitchMapping</cite>: The DNS resolver for the ensemble policy to build the network topology of the bookies cluster. It is optional.</li>
+<li><cite>HashedWheelTimer</cite>: A hashed wheel timer that could be used for timing related work. For example, a stabilize network topology could use it to delay network topology changes to reduce impacts of flapping bookie registrations due to zk session expires.</li>
+<li><cite>FeatureProvider</cite>: A feature provider that the policy could use for enabling or disabling its offered features. For example, a region-aware placement policy could offer features to disable placing data to a specific region at runtime.</li>
+<li><cite>StatsLogger</cite>: A stats logger for exposing stats.</li>
+<li><cite>AlertStatsLogger</cite>: An alert stats logger for exposing critical stats that needs to be alerted.</li>
+</ol>
+<p>The ensemble placement policy is a single instance per bookkeeper client. The instance will be <cite>#uninitialize</cite> when
+closing the bookkeeper client. The implementation of a placement policy should be responsible for releasing all the
+resources that allocated during <cite>#initialize</cite>.</p>
+</div>
+<div class="section" id="how-to-choose-bookies-to-place">
+<h5><a class="toc-backref" href="#id6">How to choose bookies to place</a></h5>
+<p>The bookkeeper client discovers list of bookies from zookeeper via <cite>BookieWatcher</cite> - whenever there are bookie changes,
+the ensemble placement policy will be notified with new list of bookies via <cite>onClusterChanged(writableBookie, readOnlyBookies)</cite>.
+The implementation of the ensemble placement policy will react on those changes to build new network topology. Subsequent
+operations like <cite>newEnsemble</cite> or <cite>replaceBookie</cite> hence can operate on the new network topology.</p>
+<dl class="docutils">
+<dt>newEnsemble(ensembleSize, writeQuorumSize, ackQuorumSize, excludeBookies)</dt>
+<dd>Choose <cite>ensembleSize</cite> bookies for ensemble. If the count is more than the number of available nodes,
+<cite>BKNotEnoughBookiesException</cite> is thrown.</dd>
+<dt>replaceBookie(ensembleSize, writeQuorumSize, ackQuorumSize, currentEnsemble, bookieToReplace, excludeBookies)</dt>
+<dd>Choose a new bookie to replace <cite>bookieToReplace</cite>. If no bookie available in the cluster,
+<cite>BKNotEnoughBookiesException</cite> is thrown.</dd>
+</dl>
+<p>Both <cite>RackAware</cite> and <cite>RegionAware</cite> placement policies are <cite>TopologyAware</cite> policies. They build a <cite>NetworkTopology</cite> on
+responding bookie changes, use it for ensemble placement and ensure rack/region coverage for write quorums - a write
+quorum should be covered by at least two racks or regions.</p>
+<div class="section" id="network-topology">
+<h6><a class="toc-backref" href="#id7">Network Topology</a></h6>
+<p>The network topology is presenting a cluster of bookies in a tree hierarchical structure. For example, a bookie cluster
+may be consists of many data centers (aka regions) filled with racks of machines. In this tree structure, leaves
+represent bookies and inner nodes represent switches/routes that manage traffic in/out of regions or racks.</p>
+<p>For example, there are 3 bookies in region <cite>A</cite>. They are <cite>bk1</cite>, <cite>bk2</cite> and <cite>bk3</cite>. And their network locations are
+<cite>/region-a/rack-1/bk1</cite>, <cite>/region-a/rack-1/bk2</cite> and <cite>/region-a/rack-2/bk3</cite>. So the network topology will look like below:</p>
+<pre class="literal-block">
+       root
+        |
+    region-a
+      /  \
+ rack-1  rack-2
+  /  \       \
+bk1  bk2     bk3
+</pre>
+<p>Another example, there are 4 bookies spanning in two regions <cite>A</cite> and <cite>B</cite>. They are <cite>bk1</cite>, <cite>bk2</cite>, <cite>bk3</cite> and <cite>bk4</cite>. And
+their network locations are <cite>/region-a/rack-1/bk1</cite>, <cite>/region-a/rack-1/bk2</cite>, <cite>/region-b/rack-2/bk3</cite> and <cite>/region-b/rack-2/bk4</cite>.
+The network topology will look like below:</p>
+<pre class="literal-block">
+       root
+       /  \
+region-a  region-b
+   |         |
+ rack-1    rack-2
+  / \       / \
+bk1  bk2  bk3  bk4
+</pre>
+<p>The network location of each bookie is resolved by a <cite>DNSResolver</cite> (interface is described as below). The <cite>DNSResolver</cite>
+resolves a list of DNS-names or IP-addresses into a list of network locations. The network location that is returned
+must be a network path of the form <cite>/region/rack</cite>, where <cite>/</cite> is the root, and <cite>region</cite> is the region id representing
+the data center where <cite>rack</cite> is located. The network topology of the bookie cluster would determine the number of
+components in the network path.</p>
+<pre class="literal-block">
+/**
+ * An interface that must be implemented to allow pluggable
+ * DNS-name/IP-address to RackID resolvers.
+ *
+ */
+&#64;Beta
+public interface DNSToSwitchMapping {
+    /**
+     * Resolves a list of DNS-names/IP-addresses and returns back a list of
+     * switch information (network paths). One-to-one correspondence must be
+     * maintained between the elements in the lists.
+     * Consider an element in the argument list - x.y.com. The switch information
+     * that is returned must be a network path of the form /foo/rack,
+     * where / is the root, and 'foo' is the switch where 'rack' is connected.
+     * Note the hostname/ip-address is not part of the returned path.
+     * The network topology of the cluster would determine the number of
+     * components in the network path.
+     * &lt;p/&gt;
+     *
+     * If a name cannot be resolved to a rack, the implementation
+     * should return {&#64;link NetworkTopology#DEFAULT_RACK}. This
+     * is what the bundled implementations do, though it is not a formal requirement
+     *
+     * &#64;param names the list of hosts to resolve (can be empty)
+     * &#64;return list of resolved network paths.
+     * If &lt;i&gt;names&lt;/i&gt; is empty, the returned list is also empty
+     */
+    public List&lt;String&gt; resolve(List&lt;String&gt; names);
+
+    /**
+     * Reload all of the cached mappings.
+     *
+     * If there is a cache, this method will clear it, so that future accesses
+     * will get a chance to see the new data.
+     */
+    public void reloadCachedMappings();
+}
+</pre>
+<p>By default, the network topology responds to bookie changes immediately. That means if a bookie's znode appears in  or
+disappears from zookeeper, the network topology will add the bookie or remove the bookie immediately. It introduces
+instability when bookie's zookeeper registration becomes flapping. In order to address this, there is a <cite>StabilizeNetworkTopology</cite>
+which delays removing bookies from network topology if they disappear from zookeeper. It could be enabled by setting
+the following option.</p>
+<pre class="literal-block">
+# enable stabilize network topology by setting it to a positive value.
+bkc.networkTopologyStabilizePeriodSeconds=10
+</pre>
+</div>
+<div class="section" id="rackaware-and-regionaware">
+<h6><a class="toc-backref" href="#id8">RackAware and RegionAware</a></h6>
+<p><cite>RackAware</cite> placement policy basically just chooses bookies from different racks in the built network topology. It
+guarantees that a write quorum will cover at least two racks.</p>
+<p><cite>RegionAware</cite> placement policy is a hierarchical placement policy, which it chooses equal-sized bookies from regions, and
+within each region it uses <cite>RackAware</cite> placement policy to choose bookies from racks. For example, if there is 3 regions -
+<cite>region-a</cite>, <cite>region-b</cite> and <cite>region-c</cite>, an application want to allocate a 15-bookies ensemble. First, it would figure
+out there are 3 regions and it should allocate 5 bookies from each region. Second, for each region, it would use
+<cite>RackAware</cite> placement policy to choose 5 bookies.</p>
+</div>
+</div>
+<div class="section" id="how-to-choose-bookies-to-do-speculative-reads">
+<h5><a class="toc-backref" href="#id9">How to choose bookies to do speculative reads?</a></h5>
+<p><cite>reorderReadSequence</cite> and <cite>reorderReadLACSequence</cite> are two methods exposed by the placement policy, to help client
+determine a better read sequence according to the network topology and the bookie failure history.</p>
+<p>In <cite>RackAware</cite> placement policy, the reads will be tried in following sequence:</p>
+<ul class="simple">
+<li>bookies are writable and didn't experience failures before</li>
+<li>bookies are writable and experienced failures before</li>
+<li>bookies are readonly</li>
+<li>bookies already disappeared from network topology</li>
+</ul>
+<p>In <cite>RegionAware</cite> placement policy, the reads will be tried in similar following sequence as <cite>RackAware</cite> placement policy.
+There is a slight different on trying writable bookies: after trying every 2 bookies from local region, it would try
+a bookie from remote region. Hence it would achieve low latency even there is network issues within local region.</p>
+</div>
+</div>
+<div class="section" id="how-to-enable-different-ensembleplacementpolicy">
+<h4><a class="toc-backref" href="#id10">How to enable different EnsemblePlacementPolicy?</a></h4>
+<p>Users could configure using different ensemble placement policies by setting following options in distributedlog
+configuration files.</p>
+<pre class="literal-block">
+# enable rack-aware ensemble placement policy
+bkc.ensemblePlacementPolicy=org.apache.bookkeeper.client.RackawareEnsemblePlacementPolicy
+# enable region-aware ensemble placement policy
+bkc.ensemblePlacementPolicy=org.apache.bookkeeper.client.RegionAwareEnsemblePlacementPolicy
+</pre>
+<p>The network topology of bookies built by either <cite>RackawareEnsemblePlacementPolicy</cite> or <cite>RegionAwareEnsemblePlacementPolicy</cite>
+is done via a <cite>DNSResolver</cite>. The default <cite>DNSResolver</cite> is a script based DNS resolver. It reads the configuration
+parameters, executes any defined script, handles errors and resolves domain names to network locations. The script
+is configured via following settings in distributedlog configuration.</p>
+<pre class="literal-block">
+bkc.networkTopologyScriptFileName=/path/to/dns/resolver/script
+</pre>
+<p>Alternatively, the <cite>DNSResolver</cite> could be configured in following settings and loaded via reflection. <cite>DNSResolverForRacks</cite>
+is a good example to check out for customizing your dns resolver based our network environments.</p>
+<pre class="literal-block">
+bkEnsemblePlacementDnsResolverClass=org.apache.distributedlog.net.DNSResolverForRacks
+</pre>
+</div>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/docs/0.4.0-incubating/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

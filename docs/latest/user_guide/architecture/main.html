@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Apache DistributedLog (incubating)</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/docs/latest/styles/site.css">
+  <link rel="stylesheet" href="/docs/latest/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/docs/latest/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/architecture/main.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/docs/latest/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/docs/latest/">V0.5.0-incubating</a></li>
+        <!-- Concepts -->
+        <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/docs/latest/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/latest/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/docs/latest/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/latest/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/docs/latest/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/docs/latest/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/docs/latest/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/docs/latest/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/docs/latest/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/docs/latest/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/docs/latest/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/docs/latest/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="/docs/latest/user_guide/main.html" class="">User Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="/docs/latest/basics/introduction.html" class="">
+                  Introduction
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/considerations/main.html" class="">
+                  Considerations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/architecture/main.html" class="active">
+                  Architecture
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/api/main.html" class="">
+                  API
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/api/core.html" class="active">
+                        Core Library API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/api/proxy.html" class="active">
+                        Proxy Client API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/api/practice.html" class="active">
+                        Best Practise
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/configuration/main.html" class="">
+                  Configuration
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/core.html" class="active">
+                        Core Library Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/proxy.html" class="active">
+                        Write Proxy Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/client.html" class="active">
+                        Client Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/perlog.html" class="active">
+                        Per Stream Configuration
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/design/main.html" class="">
+                  Detail Design
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/globalreplicatedlog/main.html" class="">
+                  Global Replicated Log
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/implementation/main.html" class="">
+                  Implementation
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/implementation/storage.html" class="active">
+                        Storage
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/references/main.html" class="">
+                  References
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/references/metrics.html" class="active">
+                        Metrics
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/references/features.html" class="active">
+                        Available Features
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+
+      
+
+      <li><a href="/docs/latest/user_guide/main.html">User Guide</a></li>
+      
+      
+      <li class="active">Architecture</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="architecture">
+<p class="topic-title first">Architecture</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id2">Architecture</a><ul>
+<li><a class="reference internal" href="#data-model" id="id3">Data Model</a><ul>
+<li><a class="reference internal" href="#log-segments" id="id4">Log Segments</a></li>
+<li><a class="reference internal" href="#log-sequence-numbers" id="id5">Log Sequence Numbers</a></li>
+<li><a class="reference internal" href="#namespace" id="id6">Namespace</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#software-stack" id="id7">Software Stack</a><ul>
+<li><a class="reference internal" href="#persistent-storage" id="id8">Persistent Storage</a><ul>
+<li><a class="reference internal" href="#log-segment-store" id="id9">Log Segment Store</a></li>
+<li><a class="reference internal" href="#cold-storage" id="id10">Cold Storage</a></li>
+<li><a class="reference internal" href="#metadata-store" id="id11">Metadata Store</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#distributedlog-core" id="id12">DistributedLog Core</a></li>
+<li><a class="reference internal" href="#stateless-serving" id="id13">Stateless Serving</a><ul>
+<li><a class="reference internal" href="#ownership-tracker" id="id14">Ownership Tracker</a></li>
+<li><a class="reference internal" href="#routing-service" id="id15">Routing Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lifecyle-of-records" id="id16">Lifecyle of records</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id2">Architecture</a></h2>
+<div class="section" id="data-model">
+<h3><a class="toc-backref" href="#id3">Data Model</a></h3>
+<p>DistributedLog exposes the <cite>log stream</cite> as the unit of operations. A <cite>log stream</cite> is a totally ordered,
+immutable sequence of log records. A <cite>log record</cite> is a sequence of bytes. Log records are batched into <cite>entries</cite>
+and written into <cite>log segments</cite>. Figure 1 illustrates the logical elements of a log stream.</p>
+<div class="figure align-center">
+<img alt="../../images/datamodel.png" src="../../images/datamodel.png" />
+<p class="caption">Figure 1. Anatomy of a log stream</p>
+</div>
+<div class="section" id="log-segments">
+<h4><a class="toc-backref" href="#id4">Log Segments</a></h4>
+<p>Although the application views the log stream as a continuous sequence of log records, it is physically stored as
+multiple <cite>log segments</cite>, where these segments are the unit of <cite>manageability</cite>. All the records in a log segment have
+the same replication configuration. The log segments are allocated, distributed and stored in a <cite>log segment store</cite>.
+As records are written to the log stream, DistributedLog switches to a new log segment based on a configured <cite>rolling policy</cite>.
+The rolling policy can be <cite>time-based</cite> i.e. based on a configured period of time (e.g. every 2 hours) or <cite>size-based</cite>
+i.e. based on a maximum log segment size (e.g. every 128MB). This allows the log segments to be distributed evenly
+across all the storage nodes. This helps evenly spread read traffic to avoid hot spots in the cluster.</p>
+<p>A log segment is also the unit of data retention. Log segments are deleted either by explicitly truncation or expiration.
+Old data is garbage collected by the log segment store once the log segments are deleted.</p>
+</div>
+<div class="section" id="log-sequence-numbers">
+<h4><a class="toc-backref" href="#id5">Log Sequence Numbers</a></h4>
+<p><cite>Log records</cite> are written sequentially into a log stream, and assigned a unique sequence number called <cite>DLSN</cite>
+(DistributedLog Sequence Number). A DLSN is comprised of 3 components: a <cite>Log Segment Sequence Number</cite> (LSSN),
+the sequence number of the log segment that the record belongs to, an <cite>Entry ID</cite> (EID) - the entry id in this log segment
+that the record is in, and a <cite>Slot ID</cite> (SID) - the slot within the entry. Records can be ordered by DLSN.</p>
+<p>Besides DLSN, an application can assign a <cite>Transaction ID</cite>,  a non-decreasing positive 64-bit integer, to each log record it writes.
+This facilitates application-specific sequencing of records and positioning of the reader. For example, a common use of the transaction ID
+is to store the timestamp of when the log record was added to the log stream. This transaction ID can then be used to rewind to a specific
+time in analytics applications.</p>
+</div>
+<div class="section" id="namespace">
+<h4><a class="toc-backref" href="#id6">Namespace</a></h4>
+<p>Log streams that belong to same application are usually categorized and managed under a <cite>namespace</cite>. A <cite>namespace</cite> is used by applications
+to locate where the log streams are. Applications can <cite>create</cite> and <cite>delete</cite> streams under a namespace, and <cite>truncate</cite> a stream to given ID.</p>
+</div>
+</div>
+<div class="section" id="software-stack">
+<h3><a class="toc-backref" href="#id7">Software Stack</a></h3>
+<p>The software stack is shown in Figure 2. The software stack is divided into three layers, with each layer is responsible for
+different features of DistributedLog. These layers are <cite>Persistent Storage</cite>, <cite>DistributedLog Core</cite> and <cite>Stateless Serving</cite>.</p>
+<div class="figure align-center">
+<img alt="../../images/softwarestack.png" src="../../images/softwarestack.png" />
+<p class="caption">Figure 2. DistributedLog Software Stack</p>
+</div>
+<div class="section" id="persistent-storage">
+<h4><a class="toc-backref" href="#id8">Persistent Storage</a></h4>
+<p>DistributedLog provides the core features - <cite>durability</cite>, <cite>availability</cite> and <cite>consistency</cite> through the storage layer.
+The main components in storage layer are <cite>Log Segment Store</cite>, <cite>Cold Storage</cite> and <cite>Metadata Store</cite>.</p>
+<div class="section" id="log-segment-store">
+<h5><a class="toc-backref" href="#id9">Log Segment Store</a></h5>
+<p>The Log segment store is responsible for storing the log segments as they are created and ensure they are durably replicated.
+We use <cite>Apache BookKeeper</cite> as the log segment store. BookKeeper helps us achieve low tail latencies for writes and reads as well as
+low delivery latency which is the end to end latency from when the record is generated until it is read by the reader - because bookkeeper's
+storage layout is optimized for I/O isolation for log workloads.</p>
+<p>In addition to storage layout optimization, the log segment store (via BookKeeper) also provides a built-in <cite>fencing</cite> mechanism for
+achieving strong consistency among multiple writers. We will discuss more about consistency in section <cite>Design Details</cite>.</p>
+</div>
+<div class="section" id="cold-storage">
+<h5><a class="toc-backref" href="#id10">Cold Storage</a></h5>
+<p>The data in the log segment store is eventually moved to a <cite>cold storage</cite>. Cold storage allows cost efficient storage of large volumes
+of log segments for extended period of time. Applications many want to have access to old data for application error recovery or debugging.
+As log segments are completed, they are proactively copied over to the cold storage, thereby providing a backup for disaster recovery or an
+operation error. We use HDFS as our cold storage.</p>
+</div>
+<div class="section" id="metadata-store">
+<h5><a class="toc-backref" href="#id11">Metadata Store</a></h5>
+<p>The metadata in DistributedLog consists of the mapping from log streams to their constituent log segments as well as each log segment's metadata.
+The log segment metadata includes the <cite>log segment ID</cite>, <cite>start and end transaction IDs</cite>, <cite>completion time</cite>, and its <cite>status</cite>. The metadata store
+is required to provide metadata operations such as consistent read and write ordering to guarantee metadata consistency in the event of failures.
+Also the metadata store should provide a notification mechanism to support streaming reads. We use ZooKeeper as the metadata store, because it is
+a strongly consistent data store which provides versioned updates, strong ordering and notifications using watches.</p>
+</div>
+</div>
+<div class="section" id="distributedlog-core">
+<h4><a class="toc-backref" href="#id12">DistributedLog Core</a></h4>
+<p>DistributedLog builds its core functionality on top of the log segment store and the metadata store. It provides the core data model of log streams
+and its naming system, and provides a <cite>single-writer-multiple-reader</cite> access model.</p>
+<p>Writers write data into the logs of their choice. Writers sequence log records written to the log streams. Therefore there is only one active log
+segment for a given log stream at a time. Correctness and consistency are guaranteed using a fencing mechanism in the log segment store and
+versioned metadata updates to prevent two writers from writing to the same log stream after a network partition.</p>
+<p>Reading from a log stream starts by <cite>positioning</cite> a reader on a log record by specifying either a DLSN or a Transaction Id. Once a reader has been
+positioned, it receives all the log records in increasing order of the sequence numbers and each record is delivered exactly once. It is up to
+individual applications to choose an appropriate mechanism to record readers positions and provide this position when a new reader session begins
+(e.g restart from a failure). Applications can choose the appropriate method for storing positions based on the desired processing semantics.</p>
+</div>
+<div class="section" id="stateless-serving">
+<h4><a class="toc-backref" href="#id13">Stateless Serving</a></h4>
+<p>A stateless serving layer is built on top of the storage layer to support large number of writers and readers. The serving layer includes <cite>Write Proxy</cite>
+and <cite>Read Proxy</cite>. <cite>Write Proxy</cite> manages the ownerships of the log streams, forwards the write requests to storage via the core library and handles
+load balancing and failover. It allows sequencing writes from many clients (aka <cite>Fan-in</cite>). <cite>Read Proxy</cite> caches log records for multiple readers consuming
+the same log stream.</p>
+<div class="section" id="ownership-tracker">
+<h5><a class="toc-backref" href="#id14">Ownership Tracker</a></h5>
+<p><cite>Ownership Tracker</cite> tracks the liveness of the owners of the log streams and fails over the ownership to other healthy write proxies when the current
+owner becomes unavailable. Since we already use zookeeper for metadata storage, we also use zookeeper for tracking the liveness of write proxies using
+<cite>ephemeral znodes</cite> and failover the ownership when zookeeper session expires.</p>
+</div>
+<div class="section" id="routing-service">
+<h5><a class="toc-backref" href="#id15">Routing Service</a></h5>
+<p>Since readers read committed data and are strict followers, the read proxies do not have to track ownership of log streams. We use consistent hashing
+as a routing mechanism to route the readers to corresponding read proxies.</p>
+<p>Applications can either use a thin client that talks to the serving tier to access DistributedLog or embed the core library to talk to the storage directly
+when they require strict write ordering. Applications choose partitioning strategies and track their reader positions based on their specific requirements.</p>
+</div>
+</div>
+</div>
+<div class="section" id="lifecyle-of-records">
+<h3><a class="toc-backref" href="#id16">Lifecyle of records</a></h3>
+<p>Figure 3 illustrates the lifecycle of a log record in DistributedLog as it flows from writers to readers and we discuss how different layers interact with
+each other.</p>
+<div class="figure align-center">
+<img alt="../../images/requestflow.png" src="../../images/requestflow.png" />
+<p class="caption">Figure 3. Lifecycle of a record</p>
+</div>
+<p>The application constructs the log records and initiates write requests (step 1). The write requests will be forwarded to the write proxy that is the master
+of the log stream. The master writer proxy will write the records in the log stream's transmit buffer. Based on the configured transmit policy, records in
+the transmit buffer will be transmitted as a batched entry to log segment store (step 2). Application can trade latency for throughput by transmitting
+<cite>immediately</cite> (lowest latency), <cite>periodically</cite> (grouping records that appear within the transmit period) or when transmit buffer has accumulated more than
+<cite>max-outstanding bytes</cite>.</p>
+<p>The batched entry is transmitted to multiple bookies (storage nodes in bookkeeper cluster) in parallel (step 3). The log segment store will respond back to
+writer once the entry is persisted durably on disk. Once the write proxy receives confirmation of durability from a quorum of bookies, it will send an
+acknowledgement to the application (step 4).</p>
+<p>Although the writer knows that the record is guaranteed to be persisted and replicated in bookkeeper. Individual bookies do not necessarily know that the
+consensus agreement has been reached for this record. The writer must therefore record a <cite>commit</cite> to make this record visible to all the readers.
+This <cite>commit</cite> can piggyback on the next batch of records from the application. If no new application records are received within the specified SLA for
+persistence, the writer will issue a special <cite>control log record</cite> notifying the log segment store that the record can now be made visible to readers (step 5).</p>
+<p>The readers' request that is waiting for new data using <cite>long polling</cite> will now receive the recent committed log records (step 6). Speculative long poll reads will be sent to other replicas to archieve predictable low 99.9% percentile latency (step 7).</p>
+<p>The log records will be cached in read proxies (step 8) for fanout readers. The read clients also use similar long poll read mechanism to read data from read proxies (step 9).</p>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/docs/latest/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

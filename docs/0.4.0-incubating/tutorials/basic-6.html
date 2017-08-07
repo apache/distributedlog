@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>API - Rewind reading records by time</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/docs/0.4.0-incubating/styles/site.css">
+  <link rel="stylesheet" href="/docs/0.4.0-incubating/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/docs/0.4.0-incubating/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/tutorials/basic-6.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/docs/0.4.0-incubating/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/docs/0.4.0-incubating/">V0.4.0</a></li>
+        <!-- Concepts -->
+        <li><a href="/docs/0.4.0-incubating/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/docs/0.4.0-incubating/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/0.4.0-incubating/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/0.4.0-incubating/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/0.4.0-incubating/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/docs/0.4.0-incubating/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/docs/0.4.0-incubating/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<div class="col-md-8 col-md-offset-2">
+  <div class="contents topic" id="basic-tutorial-rewind-reading-records-by-time">
+<p class="topic-title first">Basic Tutorial - Rewind reading records by time</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="#rewind-reading-records-by-time" id="id2">1&nbsp;&nbsp;&nbsp;Rewind reading records by time</a><ul class="auto-toc">
+<li><a class="reference internal" href="#open-a-distributedlog-manager" id="id3">1.1&nbsp;&nbsp;&nbsp;Open a distributedlog manager</a><ul class="auto-toc">
+<li><a class="reference internal" href="#create-distributedlog-uri" id="id4">1.1.1&nbsp;&nbsp;&nbsp;Create distributedlog URI</a></li>
+<li><a class="reference internal" href="#create-distributedlog-configuration" id="id5">1.1.2&nbsp;&nbsp;&nbsp;Create distributedlog configuration</a></li>
+<li><a class="reference internal" href="#build-the-distributedlog-namespace" id="id6">1.1.3&nbsp;&nbsp;&nbsp;Build the distributedlog namespace</a></li>
+<li><a class="reference internal" href="#open-the-distributedlog-manager" id="id7">1.1.4&nbsp;&nbsp;&nbsp;Open the distributedlog manager</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rewind-the-stream" id="id8">1.2&nbsp;&nbsp;&nbsp;Rewind the stream</a><ul class="auto-toc">
+<li><a class="reference internal" href="#position-the-reader-using-timestamp" id="id9">1.2.1&nbsp;&nbsp;&nbsp;Position the reader using timestamp</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#read-records" id="id10">1.3&nbsp;&nbsp;&nbsp;Read Records</a><ul class="auto-toc">
+<li><a class="reference internal" href="#register-the-read-callback" id="id11">1.3.1&nbsp;&nbsp;&nbsp;Register the read callback</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#close-the-reader" id="id12">1.4&nbsp;&nbsp;&nbsp;Close the reader</a></li>
+<li><a class="reference internal" href="#run-the-tutorial" id="id13">1.5&nbsp;&nbsp;&nbsp;Run the tutorial</a><ul class="auto-toc">
+<li><a class="reference internal" href="#start-the-local-bookkeeper-cluster" id="id14">1.5.1&nbsp;&nbsp;&nbsp;Start the local bookkeeper cluster</a></li>
+<li><a class="reference internal" href="#start-the-write-proxy" id="id15">1.5.2&nbsp;&nbsp;&nbsp;Start the write proxy</a></li>
+<li><a class="reference internal" href="#create-the-stream" id="id16">1.5.3&nbsp;&nbsp;&nbsp;Create the stream</a></li>
+<li><a class="reference internal" href="#generate-records" id="id17">1.5.4&nbsp;&nbsp;&nbsp;Generate records</a></li>
+<li><a class="reference internal" href="#id1" id="id18">1.5.5&nbsp;&nbsp;&nbsp;Rewind the stream</a></li>
+<li><a class="reference internal" href="#check-the-results" id="id19">1.5.6&nbsp;&nbsp;&nbsp;Check the results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="rewind-reading-records-by-time">
+<h2><a class="toc-backref" href="#id2">1&nbsp;&nbsp;&nbsp;Rewind reading records by time</a></h2>
+<p>This tutorial shows how to rewind reading data from a stream by time.</p>
+<div class="section" id="open-a-distributedlog-manager">
+<h3><a class="toc-backref" href="#id3">1.1&nbsp;&nbsp;&nbsp;Open a distributedlog manager</a></h3>
+<div class="section" id="create-distributedlog-uri">
+<h4><a class="toc-backref" href="#id4">1.1.1&nbsp;&nbsp;&nbsp;Create distributedlog URI</a></h4>
+<pre class="literal-block">
+String dlUriStr = ...;
+URI uri = URI.create(dlUriStr);
+</pre>
+</div>
+<div class="section" id="create-distributedlog-configuration">
+<h4><a class="toc-backref" href="#id5">1.1.2&nbsp;&nbsp;&nbsp;Create distributedlog configuration</a></h4>
+<pre class="literal-block">
+DistributedLogConfiguration conf = new DistributedLogConfiguration();
+</pre>
+</div>
+<div class="section" id="build-the-distributedlog-namespace">
+<h4><a class="toc-backref" href="#id6">1.1.3&nbsp;&nbsp;&nbsp;Build the distributedlog namespace</a></h4>
+<pre class="literal-block">
+DistributedLogNamespace namespace = DistributedLogNamespaceBuilder.newBuilder()
+        .conf(conf)
+        .uri(uri)
+        .build();
+</pre>
+</div>
+<div class="section" id="open-the-distributedlog-manager">
+<h4><a class="toc-backref" href="#id7">1.1.4&nbsp;&nbsp;&nbsp;Open the distributedlog manager</a></h4>
+<pre class="literal-block">
+DistributedLogManager dlm = namespace.openLog(&quot;basic-stream-10&quot;);
+</pre>
+</div>
+</div>
+<div class="section" id="rewind-the-stream">
+<h3><a class="toc-backref" href="#id8">1.2&nbsp;&nbsp;&nbsp;Rewind the stream</a></h3>
+<div class="section" id="position-the-reader-using-timestamp">
+<h4><a class="toc-backref" href="#id9">1.2.1&nbsp;&nbsp;&nbsp;Position the reader using timestamp</a></h4>
+<p>Since the records written by write proxy will be assigned <cite>System.currentTimeMillis()</cite>
+as the <cite>TransactionID</cite>. It is straightforward to use <cite>TransactionID</cite> to rewind reading
+the records.</p>
+<pre class="literal-block">
+int rewindSeconds = 60; // 60 seconds
+long fromTxID = System.currentTimeMillis() -
+        TimeUnit.MILLISECONDS.convert(rewindSeconds, TimeUnit.SECONDS);
+AsyncLogReader reader = FutureUtils.result(dlm.openAsyncLogReader(fromTxID));
+</pre>
+</div>
+</div>
+<div class="section" id="read-records">
+<h3><a class="toc-backref" href="#id10">1.3&nbsp;&nbsp;&nbsp;Read Records</a></h3>
+<p>Read the next available record from the stream. The future is satisified when the record is available.</p>
+<pre class="literal-block">
+Future&lt;LogRecordWithDLSN&gt; readFuture = reader.readNext();
+</pre>
+<div class="section" id="register-the-read-callback">
+<h4><a class="toc-backref" href="#id11">1.3.1&nbsp;&nbsp;&nbsp;Register the read callback</a></h4>
+<p>Register a future listener on read completion. The reader will be notified once the record is ready for consuming.</p>
+<pre class="literal-block">
+final FutureEventListener&lt;LogRecordWithDLSN&gt; readListener = new FutureEventListener&lt;LogRecordWithDLSN&gt;() {
+    &#64;Override
+    public void onFailure(Throwable cause) {
+        // executed when read failed.
+    }
+
+    &#64;Override
+    public void onSuccess(LogRecordWithDLSN record) {
+        // process the record
+        ...
+        // issue read next
+        reader.readNext().addEventListener(this);
+    }
+};
+reader.readNext().addEventListener(readListener);
+</pre>
+</div>
+</div>
+<div class="section" id="close-the-reader">
+<h3><a class="toc-backref" href="#id12">1.4&nbsp;&nbsp;&nbsp;Close the reader</a></h3>
+<p>Close the reader after usage.</p>
+<pre class="literal-block">
+FutureUtils.result(reader.asyncClose());
+</pre>
+</div>
+<div class="section" id="run-the-tutorial">
+<h3><a class="toc-backref" href="#id13">1.5&nbsp;&nbsp;&nbsp;Run the tutorial</a></h3>
+<p>Run the example in the following steps:</p>
+<div class="section" id="start-the-local-bookkeeper-cluster">
+<h4><a class="toc-backref" href="#id14">1.5.1&nbsp;&nbsp;&nbsp;Start the local bookkeeper cluster</a></h4>
+<p>You can use follow command to start the distributedlog stack locally.
+After the distributedlog cluster is started, you could access it using
+distributedlog uri <em>distributedlog://127.0.0.1:7000/messaging/distributedlog</em>.</p>
+<pre class="literal-block">
+// dlog local ${zk-port}
+./distributedlog-core/bin/dlog local 7000
+</pre>
+</div>
+<div class="section" id="start-the-write-proxy">
+<h4><a class="toc-backref" href="#id15">1.5.2&nbsp;&nbsp;&nbsp;Start the write proxy</a></h4>
+<p>Start the write proxy, listening on port 8000.</p>
+<pre class="literal-block">
+// DistributedLogServerApp -p ${service-port} --shard-id ${shard-id} -sp ${stats-port} -u {distributedlog-uri} -mx -c ${conf-file}
+./distributedlog-service/bin/dlog org.apache.distributedlog.service.DistributedLogServerApp -p 8000 --shard-id 1 -sp 8001 -u distributedlog://127.0.0.1:7000/messaging/distributedlog -mx -c ${distributedlog-repo}/distributedlog-service/conf/distributedlog_proxy.conf
+</pre>
+</div>
+<div class="section" id="create-the-stream">
+<h4><a class="toc-backref" href="#id16">1.5.3&nbsp;&nbsp;&nbsp;Create the stream</a></h4>
+<p>Create the stream under the distributedlog uri.</p>
+<pre class="literal-block">
+// Create Stream `basic-stream-10`
+// dlog tool create -u ${distributedlog-uri} -r ${stream-prefix} -e ${stream-regex}
+./distributedlog-core/bin/dlog tool create -u distributedlog://127.0.0.1:7000/messaging/distributedlog -r basic-stream- -e 10
+</pre>
+</div>
+<div class="section" id="generate-records">
+<h4><a class="toc-backref" href="#id17">1.5.4&nbsp;&nbsp;&nbsp;Generate records</a></h4>
+<p>Run the <cite>RecordGenerator</cite> to generate records.</p>
+<pre class="literal-block">
+// Write Records into Stream `basic-stream-10` in 1 requests/second
+// runner run org.apache.distributedlog.basic.RecordGenerator ${distributedlog-uri} ${stream} ${rate}
+./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.RecordGenerator 'inet!127.0.0.1:8000' basic-stream-10 1
+</pre>
+</div>
+<div class="section" id="id1">
+<h4><a class="toc-backref" href="#id18">1.5.5&nbsp;&nbsp;&nbsp;Rewind the stream</a></h4>
+<p>Rewind the stream using <cite>StreamRewinder</cite> to read records from 30 seconds ago</p>
+<pre class="literal-block">
+// Rewind `basic-stream-10`
+// runner run org.apache.distributedlog.basic.StreamRewinder ${distributedlog-uri} ${stream} ${seconds-to-rewind}
+./distributedlog-tutorials/distributedlog-basic/bin/runner run org.apache.distributedlog.basic.StreamRewinder distributedlog://127.0.0.1:7000/messaging/distributedlog basic-stream-10  30
+</pre>
+</div>
+<div class="section" id="check-the-results">
+<h4><a class="toc-backref" href="#id19">1.5.6&nbsp;&nbsp;&nbsp;Check the results</a></h4>
+<p>Example output from <cite>StreamRewinder</cite>.</p>
+<pre class="literal-block">
+// Output of `StreamRewinder`
+Opening log stream basic-stream-10
+Record records starting from 1462736697481 which is 30 seconds ago
+Received record DLSN{logSegmentSequenceNo=1, entryId=264, slotId=0}
+&quot;&quot;&quot;
+record-1462736697685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=266, slotId=0}
+&quot;&quot;&quot;
+record-1462736698684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=268, slotId=0}
+&quot;&quot;&quot;
+record-1462736699684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=270, slotId=0}
+&quot;&quot;&quot;
+record-1462736700686
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=272, slotId=0}
+&quot;&quot;&quot;
+record-1462736701685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=274, slotId=0}
+&quot;&quot;&quot;
+record-1462736702684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=276, slotId=0}
+&quot;&quot;&quot;
+record-1462736703683
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=278, slotId=0}
+&quot;&quot;&quot;
+record-1462736704685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=280, slotId=0}
+&quot;&quot;&quot;
+record-1462736705686
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=282, slotId=0}
+&quot;&quot;&quot;
+record-1462736706682
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=284, slotId=0}
+&quot;&quot;&quot;
+record-1462736707685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=286, slotId=0}
+&quot;&quot;&quot;
+record-1462736708686
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=288, slotId=0}
+&quot;&quot;&quot;
+record-1462736709684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=290, slotId=0}
+&quot;&quot;&quot;
+record-1462736710684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=292, slotId=0}
+&quot;&quot;&quot;
+record-1462736711686
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=294, slotId=0}
+&quot;&quot;&quot;
+record-1462736712686
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=296, slotId=0}
+&quot;&quot;&quot;
+record-1462736713684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=298, slotId=0}
+&quot;&quot;&quot;
+record-1462736714682
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=300, slotId=0}
+&quot;&quot;&quot;
+record-1462736715685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=302, slotId=0}
+&quot;&quot;&quot;
+record-1462736716684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=304, slotId=0}
+&quot;&quot;&quot;
+record-1462736717684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=306, slotId=0}
+&quot;&quot;&quot;
+record-1462736718684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=308, slotId=0}
+&quot;&quot;&quot;
+record-1462736719685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=310, slotId=0}
+&quot;&quot;&quot;
+record-1462736720683
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=312, slotId=0}
+&quot;&quot;&quot;
+record-1462736721686
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=314, slotId=0}
+&quot;&quot;&quot;
+record-1462736722685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=316, slotId=0}
+&quot;&quot;&quot;
+record-1462736723683
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=318, slotId=0}
+&quot;&quot;&quot;
+record-1462736724683
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=320, slotId=0}
+&quot;&quot;&quot;
+record-1462736725685
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=322, slotId=0}
+&quot;&quot;&quot;
+record-1462736726686
+&quot;&quot;&quot;
+Reader caught with latest data
+Received record DLSN{logSegmentSequenceNo=1, entryId=324, slotId=0}
+&quot;&quot;&quot;
+record-1462736727686
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=326, slotId=0}
+&quot;&quot;&quot;
+record-1462736728684
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=328, slotId=0}
+&quot;&quot;&quot;
+record-1462736729682
+&quot;&quot;&quot;
+Received record DLSN{logSegmentSequenceNo=1, entryId=330, slotId=0}
+&quot;&quot;&quot;
+record-1462736730685
+&quot;&quot;&quot;
+</pre>
+</div>
+</div>
+</div>
+
+
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/docs/0.4.0-incubating/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>
