@@ -4,10 +4,10 @@
     <title>Apache DistributedLog (incubating)</title>
     <description>Apache DistributedLog is an high performance replicated log.
 </description>
-    <link>http://distributedlog.incubator.apache.org/</link>
-    <atom:link href="http://distributedlog.incubator.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 26 Apr 2017 11:45:33 -0700</pubDate>
-    <lastBuildDate>Wed, 26 Apr 2017 11:45:33 -0700</lastBuildDate>
+    <link>http://distributedlog.incubator.apache.org/distributedlog/</link>
+    <atom:link href="http://distributedlog.incubator.apache.org/distributedlog/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Mon, 07 Aug 2017 18:09:06 -0700</pubDate>
+    <lastBuildDate>Mon, 07 Aug 2017 18:09:06 -0700</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -52,8 +52,8 @@ the &lt;a href=&quot;https://issues.apache.org/jira/browse/DL&quot;&gt;Apache Ji
 
 </description>
         <pubDate>Tue, 25 Apr 2017 03:00:00 -0700</pubDate>
-        <link>http://distributedlog.incubator.apache.org/releases/2017/04/25/the-first-release.html</link>
-        <guid isPermaLink="true">http://distributedlog.incubator.apache.org/releases/2017/04/25/the-first-release.html</guid>
+        <link>http://distributedlog.incubator.apache.org/distributedlog/releases/2017/04/25/the-first-release.html</link>
+        <guid isPermaLink="true">http://distributedlog.incubator.apache.org/distributedlog/releases/2017/04/25/the-first-release.html</guid>
         
         
         <category>releases</category>
@@ -101,7 +101,7 @@ be assigned a sequence number. The readers can start reading the log stream from
 The read requests will be load balanced across the storage replicas of that stream.
 The right diagram in Figure 1 shows the data flow in DistributedLog.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&quot;center-block&quot; src=&quot;/images/blog/kafka-distributedlog-dataflow.png&quot; alt=&quot;Kafka vs DistributedLog&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&quot;center-block&quot; src=&quot;/distributedlog/images/blog/kafka-distributedlog-dataflow.png&quot; alt=&quot;Kafka vs DistributedLog&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;text-center&quot;&gt;
 &lt;i&gt;Figure 1 - Apache Kafka vs Apache DistributedLog&lt;/i&gt;
 &lt;/div&gt;
@@ -208,7 +208,7 @@ or when the owner of the log stream fails.&lt;/p&gt;
 
 &lt;p&gt;Figure 2 shows the differences between DistributedLog and Kafka data model.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&quot;center-block&quot; src=&quot;/images/blog/kafka-distributedlog-segmentation.png&quot; alt=&quot;Kafka Partition and DistributedLog Stream&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&quot;center-block&quot; src=&quot;/distributedlog/images/blog/kafka-distributedlog-segmentation.png&quot; alt=&quot;Kafka Partition and DistributedLog Stream&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;text-center&quot;&gt;
 &lt;i&gt;Figure 2 - Kafka Partition and DistributedLog Stream&lt;/i&gt;
 &lt;/div&gt;
@@ -260,7 +260,7 @@ or when the owner of the log stream fails.&lt;/p&gt;
 
 &lt;p&gt;DistributedLog uses a different I/O model. Figure 3 illustrates the I/O system on the bookies (BookKeeper’s storage nodes). The three common I/O workloads - writes (blue lines), tailing-reads (red lines) and catchup-reads (purple lines) are separated into 3 physically different I/O subsystems. All the writes are sequentially appended to journal files on the journal disks and group committed to the disk. After the writes are durably persisted on the disks, they are put into a memtable and acknowledged back to the clients. The data in the memtable is asynchronously flushed into an interleaved indexed data structure: the entries are appended into entry log files and the offsets are indexed by entry ids in the ledger index files. The latest data is guaranteed to be in memtable to serve tailing reads. Catch-up reads read from the entry log files. With physical isolation, a bookie node can fully utilize the network ingress bandwidth and sequential write bandwidth on the journal disk for writes and utilize the network egress bandwidth and IOPS on multiple ledger disks for reads, without interfering with each other.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&quot;center-block&quot; src=&quot;/images/blog/kafka-distributedlog-bookkeeper-io.png&quot; alt=&quot;BookKeeper I/O Isolation&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&quot;center-block&quot; src=&quot;/distributedlog/images/blog/kafka-distributedlog-bookkeeper-io.png&quot; alt=&quot;BookKeeper I/O Isolation&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;text-center&quot;&gt;
 &lt;i&gt;Figure 3 - BookKeeper I/O Isolation&lt;/i&gt;
 &lt;/div&gt;
@@ -304,8 +304,8 @@ or when the owner of the log stream fails.&lt;/p&gt;
 &lt;/div&gt;
 </description>
         <pubDate>Mon, 19 Sep 2016 03:00:00 -0700</pubDate>
-        <link>http://distributedlog.incubator.apache.org/technical-review/2016/09/19/kafka-vs-distributedlog.html</link>
-        <guid isPermaLink="true">http://distributedlog.incubator.apache.org/technical-review/2016/09/19/kafka-vs-distributedlog.html</guid>
+        <link>http://distributedlog.incubator.apache.org/distributedlog/technical-review/2016/09/19/kafka-vs-distributedlog.html</link>
+        <guid isPermaLink="true">http://distributedlog.incubator.apache.org/distributedlog/technical-review/2016/09/19/kafka-vs-distributedlog.html</guid>
         
         
         <category>technical-review</category>
