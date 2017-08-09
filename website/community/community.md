@@ -24,41 +24,40 @@ There are many ways to get help from the Apache DistributedLog community. The [m
   </thead>
   <tr>
     <td>
-      <strong>user</strong>@@distributedlog.incubator.apache.org<br>
+      <strong>﻿distributedlog-user</strong>@bookkeeper.apache.org<br>
       <small>User related discussions</small>
     </td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:user-subscribe@distributedlog.incubator.apache.org">Subscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:user-digest-subscribe@distributedlog.incubator.apache.org">Subscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:user-unsubscribe@distributedlog.incubator.apache.org">Unsubscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:user@distributedlog.incubator.apache.org">Post</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-user-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-user-digest-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-user-unsubscribe@bookkeeper.apache.org">Unsubscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-user@bookkeeper.apache.org">Post</a></td>
     <td class="text-center">
-      <a href="http://mail-archives.apache.org/mod_mbox/incubator-distributedlog-user/">Archives</a> <br>
+      <a href="http://mail-archives.apache.org/mod_mbox/bookkeeper-distributedlog-user/">Archives</a> <br>
     </td>
   </tr>
   <tr>
     <td>
-      <strong>dev</strong>@@distributedlog.incubator.apache.org<br>
+      <strong>distributedlog-dev</strong>@bookkeeper.apache.org<br>
       <small>Development related discussions</small>
     </td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:dev-subscribe@distributedlog.incubator.apache.org">Subscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:dev-digest-subscribe@distributedlog.incubator.apache.org">Subscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:dev-unsubscribe@distributedlog.incubator.apache.org">Unsubscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:dev@distributedlog.incubator.apache.org">Post</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-dev-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-dev-digest-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-dev-unsubscribe@bookkeeper.apache.org">Unsubscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-dev@bookkeeper.apache.org">Post</a></td>
     <td class="text-center">
-      <a href="http://mail-archives.apache.org/mod_mbox/incubator-distributedlog-dev/">Archives</a> <br>
+      <a href="http://mail-archives.apache.org/mod_mbox/bookkeeper-distributedlog-dev/">Archives</a> <br>
     </td>
   </tr>
 <tr>
     <td>
-      <strong>commits</strong>@distributedlog.incubator.apache.org
-      <br>
+      <strong>distributedlog-commits</strong>@bookkeeper.apache.org<br>
       <small>All commits to our repositories</small>
     </td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:commits-subscribe@distributedlog.incubator.apache.org">Subscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:commits-digest-subscribe@distributedlog.incubator.apache.org">Subscribe</a></td>
-    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:commits-unsubscribe@distributedlog.incubator.apache.org">Unsubscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-commits-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-commits-digest-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-commits-unsubscribe@bookkeeper.apache.org">Unsubscribe</a></td>
     <td class="text-center"><i class="fa fa-pencil-square-o"></i> <i>Read only list</i></td>
-    <td class="text-center"><a href="http://mail-archives.apache.org/mod_mbox/incubator-distributedlog-commits/">Archives</a></td>
+    <td class="text-center"><a href="http://mail-archives.apache.org/mod_mbox/bookkeeper-distributedlog-commits/">Archives</a></td>
   </tr>
 </table>
 
