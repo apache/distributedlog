@@ -238,6 +238,7 @@
             <exclude>src/main/resources/DISCLAIMER.bin.txt</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>**/org/apache/distributedlog/thrift/*</exclude>
+            <exclude>.repository/**</exclude>
           </excludes>
         </configuration>
       </plugin>
