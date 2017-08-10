@@ -85,9 +85,9 @@ For filing bugs, suggesting improvements, or requesting new features, help us ou
 
 ### Need Help?
 
-[Subscribe](mailto:user-subscribe@distributedlog.incubator.apache.org) or [mail](mailto:user@distributedlog.incubator.apache.org) the [user@distributedlog.incubator.apache.org](mailto:user@distributedlog.incubator.apache.org) list - Ask questions, find answers, and also help other users.
+[Subscribe](mailto:﻿distributedlog-user-subscribe@﻿bookkeeper.apache.org) or [mail](mailto:distributedlog-user@bookkeeper.apache.org) the [distributedlog-user@bookkeeper.apache.org](mailto:distributedlog-user@bookkeeper.apache.org) list - Ask questions, find answers, and also help other users.
 
-[Subscribe](mailto:dev-subscribe@distributedlog.incubator.apache.org) or [mail](mailto:dev@distributedlog.incubator.apache.org) the [dev@distributedlog.incubator.apache.org](mailto:dev@distributedlog.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
+[Subscribe](mailto:﻿distributedlog-dev-subscribe@﻿bookkeeper.apache.org) or [mail](mailto:distributedlog-dev@bookkeeper.apache.org) the [distributedlog-dev@bookkeeper.apache.org](mailto:distributedlog-dev@bookkeeper.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
 
 [Join us on Slack](https://getdl-slack.herokuapp.com/) - This is the most immediate way to connect with DistributedLog committers and contributors.
 
