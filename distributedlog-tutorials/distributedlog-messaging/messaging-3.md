@@ -69,4 +69,4 @@ read positions. In this example, we used a local key/value store - `LevelDB` to 
         }, 10, 10, TimeUnit.SECONDS);
     ```
 
-Check `distributedlog-tutorials/distributedlog-messaging/src/main/java/com/twitter/distributedlog/messaging/ReaderWithOffsets` for more details.
+Check `distributedlog-tutorials/distributedlog-messaging/src/main/java/org/apache/distributedlog/messaging/ReaderWithOffsets` for more details.
