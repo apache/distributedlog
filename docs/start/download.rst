@@ -23,7 +23,7 @@ This is the first Apache release. Download here_.
 - `Release Notes`_
 - `Announce Blog Post`_
 
-.. _here: https://dist.apache.org/repos/dist/release/incubator/distributedlog/0.4.0-incubating
+.. _here: https://dist.apache.org/repos/dist/release/bookkeeper/distributedlog/0.4.0-incubating
 .. _Release Notes: https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12320620&version=12337980
 .. _Announce Blog Post: /releases/2017/04/23/the-first-release.html
 
