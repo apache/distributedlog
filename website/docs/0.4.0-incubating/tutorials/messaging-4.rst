@@ -21,4 +21,4 @@ reader position and the effects of the corresponding log records.
 
 This tutorial_ shows how to do `exact-once` processing.
 
-.. _tutorial: https://github.com/apache/incubator-distributedlog/blob/master/distributedlog-tutorials/distributedlog-messaging/src/main/java/com/twitter/distributedlog/messaging/StreamTransformer.java
+.. _tutorial: https://github.com/apache/incubator-distributedlog/blob/master/distributedlog-tutorials/distributedlog-messaging/src/main/java/org/apache/distributedlog/messaging/StreamTransformer.java
