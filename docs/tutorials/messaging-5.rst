@@ -15,5 +15,5 @@ How to implement a kafka-like partitioned pub/sub system using DistributedLog
 Check `KafkaDistributedLogProducer`_ for more details.
 
 .. _./distributedlog-tutorials/distributedlog-kafka: https://github.com/apache/incubator-distributedlog/tree/master/distributedlog-tutorials/distributedlog-kafka
-.. _KafkaDistributedLogProducer: https://github.com/apache/incubator-distributedlog/blob/master/distributedlog-tutorials/distributedlog-kafka/src/main/java/com/twitter/distributedlog/kafka/KafkaDistributedLogProducer.java
+.. _KafkaDistributedLogProducer: https://github.com/apache/incubator-distributedlog/blob/master/distributedlog-tutorials/distributedlog-kafka/src/main/java/org/apache/distributedlog/kafka/KafkaDistributedLogProducer.java
 

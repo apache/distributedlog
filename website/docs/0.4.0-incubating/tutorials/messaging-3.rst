@@ -106,6 +106,6 @@ Periodically update the last read position to the offset store.
         }, 10, 10, TimeUnit.SECONDS);
 
 
-Check `distributedlog-tutorials/distributedlog-messaging/src/main/java/com/twitter/distributedlog/messaging/ReaderWithOffsets`_ for more details.
+Check `distributedlog-tutorials/distributedlog-messaging/src/main/java/org/apache/distributedlog/messaging/ReaderWithOffsets`_ for more details.
 
-.. _distributedlog-tutorials/distributedlog-messaging/src/main/java/com/twitter/distributedlog/messaging/ReaderWithOffsets: https://github.com/apache/incubator-distributedlog/blob/master/distributedlog-tutorials/distributedlog-messaging/src/main/java/com/twitter/distributedlog/messaging/ReaderWithOffsets.java
+.. _distributedlog-tutorials/distributedlog-messaging/src/main/java/org/apache/distributedlog/messaging/ReaderWithOffsets: https://github.com/apache/incubator-distributedlog/blob/master/distributedlog-tutorials/distributedlog-messaging/src/main/java/org/apache/distributedlog/messaging/ReaderWithOffsets.java
