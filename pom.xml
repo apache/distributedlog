@@ -52,30 +52,30 @@
   <mailingLists>
     <mailingList>
       <name>DistributedLog User</name>
-      <subscribe>user-subscribe@distributedlog.incubator.apache.org</subscribe>
-      <unsubscribe>user-unsubscribe@distributedlog.incubator.apache.org</unsubscribe>
-      <post>user@distributedlog.incubator.apache.org</post>
-      <archive>http://www.mail-archive.com/user@distributedlog.incubator.apache.org</archive>
+      <subscribe>distributedlog-user-subscribe@bookkeeper.apache.org</subscribe>
+      <unsubscribe>distributedlog-user-unsubscribe@bookkeeper.apache.org</unsubscribe>
+      <post>distributedlog-user@bookkeeper.apache.org</post>
+      <archive>http://www.mail-archive.com/distributedlog-user@bookkeeper.apache.org</archive>
     </mailingList>
     <mailingList>
       <name>DistributedLog Dev</name>
-      <subscribe>dev-subscribe@distributedlog.incubator.apache.org</subscribe>
-      <unsubscribe>dev-unsubscribe@distributedlog.incubator.apache.org</unsubscribe>
-      <post>dev@distributedlog.incubator.apache.org</post>
-      <archive>http://www.mail-archive.com/dev@distributedlog.incubator.apache.org</archive>
+      <subscribe>distributedlog-dev-subscribe@bookkeeper.apache.org</subscribe>
+      <unsubscribe>distributedlog-dev-unsubscribe@bookkeeper.apache.org</unsubscribe>
+      <post>distributedlog-dev@bookkeeper.apache.org</post>
+      <archive>http://www.mail-archive.com/distributedlog-dev@bookkeeper.apache.org</archive>
     </mailingList>
     <mailingList>
       <name>DistributedLog Commits</name>
-      <subscribe>commits-subscribe@distributedlog.incubator.apache.org</subscribe>
-      <unsubscribe>commits-unsubscribe@distributedlog.incubator.apache.org</unsubscribe>
-      <post>commits@distributedlog.incubator.apache.org</post>
-      <archive>http://www.mail-archive.com/commits@distributedlog.incubator.apache.org</archive>
+      <subscribe>distributedlog-commits-subscribe@bookkeeper.apache.org</subscribe>
+      <unsubscribe>distributedlog-commits-unsubscribe@bookkeeper.apache.org</unsubscribe>
+      <post>distributedlog-commits@bookkeeper.apache.org</post>
+      <archive>http://www.mail-archive.com/distributedlog-commits@bookkeeper.apache.org</archive>
     </mailingList>
   </mailingLists>
   <developers>
     <developer>
       <name>The Apache DistributedLog Team</name>
-      <email>dev@distributedlog.incubator.apache.org</email>
+      <email>distributedlog-dev@bookkeeper.apache.org</email>
       <url>http://distributedlog.incubator.apache.org</url>
       <organization>Apache Software Foundation</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>

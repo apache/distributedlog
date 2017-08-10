@@ -38,7 +38,7 @@ We recommend to first reach consensus with the community on whether a new featur
 
 Most communication in the Apache DistributedLog community happens on the mailing list:
 
-- The mailing list `dev@distributedlog.incubator.apache.org` is the place where DistributedLog developers exchange ideas and discuss new features, upcoming releases, and the development process in general. If you are interested in contributing code to DistributedLog, you should join this mailing list.
+- The mailing list `distributedlog-dev@bookkeeper.apache.org` is the place where DistributedLog developers exchange ideas and discuss new features, upcoming releases, and the development process in general. If you are interested in contributing code to DistributedLog, you should join this mailing list.
 
 You are very welcome to [subscribe to mailing lists]({{ site.baseurl }}/community).
 
