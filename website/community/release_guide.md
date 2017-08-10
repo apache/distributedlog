@@ -77,7 +77,7 @@ This will list your GPG keys. One of these should reflect your Apache account, f
 
 Here, the key ID is the 8-digit hex string in the `pub` line: `845E6689`.
 
-Now, add your Apache GPG key to the DistributedLog’s `KEYS` file both in [`dev`](https://dist.apache.org/repos/dist/dev/incubator/distributedlog/KEYS) and [`release`](https://dist.apache.org/repos/dist/release/incubator/distributedlog/KEYS) repositories at `dist.apache.org`. Follow the instructions listed at the top of these files.
+Now, add your Apache GPG key to the DistributedLog’s `KEYS` file both in [`dev`](https://dist.apache.org/repos/dist/dev/bookkeeper/distributedlog/KEYS) and [`release`](https://dist.apache.org/repos/dist/release/incubator/distributedlog/KEYS) repositories at `dist.apache.org`. Follow the instructions listed at the top of these files.
 
 Configure `git` to use this key when signing code by giving it your key ID, as follows:
 
@@ -237,7 +237,7 @@ Copy the source release to the dev repository of `dist.apache.org`.
 
 1. If you have not already, check out the DistributedLog section of the `dev` repository on `dist.apache.org` via Subversion. In a fresh directory:
 
-        svn co https://dist.apache.org/repos/dist/dev/incubator/distributedlog
+        svn co https://dist.apache.org/repos/dist/dev/bookkeeper/distributedlog
 
 2. Make a directory for the new release:
 
@@ -263,7 +263,7 @@ Copy the source release to the dev repository of `dist.apache.org`.
         svn add distributedlog/${VERSION}
         svn commit
 
-5. Verify that files are [present](https://dist.apache.org/repos/dist/dev/incubator/distributedlog).
+5. Verify that files are [present](https://dist.apache.org/repos/dist/dev/bookkeeper/distributedlog).
 
 ### Build the API reference
 
@@ -305,7 +305,7 @@ Finally, propose a pull request with these changes. (Don’t merge before finali
 ### Checklist to proceed to the next step
 
 1. Maven artifacts deployed to the staging repository of [repository.apache.org](https://repository.apache.org/content/repositories/)
-1. Source distribution deployed to the dev repository of [dist.apache.org](https://dist.apache.org/repos/dist/dev/incubator/distributedlog/)
+1. Source distribution deployed to the dev repository of [dist.apache.org](https://dist.apache.org/repos/dist/dev/bookkeeper/distributedlog/)
 1. Website pull request proposed to list the [release]({{ site.baseurl }}/use/releases/) and publish the [API reference manual]({{ site.baseurl }}/user/api/core/javadoc/)
 
 **********
