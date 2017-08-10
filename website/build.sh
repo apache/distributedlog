@@ -89,7 +89,7 @@ function build_docs() {
     cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
   else
     rm -r /tmp/distributedlog-${version}
-    git clone https://git-wip-us.apache.org/repos/asf/incubator-distributedlog.git /tmp/distributedlog-${version}
+    git clone https://gitbox.apache.org/repos/asf/distributedlog.git /tmp/distributedlog-${version}
     cd /tmp/distributedlog-${version}
     git checkout $tag
     # create the api directory
