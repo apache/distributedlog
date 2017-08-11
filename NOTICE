@@ -1,8 +1,8 @@
 Apache DistributedLog
 Copyright 2017 The Apache Software Foundation
 
-Apache DistributedLog is currently undergoing Incubation at the Apache
-Software Foundation.
+Apache DistributedLog project graduated from Incubator at July 2017.
+It is now a sub-project of Apache BookKeeper.
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
