@@ -12,10 +12,7 @@ reliable _real-time_ applications.
 
 ## Status
 
-_Apache DistributedLog project graduated from Incubator at July 2017. It is now a sub-project of Apache BookKeeper.
-The Apache DistributedLog project development includes the creation of project resources,
-the refactoring of the initial code submissions, and the formulation of project documentation, planning and the
-improvements of existing user and operation documents. Any feedback and contributions are welcome._
+_Apache DistributedLog project graduated from Incubator at July 2017. It is now a sub-project of Apache BookKeeper._
 
 ## Features
 
