@@ -110,11 +110,10 @@ function build_docs() {
 build_docs "latest"
 build_docs "0.4.0-incubating" "v0.4.0-incubating-RC4_2.11"
 
-rm -r content
 cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
 mkdir -p ${DEST_DIR}/content/docs
-rm -r ${DEST_DIR}/content/docs/latest
-rm -r ${DEST_DIR}/content/docs/0.4.0-incubating
+[[ -d ${DEST_DIR}/content/docs/latest ]] && rm -r ${DEST_DIR}/content/docs/latest
+[[ -d ${DEST_DIR}/content/docs/0.4.0-incubating ]] && rm -r ${DEST_DIR}/content/docs/0.4.0-incubating
 cp -r ${TMP_DEST_DIR}/docs_latest ${DEST_DIR}/content/docs/latest
 cp -r ${TMP_DEST_DIR}/docs_0.4.0-incubating ${DEST_DIR}/content/docs/0.4.0-incubating
 
