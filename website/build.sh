@@ -98,6 +98,7 @@ function build_docs() {
     mvn -DskipTests clean package javadoc:aggregate \
         -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
         -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
+        -Dnotimestamp \
         -Dmaven.javadoc.failOnError=false
     # copy the built javadoc
     cp -r /tmp/distributedlog-${version}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
