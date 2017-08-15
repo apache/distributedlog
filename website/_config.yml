@@ -52,3 +52,6 @@ tracking_id: UA-83870961-1
 
 gems:
   - jekyll-redirect-from
+
+exclude:
+  - scripts
