@@ -223,6 +223,7 @@
             <exclude>docs/**/*</exclude>
             <exclude>website/**/*</exclude>
             <exclude>.git/**/*</exclude>
+            <exclude>.github/**/*</exclude>
             <exclude>.gitignore</exclude>
             <exclude>.idea/**/*</exclude>
             <exclude>dist/**/*</exclude>
