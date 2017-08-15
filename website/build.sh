@@ -40,7 +40,7 @@ else
 fi
 
 SERVE="FALSE"
-if [ $# -gt 2 ]; then
+if [ $# -gt 3 ]; then
   SERVE="TRUE"
 fi
 
@@ -110,6 +110,7 @@ function build_docs() {
 build_docs "latest"
 build_docs "0.4.0-incubating" "v0.4.0-incubating-RC4_2.11"
 
+rm -r content
 cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
 mkdir -p ${DEST_DIR}/content/docs
 rm -r ${DEST_DIR}/content/docs/latest
