@@ -109,7 +109,7 @@ function build_docs() {
 # build the javadoc API
 
 build_docs "latest"
-build_docs "0.4.0-incubating" "v0.4.0-incubating-RC4_2.11"
+build_docs "0.4.0-incubating" "v0.4.0-incubating_2.11"
 
 cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
 mkdir -p ${DEST_DIR}/content/docs
