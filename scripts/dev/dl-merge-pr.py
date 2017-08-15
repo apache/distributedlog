@@ -69,7 +69,7 @@ JIRA_BASE = "https://issues.apache.org/jira/browse"
 JIRA_API_BASE = "https://issues.apache.org/jira"
 # Prefix added to temporary branches
 TEMP_BRANCH_PREFIX = "PR_TOOL"
-RELEASE_BRANCH_PREFIX = "branch-"
+RELEASE_BRANCH_PREFIX = "release-"
 
 DEV_BRANCH_NAME = "master"
 
