@@ -62,12 +62,6 @@
       <destName>NOTICE</destName>
       <fileMode>644</fileMode>
     </file>
-    <file>
-      <source>../DISCLAIMER</source>
-      <outputDirectory>/</outputDirectory>
-      <destName>DISCLAIMER</destName>
-      <fileMode>644</fileMode>
-    </file>
   </files>
   <dependencySets>
     <dependencySet>

@@ -19,7 +19,7 @@ This initial release includes:
 - distributedlog-tutorials: A set of tutorials on how to use Apache DistributedLog in different use cases, e.g pub/sub messaging, replicated state machine and analytics.
 
 The release is available in the [Maven Central Repository](https://search.maven.org/#search%7Cga%7C1%7Corg.apache.distributedlog),
-or can be downloaded from the project’s [website](https://distributedlog.incubator.apache.org/docs/latest/start/download). 
+or can be downloaded from the project’s [website](https://bookkeeper.apache.org/distributedlog/docs/latest/start/download). 
 
 As a community, we take every release seriously and try to ensure production readiness.
 The first release is not just about following the Apache release process, i.e. creating a release and getting signoff from the Apache Software
@@ -38,7 +38,7 @@ Usability, security, and integration will be our focus for the next several mont
 is anticipated, perhaps one every 2~3 months.
 
 If you have any comments or discover any issues, I’d like to invite you to reach out to us
-via [user’s mailing list](https://distributedlog.incubator.apache.org/community/#mailing-lists), [slack channel](https://getdl-slack.herokuapp.com/) or
+via [user’s mailing list](https://bookkeeper.apache.org/distributedlog/community/#mailing-lists), [slack channel](https://getdl-slack.herokuapp.com/) or
 the [Apache Jira issues](https://issues.apache.org/jira/browse/DL).
 
 

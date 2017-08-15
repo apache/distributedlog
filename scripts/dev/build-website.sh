@@ -22,7 +22,7 @@ DLOG_ENV=$1
 
 set -e
 
-PROJECT_NAME="incubator-distributedlog"
+PROJECT_NAME="distributedlog"
 CAPITALIZED_PROJECT_NAME="DL"
 
 BASEDIR=$(dirname "$0")
@@ -30,7 +30,7 @@ DLOG_ROOT="${BASEDIR}/../.."
 DLOG_ROOT=`cd $DLOG_ROOT > /dev/null;pwd`
 # Location of the local git repository
 REPO_HOME=${DL_HOME:-"$DLOG_ROOT"}
-SITE_REMOTE="https://git-wip-us.apache.org/repos/asf/${PROJECT_NAME}.git"
+SITE_REMOTE="https://gitbox.apache.org/repos/asf/${PROJECT_NAME}.git"
 BUILT_DIR=${DLOG_ROOT}/build/website
 
 # remove the built content first

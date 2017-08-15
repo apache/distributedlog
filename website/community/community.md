@@ -79,8 +79,7 @@ All issue activity is also mirrored to the dev mailing list.
 
 ### Main source repositories
 
-- **ASF writable**: [https://git-wip-us.apache.org/repos/asf/incubator-distributedlog.git](https://git-wip-us.apache.org/repos/asf/incubator-distributedlog.git)
-- **ASF read-only**: git://git.apache.org/repos/asf/incubator-distributedlog.git
-- **GitHub mirror**: [https://github.com/apache/incubator-distributedlog.git](https://github.com/apache/incubator-distributedlog.git)
+- **ASF gitbox**: [https://gitbox.apache.org/repos/asf/distributedlog.git](﻿https://gitbox.apache.org/repos/asf/distributedlog.git)
+- **GitHub mirror**: [https://github.com/apache/distributedlog.git](https://github.com/apache/distributedlog.git)
 
 Note: We prefer to run distributedlog using Java 8.

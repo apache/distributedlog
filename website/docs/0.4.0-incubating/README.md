@@ -2,7 +2,7 @@ This README gives an overview of how to build and contribute to the documentatio
 
 The documentation is included with the source of Apache DistributedLog in order to ensure that you always
 have docs corresponding to your checked out version. The online documentation at
-http://distributedlog.incubator.apache.org/docs/0.4.0-incubating is also generated from the files found at master branch.
+http://bookkeeper.apache.org/distributedlog/docs/0.4.0-incubating is also generated from the files found at master branch.
 
 # Requirements
 

@@ -6,22 +6,22 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Apache DistributedLog (incubating)
+title: Apache DistributedLog
 description: > # this means to ignore newlines until "baseurl:"
   Apache DistributedLog is an high performance replicated log.
 
 # the subpath of your site, e.g. /blog
 baseurl: ""
 
-distributedlog_version: "0.5.0-incubating-SNAPSHOT"
-distributedlog_version_short: "0.5.0-incubating"
+distributedlog_version: "0.5.0-SNAPSHOT"
+distributedlog_version_short: "0.5.0"
 
 # the base hostname & protocol for your site
-url: "http://distributedlog.incubator.apache.org"
+url: "http://bookkeeper.apache.org/distributedlog"
 
 twitter_username: distributedlog
 twitter_url: https://twitter.com/distributedlog
-github_url: https://github.com/apache/incubator-distributedlog
+github_url: https://github.com/apache/distributedlog
 wiki_url: https://cwiki.apache.org/confluence/display/DL/Apache+DistributedLog+Home
 jira_url: https://issues.apache.org/jira/browse/DL
 
