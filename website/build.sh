@@ -118,6 +118,11 @@ mkdir -p ${DEST_DIR}/content/docs
 cp -r ${TMP_DEST_DIR}/docs_latest ${DEST_DIR}/content/docs/latest
 cp -r ${TMP_DEST_DIR}/docs_0.4.0-incubating ${DEST_DIR}/content/docs/0.4.0-incubating
 
+cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
+mkdir -p ${DEST_DIR}/content/docs
+cp -r ${TMP_DEST_DIR}/docs_latest ${DEST_DIR}/content/docs/latest
+cp -r ${TMP_DEST_DIR}/docs_0.4.0-incubating ${DEST_DIR}/content/docs/0.4.0-incubating
+
 if [[ "${SERVE}" == "TRUE" ]]; then
   cd ${DLOG_HOME}/website
   bundle exec jekyll serve --destination ${DEST_DIR}/content --config _config.yml,${OVERRIDED_CONFIG} --incremental
