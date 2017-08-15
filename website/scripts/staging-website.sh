@@ -22,7 +22,7 @@ LOCAL_GENERATED_DIR=$1
 TMP_DIR=/tmp/distributedlog-site-tmp
 ORIGIN_REPO=$(git remote show origin | grep 'Push  URL' | awk -F// '{print $NF}')
 echo "ORIGIN_REPO: $ORIGIN_REPO"
-STAGING_REPO=`echo $ORIGIN_REPO | sed -e 's/incubator-distributedlog\.git/distributedlog-staging-site.git/g'`
+STAGING_REPO=`echo $ORIGIN_REPO | sed -e 's/distributedlog\.git/distributedlog-staging-site.git/g'`
 echo "STAGING_REPO: $STAGING_REPO"
 echo "GENERATE SITE DIR: $LOCAL_GENERATED_DIR"
 

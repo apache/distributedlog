@@ -35,7 +35,7 @@ echo "ORIGIN_REPO: $ORIGIN_REPO"
   # clone the remote repo
   git clone "https://$ORIGIN_REPO" .
   git config user.name "Apache DistributedLog Site Updater"
-  git config user.email "dev@distributedlog.incubator.apache.org"
+  git config user.email "distributedlog-dev@bookkeeper.apache.org"
   git checkout asf-site
   # copy the apache generated dir
   # cp -r $PROD_DIR/content/* $TMP_DIR/content/
