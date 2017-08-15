@@ -45,6 +45,7 @@ except ImportError:
 PROJECT_NAME = 'distributedlog'
 
 CAPITALIZED_PROJECT_NAME = 'DL'
+GITHUB_ISSUES_NAME = "issue".upper()
 
 # Location of the local git repository
 REPO_HOME = os.environ.get('{0}_HOME'.format(CAPITALIZED_PROJECT_NAME), os.getcwd())
@@ -229,6 +230,14 @@ def merge_pr(pr_num, target_ref, title, body, default_pr_reviewers, pr_repo_desc
 
   # The string "Closes #%s" string is required for GitHub to correctly close the PR
   close_line = 'Closes #{0} from {1}'.format(pr_num, pr_repo_desc)
+
+  # Find the github issues to close
+  github_issues = re.findall("#[0-9]{3,6}", title)
+
+  if len(github_issues) != 0:
+    for issue_id in github_issues:
+      close_line += ", closes %s" % (issue_id)
+
   if should_list_commits:
     close_line += ' and squashes the following commits:'
 
@@ -385,6 +394,7 @@ def standardize_jira_ref(text):
   'DL-877: Script for generating patch for reviews'
   """
   jira_refs = []
+  github_issue_refs = []
   components = []
 
   # Extract JIRA ref(s):
@@ -392,6 +402,13 @@ def standardize_jira_ref(text):
   for ref in pattern.findall(text):
     # Add brackets, replace spaces with a dash, & convert to uppercase
     jira_refs.append(re.sub(r'\s+', '-', ref.upper()))
+    text = text.replace(ref, '')
+
+  # Extract Github Issue ref(s)
+  pattern = re.compile(r'(%s[-\s]*[0-9]{3,6})+' % GITHUB_ISSUES_NAME, re.IGNORECASE)
+  for ref in pattern.findall(text):
+    # Add brackets, replace spaces or a dash with ' #', & convert to uppercase
+    github_issue_refs.append(re.sub(r'[-\s]+', ' #', ref.upper()))
     text = text.replace(ref, '')
 
   # Extract project name component(s):
@@ -407,11 +424,14 @@ def standardize_jira_ref(text):
     text = pattern.search(text).groups()[0]
 
   # Assemble full text (JIRA ref(s), module(s), remaining text)
+  prefix = ''
   jira_prefix = ' '.join(jira_refs).strip()
   if jira_prefix:
-    jira_prefix = jira_prefix + ": "
-
-  clean_text = jira_prefix + ' '.join(components).strip() + " " + text.strip()
+    prefix = jira_prefix + ": "
+  github_prefix = ' '.join(github_issue_refs).strip()
+  if github_prefix:
+    prefix = github_prefix + ": "
+  clean_text = prefix + ' '.join(components).strip() + " " + text.strip()
 
   # Replace multiple spaces with a single space, e.g. if no jira refs and/or components were included
   clean_text = re.sub(r'\s+', ' ', clean_text.strip())
@@ -454,7 +474,7 @@ def get_reviewers(pr_num):
       reviewer = reviewers[reviewer_id]
       username = reviewer['name']
       useremail = reviewer['email']
-      reviewers_emails += ['{0} <{1}>'.format(username, useremail)]
+      reviewers_emails += ['{0} <{1}>'.format(username.encode('utf8'), useremail)]
       continue
     user = get_json('{0}/users/{1}'.format(GITHUB_API_URL, reviewer_id))
     if user['email'] is not None:
@@ -467,7 +487,7 @@ def get_reviewers(pr_num):
         username = useremail
     if username is None:
         continue
-    reviewers_emails += ['{0} <{1}>'.format(username, useremail)]
+    reviewers_emails += ['{0} <{1}>'.format(username.encode('utf8'), useremail)]
   return ', '.join(reviewers_emails)
 
 
