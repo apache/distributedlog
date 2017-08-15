@@ -24,7 +24,7 @@ There are many ways to get help from the Apache DistributedLog community. The [m
   </thead>
   <tr>
     <td>
-      <strong>﻿distributedlog-user</strong>@bookkeeper.apache.org<br>
+      <strong>distributedlog-user</strong>@bookkeeper.apache.org<br>
       <small>User related discussions</small>
     </td>
     <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-user-subscribe@bookkeeper.apache.org">Subscribe</a></td>
@@ -79,7 +79,7 @@ All issue activity is also mirrored to the dev mailing list.
 
 ### Main source repositories
 
-- **ASF gitbox**: [https://gitbox.apache.org/repos/asf/distributedlog.git](﻿https://gitbox.apache.org/repos/asf/distributedlog.git)
-- **GitHub mirror**: [https://github.com/apache/distributedlog.git](https://github.com/apache/distributedlog.git)
+- **ASF gitbox**: [https://gitbox.apache.org/repos/asf/distributedlog.git](https://gitbox.apache.org/repos/asf/distributedlog.git)
+- **GitHub repo**: [https://github.com/apache/distributedlog.git](https://github.com/apache/distributedlog.git)
 
 Note: We prefer to run distributedlog using Java 8.
