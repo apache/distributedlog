@@ -13,8 +13,8 @@
   <link rel="stylesheet" href="/distributedlog/css/theme.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="/distributedlog/js/bootstrap.min.js"></script>
-  <link rel="canonical" href="http://distributedlog.incubator.apache.org/distributedlog/technical-review/2016/09/19/kafka-vs-distributedlog.html" data-proofer-ignore>
-  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/distributedlog/feed.xml">
+  <link rel="canonical" href="http://bookkeeper.apache.org/distributedlog/technical-review/2016/09/19/kafka-vs-distributedlog.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog" href="http://bookkeeper.apache.org/distributedlog/feed.xml">
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -82,7 +82,7 @@
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li class="dropdown-header">Snapshot (Developement)</li>
-            <li><a href="/distributedlog/docs/latest">0.5.0-incubating-SNAPSHOT</a></li>
+            <li><a href="/distributedlog/docs/latest">0.5.0-SNAPSHOT</a></li>
             <li role="separator" class="divider"></li>
             <li class="dropdown-header">Releases</li>
             <li><a href="/distributedlog/docs/0.4.0-incubating">0.4.0-incubating</a></li>
@@ -134,7 +134,7 @@
               </a>
             </li>
             <li>
-              <a href="https://github.com/apache/incubator-distributedlog">
+              <a href="https://github.com/apache/distributedlog">
                 <small><span class="glyphicon glyphicon-new-window"></span></small>
                 Github
               </a>
@@ -348,7 +348,7 @@ or when the owner of the log stream fails.</p>
 
 <p>As shown in Figure 1, Kafka producers write batches of records to the leader broker of a Kafka partition. The follower brokers in the <a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication">ISR (in-sync-replica) set</a> <sup id="fnref:kafkareplication"><a href="#fn:kafkareplication" class="footnote">8</a></sup> will replicate the records from the leader broker. A record is considered as committed only when the leader receives acknowledgments from all the replicas in the ISR. The producer can be configured to wait for the response from leader broker or from all brokers in the ISR.</p>
 
-<p>There are two ways in DistributedLog to write log records to a DistributedLog stream, one is using a thin thrift client to write records through the write proxies (aka multiple-writer semantic), while the other one is using the DistributedLog core library to talk directly to the storage nodes (aka single-writer semantics). The first approach is common for building messaging systems while the second approach is common for building replicated state machines. You can check the <a href="http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/practice">Best Practices</a> section in DistributedLog documentation for more details about what should be used.</p>
+<p>There are two ways in DistributedLog to write log records to a DistributedLog stream, one is using a thin thrift client to write records through the write proxies (aka multiple-writer semantic), while the other one is using the DistributedLog core library to talk directly to the storage nodes (aka single-writer semantics). The first approach is common for building messaging systems while the second approach is common for building replicated state machines. You can check the <a href="http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/api/practice">Best Practices</a> section in DistributedLog documentation for more details about what should be used.</p>
 
 <p>The owner of a log stream writes a batch of records as BookKeeper entries in parallel to the bookies and waits for responses from a quorum of bookies. The size of a quorum is known as the <code class="highlighter-rouge">ack_quorum_size</code> of a BookKeeper ledger and it can be configured per DistributedLog stream. It provides similar flexibility on durability as Kafka producers. We will discuss more about the differences on replication algorithms later in ‘Replication’ section.</p>
 
