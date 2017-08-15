@@ -1,7 +1,6 @@
-# Apache DistributedLog (incubating) website
+# Apache DistributedLog website
 
-This is the website for [Apache DistributedLog](http://distributedlog.incubator.apache.org)
-(incubating).
+This is the website for [Apache DistributedLog](http://bookkeeper.apache.org/distributedlog).
 
 ### About this site
 The DistributedLog website is built using [Jekyll](http://jekyllrb.com/). Additionally,
@@ -10,7 +9,7 @@ for additional formatting capabilities, this website uses
 
 This website is hosted at:
 
-    http://distributedlog.incubator.apache.org
+    http://bookkeeper.apache.org/distributedlog
 
 It is important to note there are two sets of "website code"  with respect to
 the Apache DistributedLog website.

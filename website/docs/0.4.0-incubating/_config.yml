@@ -17,11 +17,11 @@ distributedlog_version: "0.4.0-incubating"
 distributedlog_version_short: "0.4.0"
 
 # the base hostname & protocol for your site
-url: "http://distributedlog.incubator.apache.org"
+url: "http://bookkeeper.apache.org/distributedlog"
 
 twitter_username: distributedlog
 twitter_url: https://twitter.com/distributedlog
-github_url: https://github.com/apache/incubator-distributedlog
+github_url: https://github.com/apache/distributedlog
 wiki_url: https://cwiki.apache.org/confluence/display/DL/Apache+DistributedLog+Home
 jira_url: https://issues.apache.org/jira/browse/DL
 

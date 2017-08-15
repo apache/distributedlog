@@ -78,30 +78,30 @@ function build_docs() {
 
   bundle exec jekyll build --destination ${DOC_DEST_HOME} --config _config.yml,${OVERRIDED_CONFIG}
 
-  ## create the api directory
-  #mkdir -p ${DOC_DEST_HOME}/api/java
-  #if [ "$version" == "latest" ]; then
-  #  cd ${DLOG_HOME}
-  #  # build the javadoc
-  #  mvn -DskipTests clean package javadoc:aggregate \
-  #      -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
-  #      -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
-  #      -Dmaven.javadoc.failOnError=false
-  #  # copy the built javadoc
-  #  cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
-  #else
-  #  rm -rf /tmp/distributedlog-${version}
-  #  git clone https://git-wip-us.apache.org/repos/asf/incubator-distributedlog.git /tmp/distributedlog-${version}
-  #  cd /tmp/distributedlog-${version}
-  #  git checkout $tag
-  #  # build the javadoc
-  #  mvn -DskipTests clean package javadoc:aggregate \
-  #      -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
-  #      -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
-  #      -Dmaven.javadoc.failOnError=false
-  #  # copy the built javadoc
-  #  cp -r /tmp/distributedlog-${version}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
-  #fi
+  # create the api directory
+  mkdir -p ${DOC_DEST_HOME}/api/java
+  if [ "$version" == "latest" ]; then
+    cd ${DLOG_HOME}
+    # build the javadoc
+    mvn -DskipTests clean package javadoc:aggregate \
+        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
+        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
+        -Dmaven.javadoc.failOnError=false
+    # copy the built javadoc
+    cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
+  else
+    rm -rf /tmp/distributedlog-${version}
+    git clone https://github.com/apache/distributedlog.git /tmp/distributedlog-${version}
+    cd /tmp/distributedlog-${version}
+    git checkout $tag
+    # build the javadoc
+    mvn -DskipTests clean package javadoc:aggregate \
+        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
+        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
+        -Dmaven.javadoc.failOnError=false
+    # copy the built javadoc
+    cp -r /tmp/distributedlog-${version}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
+  fi
   echo "Built the documentation for version ${version}."
 }
 
