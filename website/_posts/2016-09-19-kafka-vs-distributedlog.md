@@ -5,6 +5,7 @@ date:   2016-09-19 10:00:00
 categories: technical-review
 redirect_from:
 - /technical-review/2015/09/19/kafka-vs-distributedlog
+- /distributedlog/technical-review/2015/09/19/kafka-vs-distributedlog
 authors:
 - sijie
 ---
