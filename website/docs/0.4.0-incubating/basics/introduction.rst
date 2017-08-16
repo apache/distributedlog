@@ -134,5 +134,5 @@ At a high level, DistributedLog gives the following guarantees:
 * All records are persisted on disk before acknowledgments, to gurantee durability.
 * For a log with replication factor of N, DistributedLog tolerates up to N-1 server failures without losing any records.
 
-More details on these guarantees are given in the [design section](http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/user_guide/design/main.html).
+More details on these guarantees are given in the [design section](http://bookkeeper.apache.org/distributedlog/docs/0.4.0-incubating/user_guide/design/main.html).
 

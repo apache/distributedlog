@@ -1,10 +1,10 @@
 ![logo](/website/images/distributedlog_logo_m.png?raw=true "Apache DistributedLog logo")
 
-[![Build Status](https://travis-ci.org/apache/incubator-distributedlog.svg?branch=master)](https://travis-ci.org/apache/incubator-distributedlog)
+[![Build Status](https://api.travis-ci.org/apache/distributedlog.svg?branch=master)](https://travis-ci.org/apache/distributedlog)
 [![Build Status](https://builds.apache.org/buildStatus/icon?job=distributedlog-nightly-build)](https://builds.apache.org/job/distributedlog-nightly-build/)
 [![Coverage Status](https://coveralls.io/repos/github/apache/incubator-distributedlog/badge.svg?branch=master)](https://coveralls.io/github/apache/incubator-distributedlog?branch=master)
 
-# Apache DistributedLog (incubating)
+# Apache DistributedLog
 
 Apache DistributedLog (DL) is a *high-throughput*, *low-latency* replicated log service, offering
 *durability*, *replication* and *strong consistency* as essentials for building
@@ -12,9 +12,7 @@ reliable _real-time_ applications.
 
 ## Status
 
-_The Apache DistributedLog project is in the process of incubating. This includes the creation of project resources,
-the refactoring of the initial code submissions, and the formulation of project documentation, planning and the
-improvements of existing user and operation documents. Any feedback and contributions are welcome._
+_Apache DistributedLog project graduated from Incubator at July 2017. It is now a sub-project of Apache BookKeeper._
 
 ## Features
 
@@ -57,25 +55,25 @@ and memory.
 
 ## First Steps
 
-* *Concepts*: Start with the [basic concepts](http://distributedlog.incubator.apache.org/docs/latest/basics/introduction) of DistributedLog.
+* *Concepts*: Start with the [basic concepts](http://bookkeeper.apache.org/distributedlog/docs/latest/basics/introduction) of DistributedLog.
   This will help you to fully understand the other parts of the documentation,
-  including [setup](http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster),
-  [integration](http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/main.html) and
-  [operation guide](http://distributedlog.incubator.apache.org/docs/latest/admin_guide/main.html).
+  including [setup](http://bookkeeper.apache.org/distributedlog/docs/latest/deployment/cluster),
+  [integration](http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/api/main.html) and
+  [operation guide](http://bookkeeper.apache.org/distributedlog/docs/latest/admin_guide/main.html).
   It is highly recommended to read this first.
-* *Quickstarts*: [Run DistributedLog](http://distributedlog.incubator.apache.org/docs/latest/start/quickstart) on your local machine
-  or follow the tutorial to [write a simple program](http://distributedlog.incubator.apache.org/docs/latest/tutorials/basic-1) to interact with _DistributedLog_.
-* *Setup*: The [docker](http://distributedlog.incubator.apache.org/docs/latest/deployment/docker) and [cluster](http://distributedlog.incubator.apache.org/docs/latest/deployment/cluster) setup guides show how to deploy DistributedLog stack.
-* *User Guide*: You can checkout our guides about the [basic concepts](http://distributedlog.incubator.apache.org/docs/latest/basics/introduction) and the [Core Library API](http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/core) or [Proxy Client API](http://distributedlog.incubator.apache.org/docs/latest/user_guide/api/proxy)
+* *Quickstarts*: [Run DistributedLog](http://bookkeeper.apache.org/distributedlog/docs/latest/start/quickstart) on your local machine
+  or follow the tutorial to [write a simple program](http://bookkeeper.apache.org/distributedlog/docs/latest/tutorials/basic-1) to interact with _DistributedLog_.
+* *Setup*: The [docker](http://bookkeeper.apache.org/distributedlog/docs/latest/deployment/docker) and [cluster](http://bookkeeper.apache.org/distributedlog/docs/latest/deployment/cluster) setup guides show how to deploy DistributedLog stack.
+* *User Guide*: You can checkout our guides about the [basic concepts](http://bookkeeper.apache.org/distributedlog/docs/latest/basics/introduction) and the [Core Library API](http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/api/core) or [Proxy Client API](http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/api/proxy)
   to learn how to use DistributedLog to build your reliable real-time services.
 
 ## Next Steps
 
-* *Design Documents*: Learn about the [architecture](http://distributedlog.incubator.apache.org/docs/latest/user_guide/architecture/main),
-  [design considerations](http://distributedlog.incubator.apache.org/docs/latest/user_guide/design/main) and 
-  [implementation details](http://distributedlog.incubator.apache.org/docs/latest/user_guide/implementation/main) of DistributedLog.
-* *Tutorials*: You can check out the [tutorials](http://distributedlog.incubator.apache.org/docs/latest/tutorials/main) on how to build real applications.
-* *Admin Guide*: You can check out our guides about how to [operate](http://distributedlog.incubator.apache.org/docs/latest/admin_guide/main) the DistributedLog Stack.
+* *Design Documents*: Learn about the [architecture](http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/architecture/main),
+  [design considerations](http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/design/main) and 
+  [implementation details](http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/implementation/main) of DistributedLog.
+* *Tutorials*: You can check out the [tutorials](http://bookkeeper.apache.org/distributedlog/docs/latest/tutorials/main) on how to build real applications.
+* *Admin Guide*: You can check out our guides about how to [operate](http://bookkeeper.apache.org/distributedlog/docs/latest/admin_guide/main) the DistributedLog Stack.
 
 ## Get In Touch
 
@@ -85,9 +83,9 @@ For filing bugs, suggesting improvements, or requesting new features, help us ou
 
 ### Need Help?
 
-[Subscribe](mailto:user-subscribe@distributedlog.incubator.apache.org) or [mail](mailto:user@distributedlog.incubator.apache.org) the [user@distributedlog.incubator.apache.org](mailto:user@distributedlog.incubator.apache.org) list - Ask questions, find answers, and also help other users.
+[Subscribe](mailto:﻿distributedlog-user-subscribe@﻿bookkeeper.apache.org) or [mail](mailto:distributedlog-user@bookkeeper.apache.org) the [distributedlog-user@bookkeeper.apache.org](mailto:distributedlog-user@bookkeeper.apache.org) list - Ask questions, find answers, and also help other users.
 
-[Subscribe](mailto:dev-subscribe@distributedlog.incubator.apache.org) or [mail](mailto:dev@distributedlog.incubator.apache.org) the [dev@distributedlog.incubator.apache.org](mailto:dev@distributedlog.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
+[Subscribe](mailto:﻿distributedlog-dev-subscribe@﻿bookkeeper.apache.org) or [mail](mailto:distributedlog-dev@bookkeeper.apache.org) the [distributedlog-dev@bookkeeper.apache.org](mailto:distributedlog-dev@bookkeeper.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
 
 [Join us on Slack](https://getdl-slack.herokuapp.com/) - This is the most immediate way to connect with DistributedLog committers and contributors.
 
@@ -101,7 +99,7 @@ We feel that a welcoming open community is important and welcome contributions.
 
 2. Take a look at our [open issues](https://issues.apache.org/jira/browse/DL).
 
-3. Review our [coding style](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=65867477) and follow our [code reviews](https://github.com/apache/incubator-distributedlog/pulls) to learn about our conventions.
+3. Review our [coding style](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=65867477) and follow our [code reviews](https://github.com/apache/distributedlog/pulls) to learn about our conventions.
 
 4. Make your changes according to our [code review workflow](https://cwiki.apache.org/confluence/display/DL/Contributing+to+DistributedLog#ContributingtoDistributedLog-ContributingCodeChanges).
 

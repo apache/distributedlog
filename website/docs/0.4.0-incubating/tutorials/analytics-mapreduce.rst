@@ -211,4 +211,4 @@ We could calculate the progress by comparing the position with the record count 
 Once we have *LogSegmentSplit* and the *LogSegmentReader* over a split. We could hook them up to
 implement distributedlog's InputFormat. Please check out the code_ for more details.
 
-.. _code: https://github.com/apache/incubator-distributedlog/tree/master/distributedlog-tutorials/distributedlog-mapreduce
+.. _code: https://github.com/apache/distributedlog/tree/master/distributedlog-tutorials/distributedlog-mapreduce
