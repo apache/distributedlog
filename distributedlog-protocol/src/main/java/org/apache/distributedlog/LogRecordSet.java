@@ -19,12 +19,9 @@ package org.apache.distributedlog;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.CompletableFuture;
-import org.apache.bookkeeper.stats.NullStatsLogger;
-import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.distributedlog.exceptions.LogRecordTooLongException;
 import org.apache.distributedlog.exceptions.WriteException;
 import org.apache.distributedlog.io.CompressionCodec;
@@ -57,9 +54,6 @@ import org.apache.distributedlog.io.CompressionCodec;
  */
 public class LogRecordSet {
 
-    static final OpStatsLogger NULL_OP_STATS_LOGGER =
-            NullStatsLogger.INSTANCE.getOpStatsLogger("");
-
     public static final int HEADER_LEN =
             4 /* Metadata */
           + 4 /* Count */
@@ -72,10 +66,6 @@ public class LogRecordSet {
     // Metadata
     static final int METADATA_VERSION_MASK = 0xf000;
     static final int METADATA_COMPRESSION_MASK = 0x3;
-
-    // Compression Codec
-    static final int COMPRESSION_CODEC_NONE = 0x0;
-    static final int COMPRESSION_CODEC_LZ4 = 0X1;
 
     public static int numRecords(LogRecord record) throws IOException {
         checkArgument(record.isRecordSet(),
@@ -103,7 +93,6 @@ public class LogRecordSet {
     public static Reader of(LogRecordWithDLSN record) throws IOException {
         checkArgument(record.isRecordSet(),
                 "record is not a recordset");
-        byte[] data = record.getPayload();
         DLSN dlsn = record.getDlsn();
         int startPosition = record.getPositionWithinLogSegment();
         long startSequenceId = record.getStartSequenceIdOfCurrentSegment();
@@ -115,7 +104,7 @@ public class LogRecordSet {
                 dlsn.getSlotId(),
                 startPosition,
                 startSequenceId,
-                new ByteArrayInputStream(data));
+                record.getPayloadBuf());
     }
 
     /**

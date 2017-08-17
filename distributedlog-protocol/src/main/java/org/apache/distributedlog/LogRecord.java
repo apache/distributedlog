@@ -18,12 +18,13 @@
 package org.apache.distributedlog;
 
 import com.google.common.annotations.VisibleForTesting;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.Unpooled;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +104,7 @@ import org.slf4j.LoggerFactory;
  *
  * @see LogRecordWithDLSN
  */
+@NotThreadSafe
 public class LogRecord {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogRecord.class);
@@ -128,7 +130,8 @@ public class LogRecord {
 
     private long metadata;
     private long txid;
-    private byte[] payload;
+    private ByteBuf payload;
+    private byte[] payloadData;
 
     /**
      * Construct an uninitialized log record.
@@ -151,6 +154,11 @@ public class LogRecord {
      *          record data
      */
     public LogRecord(long txid, byte[] payload) {
+        this(txid, Unpooled.wrappedBuffer(payload));
+        this.payloadData = payload;
+    }
+
+    public LogRecord(long txid, ByteBuf payload) {
         this.txid = txid;
         this.payload = payload;
         this.metadata = 0;
@@ -184,7 +192,23 @@ public class LogRecord {
      * @return payload of this log record.
      */
     public byte[] getPayload() {
-        return payload;
+        if (null != payloadData) {
+            return payloadData;
+        }
+
+        ByteBuf bb = payload.retainedSlice();
+        try {
+            byte[] data = new byte[bb.readableBytes()];
+            bb.writeBytes(data);
+            payloadData = data;
+            return payloadData;
+        } finally {
+            bb.release();
+        }
+    }
+
+    public ByteBuf getPayloadBuf() {
+        return payload.retainedSlice();
     }
 
     /**
@@ -193,7 +217,19 @@ public class LogRecord {
      * @param payload payload of this log record
      */
     void setPayload(byte[] payload) {
+        this.payloadData = payload;
+        if (null != this.payload) {
+            this.payload.release();
+        }
+        this.payload = Unpooled.wrappedBuffer(payload);
+    }
+
+    void setPayloadBuf(ByteBuf payload) {
+        if (null != this.payload) {
+            this.payload.release();
+        }
         this.payload = payload;
+        this.payloadData = null;
     }
 
     /**
@@ -202,7 +238,7 @@ public class LogRecord {
      * @return payload as input stream
      */
     public InputStream getPayLoadInputStream() {
-        return new ByteArrayInputStream(payload);
+        return new ByteBufInputStream(payload.retainedSlice(), true);
     }
 
     //
@@ -340,24 +376,31 @@ public class LogRecord {
     // Serialization & Deserialization
     //
 
-    protected void readPayload(DataInputStream in) throws IOException {
+    protected void readPayload(ByteBuf in) throws IOException {
         int length = in.readInt();
         if (length < 0) {
             throw new EOFException("Log Record is corrupt: Negative length " + length);
         }
-        payload = new byte[length];
-        in.readFully(payload);
+        setPayloadBuf(in.retainedSlice(in.readerIndex(), length));
     }
 
-    private void writePayload(DataOutputStream out) throws IOException {
-        out.writeInt(payload.length);
-        out.write(payload);
+    private void writePayload(ByteBuf out) {
+        out.writeInt(payload.readableBytes());
+        out.writeBytes(payload, payload.readerIndex(), payload.readableBytes());
     }
 
-    private void writeToStream(DataOutputStream out) throws IOException {
+    private void writeToStream(ByteBuf out) {
         out.writeLong(metadata);
         out.writeLong(txid);
         writePayload(out);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        if (null != payload) {
+            payload.release();
+        }
+        super.finalize();
     }
 
     /**
@@ -369,16 +412,16 @@ public class LogRecord {
      */
     int getPersistentSize() {
         // Flags + TxId + Payload-length + payload
-        return 2 * (Long.SIZE / 8) + Integer.SIZE / 8 + payload.length;
+        return 2 * (Long.SIZE / 8) + Integer.SIZE / 8 + payload.readableBytes();
     }
 
     /**
      * Writer class to write log records into an output {@code stream}.
      */
     public static class Writer {
-        private final DataOutputStream buf;
+        private final ByteBuf buf;
 
-        public Writer(DataOutputStream out) {
+        public Writer(ByteBuf out) {
             this.buf = out;
         }
 
@@ -386,14 +429,13 @@ public class LogRecord {
          * Write an operation to the output stream.
          *
          * @param record The operation to write
-         * @throws IOException if an error occurs during writing.
          */
-        public void writeOp(LogRecord record) throws IOException {
+        public void writeOp(LogRecord record) {
             record.writeToStream(buf);
         }
 
         public int getPendingBytes() {
-            return buf.size();
+            return buf.readableBytes();
         }
     }
 
@@ -402,7 +444,7 @@ public class LogRecord {
       */
     public static class Reader {
         private final RecordStream recordStream;
-        private final DataInputStream in;
+        private final ByteBuf in;
         private final long startSequenceId;
         private final boolean deserializeRecordSet;
         private static final int SKIP_BUFFER_SIZE = 512;
@@ -417,13 +459,13 @@ public class LogRecord {
          * @param startSequenceId the start sequence id.
          */
         public Reader(RecordStream recordStream,
-                      DataInputStream in,
+                      ByteBuf in,
                       long startSequenceId) {
             this(recordStream, in, startSequenceId, true);
         }
 
         public Reader(RecordStream recordStream,
-                      DataInputStream in,
+                      ByteBuf in,
                       long startSequenceId,
                       boolean deserializeRecordSet) {
             this.recordStream = recordStream;
@@ -509,8 +551,6 @@ public class LogRecord {
         }
 
         private boolean skipTo(Long txId, DLSN dlsn, boolean skipControl) throws IOException {
-            LOG.debug("SkipTo");
-            byte[] skipBuffer = null;
             boolean found = false;
             while (true) {
                 try {
@@ -519,7 +559,7 @@ public class LogRecord {
 
                     // if there is not record set, read next record
                     if (null == recordSetReader) {
-                        in.mark(INPUTSTREAM_MARK_LIMIT);
+                        in.markReaderIndex();
                         flags = in.readLong();
                         currTxId = in.readLong();
                     } else {
@@ -539,7 +579,7 @@ public class LogRecord {
                             LOG.trace("Found position {} beyond {}", recordStream.getCurrentPosition(), dlsn);
                         }
                         if (null == lastRecordSkipTo) {
-                            in.reset();
+                            in.resetReaderIndex();
                         }
                         found = true;
                         break;
@@ -550,7 +590,7 @@ public class LogRecord {
                                 LOG.trace("Found position {} beyond {}", currTxId, txId);
                             }
                             if (null == lastRecordSkipTo) {
-                                in.reset();
+                                in.resetReaderIndex();
                             }
                             found = true;
                             break;
@@ -580,15 +620,7 @@ public class LogRecord {
                             break;
                         }
                         // skip single record
-                        if (null == skipBuffer) {
-                            skipBuffer = new byte[SKIP_BUFFER_SIZE];
-                        }
-                        int read = 0;
-                        while (read < length) {
-                            int bytesToRead = Math.min(length - read, SKIP_BUFFER_SIZE);
-                            in.readFully(skipBuffer, 0, bytesToRead);
-                            read += bytesToRead;
-                        }
+                        in.skipBytes(length);
                         if (LOG.isTraceEnabled()) {
                             LOG.trace("Skipped Record with TxId {} DLSN {}",
                                 currTxId, recordStream.getCurrentPosition());
