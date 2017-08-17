@@ -84,14 +84,14 @@ public abstract class StreamAdminOp implements AdminOp<WriteResponse> {
             @Override
             public WriteResponse map(WriteResponse response) {
                 opStatsLogger.registerSuccessfulEvent(
-                        stopwatch.elapsed(TimeUnit.MICROSECONDS));
+                        stopwatch.elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
                 return response;
             }
 
             @Override
             public WriteResponse handle(Throwable cause) {
                 opStatsLogger.registerFailedEvent(
-                        stopwatch.elapsed(TimeUnit.MICROSECONDS));
+                        stopwatch.elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
                 return ResponseUtils.write(ResponseUtils.exceptionToHeader(cause));
             }
 

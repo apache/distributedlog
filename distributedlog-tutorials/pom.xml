@@ -29,7 +29,6 @@
     <module>distributedlog-basic</module>
     <module>distributedlog-messaging</module>
     <module>distributedlog-kafka</module>
-    <module>distributedlog-mapreduce</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

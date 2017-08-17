@@ -228,12 +228,14 @@ public class DLWriterWorker implements Worker {
                 writer.write(new LogRecord(requestMillis, data)).whenComplete(new FutureEventListener<DLSN>() {
                     @Override
                     public void onSuccess(DLSN value) {
-                        requestStat.registerSuccessfulEvent(System.currentTimeMillis() - requestMillis);
+                        requestStat.registerSuccessfulEvent(
+                          System.currentTimeMillis() - requestMillis, TimeUnit.MILLISECONDS);
                     }
 
                     @Override
                     public void onFailure(Throwable cause) {
-                        requestStat.registerFailedEvent(System.currentTimeMillis() - requestMillis);
+                        requestStat.registerFailedEvent(
+                          System.currentTimeMillis() - requestMillis, TimeUnit.MILLISECONDS);
                         LOG.error("Failed to publish, rescue it : ", cause);
                         scheduleRescue(streamIdx, writer, 0);
                     }
