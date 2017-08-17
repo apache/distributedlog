@@ -17,9 +17,22 @@
  */
 package org.apache.distributedlog.impl.logsegment;
 
+import static com.google.common.base.Charsets.UTF_8;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.Entry;
 import org.apache.distributedlog.LogSegmentMetadata;
@@ -42,20 +55,6 @@ import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static com.google.common.base.Charsets.UTF_8;
-
 /**
  * BookKeeper ledger based log segment entry reader.
  */
@@ -76,6 +75,14 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
             this.entry = null;
             this.rc = BKException.Code.UnexpectedConditionException;
             this.done = false;
+        }
+
+        @Override
+        protected synchronized void finalize() throws Throwable {
+            if (null != entry) {
+                entry.getEntryBuffer().release();
+            }
+            super.finalize();
         }
 
         long getEntryId() {
@@ -624,7 +631,7 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
                 .setEntryId(entry.getEntryId())
                 .setEnvelopeEntry(envelopeEntries)
                 .deserializeRecordSet(deserializeRecordSet)
-                .setInputStream(entry.getEntryInputStream())
+                .setEntry(entry.getEntryBuffer())
                 .buildReader();
     }
 

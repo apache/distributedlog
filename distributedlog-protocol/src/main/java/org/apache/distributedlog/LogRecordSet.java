@@ -19,6 +19,7 @@ package org.apache.distributedlog;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.CompletableFuture;
@@ -70,19 +71,14 @@ public class LogRecordSet {
     public static int numRecords(LogRecord record) throws IOException {
         checkArgument(record.isRecordSet(),
                 "record is not a recordset");
-        byte[] data = record.getPayload();
-        return numRecords(data);
-    }
-
-    public static int numRecords(byte[] data) throws IOException {
-        ByteBuffer buffer = ByteBuffer.wrap(data);
-        int metadata = buffer.getInt();
+        ByteBuf buffer = record.getPayloadBuf();
+        int metadata = buffer.getInt(0);
         int version = (metadata & METADATA_VERSION_MASK);
         if (version != VERSION) {
             throw new IOException(String.format("Version mismatch while reading. Received: %d,"
                 + " Required: %d", version, VERSION));
         }
-        return buffer.getInt();
+        return buffer.getInt(4);
     }
 
     public static Writer newWriter(int initialBufferSize,

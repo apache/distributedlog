@@ -199,7 +199,7 @@ public class LogRecord {
         ByteBuf bb = payload.retainedSlice();
         try {
             byte[] data = new byte[bb.readableBytes()];
-            bb.writeBytes(data);
+            bb.readBytes(data);
             payloadData = data;
             return payloadData;
         } finally {
@@ -382,6 +382,7 @@ public class LogRecord {
             throw new EOFException("Log Record is corrupt: Negative length " + length);
         }
         setPayloadBuf(in.retainedSlice(in.readerIndex(), length));
+        in.skipBytes(length);
     }
 
     private void writePayload(ByteBuf out) {
@@ -500,6 +501,10 @@ public class LogRecord {
                     } else {
                         recordSetReader = null;
                     }
+                }
+
+                if (in.readableBytes() <= 0) {
+                    return null;
                 }
 
                 try {

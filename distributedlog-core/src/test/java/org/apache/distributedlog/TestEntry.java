@@ -17,12 +17,20 @@
  */
 package org.apache.distributedlog;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static org.apache.distributedlog.EnvelopedEntry.HEADER_LENGTH;
+import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.google.common.collect.Lists;
+import io.netty.buffer.ByteBuf;
+import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.apache.distributedlog.Entry.Reader;
 import org.apache.distributedlog.Entry.Writer;
 import org.apache.distributedlog.exceptions.LogRecordTooLongException;
-import org.apache.distributedlog.io.Buffer;
 import org.apache.distributedlog.io.CompressionCodec;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.distributedlog.common.concurrent.FutureEventListener;
@@ -30,13 +38,6 @@ import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.nio.ByteBuffer;
-import java.util.List;
-
-import static com.google.common.base.Charsets.UTF_8;
-import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
-import static org.junit.Assert.*;
 
 /**
  * Test Case of {@link Entry}
@@ -51,18 +52,18 @@ public class TestEntry {
                 true,
                 CompressionCodec.Type.NONE,
                 NullStatsLogger.INSTANCE);
-        assertEquals("zero bytes", 0, writer.getNumBytes());
+        assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
-        Buffer buffer = writer.getBuffer();
-        Entry recordSet = Entry.newBuilder()
-                .setData(buffer.getData(), 0, buffer.size())
+        ByteBuf buffer = writer.getBuffer();
+        Reader reader = Entry.newBuilder()
+                .setEntry(buffer)
                 .setLogSegmentInfo(1L, 0L)
                 .setEntryId(0L)
-                .build();
-        Reader reader = recordSet.reader();
+                .buildReader();
         Assert.assertNull("Empty record set should return null",
                 reader.nextRecord());
+        buffer.release();
     }
 
     @Test(timeout = 20000)
@@ -70,10 +71,10 @@ public class TestEntry {
         Writer writer = Entry.newEntry(
                 "test-write-too-long-record",
                 1024,
-                false,
+                true,
                 CompressionCodec.Type.NONE,
                 NullStatsLogger.INSTANCE);
-        assertEquals("zero bytes", 0, writer.getNumBytes());
+        assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
         LogRecord largeRecord = new LogRecord(1L, new byte[MAX_LOGRECORD_SIZE + 1]);
@@ -83,11 +84,12 @@ public class TestEntry {
         } catch (LogRecordTooLongException lrtle) {
             // expected
         }
-        assertEquals("zero bytes", 0, writer.getNumBytes());
+        assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
-        Buffer buffer = writer.getBuffer();
-        Assert.assertEquals("zero bytes", 0, buffer.size());
+        ByteBuf buffer = writer.getBuffer();
+        assertEquals("zero bytes", HEADER_LENGTH, buffer.readableBytes());
+        buffer.release();
     }
 
     @Test(timeout = 20000)
@@ -98,7 +100,7 @@ public class TestEntry {
                 true,
                 CompressionCodec.Type.NONE,
                 NullStatsLogger.INSTANCE);
-        assertEquals("zero bytes", 0, writer.getNumBytes());
+        assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
         List<CompletableFuture<DLSN>> writePromiseList = Lists.newArrayList();
@@ -132,34 +134,38 @@ public class TestEntry {
             assertEquals((i + 6) + " records", (i + 6), writer.getNumRecords());
         }
 
-        Buffer buffer = writer.getBuffer();
+        ByteBuf buffer = writer.getBuffer();
+        buffer.retain();
 
         // Test transmit complete
         writer.completeTransmit(1L, 1L);
         List<DLSN> writeResults = Utils.ioResult(FutureUtils.collect(writePromiseList));
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals(new DLSN(1L, 1L, i), writeResults.get(i));
+            assertEquals(new DLSN(1L, 1L, i), writeResults.get(i));
         }
 
         // Test reading from buffer
-        Entry recordSet = Entry.newBuilder()
-                .setData(buffer.getData(), 0, buffer.size())
+        Reader reader = Entry.newBuilder()
+                .setEntry(buffer)
                 .setLogSegmentInfo(1L, 1L)
                 .setEntryId(0L)
-                .build();
-        Reader reader = recordSet.reader();
+                .setEnvelopeEntry(true)
+                .buildReader();
+        buffer.release();
         LogRecordWithDLSN record = reader.nextRecord();
         int numReads = 0;
         long expectedTxid = 0L;
         while (null != record) {
-            Assert.assertEquals(expectedTxid, record.getTransactionId());
-            Assert.assertEquals(expectedTxid, record.getSequenceId());
-            Assert.assertEquals(new DLSN(1L, 0L, expectedTxid), record.getDlsn());
+            assertEquals(expectedTxid, record.getTransactionId());
+            assertEquals(expectedTxid, record.getSequenceId());
+            assertEquals(new DLSN(1L, 0L, expectedTxid), record.getDlsn());
             ++numReads;
             ++expectedTxid;
             record = reader.nextRecord();
         }
-        Assert.assertEquals(10, numReads);
+        assertEquals(10, numReads);
+
+        buffer.release();
     }
 
     @Test(timeout = 20000)
@@ -170,7 +176,7 @@ public class TestEntry {
                 true,
                 CompressionCodec.Type.NONE,
                 NullStatsLogger.INSTANCE);
-        assertEquals("zero bytes", 0, writer.getNumBytes());
+        assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
         List<CompletableFuture<DLSN>> writePromiseList = Lists.newArrayList();
@@ -194,10 +200,8 @@ public class TestEntry {
             recordSetPromiseList.add(writePromise);
             assertEquals((i + 1) + " records", (i + 1), recordSetWriter.getNumRecords());
         }
-        final ByteBuffer recordSetBuffer = recordSetWriter.getBuffer();
-        byte[] data = new byte[recordSetBuffer.remaining()];
-        recordSetBuffer.get(data);
-        LogRecord setRecord = new LogRecord(5L, data);
+        final ByteBuf recordSetBuffer = recordSetWriter.getBuffer();
+        LogRecord setRecord = new LogRecord(5L, recordSetBuffer);
         setRecord.setPositionWithinLogSegment(5);
         setRecord.setRecordSet();
         CompletableFuture<DLSN> writePromise = new CompletableFuture<DLSN>();
@@ -228,21 +232,22 @@ public class TestEntry {
             assertEquals((i + 11) + " records", (i + 11), writer.getNumRecords());
         }
 
-        Buffer buffer = writer.getBuffer();
+        ByteBuf buffer = writer.getBuffer();
+        buffer.retain();
 
         // Test transmit complete
         writer.completeTransmit(1L, 1L);
         List<DLSN> writeResults = Utils.ioResult(FutureUtils.collect(writePromiseList));
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals(new DLSN(1L, 1L, i), writeResults.get(i));
+            assertEquals(new DLSN(1L, 1L, i), writeResults.get(i));
         }
-        Assert.assertEquals(new DLSN(1L, 1L, 5), writeResults.get(5));
+        assertEquals(new DLSN(1L, 1L, 5), writeResults.get(5));
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals(new DLSN(1L, 1L, (10 + i)), writeResults.get(6 + i));
+            assertEquals(new DLSN(1L, 1L, (10 + i)), writeResults.get(6 + i));
         }
         List<DLSN> recordSetWriteResults = Utils.ioResult(FutureUtils.collect(recordSetPromiseList));
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals(new DLSN(1L, 1L, (5 + i)), recordSetWriteResults.get(i));
+            assertEquals(new DLSN(1L, 1L, (5 + i)), recordSetWriteResults.get(i));
         }
 
         // Test reading from buffer
@@ -264,9 +269,11 @@ public class TestEntry {
         verifyReadResult(buffer, 1L, 1L, 1L, false,
                 new DLSN(1L, 1L, 12L), 0, 0, 3,
                 new DLSN(1L, 1L, 12L), 12L);
+
+        buffer.release();
     }
 
-    void verifyReadResult(Buffer data,
+    void verifyReadResult(ByteBuf data,
                           long lssn, long entryId, long startSequenceId,
                           boolean deserializeRecordSet,
                           DLSN skipTo,
@@ -275,14 +282,13 @@ public class TestEntry {
                           int lastNumRecords,
                           DLSN expectedDLSN,
                           long expectedTxId) throws Exception {
-        Entry recordSet = Entry.newBuilder()
-                .setData(data.getData(), 0, data.size())
+        Reader reader = Entry.newBuilder()
+                .setEntry(data)
                 .setLogSegmentInfo(lssn, startSequenceId)
                 .setEntryId(entryId)
                 .deserializeRecordSet(deserializeRecordSet)
-                .skipTo(skipTo)
-                .build();
-        Reader reader = recordSet.reader();
+                .buildReader();
+        reader.skipTo(skipTo);
 
         LogRecordWithDLSN record;
         for (int i = 0; i < firstNumRecords; i++) { // first
@@ -291,7 +297,7 @@ public class TestEntry {
             assertEquals(expectedDLSN, record.getDlsn());
             assertEquals(expectedTxId, record.getTransactionId());
             assertNotNull("record " + record + " payload is null",
-                    record.getPayload());
+                    record.getPayloadBuf());
             assertEquals("record-" + expectedTxId, new String(record.getPayload(), UTF_8));
             expectedDLSN = expectedDLSN.getNextDLSN();
             ++expectedTxId;

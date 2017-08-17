@@ -17,11 +17,9 @@
  */
 package org.apache.distributedlog;
 
-import org.apache.bookkeeper.stats.StatsLogger;
-
-import java.io.DataInputStream;
+import io.netty.buffer.ByteBuf;
 import java.io.IOException;
-import java.io.InputStream;
+import org.apache.bookkeeper.stats.StatsLogger;
 
 /**
  * Record reader to read records from an enveloped entry buffer.
@@ -30,6 +28,7 @@ class EnvelopedEntryReader implements Entry.Reader, RecordStream {
 
     private final long logSegmentSeqNo;
     private final long entryId;
+    private final ByteBuf src;
     private final LogRecord.Reader reader;
 
     // slot id
@@ -38,20 +37,21 @@ class EnvelopedEntryReader implements Entry.Reader, RecordStream {
     EnvelopedEntryReader(long logSegmentSeqNo,
                          long entryId,
                          long startSequenceId,
-                         InputStream in,
+                         ByteBuf in,
                          boolean envelopedEntry,
                          boolean deserializeRecordSet,
                          StatsLogger statsLogger)
             throws IOException {
         this.logSegmentSeqNo = logSegmentSeqNo;
         this.entryId = entryId;
-        InputStream src = in;
         if (envelopedEntry) {
-            src = EnvelopedEntry.fromInputStream(in, statsLogger);
+            this.src = EnvelopedEntry.fromEnvlopedBuf(in, statsLogger);
+        } else {
+            this.src = in;
         }
         this.reader = new LogRecord.Reader(
                 this,
-                new DataInputStream(src),
+                src,
                 startSequenceId,
                 deserializeRecordSet);
     }
@@ -98,5 +98,11 @@ class EnvelopedEntryReader implements Entry.Reader, RecordStream {
     @Override
     public String getName() {
         return "EnvelopedReader";
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.src.release();
+        super.finalize();
     }
 }
