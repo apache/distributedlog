@@ -49,6 +49,12 @@ import org.junit.BeforeClass;
  */
 public abstract class DistributedLogServerTestCase {
 
+    static {
+        // org.apache.zookeeper.test.ClientBase uses FourLetterWordMain, from 3.5.3 four letter words
+        // are disabled by default due to security reasons
+        System.setProperty("zookeeper.4lw.commands.whitelist", "*");
+    }
+
     protected static DistributedLogConfiguration conf =
             new DistributedLogConfiguration().setLockTimeout(10)
                     .setOutputBufferSize(0).setPeriodicFlushFrequencyMilliSeconds(10);

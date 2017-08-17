@@ -97,13 +97,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- dependencies -->
-    <bookkeeper.version>4.3.7-TWTTR-OSS</bookkeeper.version>
+    <bookkeeper.version>4.5.0</bookkeeper.version>
     <codahale.metrics.version>3.0.1</codahale.metrics.version>
     <commons-cli.version>1.1</commons-cli.version>
     <commons-codec.version>1.6</commons-codec.version>
     <commons-lang.version>2.6</commons-lang.version>
     <commons-lang3.version>3.3.2</commons-lang3.version>
-    <curator.version>3.2.1</curator.version>
+    <curator.version>4.0.0</curator.version>
     <finagle.version>6.34.0</finagle.version>
     <freebuilder.version>1.12.3</freebuilder.version>
     <guava.version>20.0</guava.version>
@@ -117,7 +117,7 @@
     <scrooge.version>4.6.0</scrooge.version>
     <slf4j.version>1.6.4</slf4j.version>
     <stats-util.version>0.0.58</stats-util.version>
-    <zookeeper.version>3.5.1-alpha</zookeeper.version>
+    <zookeeper.version>3.5.3-beta</zookeeper.version>
     <!-- plugin dependencies -->
     <apache-rat-plugin.version>0.7</apache-rat-plugin.version>
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
@@ -171,7 +171,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>${maven-assembly-plugin.version}</version>
         <configuration>
-	  <tarLongFileMode>gnu</tarLongFileMode>
+          <tarLongFileMode>gnu</tarLongFileMode>
           <descriptors>
             <descriptor>src/assemble/src.xml</descriptor>
           </descriptors>
@@ -231,13 +231,14 @@
             <exclude>ChangeLog</exclude>
             <exclude>**/README.md</exclude>
             <exclude>**/apidocs/*</exclude>
-	    <exclude>GROUPS</exclude>
-	    <exclude>OWNERS</exclude>
-	    <exclude>CONFIG.ini</exclude>
+            <exclude>GROUPS</exclude>
+            <exclude>OWNERS</exclude>
+            <exclude>CONFIG.ini</exclude>
             <exclude>**/**.md</exclude>
             <exclude>scripts/dev/reviewers</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>**/org/apache/distributedlog/thrift/*</exclude>
+            <exclude>.repository/**</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -260,19 +261,4 @@
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <repository>
-      <id>bookkeeper-twitter-mvn-repo</id>
-      <url>https://raw.github.com/twitter/bookkeeper/mvn-repo/${bookkeeper.version}</url>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-    </repository> 
-    <repository>
-      <id>twitter-repo</id>
-      <name>Twitter Maven Repo</name>
-      <url>http://maven.twttr.com</url>
-    </repository>
-  </repositories>
 </project>

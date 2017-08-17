@@ -42,11 +42,13 @@ class StatsFilter<Req, Rep> extends SimpleFilter<Req, Rep> {
         final Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             result = service.apply(req);
-            serviceExec.registerSuccessfulEvent(stopwatch.stop().elapsed(TimeUnit.MICROSECONDS));
+            serviceExec.registerSuccessfulEvent(
+                stopwatch.stop().elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
         } finally {
             outstandingAsync.dec();
             if (null == result) {
-                serviceExec.registerFailedEvent(stopwatch.stop().elapsed(TimeUnit.MICROSECONDS));
+                serviceExec.registerFailedEvent(
+                    stopwatch.stop().elapsed(TimeUnit.MICROSECONDS), TimeUnit.MICROSECONDS);
             }
         }
         return result;

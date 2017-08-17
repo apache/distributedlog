@@ -17,6 +17,7 @@
  */
 package org.apache.distributedlog.service.placement;
 
+import java.util.concurrent.TimeUnit;
 import org.apache.distributedlog.client.routing.RoutingService;
 import org.apache.distributedlog.api.namespace.Namespace;
 import com.twitter.util.Duration;
@@ -175,14 +176,16 @@ public class LeastLoadPlacementPolicy extends PlacementPolicy {
         }).onSuccess(new Function<TreeSet<ServerLoad>, BoxedUnit>() {
             @Override
             public BoxedUnit apply(TreeSet<ServerLoad> serverLoads) {
-                placementCalcStats.registerSuccessfulEvent(System.currentTimeMillis() - startTime);
+                placementCalcStats.registerSuccessfulEvent(
+                    System.currentTimeMillis() - startTime, TimeUnit.MICROSECONDS);
                 return BoxedUnit.UNIT;
             }
         }).onFailure(new Function<Throwable, BoxedUnit>() {
             @Override
             public BoxedUnit apply(Throwable t) {
                 logger.error("Failure calculating loads", t);
-                placementCalcStats.registerFailedEvent(System.currentTimeMillis() - startTime);
+                placementCalcStats.registerFailedEvent(
+                    System.currentTimeMillis() - startTime, TimeUnit.MICROSECONDS);
                 return BoxedUnit.UNIT;
             }
         });

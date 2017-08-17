@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.apache.thrift</groupId>
       <artifactId>libthrift</artifactId>
-      <version>0.5.0-1</version>
+      <version>${libthrift.version}</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
@@ -114,4 +114,11 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <id>twitter-repo</id>
+      <name>Twitter Maven Repo</name>
+      <url>http://maven.twttr.com</url>
+    </repository>
+  </repositories>
 </project>
