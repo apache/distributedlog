@@ -2856,6 +2856,7 @@ public class DistributedLogTool extends Tool {
         addCommand(new ListCommand());
         addCommand(new ReadLastConfirmedCommand());
         addCommand(new ReadEntriesCommand());
+        // TODO: Fix it later, tracking by https://github.com/apache/distributedlog/issues/150
         // addCommand(new RecoverCommand());
         addCommand(new RecoverLedgerCommand());
         addCommand(new ShowCommand());
