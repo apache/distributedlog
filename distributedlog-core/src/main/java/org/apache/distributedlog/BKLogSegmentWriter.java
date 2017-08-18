@@ -53,7 +53,6 @@ import org.apache.distributedlog.io.CompressionUtils;
 import org.apache.distributedlog.lock.DistributedLock;
 import org.apache.distributedlog.logsegment.LogSegmentEntryWriter;
 import org.apache.distributedlog.logsegment.LogSegmentWriter;
-import org.apache.distributedlog.common.stats.BroadCastStatsLogger;
 import org.apache.distributedlog.common.stats.OpStatsListener;
 import org.apache.distributedlog.util.FailpointUtils;
 import org.apache.distributedlog.common.concurrent.FutureEventListener;
@@ -151,7 +150,6 @@ class BKLogSegmentWriter implements LogSegmentWriter, AddCallback, Runnable, Siz
     private final OrderedScheduler scheduler;
 
     // stats
-    private final StatsLogger envelopeStatsLogger;
     private final StatsLogger transmitOutstandingLogger;
     private final Counter transmitDataSuccesses;
     private final Counter transmitDataMisses;
@@ -219,7 +217,6 @@ class BKLogSegmentWriter implements LogSegmentWriter, AddCallback, Runnable, Siz
         }
         this.writeLimiter = new WriteLimiter(streamName, streamWriteLimiter, globalWriteLimiter);
         this.alertStatsLogger = alertStatsLogger;
-        this.envelopeStatsLogger = BroadCastStatsLogger.masterslave(statsLogger, perLogStatsLogger);
 
         StatsLogger flushStatsLogger = statsLogger.scope("flush");
         StatsLogger pFlushStatsLogger = flushStatsLogger.scope("periodic");
@@ -278,8 +275,7 @@ class BKLogSegmentWriter implements LogSegmentWriter, AddCallback, Runnable, Siz
                 streamName,
                 Math.max(transmissionThreshold, 1024),
                 envelopeBeforeTransmit(),
-                compressionType,
-                envelopeStatsLogger);
+                compressionType);
         this.packetPrevious = null;
         this.startTxId = startTxId;
         this.lastTxId = startTxId;
@@ -439,8 +435,7 @@ class BKLogSegmentWriter implements LogSegmentWriter, AddCallback, Runnable, Siz
                 streamName,
                 Math.max(transmissionThreshold, getAverageTransmitSize()),
                 envelopeBeforeTransmit(),
-                compressionType,
-                envelopeStatsLogger);
+                compressionType);
     }
 
     private boolean envelopeBeforeTransmit() {

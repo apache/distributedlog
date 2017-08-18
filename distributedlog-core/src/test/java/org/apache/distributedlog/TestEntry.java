@@ -32,7 +32,6 @@ import org.apache.distributedlog.Entry.Reader;
 import org.apache.distributedlog.Entry.Writer;
 import org.apache.distributedlog.exceptions.LogRecordTooLongException;
 import org.apache.distributedlog.io.CompressionCodec;
-import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.distributedlog.common.concurrent.FutureEventListener;
 import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.Utils;
@@ -50,8 +49,7 @@ public class TestEntry {
                 "test-empty-record-set",
                 1024,
                 true,
-                CompressionCodec.Type.NONE,
-                NullStatsLogger.INSTANCE);
+                CompressionCodec.Type.NONE);
         assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
@@ -72,8 +70,7 @@ public class TestEntry {
                 "test-write-too-long-record",
                 1024,
                 true,
-                CompressionCodec.Type.NONE,
-                NullStatsLogger.INSTANCE);
+                CompressionCodec.Type.NONE);
         assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
@@ -98,8 +95,7 @@ public class TestEntry {
                 "test-write-records",
                 1024,
                 true,
-                CompressionCodec.Type.NONE,
-                NullStatsLogger.INSTANCE);
+                CompressionCodec.Type.NONE);
         assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 
@@ -174,8 +170,7 @@ public class TestEntry {
                 "test-write-recordset",
                 1024,
                 true,
-                CompressionCodec.Type.NONE,
-                NullStatsLogger.INSTANCE);
+                CompressionCodec.Type.NONE);
         assertEquals("zero bytes", HEADER_LENGTH, writer.getNumBytes());
         assertEquals("zero records", 0, writer.getNumRecords());
 

@@ -17,7 +17,6 @@
  */
 package org.apache.distributedlog;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import org.apache.distributedlog.exceptions.LogRecordTooLongException;
 import org.apache.distributedlog.exceptions.WriteException;
 import org.apache.distributedlog.io.CompressionCodec;
 import org.apache.bookkeeper.stats.NullStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
 
 /**
  * A set of {@link LogRecord}s.
@@ -44,22 +42,18 @@ public class Entry {
      *          if envelope the buffer before transmit
      * @param codec
      *          compression codec
-     * @param statsLogger
-     *          stats logger to receive stats
      * @return writer to build a log record set.
      */
     public static Writer newEntry(
             String logName,
             int initialBufferSize,
             boolean envelopeBeforeTransmit,
-            CompressionCodec.Type codec,
-            StatsLogger statsLogger) {
+            CompressionCodec.Type codec) {
         return new EnvelopedEntryWriter(
                 logName,
                 initialBufferSize,
                 envelopeBeforeTransmit,
-                codec,
-                statsLogger);
+                codec);
     }
 
     public static Builder newBuilder() {
@@ -76,8 +70,6 @@ public class Entry {
         private long startSequenceId = Long.MIN_VALUE;
         private boolean envelopeEntry = true;
         private ByteBuf buffer;
-        private Optional<Long> txidToSkipTo = Optional.absent();
-        private Optional<DLSN> dlsnToSkipTo = Optional.absent();
         private boolean deserializeRecordSet = true;
 
         private Builder() {}

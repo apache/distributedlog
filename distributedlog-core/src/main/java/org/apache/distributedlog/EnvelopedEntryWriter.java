@@ -35,7 +35,6 @@ import org.apache.distributedlog.exceptions.InvalidEnvelopedEntryException;
 import org.apache.distributedlog.exceptions.LogRecordTooLongException;
 import org.apache.distributedlog.exceptions.WriteException;
 import org.apache.distributedlog.io.CompressionCodec;
-import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.distributedlog.io.CompressionCodec.Type;
 import org.apache.distributedlog.io.CompressionUtils;
 import org.slf4j.Logger;
@@ -68,7 +67,6 @@ class EnvelopedEntryWriter implements Writer {
     private final boolean envelopeBeforeTransmit;
     private final CompressionCodec.Type codec;
     private final int flags;
-    private final StatsLogger statsLogger;
     private int count = 0;
     private boolean hasUserData = false;
     private long maxTxId = Long.MIN_VALUE;
@@ -76,8 +74,7 @@ class EnvelopedEntryWriter implements Writer {
     EnvelopedEntryWriter(String logName,
                          int initialBufferSize,
                          boolean envelopeBeforeTransmit,
-                         CompressionCodec.Type codec,
-                         StatsLogger statsLogger) {
+                         CompressionCodec.Type codec) {
         this.logName = logName;
         this.buffer = PooledByteBufAllocator.DEFAULT.buffer(
                 Math.min(Math.max(initialBufferSize * 6 / 5, HEADER_LENGTH), MAX_LOGRECORDSET_SIZE),
@@ -87,7 +84,6 @@ class EnvelopedEntryWriter implements Writer {
         this.envelopeBeforeTransmit = envelopeBeforeTransmit;
         this.codec = codec;
         this.flags = codec.code() & COMPRESSION_CODEC_MASK;
-        this.statsLogger = statsLogger;
         if (envelopeBeforeTransmit) {
             this.buffer.writerIndex(HEADER_LENGTH);
         }
@@ -211,13 +207,17 @@ class EnvelopedEntryWriter implements Writer {
     public void completeTransmit(long lssn, long entryId) {
         satisfyPromises(lssn, entryId);
         buffer.release();
-        ReferenceCountUtil.release(finalizedBuffer);
+        synchronized (this) {
+            ReferenceCountUtil.release(finalizedBuffer);
+        }
     }
 
     @Override
     public void abortTransmit(Throwable reason) {
         cancelPromises(reason);
         buffer.release();
-        ReferenceCountUtil.release(finalizedBuffer);
+        synchronized (this) {
+            ReferenceCountUtil.release(finalizedBuffer);
+        }
     }
 }

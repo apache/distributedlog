@@ -24,6 +24,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.netty.buffer.ByteBuf;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecordSetBuffer;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
@@ -384,11 +385,19 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
     }
 
     class WriteOp extends AbstractWriteOp {
+        final ByteBuf dataBuf;
         final ByteBuffer data;
+
+        WriteOp(final String name, final ByteBuf dataBuf) {
+            super(name, clientStats.getOpStats("write"));
+            this.dataBuf = dataBuf;
+            this.data = dataBuf.nioBuffer();
+        }
 
         WriteOp(final String name, final ByteBuffer data) {
             super(name, clientStats.getOpStats("write"));
             this.data = data;
+            this.dataBuf = null;
         }
 
         @Override
@@ -415,6 +424,9 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         @Override
         protected void finalize() throws Throwable {
+            if (null != dataBuf) {
+                dataBuf.release();
+            }
             super.finalize();
         }
     }
@@ -458,7 +470,6 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
 
     }
-
 
     class ReleaseOp extends AbstractWriteOp {
 
