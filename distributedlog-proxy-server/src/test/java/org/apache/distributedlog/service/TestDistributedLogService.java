@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Lists;
+import io.netty.buffer.Unpooled;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.TestDistributedLogBase;
@@ -569,7 +570,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
     public void testWriteOpChecksumBadStream() throws Exception {
         DistributedLogServiceImpl localService = createConfiguredLocalService();
         WriteContext ctx = new WriteContext().setCrc32(
-            ProtocolUtils.writeOpCRC32("test", getTestDataBuffer().array()));
+            ProtocolUtils.writeOpCRC32("test", getTestDataBuffer()));
         Future<WriteResponse> result = localService.writeWithContext("test1", getTestDataBuffer(), ctx);
         WriteResponse resp = Await.result(result);
         assertEquals(StatusCode.CHECKSUM_FAILED, resp.getHeader().getCode());
@@ -581,7 +582,7 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         DistributedLogServiceImpl localService = createConfiguredLocalService();
         ByteBuffer buffer = getTestDataBuffer();
         WriteContext ctx = new WriteContext().setCrc32(
-            ProtocolUtils.writeOpCRC32("test", buffer.array()));
+            ProtocolUtils.writeOpCRC32("test", buffer));
 
         // Overwrite 1 byte to corrupt data.
         buffer.put(1, (byte) 0xab);
@@ -658,11 +659,11 @@ public class TestDistributedLogService extends TestDistributedLogBase {
         WriteOp writeOp0 = getWriteOp(
             streamName,
             disabledFeature,
-            ProtocolUtils.writeOpCRC32(streamName, "test".getBytes()));
+            ProtocolUtils.writeOpCRC32(streamName, Unpooled.wrappedBuffer("test".getBytes())));
         WriteOp writeOp1 = getWriteOp(
             streamName,
             disabledFeature,
-            ProtocolUtils.writeOpCRC32(streamName, "test".getBytes()));
+            ProtocolUtils.writeOpCRC32(streamName, Unpooled.wrappedBuffer("test".getBytes())));
 
         writeOp0.preExecute();
         disabledFeature.set(0);

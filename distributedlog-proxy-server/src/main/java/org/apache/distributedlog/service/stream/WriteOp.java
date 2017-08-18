@@ -19,6 +19,7 @@ package org.apache.distributedlog.service.stream;
 
 import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFuture;
 
+import io.netty.buffer.Unpooled;
 import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
@@ -53,7 +54,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
 
     private static final Logger logger = LoggerFactory.getLogger(WriteOp.class);
 
-    private final byte[] payload;
+    private final ByteBuffer payload;
     private final boolean isRecordSet;
 
     // Stats
@@ -80,8 +81,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
                    Feature checksumDisabledFeature,
                    AccessControlManager accessControlManager) {
         super(stream, requestStat(statsLogger, "write"), checksum, checksumDisabledFeature);
-        payload = new byte[data.remaining()];
-        data.get(payload);
+        this.payload = data;
         this.isRecordSet = isRecordSet;
 
         final Partition partition = streamPartitionConverter.convert(stream);
@@ -121,12 +121,12 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
 
     @Override
     public long getPayloadSize() {
-      return payload.length;
+      return payload.remaining();
     }
 
     @Override
     public Long computeChecksum() {
-        return ProtocolUtils.writeOpCRC32(stream, payload);
+        return ProtocolUtils.writeOpCRC32(stream, payload.duplicate());
     }
 
     @Override
@@ -151,7 +151,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
         Future<DLSN> writeResult;
         synchronized (txnLock) {
             txnId = sequencer.nextId();
-            LogRecord record = new LogRecord(txnId, payload);
+            LogRecord record = new LogRecord(txnId, Unpooled.wrappedBuffer(payload));
             if (isRecordSet) {
                 record.setRecordSet();
             }

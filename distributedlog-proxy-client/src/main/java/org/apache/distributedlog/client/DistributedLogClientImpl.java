@@ -393,15 +393,13 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().writeWithContext(stream, data, ctx);
+            return sc.getService().writeWithContext(stream, data.duplicate(), ctx);
         }
 
         @Override
         Long computeChecksum() {
             if (null == crc32) {
-                byte[] dataBytes = new byte[data.remaining()];
-                data.duplicate().get(dataBytes);
-                crc32 = ProtocolUtils.writeOpCRC32(stream, dataBytes);
+                crc32 = ProtocolUtils.writeOpCRC32(stream, data.duplicate());
             }
             return crc32;
         }
@@ -413,6 +411,11 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                     return DLSN.deserialize(response.getDlsn());
                 }
             });
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
         }
     }
 
