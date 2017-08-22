@@ -258,7 +258,7 @@ public class BKNamespaceDriver implements NamespaceDriver {
             try {
                 return new EpollEventLoopGroup(numThreads, threadFactory);
             } catch (Throwable t) {
-                LOG.warn("Could not use Netty Epoll event loop for bookie server: {}", t.getMessage());
+                LOG.warn("Could not use Netty Epoll event loop for bookie server:", t);
                 return new NioEventLoopGroup(numThreads, threadFactory);
             }
         } else {
