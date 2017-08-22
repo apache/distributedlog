@@ -221,24 +221,30 @@
         <version>${apache-rat-plugin.version}</version>
         <configuration>
           <excludes>
+            <exclude>ChangeLog</exclude>
+            <exclude>CONFIG.ini</exclude>
+            <exclude>GROUPS</exclude>
+            <exclude>OWNERS</exclude>
+            <exclude>dist/**/*</exclude>
             <exclude>docs/**/*</exclude>
+            <exclude>scripts/dev/reviewers</exclude>
             <exclude>website/**/*</exclude>
+            <exclude>**/*.md</exclude>
+            <exclude>**/apidocs/*</exclude>
+            <exclude>**/dependency-reduced-pom.xml</exclude>
+            <exclude>**/org/apache/distributedlog/thrift/*</exclude>
+            <!-- Git -->
             <exclude>.git/**/*</exclude>
             <exclude>.github/**/*</exclude>
             <exclude>.gitignore</exclude>
             <exclude>.idea/**/*</exclude>
-            <exclude>dist/**/*</exclude>
+            <!-- Intellij -->
+            <exclude>**/*.iml</exclude>
+            <exclude>**/*.iws</exclude>
+            <exclude>**/*.ipr</exclude>
+            <!-- SVN -->
             <exclude>**/.svn/**/*</exclude>
-            <exclude>ChangeLog</exclude>
-            <exclude>**/README.md</exclude>
-            <exclude>**/apidocs/*</exclude>
-            <exclude>GROUPS</exclude>
-            <exclude>OWNERS</exclude>
-            <exclude>CONFIG.ini</exclude>
-            <exclude>**/**.md</exclude>
-            <exclude>scripts/dev/reviewers</exclude>
-            <exclude>**/dependency-reduced-pom.xml</exclude>
-            <exclude>**/org/apache/distributedlog/thrift/*</exclude>
+            <!-- Maven -->
             <exclude>.repository/**</exclude>
           </excludes>
         </configuration>
