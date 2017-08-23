@@ -134,7 +134,8 @@ public class DistributedLogServerApp {
                         return ReflectionUtils.newInstance(name, StatsProvider.class);
                     }
                 }).or(new NullStatsProvider());
-
+//the argument transfered in(the uri) contains the zookeeper address
+// 3.12 Arvin
         final Optional<String> uriOption = getOptionalStringArg(cmdline, "u");
         checkArgument(uriOption.isPresent(), "No distributedlog uri provided.");
         URI dlUri = URI.create(uriOption.get());
