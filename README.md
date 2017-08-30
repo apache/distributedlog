@@ -2,7 +2,7 @@
 
 [![Build Status](https://api.travis-ci.org/apache/distributedlog.svg?branch=master)](https://travis-ci.org/apache/distributedlog)
 [![Build Status](https://builds.apache.org/buildStatus/icon?job=distributedlog-nightly-build)](https://builds.apache.org/job/distributedlog-nightly-build/)
-[![Coverage Status](https://coveralls.io/repos/github/apache/incubator-distributedlog/badge.svg?branch=master)](https://coveralls.io/github/apache/incubator-distributedlog?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/apache/distributedlog/badge.svg?branch=master)](https://coveralls.io/github/apache/distributedlog?branch=master)
 
 # Apache DistributedLog
 

@@ -92,6 +92,7 @@
     <module>distributedlog-benchmark</module>
     <module>distributedlog-tutorials</module>
     <module>distributedlog-core-twitter</module>
+    <module>tests</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -108,6 +109,7 @@
     <freebuilder.version>1.12.3</freebuilder.version>
     <guava.version>20.0</guava.version>
     <jetty.version>8.1.19.v20160209</jetty.version>
+    <jmh.version>1.19</jmh.version>
     <jmock.version>2.8.2</jmock.version>
     <junit.version>4.8.1</junit.version>
     <libthrift.version>0.5.0-1</libthrift.version>
@@ -128,6 +130,7 @@
     <maven-assembly-plugin.version>2.2.1</maven-assembly-plugin.version>
     <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+    <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
     <maven-jar-plugin.version>2.2</maven-jar-plugin.version>
     <maven-javadoc-plugin.version>2.8</maven-javadoc-plugin.version>
     <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
@@ -182,6 +185,9 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
         <version>${findbugs-maven-plugin.version}</version>
+        <configuration>
+          <excludeFilterFile>${session.executionRootDirectory}/distributedlog-build-tools/src/main/resources/distributedlog/findbugsExclude.xml</excludeFilterFile>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
