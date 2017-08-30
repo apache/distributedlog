@@ -172,7 +172,7 @@ public class TestEntry {
         }
         assertEquals(10, numReads);
 
-        buffer.release();
+        reader.release();
     }
 
     @Test(timeout = 20000)
