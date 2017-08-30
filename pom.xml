@@ -184,6 +184,9 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
         <version>${findbugs-maven-plugin.version}</version>
+        <configuration>
+          <excludeFilterFile>${session.executionRootDirectory}/distributedlog-build-tools/src/main/resources/distributedlog/findbugsExclude.xml</excludeFilterFile>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -238,6 +241,7 @@
             <exclude>OWNERS</exclude>
             <exclude>CONFIG.ini</exclude>
             <exclude>**/**.md</exclude>
+            <exclude>**/**.iml</exclude>
             <exclude>scripts/dev/reviewers</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>**/org/apache/distributedlog/thrift/*</exclude>
