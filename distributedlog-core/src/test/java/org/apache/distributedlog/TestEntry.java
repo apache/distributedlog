@@ -21,7 +21,9 @@ import static com.google.common.base.Charsets.UTF_8;
 import static org.apache.distributedlog.EnvelopedEntry.HEADER_LENGTH;
 import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
@@ -54,13 +56,22 @@ public class TestEntry {
         assertEquals("zero records", 0, writer.getNumRecords());
 
         ByteBuf buffer = writer.getBuffer();
-        Reader reader = Entry.newBuilder()
+        EnvelopedEntryReader reader = (EnvelopedEntryReader) Entry.newBuilder()
                 .setEntry(buffer)
                 .setLogSegmentInfo(1L, 0L)
                 .setEntryId(0L)
                 .buildReader();
+        int refCnt = reader.getSrcBuf().refCnt();
+        assertFalse(reader.isExhausted());
         Assert.assertNull("Empty record set should return null",
                 reader.nextRecord());
+        assertTrue(reader.isExhausted());
+        assertEquals(refCnt - 1, reader.getSrcBuf().refCnt());
+
+        // read next record again (to test release buffer)
+        Assert.assertNull("Empty record set should return null",
+            reader.nextRecord());
+        assertEquals(refCnt - 1, reader.getSrcBuf().refCnt());
         buffer.release();
     }
 

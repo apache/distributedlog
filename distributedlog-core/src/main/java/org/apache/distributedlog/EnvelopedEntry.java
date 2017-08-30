@@ -65,6 +65,11 @@ class EnvelopedEntry {
             + Integer.BYTES // decompressed size
             + Integer.BYTES; // compressed size
 
+    static final int VERSION_OFFSET = 0;
+    static final int FLAGS_OFFSET = VERSION_OFFSET + Byte.BYTES;
+    static final int DECOMPRESSED_SIZE_OFFSET = FLAGS_OFFSET + Integer.BYTES;
+    static final int COMPRESSED_SIZE_OFFSET = DECOMPRESSED_SIZE_OFFSET + Integer.BYTES;
+
     public static final byte CURRENT_VERSION = VERSION_ONE;
     public static final int COMPRESSION_CODEC_MASK = 0x3;
 
@@ -78,7 +83,7 @@ class EnvelopedEntry {
      *      New Input stream with the underlying payload.
      * @throws Exception
      */
-    public static ByteBuf fromEnvlopedBuf(ByteBuf src, StatsLogger statsLogger)
+    public static ByteBuf fromEnvelopedBuf(ByteBuf src, StatsLogger statsLogger)
             throws IOException {
         byte version = src.readByte();
         if (version != CURRENT_VERSION) {
@@ -93,7 +98,7 @@ class EnvelopedEntry {
         ByteBuf decompressedBuf;
         try {
             if (Type.NONE.code() == codecCode && originDataLen != actualDataLen) {
-                throw new IOException("Inconsistent data length found for a non-compressed entry : original = "
+                throw new IOException("Inconsistent data length found for a non-compressed entry : compressed = "
                         + originDataLen + ", actual = " + actualDataLen);
             }
             CompressionCodec codec = CompressionUtils.getCompressionCodec(Type.of(codecCode));

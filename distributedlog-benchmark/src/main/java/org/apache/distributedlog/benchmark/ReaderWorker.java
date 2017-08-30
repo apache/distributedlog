@@ -140,6 +140,7 @@ public class ReaderWorker implements Worker {
                 processRecord(nextRecord);
                 nextRecord = reader.nextRecord();
             }
+            reader.release();
         }
 
         public void processRecord(final LogRecordWithDLSN record) {

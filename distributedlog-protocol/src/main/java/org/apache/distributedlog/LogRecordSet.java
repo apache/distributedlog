@@ -56,13 +56,18 @@ import org.apache.distributedlog.io.CompressionCodec;
 public class LogRecordSet {
 
     public static final int HEADER_LEN =
-            4 /* Metadata */
-          + 4 /* Count */
-          + 8 /* Lengths */
+            Integer.BYTES /* Metadata */
+          + Integer.BYTES /* Count */
+          + Integer.BYTES + Integer.BYTES /* Lengths: (decompressed + compressed) */
             ;
 
     // Version
     static final int VERSION = 0x1000;
+
+    static final int METADATA_OFFSET = 0;
+    static final int COUNT_OFFSET = METADATA_OFFSET + Integer.BYTES;
+    static final int DECOMPRESSED_SIZE_OFFSET = COUNT_OFFSET + Integer.BYTES;
+    static final int COMPRESSED_SIZE_OFFSET = DECOMPRESSED_SIZE_OFFSET + Integer.BYTES;
 
     // Metadata
     static final int METADATA_VERSION_MASK = 0xf000;
@@ -72,13 +77,13 @@ public class LogRecordSet {
         checkArgument(record.isRecordSet(),
                 "record is not a recordset");
         ByteBuf buffer = record.getPayloadBuf();
-        int metadata = buffer.getInt(0);
+        int metadata = buffer.getInt(METADATA_OFFSET);
         int version = (metadata & METADATA_VERSION_MASK);
         if (version != VERSION) {
             throw new IOException(String.format("Version mismatch while reading. Received: %d,"
                 + " Required: %d", version, VERSION));
         }
-        return buffer.getInt(4);
+        return buffer.getInt(COUNT_OFFSET);
     }
 
     public static Writer newWriter(int initialBufferSize,
@@ -134,6 +139,11 @@ public class LogRecordSet {
          * @return next log record from this record set.
          */
         LogRecordWithDLSN nextRecord() throws IOException;
+
+        /**
+         * Release the resources hold by this record set reader.
+         */
+        void release();
 
     }
 

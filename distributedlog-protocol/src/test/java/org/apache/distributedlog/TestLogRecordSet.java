@@ -61,6 +61,7 @@ public class TestLogRecordSet {
         Reader reader = LogRecordSet.of(record);
         assertNull("Empty record set should return null",
                 reader.nextRecord());
+        reader.release();
     }
 
     @Test(timeout = 60000)
@@ -90,6 +91,7 @@ public class TestLogRecordSet {
         Reader reader = LogRecordSet.of(record);
         assertNull("Empty record set should return null",
                 reader.nextRecord());
+        reader.release();
     }
 
     @Test(timeout = 20000)
@@ -165,6 +167,7 @@ public class TestLogRecordSet {
             readRecord = reader.nextRecord();
         }
         assertEquals(10, numReads);
+        reader.release();
     }
 
 }

@@ -69,18 +69,21 @@ class EnvelopedRecordSetReader implements LogRecordSet.Reader {
         }
         int codecCode = metadata & METADATA_COMPRESSION_MASK;
         this.numRecords = src.readInt();
-        int originDataLen = src.readInt();
-        int actualDataLen = src.readInt();
-        ByteBuf compressedBuf = src.slice(src.readerIndex(), actualDataLen);
+        int decompressedDataLen = src.readInt();
+        int compressedDataLen = src.readInt();
+        ByteBuf compressedBuf = src.slice(src.readerIndex(), compressedDataLen);
         try {
-            if (Type.NONE.code() == codecCode && originDataLen != actualDataLen) {
-                throw new IOException("Inconsistent data length found for a non-compressed record set : original = "
-                        + originDataLen + ", actual = " + actualDataLen);
+            if (Type.NONE.code() == codecCode && decompressedDataLen != compressedDataLen) {
+                throw new IOException("Inconsistent data length found for a non-compressed record set : decompressed = "
+                        + decompressedDataLen + ", actual = " + compressedDataLen);
             }
             CompressionCodec codec = CompressionUtils.getCompressionCodec(Type.of(codecCode));
-            this.reader = codec.decompress(compressedBuf, originDataLen);
+            this.reader = codec.decompress(compressedBuf, decompressedDataLen);
         } finally {
             compressedBuf.release();
+        }
+        if (numRecords == 0) {
+            this.reader.release();
         }
     }
 
@@ -91,7 +94,7 @@ class EnvelopedRecordSetReader implements LogRecordSet.Reader {
         }
 
         int recordLen = reader.readInt();
-        ByteBuf recordBuf = reader.retainedSlice(reader.readerIndex(), recordLen);
+        ByteBuf recordBuf = reader.slice(reader.readerIndex(), recordLen);
         reader.readerIndex(reader.readerIndex() + recordLen);
 
         DLSN dlsn = new DLSN(logSegmentSeqNo, entryId, slotId);
@@ -99,18 +102,25 @@ class EnvelopedRecordSetReader implements LogRecordSet.Reader {
                 new LogRecordWithDLSN(dlsn, startSequenceId);
         record.setPositionWithinLogSegment(position);
         record.setTransactionId(transactionId);
-        record.setPayloadBuf(recordBuf);
+        record.setPayloadBuf(recordBuf, true);
 
         ++slotId;
         ++position;
         --numRecords;
 
+        // release the record set buffer when exhausting the reader
+        if (0 == numRecords) {
+            this.reader.release();
+        }
+
         return record;
     }
 
     @Override
-    protected void finalize() throws Throwable {
-        reader.release();
-        super.finalize();
+    public void release() {
+        if (0 != numRecords) {
+            numRecords = 0;
+            reader.release();
+        }
     }
 }

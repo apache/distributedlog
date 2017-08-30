@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import java.nio.ByteBuffer;
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
@@ -41,7 +40,7 @@ public class LZ4CompressionCodec implements CompressionCodec {
 
     private static final LZ4CompressionCodec INSTANCE = new LZ4CompressionCodec();
 
-    private static final LZ4Factory factory = LZ4Factory.fastestInstance();
+    private static final LZ4Factory factory = LZ4Factory.fastestJavaInstance();
     // Used for compression
     private static final LZ4Compressor compressor = factory.fastCompressor();
     // Used to decompress when the size of the output is known
@@ -76,7 +75,7 @@ public class LZ4CompressionCodec implements CompressionCodec {
         checkArgument(compressed.readableBytes() >= 0);
         checkArgument(decompressedSize >= 0);
 
-        ByteBuf uncompressed = Unpooled.buffer(decompressedSize, decompressedSize);
+        ByteBuf uncompressed = PooledByteBufAllocator.DEFAULT.buffer(decompressedSize, decompressedSize);
         ByteBuffer uncompressedNio = uncompressed.nioBuffer(0, decompressedSize);
         ByteBuffer compressedNio = compressed.nioBuffer(compressed.readerIndex(), compressed.readableBytes());
 

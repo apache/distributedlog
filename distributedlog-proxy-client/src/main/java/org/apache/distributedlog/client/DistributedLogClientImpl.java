@@ -368,10 +368,12 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                         beforeComplete(sc, response.getHeader());
                         AbstractWriteOp.this.complete(sc.getAddress(), response);
                     }
+                    onSendWriteRequestCompleted();
                 }
                 @Override
                 public void onFailure(Throwable cause) {
                     // handled by the ResponseHeader listener
+                    onSendWriteRequestCompleted();
                 }
             }).map(new AbstractFunction1<WriteResponse, ResponseHeader>() {
                 @Override
@@ -382,6 +384,10 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
 
         abstract Future<WriteResponse> sendWriteRequest(ProxyClient sc);
+
+        // action triggered on {@link #sendWriteRequest} completed (either succeed or failed)
+        void onSendWriteRequestCompleted() {
+        }
     }
 
     class WriteOp extends AbstractWriteOp {
@@ -401,8 +407,29 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
 
         @Override
+        void complete(SocketAddress address, WriteResponse response) {
+            super.complete(address, response);
+            release();
+        }
+
+        @Override
+        void fail(SocketAddress address, Throwable t) {
+            super.fail(address, t);
+            release();
+        }
+
+        @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().writeWithContext(stream, data.duplicate(), ctx);
+            // retain the databuf when sending a write request
+            // release the databuf {@link #onSendWriteRequestCompleted()}
+            dataBuf.retain();
+            return sc.getService()
+                .writeWithContext(stream, data.duplicate(), ctx);
+        }
+
+        @Override
+        void onSendWriteRequestCompleted() {
+            dataBuf.release();
         }
 
         @Override
@@ -422,12 +449,10 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
             });
         }
 
-        @Override
-        protected void finalize() throws Throwable {
+        void release() {
             if (null != dataBuf) {
                 dataBuf.release();
             }
-            super.finalize();
         }
     }
 

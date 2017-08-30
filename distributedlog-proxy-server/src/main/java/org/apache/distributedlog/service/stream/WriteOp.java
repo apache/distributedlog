@@ -19,7 +19,6 @@ package org.apache.distributedlog.service.stream;
 
 import static org.apache.distributedlog.protocol.util.TwitterFutureUtils.newTFuture;
 
-import io.netty.buffer.Unpooled;
 import org.apache.distributedlog.api.AsyncLogWriter;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecord;
@@ -151,7 +150,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
         Future<DLSN> writeResult;
         synchronized (txnLock) {
             txnId = sequencer.nextId();
-            LogRecord record = new LogRecord(txnId, Unpooled.wrappedBuffer(payload));
+            LogRecord record = new LogRecord(txnId, payload);
             if (isRecordSet) {
                 record.setRecordSet();
             }

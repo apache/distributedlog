@@ -19,8 +19,12 @@ package org.apache.distributedlog;
 
 import static org.apache.distributedlog.LogRecord.MAX_LOGRECORDSET_SIZE;
 import static org.apache.distributedlog.LogRecord.MAX_LOGRECORD_SIZE;
+import static org.apache.distributedlog.LogRecordSet.COMPRESSED_SIZE_OFFSET;
+import static org.apache.distributedlog.LogRecordSet.COUNT_OFFSET;
+import static org.apache.distributedlog.LogRecordSet.DECOMPRESSED_SIZE_OFFSET;
 import static org.apache.distributedlog.LogRecordSet.HEADER_LEN;
 import static org.apache.distributedlog.LogRecordSet.METADATA_COMPRESSION_MASK;
+import static org.apache.distributedlog.LogRecordSet.METADATA_OFFSET;
 import static org.apache.distributedlog.LogRecordSet.METADATA_VERSION_MASK;
 import static org.apache.distributedlog.LogRecordSet.VERSION;
 
@@ -128,10 +132,10 @@ class EnvelopedRecordSetWriter implements LogRecordSet.Writer {
 
         if (Type.NONE.code() == codecCode) {
             // update count
-            buffer.setInt(4, count);
+            buffer.setInt(COUNT_OFFSET, count);
             // update data len
-            buffer.setInt(8, dataLen);
-            buffer.setInt(12, dataLen);
+            buffer.setInt(DECOMPRESSED_SIZE_OFFSET, dataLen);
+            buffer.setInt(COMPRESSED_SIZE_OFFSET, dataLen);
             return buffer.retain();
         }
 
@@ -141,12 +145,13 @@ class EnvelopedRecordSetWriter implements LogRecordSet.Writer {
                     CompressionUtils.getCompressionCodec(codec);
         ByteBuf uncompressedBuf = buffer.slice(dataOffset, dataLen);
         ByteBuf compressedBuf = compressor.compress(uncompressedBuf, HEADER_LEN);
-        compressedBuf.setInt(0, metadata);
+        compressedBuf.setInt(METADATA_OFFSET, metadata);
         // update count
-        compressedBuf.setInt(4, count);
+        compressedBuf.setInt(COUNT_OFFSET, count);
         // update data len
-        compressedBuf.setInt(8, dataLen);
-        compressedBuf.setInt(12, compressedBuf.readableBytes() - HEADER_LEN);
+        compressedBuf.setInt(DECOMPRESSED_SIZE_OFFSET, dataLen);
+        compressedBuf.setInt(COMPRESSED_SIZE_OFFSET, compressedBuf.readableBytes() - HEADER_LEN);
+
         return compressedBuf;
     }
 

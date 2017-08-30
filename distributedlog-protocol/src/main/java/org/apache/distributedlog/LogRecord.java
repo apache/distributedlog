@@ -24,7 +24,9 @@ import io.netty.buffer.Unpooled;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import javax.annotation.concurrent.NotThreadSafe;
+import org.apache.distributedlog.common.util.ByteBufUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,7 +133,6 @@ public class LogRecord {
     private long metadata;
     private long txid;
     private ByteBuf payload;
-    private byte[] payloadData;
 
     /**
      * Construct an uninitialized log record.
@@ -154,13 +155,33 @@ public class LogRecord {
      *          record data
      */
     public LogRecord(long txid, byte[] payload) {
-        this(txid, Unpooled.wrappedBuffer(payload));
-        this.payloadData = payload;
+        this.txid = txid;
+        this.payload = Unpooled.wrappedBuffer(payload);
     }
 
-    public LogRecord(long txid, ByteBuf payload) {
+    /**
+     * Construct a log record with <i>txid</i> and payload <i>buffer</i>.
+     *
+     * @param txid application defined transaction id.
+     * @param buffer payload buffer.
+     */
+    public LogRecord(long txid, ByteBuffer buffer) {
         this.txid = txid;
-        this.payload = payload;
+        this.payload = Unpooled.wrappedBuffer(buffer);
+    }
+
+    /**
+     * Used by {@link LogRecordWithDLSN} to construct a log record read by readers.
+     *
+     * @param txid transaction id
+     * @param payload playload
+     */
+    protected LogRecord(long txid, ByteBuf payload) {
+        this.txid = txid;
+        // Need to make a copy since the passed payload is using a ref-count buffer that we don't know when could
+        // release, since the record is passed to the user. Also, the passed ByteBuf is coming from network and is
+        // backed by a direct buffer which we could not expose as a byte[]
+        this.payload = Unpooled.copiedBuffer(payload);
         this.metadata = 0;
     }
 
@@ -192,44 +213,22 @@ public class LogRecord {
      * @return payload of this log record.
      */
     public byte[] getPayload() {
-        if (null != payloadData) {
-            return payloadData;
-        }
-
-        ByteBuf bb = payload.retainedSlice();
-        try {
-            byte[] data = new byte[bb.readableBytes()];
-            bb.readBytes(data);
-            payloadData = data;
-            return payloadData;
-        } finally {
-            bb.release();
-        }
+        return ByteBufUtils.getArray(payload);
     }
 
     public ByteBuf getPayloadBuf() {
-        return payload.retainedSlice();
+        return payload.slice();
     }
 
-    /**
-     * Set payload for this log record.
-     *
-     * @param payload payload of this log record
-     */
-    void setPayload(byte[] payload) {
-        this.payloadData = payload;
+    void setPayloadBuf(ByteBuf payload, boolean copyData) {
         if (null != this.payload) {
             this.payload.release();
         }
-        this.payload = Unpooled.wrappedBuffer(payload);
-    }
-
-    void setPayloadBuf(ByteBuf payload) {
-        if (null != this.payload) {
-            this.payload.release();
+        if (copyData) {
+            this.payload = Unpooled.copiedBuffer(payload);
+        } else {
+            this.payload = payload;
         }
-        this.payload = payload;
-        this.payloadData = null;
     }
 
     /**
@@ -376,12 +375,16 @@ public class LogRecord {
     // Serialization & Deserialization
     //
 
-    protected void readPayload(ByteBuf in) throws IOException {
+    protected void readPayload(ByteBuf in, boolean copyData) throws IOException {
         int length = in.readInt();
         if (length < 0) {
             throw new EOFException("Log Record is corrupt: Negative length " + length);
         }
-        setPayloadBuf(in.retainedSlice(in.readerIndex(), length));
+        if (copyData) {
+            setPayloadBuf(in.slice(in.readerIndex(), length), true);
+        } else {
+            setPayloadBuf(in.retainedSlice(in.readerIndex(), length), false);
+        }
         in.skipBytes(length);
     }
 
@@ -394,14 +397,6 @@ public class LogRecord {
         out.writeLong(metadata);
         out.writeLong(txid);
         writePayload(out);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        if (null != payload) {
-            payload.release();
-        }
-        super.finalize();
     }
 
     /**
@@ -517,7 +512,14 @@ public class LogRecord {
                     nextRecordInStream = new LogRecordWithDLSN(recordStream.getCurrentPosition(), startSequenceId);
                     nextRecordInStream.setMetadata(metadata);
                     nextRecordInStream.setTransactionId(in.readLong());
-                    nextRecordInStream.readPayload(in);
+
+                    // 1) if it is simple record, copy the data
+                    // 2) if it is record set and deserializeRecordSet is true, we don't need to copy data,
+                    //    defer data copying to deserializing record from record set.
+                    // 3) if it is record set and deserializeRecordSet is false, we copy the data, so applications
+                    //    don't have to deal with reference count.
+                    boolean copyData = !isRecordSet(metadata) || !deserializeRecordSet;
+                    nextRecordInStream.readPayload(in, copyData);
                     if (LOG.isTraceEnabled()) {
                         if (nextRecordInStream.isControl()) {
                             LOG.trace("Reading {} Control DLSN {}",
@@ -614,7 +616,7 @@ public class LogRecord {
                             new LogRecordWithDLSN(recordStream.getCurrentPosition(), startSequenceId);
                         record.setMetadata(flags);
                         record.setTransactionId(currTxId);
-                        record.readPayload(in);
+                        record.readPayload(in, false);
                         recordSetReader = LogRecordSet.of(record);
                     } else {
                         int length = in.readInt();

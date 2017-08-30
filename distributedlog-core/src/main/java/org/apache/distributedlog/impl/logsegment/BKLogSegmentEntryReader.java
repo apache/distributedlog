@@ -77,14 +77,6 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
             this.done = false;
         }
 
-        @Override
-        protected synchronized void finalize() throws Throwable {
-            if (null != entry) {
-                entry.getEntryBuffer().release();
-            }
-            super.finalize();
-        }
-
         long getEntryId() {
             return entryId;
         }
@@ -93,7 +85,24 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
             return done;
         }
 
+        synchronized void release() {
+            if (null != this.entry) {
+                this.entry.getEntryBuffer().release();
+                this.entry = null;
+            }
+        }
+
+        void release(LedgerEntry entry) {
+            if (null != entry) {
+                entry.getEntryBuffer().release();
+            }
+        }
+
         void complete(LedgerEntry entry) {
+            // the reader is already closed
+            if (isClosed()) {
+                release(entry);
+            }
             synchronized (this) {
                 if (done) {
                     return;
@@ -126,6 +135,8 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
         }
 
         synchronized LedgerEntry getEntry() {
+            // retain reference for the caller
+            this.entry.getEntryBuffer().retain();
             return this.entry;
         }
 
@@ -520,6 +531,16 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
         }
     }
 
+    private void releaseAllCachedEntries() {
+        synchronized (this) {
+            CacheEntry entry = readAheadEntries.poll();
+            while (null != entry) {
+                entry.release();
+                entry = readAheadEntries.poll();
+            }
+        }
+    }
+
     //
     // Background Read Operations
     //
@@ -754,22 +775,28 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
             }
             if (entry.isSuccess()) {
                 CacheEntry removedEntry = readAheadEntries.poll();
-                if (entry != removedEntry) {
-                    DLIllegalStateException ise = new DLIllegalStateException("Unexpected condition at reading from "
-                            + getSegment());
-                    completeExceptionally(ise, false);
-                    return;
-                }
                 try {
-                    nextRequest.addEntry(processReadEntry(entry.getEntry()));
-                } catch (IOException e) {
-                    completeExceptionally(e, false);
-                    return;
+                    if (entry != removedEntry) {
+                        DLIllegalStateException ise = new DLIllegalStateException("Unexpected condition at reading from "
+                            + getSegment());
+                        completeExceptionally(ise, false);
+                        return;
+                    }
+                    try {
+                        // the reference is retained on `entry.getEntry()`. Entry.Reader is responsible for releasing it.
+                        nextRequest.addEntry(processReadEntry(entry.getEntry()));
+                    } catch (IOException e) {
+                        completeExceptionally(e, false);
+                        return;
+                    }
+                } finally {
+                    removedEntry.release();
                 }
             } else if (skipBrokenEntries && BKException.Code.DigestMatchException == entry.getRc()) {
                 // skip this entry and move forward
                 skippedBrokenEntriesCounter.inc();
-                readAheadEntries.poll();
+                CacheEntry removedEntry = readAheadEntries.poll();
+                removedEntry.release();
                 continue;
             } else {
                 completeExceptionally(new BKTransmitException("Encountered issue on reading entry " + entry.getEntryId()
@@ -832,6 +859,9 @@ public class BKLogSegmentEntryReader implements Runnable, LogSegmentEntryReader,
             exception = new ReadCancelledException(getSegment().getZNodeName(), "Reader was closed");
             completeExceptionally(exception, false);
         }
+
+        // release the cached entries
+        releaseAllCachedEntries();
 
         // cancel all pending reads
         cancelAllPendingReads(exception);

@@ -220,6 +220,11 @@ public class Entry {
          */
         boolean skipTo(DLSN dlsn) throws IOException;
 
+        /**
+         * Release the resources held by the entry reader.
+         */
+        void release();
+
     }
 
 }
