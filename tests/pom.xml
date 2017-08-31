@@ -30,6 +30,7 @@
   <modules>
     <module>jmh</module>
     <module>jmh-0.4</module>
+    <module>shading</module>
   </modules>
   <build>
     <plugins>
