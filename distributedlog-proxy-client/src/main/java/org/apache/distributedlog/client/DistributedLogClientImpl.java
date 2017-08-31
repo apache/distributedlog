@@ -25,6 +25,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecordSetBuffer;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
@@ -403,7 +404,7 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         WriteOp(final String name, final ByteBuffer data) {
             super(name, clientStats.getOpStats("write"));
             this.data = data;
-            this.dataBuf = null;
+            this.dataBuf = Unpooled.wrappedBuffer(data);
         }
 
         @Override
