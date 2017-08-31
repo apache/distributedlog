@@ -27,7 +27,7 @@ public interface CompressionCodec {
      * Enum specifying the currently supported compression types.
      */
     enum Type {
-        NONE, LZ4, UNKNOWN
+        NONE, LZ4, ZSTD, UNKNOWN
     }
 
     /**

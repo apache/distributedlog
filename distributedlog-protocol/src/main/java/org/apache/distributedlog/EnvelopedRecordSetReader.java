@@ -18,6 +18,7 @@
 package org.apache.distributedlog;
 
 import static org.apache.distributedlog.LogRecordSet.COMPRESSION_CODEC_LZ4;
+import static org.apache.distributedlog.LogRecordSet.COMPRESSION_CODEC_ZSTD;
 import static org.apache.distributedlog.LogRecordSet.METADATA_COMPRESSION_MASK;
 import static org.apache.distributedlog.LogRecordSet.METADATA_VERSION_MASK;
 import static org.apache.distributedlog.LogRecordSet.NULL_OP_STATS_LOGGER;
@@ -80,7 +81,12 @@ class EnvelopedRecordSetReader implements LogRecordSet.Reader {
         if (COMPRESSION_CODEC_LZ4 == codecCode) {
             CompressionCodec codec = CompressionUtils.getCompressionCodec(CompressionCodec.Type.LZ4);
             byte[] decompressedData = codec.decompress(compressedData, 0, actualDataLen,
-                    originDataLen, NULL_OP_STATS_LOGGER);
+                originDataLen, NULL_OP_STATS_LOGGER);
+            this.reader = ByteBuffer.wrap(decompressedData);
+        } else if (COMPRESSION_CODEC_ZSTD == codecCode) {
+            CompressionCodec codec = CompressionUtils.getCompressionCodec(CompressionCodec.Type.ZSTD);
+            byte[] decompressedData = codec.decompress(compressedData, 0, actualDataLen,
+                originDataLen, NULL_OP_STATS_LOGGER);
             this.reader = ByteBuffer.wrap(decompressedData);
         } else {
             if (originDataLen != actualDataLen) {

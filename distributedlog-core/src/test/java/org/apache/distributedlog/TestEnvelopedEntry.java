@@ -63,9 +63,18 @@ public class TestEnvelopedEntry {
 
     @Test(timeout = 20000)
     public void testLZ4Compression() throws Exception {
+        testCompression(CompressionCodec.Type.LZ4);
+    }
+
+    @Test(timeout = 20000)
+    public void testZstdCompression() throws Exception {
+        testCompression(CompressionCodec.Type.ZSTD);
+    }
+
+    private void testCompression(CompressionCodec.Type codec) throws Exception {
         byte[] data = getString(true).getBytes();
         EnvelopedEntry writeEntry = new EnvelopedEntry(EnvelopedEntry.CURRENT_VERSION,
-                                                       CompressionCodec.Type.LZ4,
+                                                       codec,
                                                        data,
                                                        data.length,
                                                        new NullStatsLogger());

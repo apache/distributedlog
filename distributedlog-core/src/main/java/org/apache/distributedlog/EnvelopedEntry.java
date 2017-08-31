@@ -187,6 +187,7 @@ class EnvelopedEntry {
         public static final int COMPRESSION_CODEC_MASK = 0x3;
         public static final int COMPRESSION_CODEC_NONE = 0x0;
         public static final int COMPRESSION_CODEC_LZ4 = 0x1;
+        public static final int COMPRESSION_CODEC_ZSTD = 0x2;
 
         private int flags = 0;
         private int decompressedSize = 0;
@@ -213,6 +214,10 @@ class EnvelopedEntry {
                     this.flags = (int) BitMaskUtils.set(flags, COMPRESSION_CODEC_MASK,
                                                         COMPRESSION_CODEC_LZ4);
                     break;
+                case ZSTD:
+                    this.flags = (int) BitMaskUtils.set(flags, COMPRESSION_CODEC_MASK,
+                        COMPRESSION_CODEC_ZSTD);
+                    break;
                 default:
                     throw new RuntimeException(String.format("Unknown Compression Type: %s",
                                                              compressionType));
@@ -233,6 +238,8 @@ class EnvelopedEntry {
                 this.compressionType = CompressionCodec.Type.NONE;
             } else if (compressionType == COMPRESSION_CODEC_LZ4) {
                 this.compressionType = CompressionCodec.Type.LZ4;
+            } else if (compressionType == COMPRESSION_CODEC_ZSTD) {
+                this.compressionType = CompressionCodec.Type.ZSTD;
             } else {
                 throw new IOException(String.format("Unsupported Compression Type: %s",
                                                     compressionType));
