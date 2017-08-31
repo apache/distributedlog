@@ -114,8 +114,9 @@
     <junit.version>4.8.1</junit.version>
     <libthrift.version>0.5.0-1</libthrift.version>
     <lombok.version>1.16.16</lombok.version>
-    <lz4.version>1.2.0</lz4.version>
+    <lz4.version>1.3.0</lz4.version>
     <mockito.version>1.9.5</mockito.version>
+    <netty.version>4.1.12.Final</netty.version>
     <scrooge.version>4.6.0</scrooge.version>
     <slf4j.version>1.6.4</slf4j.version>
     <stats-util.version>0.0.58</stats-util.version>
@@ -215,7 +216,7 @@
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <argLine>-Xmx3G -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=2G</argLine>
+          <argLine>-Xmx3G -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=2G -Dio.netty.leakDetection.level=PARANOID</argLine>
           <forkMode>always</forkMode>
           <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
         </configuration>
@@ -226,25 +227,30 @@
         <version>${apache-rat-plugin.version}</version>
         <configuration>
           <excludes>
+            <exclude>ChangeLog</exclude>
+            <exclude>CONFIG.ini</exclude>
+            <exclude>GROUPS</exclude>
+            <exclude>OWNERS</exclude>
+            <exclude>dist/**/*</exclude>
             <exclude>docs/**/*</exclude>
+            <exclude>scripts/dev/reviewers</exclude>
             <exclude>website/**/*</exclude>
+            <exclude>**/*.md</exclude>
+            <exclude>**/apidocs/*</exclude>
+            <exclude>**/dependency-reduced-pom.xml</exclude>
+            <exclude>**/org/apache/distributedlog/thrift/*</exclude>
+            <!-- Git -->
             <exclude>.git/**/*</exclude>
             <exclude>.github/**/*</exclude>
             <exclude>.gitignore</exclude>
             <exclude>.idea/**/*</exclude>
-            <exclude>dist/**/*</exclude>
+            <!-- Intellij -->
+            <exclude>**/*.iml</exclude>
+            <exclude>**/*.iws</exclude>
+            <exclude>**/*.ipr</exclude>
+            <!-- SVN -->
             <exclude>**/.svn/**/*</exclude>
-            <exclude>ChangeLog</exclude>
-            <exclude>**/README.md</exclude>
-            <exclude>**/apidocs/*</exclude>
-            <exclude>GROUPS</exclude>
-            <exclude>OWNERS</exclude>
-            <exclude>CONFIG.ini</exclude>
-            <exclude>**/**.md</exclude>
-            <exclude>**/**.iml</exclude>
-            <exclude>scripts/dev/reviewers</exclude>
-            <exclude>**/dependency-reduced-pom.xml</exclude>
-            <exclude>**/org/apache/distributedlog/thrift/*</exclude>
+            <!-- Maven -->
             <exclude>.repository/**</exclude>
           </excludes>
         </configuration>

@@ -53,7 +53,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
 
     private static final Logger logger = LoggerFactory.getLogger(WriteOp.class);
 
-    private final byte[] payload;
+    private final ByteBuffer payload;
     private final boolean isRecordSet;
 
     // Stats
@@ -80,8 +80,7 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
                    Feature checksumDisabledFeature,
                    AccessControlManager accessControlManager) {
         super(stream, requestStat(statsLogger, "write"), checksum, checksumDisabledFeature);
-        payload = new byte[data.remaining()];
-        data.get(payload);
+        this.payload = data;
         this.isRecordSet = isRecordSet;
 
         final Partition partition = streamPartitionConverter.convert(stream);
@@ -121,12 +120,12 @@ public class WriteOp extends AbstractWriteOp implements WriteOpWithPayload {
 
     @Override
     public long getPayloadSize() {
-      return payload.length;
+      return payload.remaining();
     }
 
     @Override
     public Long computeChecksum() {
-        return ProtocolUtils.writeOpCRC32(stream, payload);
+        return ProtocolUtils.writeOpCRC32(stream, payload.duplicate());
     }
 
     @Override

@@ -24,6 +24,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.LogRecordSetBuffer;
 import org.apache.distributedlog.client.monitor.MonitorServiceClient;
@@ -367,10 +369,12 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                         beforeComplete(sc, response.getHeader());
                         AbstractWriteOp.this.complete(sc.getAddress(), response);
                     }
+                    onSendWriteRequestCompleted();
                 }
                 @Override
                 public void onFailure(Throwable cause) {
                     // handled by the ResponseHeader listener
+                    onSendWriteRequestCompleted();
                 }
             }).map(new AbstractFunction1<WriteResponse, ResponseHeader>() {
                 @Override
@@ -381,27 +385,58 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
 
         abstract Future<WriteResponse> sendWriteRequest(ProxyClient sc);
+
+        // action triggered on {@link #sendWriteRequest} completed (either succeed or failed)
+        void onSendWriteRequestCompleted() {
+        }
     }
 
     class WriteOp extends AbstractWriteOp {
+        final ByteBuf dataBuf;
         final ByteBuffer data;
+
+        WriteOp(final String name, final ByteBuf dataBuf) {
+            super(name, clientStats.getOpStats("write"));
+            this.dataBuf = dataBuf;
+            this.data = dataBuf.nioBuffer();
+        }
 
         WriteOp(final String name, final ByteBuffer data) {
             super(name, clientStats.getOpStats("write"));
             this.data = data;
+            this.dataBuf = Unpooled.wrappedBuffer(data);
+        }
+
+        @Override
+        void complete(SocketAddress address, WriteResponse response) {
+            super.complete(address, response);
+            release();
+        }
+
+        @Override
+        void fail(SocketAddress address, Throwable t) {
+            super.fail(address, t);
+            release();
         }
 
         @Override
         Future<WriteResponse> sendWriteRequest(ProxyClient sc) {
-            return sc.getService().writeWithContext(stream, data, ctx);
+            // retain the databuf when sending a write request
+            // release the databuf {@link #onSendWriteRequestCompleted()}
+            dataBuf.retain();
+            return sc.getService()
+                .writeWithContext(stream, data.duplicate(), ctx);
+        }
+
+        @Override
+        void onSendWriteRequestCompleted() {
+            dataBuf.release();
         }
 
         @Override
         Long computeChecksum() {
             if (null == crc32) {
-                byte[] dataBytes = new byte[data.remaining()];
-                data.duplicate().get(dataBytes);
-                crc32 = ProtocolUtils.writeOpCRC32(stream, dataBytes);
+                crc32 = ProtocolUtils.writeOpCRC32(stream, data.duplicate());
             }
             return crc32;
         }
@@ -413,6 +448,12 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
                     return DLSN.deserialize(response.getDlsn());
                 }
             });
+        }
+
+        void release() {
+            if (null != dataBuf) {
+                dataBuf.release();
+            }
         }
     }
 
@@ -455,7 +496,6 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
         }
 
     }
-
 
     class ReleaseOp extends AbstractWriteOp {
 
