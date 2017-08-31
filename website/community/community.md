@@ -48,7 +48,18 @@ There are many ways to get help from the Apache DistributedLog community. The [m
       <a href="http://mail-archives.apache.org/mod_mbox/bookkeeper-distributedlog-dev/">Archives</a> <br>
     </td>
   </tr>
-<tr>
+  <tr>
+    <td>
+      <strong>distributedlog-issues</strong>@bookkeeper.apache.org<br>
+      <small>Updates from DistributedLog's JIRA, Github and Jenkins.</small>
+    </td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-issues-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-issues-digest-subscribe@bookkeeper.apache.org">Subscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <a href="mailto:distributedlog-issues-unsubscribe@bookkeeper.apache.org">Unsubscribe</a></td>
+    <td class="text-center"><i class="fa fa-pencil-square-o"></i> <i>Read only list</i></td>
+    <td class="text-center"><a href="http://mail-archives.apache.org/mod_mbox/bookkeeper-distributedlog-issues/">Archives</a></td>
+  </tr>
+  <tr>
     <td>
       <strong>distributedlog-commits</strong>@bookkeeper.apache.org<br>
       <small>All commits to our repositories</small>
