@@ -5,7 +5,7 @@ layout: default
 <div class="alert alert-info alert-dismissible" role="alert">
 <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-The Apache DistributedLog project is in the process of bootstrapping. This includes the website -- so please file issues you find in <a href="/community">Jira</a>. Thanks!
+Apache DistributedLog graduated from Apache Incubator and is a sub-project of Apache BookKeeper now!
 </div>
 
 <!-- landing page -->
