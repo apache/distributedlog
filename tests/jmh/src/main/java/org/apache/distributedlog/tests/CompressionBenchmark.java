@@ -61,7 +61,7 @@ public class CompressionBenchmark {
         Random r = new Random(System.currentTimeMillis());
         byte[] data = new byte[this.size];
         r.nextBytes(data);
-        this.entry = Unpooled.directBuffer(size);
+        this.entry = Unpooled.buffer(size);
         this.entry.writeBytes(data);
 
         this.codecLz4 = CompressionUtils.getCompressionCodec(Type.LZ4);
