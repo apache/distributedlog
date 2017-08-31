@@ -20,6 +20,8 @@
  */
 package org.apache.distributedlog.tests;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.apache.bookkeeper.stats.NullStatsLogger;
@@ -47,9 +49,9 @@ public class CompressionBenchmark {
     @Param({ "10", "100", "1000", "10000" })
     int size;
 
-    byte[] entry;
-    byte[] compressedLz4;
-    byte[] compressedNone;
+    ByteBuf entry;
+    ByteBuf compressedLz4;
+    ByteBuf compressedNone;
     CompressionCodec codecLz4;
     CompressionCodec codecNone;
     OpStatsLogger opStatsLogger;
@@ -57,14 +59,16 @@ public class CompressionBenchmark {
     @Setup
     public void prepare() {
         Random r = new Random(System.currentTimeMillis());
-        this.entry = new byte[this.size];
-        r.nextBytes(entry);
+        byte[] data = new byte[this.size];
+        r.nextBytes(data);
+        this.entry = Unpooled.buffer(size);
+        this.entry.writeBytes(data);
 
         this.codecLz4 = CompressionUtils.getCompressionCodec(Type.LZ4);
         this.codecNone = CompressionUtils.getCompressionCodec(Type.NONE);
         this.opStatsLogger = NullStatsLogger.INSTANCE.getOpStatsLogger("");
-        this.compressedLz4 = codecLz4.compress(entry, 0, entry.length, opStatsLogger);
-        this.compressedNone = codecNone.compress(entry, 0, entry.length, opStatsLogger);
+        this.compressedLz4 = codecLz4.compress(entry.slice(), 0);
+        this.compressedNone = codecNone.compress(entry.slice(), 0);
     }
 
 
@@ -79,7 +83,8 @@ public class CompressionBenchmark {
     }
 
     private void testCompress(CompressionCodec codec) {
-        codec.compress(entry, 0, entry.length, opStatsLogger);
+        ByteBuf compressed = codec.compress(entry.slice(), 0);
+        compressed.release();
     }
 
     @Benchmark
@@ -92,8 +97,9 @@ public class CompressionBenchmark {
         testDecompress(codecNone, compressedNone);
     }
 
-    private void testDecompress(CompressionCodec codec, byte[] compressed) {
-        codec.decompress(compressed, 0, compressed.length, opStatsLogger);
+    private void testDecompress(CompressionCodec codec, ByteBuf compressed) {
+        ByteBuf decompressed = codec.decompress(compressed.slice(), size);
+        decompressed.release();
     }
 
 }
