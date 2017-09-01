@@ -22,6 +22,7 @@
   <suppress checks="JavadocPackage" files=".*[\\/]examples[\\/].*"/>
 
   <!-- suppress packages by packages -->
+  <!-- TODO: enable checkstyle package by package in https://github.com/apache/distributedlog/issues/165 -->
   <suppress checks=".*" files=".*[\\/]distributedlog[\\/].*"/>
   <suppress checks=".*" files=".*[\\/]distributedlog\.acl[\\/].*"/>
   <suppress checks=".*" files=".*[\\/]distributedlog\.admin[\\/].*"/>
@@ -41,7 +42,6 @@
   <suppress checks=".*" files=".*[\\/]distributedlog\.namespace[\\/].*"/>
   <suppress checks=".*" files=".*[\\/]distributedlog\.net[\\/].*"/>
   <suppress checks=".*" files=".*[\\/]distributedlog\.selector[\\/].*"/>
-
   <suppress checks=".*" files=".*[\\/]distributedlog\.tools[\\/].*"/>
   <suppress checks=".*" files=".*[\\/]distributedlog\.util[\\/].*"/>
   <suppress checks=".*" files=".*[\\/]distributedlog\.zk[\\/].*"/>

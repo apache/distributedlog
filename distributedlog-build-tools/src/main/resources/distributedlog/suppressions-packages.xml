@@ -21,7 +21,8 @@
   <suppress checks="JavadocPackage" files=".*[\\/]maven-archetypes[\\/].*"/>
   <suppress checks="JavadocPackage" files=".*[\\/]examples[\\/].*"/>
 
-  <!-- suppress packages by packages -->
+  <!-- suppress ImportOrder -->
+  <!-- TODO: enable ImportOrder checkstyle rule in https://github.com/apache/distributedlog/issues/165 -->
   <suppress checks="ImportOrder" files=".*[\\/]distributedlog[\\/].*"/>
 
   <!-- suppress all checks in the generated directories -->
