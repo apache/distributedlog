@@ -121,7 +121,7 @@
         </dependencies>
         <configuration>
           <configLocation>distributedlog/checkstyle.xml</configLocation>
-          <suppressionsLocation>distributedlog/suppressions.xml</suppressionsLocation>
+          <suppressionsLocation>distributedlog/suppressions-packages.xml</suppressionsLocation>
           <consoleOutput>true</consoleOutput>
           <failOnViolation>true</failOnViolation>
           <includeResources>false</includeResources>
