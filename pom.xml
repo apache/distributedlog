@@ -241,10 +241,12 @@
             <exclude>**/apidocs/*</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>**/org/apache/distributedlog/thrift/*</exclude>
+            <exclude>**/logs/*.log</exclude>
             <!-- Git -->
             <exclude>.git/**/*</exclude>
             <exclude>.github/**/*</exclude>
             <exclude>.gitignore</exclude>
+            <exclude>docker/.gitignore</exclude>
             <exclude>.idea/**/*</exclude>
             <!-- Intellij -->
             <exclude>**/*.iml</exclude>
@@ -254,6 +256,8 @@
             <exclude>**/.svn/**/*</exclude>
             <!-- Maven -->
             <exclude>.repository/**</exclude>
+            <!-- Grafana -->
+            <exclude>docker/grafana/dashboards/*.json</exclude>
           </excludes>
         </configuration>
       </plugin>
