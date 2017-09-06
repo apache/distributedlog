@@ -24,14 +24,14 @@
     <version>0.5.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent> 
-  <artifactId>backward-test-0.4</artifactId>
-  <name>Apache DistributedLog :: Tests :: Backward Test (0.4.0-incubating)</name>
+  <artifactId>backward-compat-test</artifactId>
+  <name>Apache DistributedLog :: Tests :: Backward Compatibility Test</name>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.distributedlog</groupId>
-      <artifactId>distributedlog-core_2.11</artifactId>
-      <version>0.4.0-incubating</version>
+      <artifactId>distributedlog-core</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -42,9 +42,9 @@
 
   <properties>
     <!--
-        Name of the Uber-JAR to generate.
+        Name of the benchmark Uber-JAR to generate.
       -->
-    <uberjar.name>backward-test-0.4.0</uberjar.name>
+    <uberjar.name>backward-test</uberjar.name>
   </properties>
 
   <build>

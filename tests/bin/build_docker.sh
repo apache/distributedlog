@@ -28,13 +28,13 @@ DOCKER_IMAGE_VERSION="nightly"
 # target jars
 BENCHMARKS_JAR="$TESTS_DIR/jmh/target/jmh-benchmarks.jar"
 BENCHMARKS_JAR_040="$TESTS_DIR/jmh-0.4/target/jmh-benchmarks-0.4.0.jar"
-BACKWARD_TEST_JAR="$TESTS_DIR/backward/target/backward-test.jar"
-BACKWARD_TEST_JAR_040="$TESTS_DIR/backward-0.4/target/backward-test-0.4.0.jar"
+BACKWARD_TEST_JAR="$TESTS_DIR/backward-compat/target/backward-compat-test.jar"
+BACKWARD_TEST_JAR_040="$TESTS_DIR/backward-compat-0.4/target/backward-compat-test-0.4.0.jar"
 
 LINKED_BENCHMARKS_JAR="$TESTS_DIR/docker/jmh-benchmarks.jar"
 LINKED_BENCHMARKS_JAR_040="$TESTS_DIR/docker/jmh-benchmarks-0.4.0.jar"
-LINKED_BACKWARD_TEST_JAR="$TESTS_DIR/docker/backward-test.jar"
-LINKED_BACKWARD_TEST_JAR_040="$TESTS_DIR/docker/backward-test-0.4.0.jar"
+LINKED_BACKWARD_TEST_JAR="$TESTS_DIR/docker/backward-compat-test.jar"
+LINKED_BACKWARD_TEST_JAR_040="$TESTS_DIR/docker/backward-compat-test-0.4.0.jar"
 
 cd $ROOT_DIR
 

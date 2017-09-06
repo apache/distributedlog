@@ -22,9 +22,9 @@ MAINTAINER Apache DistributedLog <distributedlog-dev@bookkeeper.apache.org>
 
 RUN mkdir -p /opt/distributedlog/tests/conf
 RUN mkdir -p /opt/distributedlog/tests/lib
-# copy backward test jars
-COPY backward-test.jar /opt/distributedlog/tests/lib
-COPY backward-test-0.4.0.jar /opt/distributedlog/tests/lib
+# copy backward compat test jars
+COPY backward-compat-test.jar /opt/distributedlog/tests/lib
+COPY backward-compat-test-0.4.0.jar /opt/distributedlog/tests/lib
 # copy benchmark jars
 COPY jmh-benchmarks.jar /opt/distributedlog/tests/lib
 COPY jmh-benchmarks-0.4.0.jar /opt/distributedlog/tests/lib

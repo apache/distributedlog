@@ -30,8 +30,8 @@
   <modules>
     <module>jmh</module>
     <module>jmh-0.4</module>
-    <module>backward</module>
-    <module>backward-0.4</module>
+    <module>backward-compat</module>
+    <module>backward-compat-0.4</module>
   </modules>
   <build>
     <plugins>
