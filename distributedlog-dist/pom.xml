@@ -29,7 +29,7 @@
     <relativePath>..</relativePath>
   </parent>
 
-  <artifactId>distributedlog-all</artifactId>
+  <artifactId>distributedlog-dist</artifactId>
   <packaging>pom</packaging>
   <name>Apache DistributedLog :: Dist</name>
 

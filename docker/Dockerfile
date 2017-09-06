@@ -37,8 +37,8 @@ RUN set -x \
     && yum remove -y wget \
     && yum clean all
 
-ADD distributedlog-all-${VERSION}-bin.tar.gz /opt
-RUN mv /opt/distributedlog-all-${VERSION} /opt/distributedlog
+ADD distributedlog-dist-${VERSION}-bin.tar.gz /opt
+RUN mv /opt/distributedlog-dist-${VERSION} /opt/distributedlog
 
 COPY scripts/apply-config-from-env.py /opt/distributedlog/bin
 COPY scripts/gen-zk-config.sh /opt/distributedlog/bin

@@ -22,14 +22,14 @@ ROOT_DIR=$(git rev-parse --show-toplevel)
 cd $ROOT_DIR/docker
 
 MVN_VERSION=`./get-version.sh`
-ALL_MODULE="distributedlog-all"
+ALL_MODULE="distributedlog-dist"
 DOCKER_IMAGE_NAME="distributedlog"
 DOCKER_GRAFANA_NAME="distributedlog-grafana"
 DOCKER_IMAGE_VERSION="nightly"
 
 echo "distributedlog version: ${MVN_VERSION}"
 
-DLOG_TGZ=$(dirname $PWD)/all/target/${ALL_MODULE}-${MVN_VERSION}-bin.tar.gz
+DLOG_TGZ=$(dirname $PWD)/distributedlog-dist/target/${ALL_MODULE}-${MVN_VERSION}-bin.tar.gz
 
 if [ ! -f $DLOG_TGZ ]; then
     echo "distributedlog bin distribution not found at ${DLOG_TGZ}"
