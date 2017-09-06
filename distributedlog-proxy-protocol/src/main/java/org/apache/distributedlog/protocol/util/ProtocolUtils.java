@@ -21,8 +21,8 @@ import static com.google.common.base.Charsets.UTF_8;
 
 import io.netty.buffer.ByteBuf;
 import java.nio.ByteBuffer;
-import org.apache.distributedlog.DLSN;
 import java.util.zip.CRC32;
+import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.exceptions.DLException;
 import org.apache.distributedlog.exceptions.OwnershipAcquireFailedException;
 import org.apache.distributedlog.thrift.service.ResponseHeader;

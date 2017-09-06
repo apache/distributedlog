@@ -76,7 +76,11 @@ public class TestDistributedLogNamespaceImpl {
         String logName = "test-open-log";
         namespace.openLog(logName, Optional.absent(), Optional.absent(), Optional.absent());
         verify(impl, times(1))
-            .openLog(eq(logName), eq(Optional.absent()), eq(Optional.absent()), eq(Optional.absent()));
+            .openLog(
+                eq(logName),
+                eq(java.util.Optional.empty()),
+                eq(java.util.Optional.empty()),
+                eq(java.util.Optional.empty()));
     }
 
     @Test

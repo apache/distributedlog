@@ -37,12 +37,19 @@ import org.apache.distributedlog.exceptions.LogNotFoundException;
  */
 class DistributedLogNamespaceImpl implements DistributedLogNamespace {
 
+    private static <T> java.util.Optional<T> gOptional2JOptional(Optional<T> gOptional) {
+        if (gOptional.isPresent()) {
+            return java.util.Optional.of(gOptional.get());
+        } else {
+            return java.util.Optional.empty();
+        }
+    }
+
     private final Namespace impl;
 
     DistributedLogNamespaceImpl(Namespace impl) {
         this.impl = impl;
     }
-
 
     @Override
     public NamespaceDriver getNamespaceDriver() {
@@ -70,8 +77,13 @@ class DistributedLogNamespaceImpl implements DistributedLogNamespace {
                                          Optional<DynamicDistributedLogConfiguration> dynamicLogConf,
                                          Optional<StatsLogger> perStreamStatsLogger)
             throws InvalidStreamNameException, IOException {
-        return new DistributedLogManagerImpl(impl.openLog(
-            logName, logConf, dynamicLogConf, perStreamStatsLogger));
+        return new DistributedLogManagerImpl(
+            impl.openLog(
+                logName,
+                gOptional2JOptional(logConf),
+                gOptional2JOptional(dynamicLogConf),
+                gOptional2JOptional(perStreamStatsLogger)
+            ));
     }
 
     @Override
