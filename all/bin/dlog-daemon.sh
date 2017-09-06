@@ -85,7 +85,7 @@ case $service in
     WP_STATS_PORT=${WP_STATS_PORT:-'9000'}
     WP_STATS_PROVIDER=${WP_STATS_PROVIDER:-'org.apache.bookkeeper.stats.CodahaleMetricsServletProvider'}
     WP_SHARD_ID=${WP_SHARD_ID:-'0'}
-    WP_NAMESPACE=${WP_NAMESPACE:-'distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace'}
+    WP_NAMESPACE=${WP_NAMESPACE:-'distributedlog://127.0.0.1:2181/distributedlog/mynamespace'}
     SERVICE_PORT=${WP_SERVICE_PORT}
     SERVICE_ARGS="--conf ${WP_CONF_FILE} --uri ${WP_NAMESPACE} --shard-id ${WP_SHARD_ID} --port ${WP_SERVICE_PORT} --stats-port ${WP_STATS_PORT} --stats-provider ${WP_STATS_PROVIDER} --announce --thriftmux"
     DLOG_EXTRA_OPTS="${DLOG_EXTRA_OPTS} -DcodahaleStatsHttpPort=${WP_STATS_PORT} -Dserver_port=${WP_SERVICE_PORT} -Dserver_shard=${WP_SHARD_ID}"

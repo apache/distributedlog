@@ -17,7 +17,7 @@
 # under the License.
 #
 
-FROM centos:7
+FROM apache/bookkeeper:4.5.0
 MAINTAINER Apache DistributedLog <distributedlog-dev@bookkeeper.apache.org>
 
 ARG VERSION
@@ -28,8 +28,7 @@ ENV DL_USER=distributedlog
 
 # install dependencies
 RUN set -x \
-    && adduser "${DL_USER}" \
-    && yum install -y java-1.8.0-openjdk-headless wget bash python sudo \
+    && yum install -y wget \
     && wget -q https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && pip install zk-shell \
@@ -45,8 +44,7 @@ COPY scripts/apply-config-from-env.py /opt/distributedlog/bin
 COPY scripts/gen-zk-config.sh /opt/distributedlog/bin
 COPY scripts/zk-ruok.sh /opt/distributedlog/bin
 COPY scripts/entrypoint.sh /opt/distributedlog/bin
+COPY scripts/wait_bookies.sh /opt/distributedlog/bin
+
 ENTRYPOINT [ "/bin/bash", "/opt/distributedlog/bin/entrypoint.sh" ]
-
-WORKDIR /opt/distributedlog
-
-VOLUME  ["/opt/distributedlog/conf", "/data"]
+CMD ["/opt/bookkeeper/bin/bookkeeper", "bookie"]

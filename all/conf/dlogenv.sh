@@ -80,7 +80,7 @@ DLOG_EXTRA_OPTS="${DLOG_JVM_MEM_OPTS} ${DLOG_JVM_GC_OPTS} -Dio.netty.leakDetecti
 # WP_SHARD_ID=0
 
 # write proxy namespace
-# WP_NAMESPACE=distributedlog://127.0.0.1:2181/messaging/distributedlog/mynamespace
+# WP_NAMESPACE=distributedlog://127.0.0.1:2181/distributedlog/mynamespace
 
 ########################
 # Benchmark Arguments
@@ -95,7 +95,7 @@ STREAM_NAME_PREFIX=distributedlog-smoketest
 # Benchmark Run Duration in minutes
 BENCHMARK_DURATION=60
 # DL Namespace
-DL_NAMESPACE=distributedlog://127.0.0.1:2181/messaging/my_namespace
+DL_NAMESPACE=distributedlog://127.0.0.1:2181/my_namespace
 # Benchmark SHARD id
 BENCHMARK_SHARD_ID=0
 

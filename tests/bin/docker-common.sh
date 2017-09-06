@@ -30,7 +30,7 @@ BK_BACKEND_V040="0.4.0-incubating"
 BK_BACKEND_LATEST="nightly"
 NUM_BOOKIES=3
 # Test
-DL_NAMESPACE="/messaging/distributedlog/streams"
+DL_NAMESPACE="/distributedlog"
 BACKWARD_TEST_IMAGE="distributedlog-tests-${USER}:nightly"
 BACKWARD_TEST_LATEST="backward-test.jar"
 BACKWARD_TEST_040="backward-test-0.4.0.jar"
@@ -50,7 +50,7 @@ create_network() {
 remove_network() {
     local network=$1
     # remove docker network
-    docker network rm $network
+    [ ! -z "$(docker network ls | grep ${network})" ] && docker network rm $network
     return 0
 }
 
@@ -108,12 +108,12 @@ format_bookkeeper() {
     local bkversion=$3
     echo "Format bookkeeper '${zkname}'"
     remove_image "bkmetaformat"
-    docker run -it \
+    docker run -i \
         --network $network \
-        --env DL_zkServers=${zkname}:2181 \
+        --env BK_zkServers=${zkname}:2181 \
         --name "bkmetaformat" \
         ${BK_BACKEND_IMAGE}:${bkversion} \
-        bin/dlog org.apache.bookkeeper.bookie.BookieShell -conf conf/bookie.conf metaformat -n -f
+        /opt/distributedlog/bin/dlog org.apache.bookkeeper.bookie.BookieShell -conf /opt/distributedlog/conf/bookie.conf metaformat -n -f
     remove_image "bkmetaformat"
     return 0
 }
@@ -126,12 +126,12 @@ create_namespace() {
     local namespace=$4
     echo "Create distributedlog namespace '${namespace}'"
     remove_image "dlmetaformat" 
-    docker run -it \
+    docker run -i \
         --network $network \
-        --env DL_zkServers=${zkname}:2181 \
+        --env BK_zkServers=${zkname}:2181 \
         --name "dlmetaformat" \
         ${BK_BACKEND_IMAGE}:${bkversion} \
-        bin/dlog admin bind -l /messaging/bookkeeper/ledgers -s ${zkname}:2181 -c distributedlog://${zkname}:2181${namespace}
+        /opt/distributedlog/bin/dlog admin bind -l /bookkeeper/ledgers -s ${zkname}:2181 -c distributedlog://${zkname}:2181${namespace} || yes
     remove_image "dlmetaformat"
     return 0
 }
@@ -146,13 +146,13 @@ start_bookie() {
     echo "Starting bookie @ port $bkport ..."
     docker run -d --rm \
         --network $network \
-        --env DL_zkServers=${zkname}:2181 \
-        --env DL_bookiePort=$bkport \
+        --env BK_zkServers=${zkname}:2181 \
+        --env BK_bookiePort=$bkport \
         --name "bookie-${bkport}" \
         --hostname "bookie-${bkport}" \
         --mount source=${volume},target=/data \
         ${BK_BACKEND_IMAGE}:${bkversion} \
-        bin/dlog org.apache.bookkeeper.proto.BookieServer --conf conf/bookie.conf
+        /opt/distributedlog/bin/dlog org.apache.bookkeeper.proto.BookieServer --conf /opt/distributedlog/conf/bookie.conf
     return 0
 }
 
@@ -190,7 +190,6 @@ start_bookies() {
     do
         local bkport=$((3181+n))
         local bkname="bookie-${bkport}"
-        stop_image $bkname
         remove_image $bkname 
         start_bookie $network $zkname $bkversion $bkport
     done
@@ -205,10 +204,32 @@ stop_bookies() {
         local bkport=$((3181+n))
         local bkname="bookie-${bkport}"
         echo "Stopping bookie $bkport ..."
-        stop_image $bkname
         remove_image $bkname
     done
     return 0
+}
+
+wait_bookies() {
+    local network=$1
+    local zkname=$2
+    local num_bookies=$1
+
+    for ((n=0;n<${num_bookies};n++))
+    do
+        local bkport=$((3181+n))
+        local bkname="bookie-${bkport}"
+        until [ "`docker inspect -f {{.State.Running}} ${bkname}`" == "true" ]; do
+            sleep 0.1;
+        done
+    done
+    remove_image "waitbookies"
+    docker run -i \
+        --network $network \
+        --env BK_zkServers=${zkname}:2181 \
+        --name "waitbookies" \
+        ${BK_BACKEND_IMAGE}:nightly \
+        /opt/distributedlog/bin/wait_bookies.sh $zkname /bookkeeper/ledgers ${num_bookies} 2
+    remove_image "waitbookies"
 }
 
 ####################################
@@ -243,11 +264,14 @@ stop_cluster() {
     remove_bookie_volumes $NUM_BOOKIES
 
     # stop zookeeper
-    stop_image $ZK_NAME
     remove_image $ZK_NAME
 
     # remove network
     remove_network $NETWORK
+}
+
+warmup() {
+    sleep 5
 }
 
 write_records() {
@@ -259,7 +283,7 @@ write_records() {
     local stream_name=$6
     local image_name="dlog_writer"
     remove_image ${image_name}
-    docker run -it \
+    docker run -i \
         --network $network \
         --name ${image_name} \
         ${BACKWARD_TEST_IMAGE} \

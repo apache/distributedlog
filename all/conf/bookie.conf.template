@@ -41,7 +41,7 @@ ledgerManagerType=hierarchical
 # Root zookeeper path to store ledger metadata
 # This parameter is used by zookeeper-based ledger manager as a root znode to
 # store all ledgers.
-zkLedgersRootPath=/messaging/bookkeeper/ledgers
+zkLedgersRootPath=/bookkeeper/ledgers
 
 # Max file size of entry logger, in bytes
 # A new entry log file will be created when the old one reaches the file size limitation

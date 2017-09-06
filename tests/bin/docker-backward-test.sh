@@ -33,6 +33,9 @@ main() {
     # start the cluster (the cluster starts 0.4.0 bookies)
     start_cluster
 
+    # wait bookies 
+    wait_bookies $NETWORK $ZK_NAME 3
+
     #########################################
     # backend = 0.4.0, stream = 0.4.0
     #########################################
@@ -86,6 +89,10 @@ main() {
     # start latest bookies
     echo "start bookies (latest) ..."
     start_bookies $NETWORK $ZK_NAME $BK_BACKEND_LATEST $NUM_BOOKIES
+
+    # wait bookies
+    wait_bookies $NETWORK $ZK_NAME 3
+    sleep 30
 
     # read records using 0.4.0 version
     read_records ${NETWORK} ${ZK_NAME} ${DL_NAMESPACE} $((2 * num_records)) 1 ${BACKWARD_TEST_040} ${STREAM_040} "dlog_reader_040"
