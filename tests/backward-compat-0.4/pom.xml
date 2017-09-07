@@ -44,7 +44,7 @@
     <!--
         Name of the Uber-JAR to generate.
       -->
-    <uberjar.name>backward-test-0.4.0</uberjar.name>
+    <uberjar.name>backward-compat-test-0.4.0</uberjar.name>
   </properties>
 
   <build>

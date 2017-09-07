@@ -32,8 +32,8 @@ NUM_BOOKIES=3
 # Test
 DL_NAMESPACE="/distributedlog"
 BACKWARD_TEST_IMAGE="distributedlog-tests-${USER}:nightly"
-BACKWARD_TEST_LATEST="backward-test.jar"
-BACKWARD_TEST_040="backward-test-0.4.0.jar"
+BACKWARD_TEST_LATEST="backward-compat-test.jar"
+BACKWARD_TEST_040="backward-compat-test-0.4.0.jar"
 STREAM_LATEST="stream_latest"
 STREAM_040="stream_040"
 
