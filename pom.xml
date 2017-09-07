@@ -43,7 +43,7 @@
     <connection>scm:git:https://github.com/apache/distributedlog.git</connection>
     <developerConnection>scm:git:https://github.com/apache/distributedlog.git</developerConnection>
     <url>https://github.com/apache/distributedlog</url>
-    <tag>HEAD</tag>
+    <tag>release-0.5.0</tag>
   </scm>
   <issueManagement>
     <system>jira</system>
