@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+#
+#/**
+# * Licensed to the Apache Software Foundation (ASF) under one
+# * or more contributor license agreements.  See the NOTICE file
+# * distributed with this work for additional information
+# * regarding copyright ownership.  The ASF licenses this file
+# * to you under the Apache License, Version 2.0 (the
+# * "License"); you may not use this file except in compliance
+# * with the License.  You may obtain a copy of the License at
+# *
+# *     http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# */
+
+set -e
+
+BASEDIR=$(dirname "$0")
+
+DLOG_HOME="${BASEDIR}/.."
+
+usage() {
+    cat <<EOF
+Usage: dlog <command>
+where command is one of:
+    bkwrite             Benchmark bookkeeper using distributedlog core library
+    write               Benchmark distributedlog write proxy using thin client
+    read                Benchmark distributedlog read using distributedlog core library
+
+or command is the full name of a class with a defined main() method.
+
+Environment variables:
+   DLOG_LOG_CONF        Log4j configuration file (default $DEFAULT_LOG_CONF)
+   DLOG_EXTRA_OPTS      Extra options to be passed to the jvm
+   DLOG_EXTRA_CLASSPATH Add extra paths to the dlog classpath
+
+These variable can also be set in conf/dlogenv.sh
+EOF
+}
+
+source ${DLOG_HOME}/bin/common.sh
+
+# get arguments
+COMMAND=$1
+shift
+
+BENCH_ARGS="""
+  --provider ${STATS_PROVIDER} \\
+  --conf ${BENCH_CONF_FILE:-"${DLOG_HOME}/conf/benchmark.conf"} \\
+  --streamprefix ${STREAM_NAME_PREFIX} \\
+  --duration ${BENCHMARK_DURATION} \\
+  --shard ${BENCHMARK_SHARD_ID} \\
+  --uri ${DL_NAMESPACE} \\
+  --streamcount ${NUM_STREAMS} \\
+  --thriftmux \\
+  --handshake-with-client-info \\
+  --concurrency 1
+"""
+
+#Change to DLOG_HOME to support relative paths
+#cd "$DLOG_HOME"
+
+case "${COMMAND}" in
+  bkwrite)
+    BENCH_WRITE_ARGS="""
+    --messagesize ${MSG_SIZE} \\
+    --rate ${INITIAL_RATE} \\
+    --max-rate ${MAX_RATE} \\
+    --change-rate ${CHANGE_RATE} \\
+    --change-interval ${CHANGE_RATE_INTERVAL} \\
+    """
+    BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_WRITE_ARGS} \\ --mode dlwrite \\"
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
+    ;;
+  write)
+    BENCH_WRITE_ARGS="""
+    --messagesize ${MSG_SIZE} \\
+    --rate ${INITIAL_RATE} \\
+    --max-rate ${MAX_RATE} \\
+    --change-rate ${CHANGE_RATE} \\
+    --change-interval ${CHANGE_RATE_INTERVAL} \\
+    --finagle-name inet!localhost:8000 \\
+    """
+    BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_WRITE_ARGS} \\ --mode write \\"
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
+    ;;
+  read)
+    BENCH_READ_ARGS="""
+    --readers-per-stream ${NUM_READERS_PER_STREAM} \\
+    --max-stream-id ${MAX_STREAM_ID} \\
+    --truncation-interval ${TRUNCATION_INTERVAL} \\
+    --finagle-name inet!localhost:8000 \\
+    """
+    BENCH_ARGS="${BENCH_ARGS} \\ ${BENCH_READ_ARGS} \\ --mode read \\"
+    exec java $OPTS $JMX_ARGS org.apache.distributedlog.benchmark.Benchmarker $BENCH_ARGS $@
+    ;;
+  help)
+    usage
+    ;;
+  *)
+    set -x
+    exec java $OPTS $COMMAND $@
+    ;;
+esac
+

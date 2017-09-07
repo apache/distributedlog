@@ -26,10 +26,12 @@
   </parent>
   <groupId>org.apache.distributedlog.tests</groupId>
   <artifactId>tests-parent</artifactId>
-  <name>Apache BookKeeper :: Tests</name>
+  <name>Apache DistributedLog :: Tests</name>
   <modules>
     <module>jmh</module>
     <module>jmh-0.4</module>
+    <module>backward-compat</module>
+    <module>backward-compat-0.4</module>
   </modules>
   <build>
     <plugins>
