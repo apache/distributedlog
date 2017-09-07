@@ -84,4 +84,4 @@ It reduces object allocation, memory copies and improves the latency because les
 
 ### Github
 
-- [https://github.com/apache/distributedlog/milestone/2](https://github.com/apache/distributedlog/milestone/2)
+- [https://github.com/apache/distributedlog/milestone/1](https://github.com/apache/distributedlog/milestone/1)
