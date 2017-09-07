@@ -40,10 +40,10 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:https://gitbox.apache.org/repos/asf/distributedlog.git</connection>
-    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/distributedlog.git</developerConnection>
-    <url>https://gitbox.apache.org/repos/asf?p=distributedlog.git;a=summary</url>
-    <tag>release-0.5.0</tag>
+    <connection>scm:git:https://github.com/apache/distributedlog.git</connection>
+    <developerConnection>scm:git:https://github.com/apache/distributedlog.git</developerConnection>
+    <url>https://github.com/apache/distributedlog</url>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>jira</system>
