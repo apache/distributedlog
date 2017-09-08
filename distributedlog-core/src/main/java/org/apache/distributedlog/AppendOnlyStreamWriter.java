@@ -26,6 +26,9 @@ import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * AppendOnlyStreamWriter.
+ */
 public class AppendOnlyStreamWriter implements Closeable {
     static final Logger LOG = LoggerFactory.getLogger(AppendOnlyStreamWriter.class);
 

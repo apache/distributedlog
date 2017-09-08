@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * A Tool Framework
+ * A Tool Framework.
  */
 public abstract class Tool {
 
@@ -106,7 +106,9 @@ public abstract class Tool {
             helpFormatter.printHelp(getUsage(), getOptions());
         }
     }
-
+    /**
+     * HelpCommand describing the usage of this tool.
+     */
     public class HelpCommand implements Command {
 
         @Override

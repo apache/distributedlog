@@ -27,7 +27,7 @@ import org.apache.zookeeper.OpResult;
 import javax.annotation.Nullable;
 
 /**
- * ZooKeeper Operation that plays with {@link org.apache.bookkeeper.versioning.Version}
+ * ZooKeeper Operation that plays with {@link org.apache.bookkeeper.versioning.Version}.
  */
 public class ZKVersionedSetOp extends ZKOp {
 

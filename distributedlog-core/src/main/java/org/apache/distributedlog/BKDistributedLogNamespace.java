@@ -76,7 +76,6 @@ import org.slf4j.LoggerFactory;
  * </ul>
  *
  * <h4>DistributedLogManager</h4>
- *
  * All the core stats about reader and writer are exposed under current scope via {@link BKDistributedLogManager}.
  */
 public class BKDistributedLogNamespace implements Namespace {

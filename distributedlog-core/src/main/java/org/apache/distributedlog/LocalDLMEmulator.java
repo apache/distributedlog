@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class for setting up bookkeeper ensembles
- * and bringing individual bookies up and down
+ * and bringing individual bookies up and down.
  */
 public class LocalDLMEmulator {
     private static final Logger LOG = LoggerFactory.getLogger(LocalDLMEmulator.class);
@@ -67,6 +67,9 @@ public class LocalDLMEmulator {
     private final int zkPort;
     private final int numBookies;
 
+    /**
+     * Builder to build LocalDLMEmulator.
+     */
     public static class Builder {
         private int zkTimeoutSec = DEFAULT_ZK_TIMEOUT_SEC;
         private int numBookies = DEFAULT_NUM_BOOKIES;
@@ -126,7 +129,9 @@ public class LocalDLMEmulator {
         return new Builder();
     }
 
-    private LocalDLMEmulator(final int numBookies, final boolean shouldStartZK, final String zkHost, final int zkPort, final int initialBookiePort, final int zkTimeoutSec, final ServerConfiguration serverConf) throws Exception {
+    private LocalDLMEmulator(final int numBookies, final boolean shouldStartZK,
+                             final String zkHost, final int zkPort, final int initialBookiePort,
+                             final int zkTimeoutSec, final ServerConfiguration serverConf) throws Exception {
         this.numBookies = numBookies;
         this.zkHost = zkHost;
         this.zkPort = zkPort;
@@ -137,7 +142,8 @@ public class LocalDLMEmulator {
             public void run() {
                 try {
                     LOG.info("Starting {} bookies : allowLoopback = {}", numBookies, serverConf.getAllowLoopback());
-                    LocalBookKeeper.startLocalBookies(zkHost, zkPort, numBookies, shouldStartZK, initialBookiePort, serverConf);
+                    LocalBookKeeper.startLocalBookies(zkHost, zkPort,
+                            numBookies, shouldStartZK, initialBookiePort, serverConf);
                     LOG.info("{} bookies are started.");
                 } catch (InterruptedException e) {
                     // go away quietly
@@ -150,7 +156,7 @@ public class LocalDLMEmulator {
 
     public void start() throws Exception {
         bkStartupThread.start();
-        if (!LocalBookKeeper.waitForServerUp(zkEnsemble, zkTimeoutSec*1000)) {
+        if (!LocalBookKeeper.waitForServerUp(zkEnsemble, zkTimeoutSec * 1000)) {
             throw new Exception("Error starting zookeeper/bookkeeper");
         }
         int bookiesUp = checkBookiesUp(numBookies, zkTimeoutSec);
@@ -182,7 +188,7 @@ public class LocalDLMEmulator {
     }
 
     /**
-     * Check that a number of bookies are available
+     * Check that a number of bookies are available.
      *
      * @param count number of bookies required
      * @param timeout number of seconds to wait for bookies to start
@@ -260,7 +266,7 @@ public class LocalDLMEmulator {
      * Try to start zookkeeper locally on any port.
      */
     public static Pair<ZooKeeperServerShim, Integer> runZookeeperOnAnyPort(File zkDir) throws Exception {
-        return runZookeeperOnAnyPort((int) (Math.random()*10000+7000), zkDir);
+        return runZookeeperOnAnyPort((int) (Math.random() * 10000 + 7000), zkDir);
     }
 
     /**
@@ -269,9 +275,9 @@ public class LocalDLMEmulator {
      */
     public static Pair<ZooKeeperServerShim, Integer> runZookeeperOnAnyPort(int basePort, File zkDir) throws Exception {
 
-        final int MAX_RETRIES = 20;
-        final int MIN_PORT = 1025;
-        final int MAX_PORT = 65535;
+        final int maxRetries = 20;
+        final int minPort = 1025;
+        final int maxPort = 65535;
         ZooKeeperServerShim zks = null;
         int zkPort = basePort;
         boolean success = false;
@@ -284,12 +290,12 @@ public class LocalDLMEmulator {
                 success = true;
             } catch (BindException be) {
                 retries++;
-                if (retries > MAX_RETRIES) {
+                if (retries > maxRetries) {
                     throw be;
                 }
                 zkPort++;
-                if (zkPort > MAX_PORT) {
-                    zkPort = MIN_PORT;
+                if (zkPort > maxPort) {
+                    zkPort = minPort;
                 }
             }
         }

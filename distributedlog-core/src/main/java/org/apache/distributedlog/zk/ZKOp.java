@@ -24,7 +24,7 @@ import org.apache.zookeeper.OpResult;
 import javax.annotation.Nullable;
 
 /**
- * ZooKeeper Transaction Operation
+ * ZooKeeper Transaction Operation.
  */
 public abstract class ZKOp implements Transaction.Op<Object> {
 

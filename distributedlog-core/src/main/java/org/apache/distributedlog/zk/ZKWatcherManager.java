@@ -43,35 +43,38 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ZKWatcherManager implements Watcher {
 
-    static final Logger logger = LoggerFactory.getLogger(ZKWatcherManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZKWatcherManager.class);
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Builder to build Watcher Manager.
+     */
     public static class Builder {
 
-        private String _name;
-        private StatsLogger _statsLogger;
-        private ZooKeeperClient _zkc;
+        private String pName;
+        private StatsLogger pStatsLogger;
+        private ZooKeeperClient pZkc;
 
         public Builder name(String name) {
-            this._name = name;
+            this.pName = name;
             return this;
         }
 
         public Builder zkc(ZooKeeperClient zkc) {
-            this._zkc = zkc;
+            this.pZkc = zkc;
             return this;
         }
 
         public Builder statsLogger(StatsLogger statsLogger) {
-            this._statsLogger = statsLogger;
+            this.pStatsLogger = statsLogger;
             return this;
         }
 
         public ZKWatcherManager build() {
-            return new ZKWatcherManager(_name, _zkc, _statsLogger);
+            return new ZKWatcherManager(pName, pZkc, pStatsLogger);
         }
     }
 
@@ -164,7 +167,8 @@ public class ZKWatcherManager implements Watcher {
                 // best-efforts to remove watches
                 try {
                     if (null != zkc && removeFromServer) {
-                        zkc.get().removeWatches(path, this, WatcherType.Children, true, new AsyncCallback.VoidCallback() {
+                        zkc.get().removeWatches(path, this, WatcherType.Children, true,
+                                new AsyncCallback.VoidCallback() {
                             @Override
                             public void processResult(int rc, String path, Object ctx) {
                                 if (KeeperException.Code.OK.intValue() == rc) {

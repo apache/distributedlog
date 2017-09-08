@@ -15,18 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.distributedlog;
-
-interface AsyncNotification {
-    /**
-     * Triggered when the background activity encounters an exception.
-     *
-     * @param reason the exception that encountered.
-     */
-    void notifyOnError(Throwable reason);
-
-    /**
-     *  Triggered when the background activity completes an operation.
-     */
-    void notifyOnOperationComplete();
-}
+/**
+ * zk utils for distributedlog
+ */
+package org.apache.distributedlog.zk;

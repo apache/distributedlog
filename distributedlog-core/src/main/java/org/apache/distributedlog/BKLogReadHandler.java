@@ -218,8 +218,8 @@ class BKLogReadHandler extends BKLogHandler implements LogSegmentNamesListener {
      */
     void checkReadLock() throws DLIllegalStateException, LockingException {
         synchronized (this) {
-            if ((null == lockAcquireFuture) ||
-                (!lockAcquireFuture.isDone())) {
+            if ((null == lockAcquireFuture)
+                    || (!lockAcquireFuture.isDone())) {
                 throw new DLIllegalStateException("Attempt to check for lock before it has been acquired successfully");
             }
         }
@@ -268,9 +268,9 @@ class BKLogReadHandler extends BKLogHandler implements LogSegmentNamesListener {
                 this).whenComplete(new FutureEventListener<Versioned<List<LogSegmentMetadata>>>() {
             @Override
             public void onFailure(Throwable cause) {
-                if (cause instanceof LogNotFoundException ||
-                        cause instanceof LogSegmentNotFoundException ||
-                        cause instanceof UnexpectedException) {
+                if (cause instanceof LogNotFoundException
+                        || cause instanceof LogSegmentNotFoundException
+                        || cause instanceof UnexpectedException) {
                     // indicate some inconsistent behavior, abort
                     metadataException.compareAndSet(null, (IOException) cause);
                     // notify the reader that read handler is in error state
@@ -302,8 +302,8 @@ class BKLogReadHandler extends BKLogHandler implements LogSegmentNamesListener {
     @Override
     public void onSegmentsUpdated(final Versioned<List<String>> segments) {
         synchronized (this) {
-            if (lastNotifiedLogSegments.getVersion() != Version.NEW &&
-                    lastNotifiedLogSegments.getVersion().compare(segments.getVersion()) != Version.Occurred.BEFORE) {
+            if (lastNotifiedLogSegments.getVersion() != Version.NEW
+                    && lastNotifiedLogSegments.getVersion().compare(segments.getVersion()) != Version.Occurred.BEFORE) {
                 // the log segments has been read, and it is possibly a retry from last segments update
                 return;
             }
@@ -314,9 +314,9 @@ class BKLogReadHandler extends BKLogHandler implements LogSegmentNamesListener {
         readLogSegmentsPromise.whenComplete(new FutureEventListener<Versioned<List<LogSegmentMetadata>>>() {
             @Override
             public void onFailure(Throwable cause) {
-                if (cause instanceof LogNotFoundException ||
-                        cause instanceof LogSegmentNotFoundException ||
-                        cause instanceof UnexpectedException) {
+                if (cause instanceof LogNotFoundException
+                        || cause instanceof LogSegmentNotFoundException
+                        || cause instanceof UnexpectedException) {
                     // indicate some inconsistent behavior, abort
                     metadataException.compareAndSet(null, (IOException) cause);
                     // notify the reader that read handler is in error state
@@ -336,8 +336,9 @@ class BKLogReadHandler extends BKLogHandler implements LogSegmentNamesListener {
                 List<LogSegmentMetadata> segmentsToNotify = null;
                 synchronized (BKLogReadHandler.this) {
                     Versioned<List<LogSegmentMetadata>> lastLogSegments = lastNotifiedLogSegments;
-                    if (lastLogSegments.getVersion() == Version.NEW ||
-                            lastLogSegments.getVersion().compare(logSegments.getVersion()) == Version.Occurred.BEFORE) {
+                    if (lastLogSegments.getVersion() == Version.NEW
+                            || lastLogSegments.getVersion().compare(logSegments.getVersion())
+                            == Version.Occurred.BEFORE) {
                         lastNotifiedLogSegments = logSegments;
                         segmentsToNotify = logSegments.getValue();
                     }

@@ -216,7 +216,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="applyToProtected" value="true"/>
       <property name="applyToPackage" value="true"/>
       <property name="applyToPrivate" value="true"/>
-      <property name="format" value="^[a-z][a-zA-Z0-9]*_?$"/>
+      <property name="format" value="^[a-zA-Z0-9_]*$"/>
       <property name="severity" value="error"/>
     </module>
 
@@ -227,7 +227,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="applyToProtected" value="true"/>
       <property name="applyToPackage" value="true"/>
       <property name="applyToPrivate" value="true"/>
-      <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+      <property name="format" value="^[a-zA-Z0-9_]*$"/>
       <property name="severity" value="error"/>
     </module>
 

@@ -18,7 +18,8 @@
 package org.apache.distributedlog;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
 import io.netty.channel.EventLoopGroup;
 import io.netty.util.HashedWheelTimer;
 import org.apache.bookkeeper.stats.NullStatsLogger;
@@ -187,10 +188,10 @@ public class BookKeeperClientBuilder {
     }
 
     private void validateParameters() {
-        Preconditions.checkNotNull(name, "Missing client name.");
-        Preconditions.checkNotNull(dlConfig, "Missing DistributedLog Configuration.");
-        Preconditions.checkArgument(null == zkc || null == zkServers, "Missing zookeeper setting.");
-        Preconditions.checkNotNull(ledgersPath, "Missing Ledgers Root Path.");
+        checkNotNull(name, "Missing client name.");
+        checkNotNull(dlConfig, "Missing DistributedLog Configuration.");
+        checkArgument(null == zkc || null == zkServers, "Missing zookeeper setting.");
+        checkNotNull(ledgersPath, "Missing Ledgers Root Path.");
     }
 
     public synchronized BookKeeperClient build() {

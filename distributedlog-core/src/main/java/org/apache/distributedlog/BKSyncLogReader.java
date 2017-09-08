@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Synchronous Log Reader based on {@link AsyncLogReader}
+ * Synchronous Log Reader based on {@link AsyncLogReader}.
  */
 class BKSyncLogReader implements LogReader, AsyncNotification {
 
@@ -171,8 +171,8 @@ class BKSyncLogReader implements LogReader, AsyncNotification {
         LogRecordWithDLSN record = doReadNext(nonBlocking);
         // no record is returned, check if the reader becomes idle
         if (null == record && shouldCheckIdleReader) {
-            if (readAheadReader.getNumCachedEntries() <= 0 &&
-                    readAheadReader.isReaderIdle(idleErrorThresholdMillis, TimeUnit.MILLISECONDS)) {
+            if (readAheadReader.getNumCachedEntries() <= 0
+                    && readAheadReader.isReaderIdle(idleErrorThresholdMillis, TimeUnit.MILLISECONDS)) {
                 markReaderAsIdle();
             }
         }
