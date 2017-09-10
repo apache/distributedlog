@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * ZooKeeper Based {@link org.apache.distributedlog.acl.AccessControlManager}
+ * ZooKeeper Based {@link org.apache.distributedlog.acl.AccessControlManager}.
  */
 public class ZKAccessControlManager implements AccessControlManager, Watcher {
 

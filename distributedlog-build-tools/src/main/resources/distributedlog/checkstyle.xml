@@ -100,6 +100,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
     <module name="AvoidStarImport">
       <property name="severity" value="error"/>
+      <property name="allowStaticMemberImports" value="true"/>
     </module>
 
     <module name="IllegalImport">

@@ -15,24 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.distributedlog.lock;
-
-import java.util.concurrent.CompletableFuture;
-
 /**
- * Factory to create {@link SessionLock}.
+ * distributedlog logSegment impl.
  */
-public interface SessionLockFactory {
-
-    /**
-     * Create a lock with lock path.
-     *
-     * @param lockPath
-     *          lock path
-     * @param context
-     *          lock context
-     * @return future represents the creation result.
-     */
-    CompletableFuture<SessionLock> createLock(String lockPath, DistributedLockContext context);
-
-}
+package org.apache.distributedlog.impl.logsegment;

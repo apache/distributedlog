@@ -20,7 +20,7 @@ package org.apache.distributedlog.metadata;
 import java.net.URI;
 
 /**
- * Class to represent the layout and metadata of the zookeeper-based log metadata
+ * Class to represent the layout and metadata of the zookeeper-based log metadata.
  */
 public class LogMetadata {
 

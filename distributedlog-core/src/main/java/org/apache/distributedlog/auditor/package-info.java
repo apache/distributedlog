@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,24 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.distributedlog.lock;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
- * Factory to create {@link SessionLock}.
+ * DistributedLog Auditor.
+ *
  */
-public interface SessionLockFactory {
-
-    /**
-     * Create a lock with lock path.
-     *
-     * @param lockPath
-     *          lock path
-     * @param context
-     *          lock context
-     * @return future represents the creation result.
-     */
-    CompletableFuture<SessionLock> createLock(String lockPath, DistributedLockContext context);
-
-}
+package org.apache.distributedlog.auditor;

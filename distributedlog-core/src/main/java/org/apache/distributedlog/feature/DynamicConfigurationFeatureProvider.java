@@ -17,21 +17,9 @@
  */
 package org.apache.distributedlog.feature;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.common.config.ConcurrentBaseConfiguration;
-import org.apache.distributedlog.common.config.ConfigurationListener;
-import org.apache.distributedlog.common.config.ConfigurationSubscription;
-import org.apache.distributedlog.common.config.FileConfigurationBuilder;
-import org.apache.distributedlog.common.config.PropertiesConfigurationBuilder;
-import org.apache.bookkeeper.feature.Feature;
-import org.apache.bookkeeper.feature.FeatureProvider;
-import org.apache.bookkeeper.feature.SettableFeature;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.commons.configuration.ConfigurationException;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +29,20 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.bookkeeper.feature.Feature;
+import org.apache.bookkeeper.feature.FeatureProvider;
+import org.apache.bookkeeper.feature.SettableFeature;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.distributedlog.DistributedLogConfiguration;
+import org.apache.distributedlog.common.config.ConcurrentBaseConfiguration;
+import org.apache.distributedlog.common.config.ConfigurationListener;
+import org.apache.distributedlog.common.config.ConfigurationSubscription;
+import org.apache.distributedlog.common.config.FileConfigurationBuilder;
+import org.apache.distributedlog.common.config.PropertiesConfigurationBuilder;
+
+
+
 
 /**
  * Feature Provider based dynamic configuration.
@@ -76,7 +78,7 @@ public class DynamicConfigurationFeatureProvider extends AbstractFeatureProvider
         List<FileConfigurationBuilder> fileConfigBuilders =
                 Lists.newArrayListWithExpectedSize(2);
         String baseConfigPath = conf.getFileFeatureProviderBaseConfigPath();
-        Preconditions.checkNotNull(baseConfigPath);
+        checkNotNull(baseConfigPath);
         File baseConfigFile = new File(baseConfigPath);
         FileConfigurationBuilder baseProperties =
                 new PropertiesConfigurationBuilder(baseConfigFile.toURI().toURL());

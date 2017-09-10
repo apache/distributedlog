@@ -135,8 +135,8 @@ import org.apache.distributedlog.io.AsyncCloseable;
  * LogReader reader = ...
  * int N = 10;
  *
- * // keep reading N records in blocking way until no records available in the log
- * List<LogRecord> records = reader.readBulk(false, N);
+ *<p>// keep reading N records in blocking way until no records available in the log
+ * <code>List<LogRecord> records = reader.readBulk(false, N);</code>
  * while (!records.isEmpty()) {
  *     // process the list of records
  *     ...
@@ -155,7 +155,7 @@ import org.apache.distributedlog.io.AsyncCloseable;
  *     // process the new records
  *     ...
  * }
- *
+ *</p>
  * </pre>
  *
  * <p>
@@ -170,12 +170,12 @@ public interface LogReader extends Closeable, AsyncCloseable {
 
     /**
      * Read the next log record from the stream.
-     * <p>
-     * If <i>nonBlocking</i> is set to true, the call returns immediately by just polling
+     *
+     *  <p>If <i>nonBlocking</i> is set to true, the call returns immediately by just polling
      * records from read ahead cache. It would return <i>null</i> if there isn't any records
      * available in the read ahead cache.
-     * <p>
-     * If <i>nonBlocking</i> is set to false, it would does blocking call. The call will
+     *
+     *  <p>If <i>nonBlocking</i> is set to false, it would does blocking call. The call will
      * block until return a record if there are records in the stream (aka catching up).
      * Otherwise it would wait up to {@link DistributedLogConfiguration#getReadAheadWaitTime()}
      * milliseconds and return null if there isn't any more records in the stream.
@@ -185,10 +185,10 @@ public interface LogReader extends Closeable, AsyncCloseable {
      * @return an operation from the stream or null if at end of stream
      * @throws IOException if there is an error reading from the stream
      */
-    public LogRecordWithDLSN readNext(boolean nonBlocking) throws IOException;
+    LogRecordWithDLSN readNext(boolean nonBlocking) throws IOException;
 
     /**
-     * Read the next <i>numLogRecords</i> log records from the stream
+     * Read the next <i>numLogRecords</i> log records from the stream.
      *
      * @param nonBlocking should the read make blocking calls to the backend or rely on the
      * readAhead cache
@@ -197,5 +197,5 @@ public interface LogReader extends Closeable, AsyncCloseable {
      * @throws IOException if there is an error reading from the stream
      * @see #readNext(boolean)
      */
-    public List<LogRecordWithDLSN> readBulk(boolean nonBlocking, int numLogRecords) throws IOException;
+    List<LogRecordWithDLSN> readBulk(boolean nonBlocking, int numLogRecords) throws IOException;
 }
