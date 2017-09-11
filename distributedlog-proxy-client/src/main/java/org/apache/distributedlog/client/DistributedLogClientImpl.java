@@ -397,14 +397,27 @@ public class DistributedLogClientImpl implements DistributedLogClient, MonitorSe
 
         WriteOp(final String name, final ByteBuf dataBuf) {
             super(name, clientStats.getOpStats("write"));
-            this.dataBuf = dataBuf;
-            this.data = dataBuf.nioBuffer();
+            if (dataBuf.hasArray()) {
+                this.dataBuf = dataBuf;
+                this.data = dataBuf.nioBuffer();
+            } else {
+                // thrift only takes heap byte buffer
+                this.dataBuf = Unpooled.copiedBuffer(dataBuf);
+                dataBuf.release();
+                this.data = this.dataBuf.nioBuffer();
+            }
         }
 
         WriteOp(final String name, final ByteBuffer data) {
             super(name, clientStats.getOpStats("write"));
-            this.data = data;
-            this.dataBuf = Unpooled.wrappedBuffer(data);
+            if (data.hasArray()) {
+                this.data = data;
+                this.dataBuf = Unpooled.wrappedBuffer(data);
+            } else {
+                // thrift only takes heap byte buffer
+                this.dataBuf = Unpooled.copiedBuffer(data);
+                this.data = this.dataBuf.nioBuffer();
+            }
         }
 
         @Override
