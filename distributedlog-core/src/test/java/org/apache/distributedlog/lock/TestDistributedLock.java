@@ -313,7 +313,8 @@ public class TestDistributedLock extends TestDistributedLogBase {
 
     @Test(timeout = 60000)
     public void testCheckWriteLockFailureWhenLockIsAcquiredByOthers() throws Exception {
-        String lockPath = "/test-check-write-lock-failure-when-lock-is-acquired-by-others-" + System.currentTimeMillis();
+        String lockPath = "/test-check-write-lock-failure-when-lock-is-acquired-by-others-"
+                + System.currentTimeMillis();
         String clientId = "test-check-write-lock-failure";
 
         createLockPath(zkc.get(), lockPath);
@@ -724,7 +725,7 @@ public class TestDistributedLock extends TestDistributedLogBase {
         // acquired).
         for (int i = 0; i < count; i++) {
             latches[i].await();
-            assertLatchesSet(latches, i+1);
+            assertLatchesSet(latches, i + 1);
             Utils.ioResult(results.get(i));
             Utils.ioResult(lockArray[i].asyncClose());
         }

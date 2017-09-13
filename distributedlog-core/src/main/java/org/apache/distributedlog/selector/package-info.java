@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 /**
- * Tools for distributedlog.
+ * selector for selecting specific log record.
  */
-package org.apache.distributedlog.tools;
+package org.apache.distributedlog.selector;

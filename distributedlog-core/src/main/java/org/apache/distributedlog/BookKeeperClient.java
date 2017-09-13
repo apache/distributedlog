@@ -17,9 +17,11 @@
  */
 package org.apache.distributedlog;
 
+import static com.google.common.base.Charsets.UTF_8;
 import com.google.common.base.Optional;
 import io.netty.channel.EventLoopGroup;
 import io.netty.util.HashedWheelTimer;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import org.apache.bookkeeper.client.AsyncCallback;
@@ -36,19 +38,17 @@ import org.apache.bookkeeper.zookeeper.RetryPolicy;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.distributedlog.ZooKeeperClient.Credentials;
 import org.apache.distributedlog.ZooKeeperClient.DigestCredentials;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.exceptions.AlreadyClosedException;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
 import org.apache.distributedlog.exceptions.ZKException;
 import org.apache.distributedlog.net.NetUtils;
 import org.apache.distributedlog.util.ConfUtils;
-import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 
-import static com.google.common.base.Charsets.UTF_8;
 
 /**
  * BookKeeper Client wrapper over {@link BookKeeper}.

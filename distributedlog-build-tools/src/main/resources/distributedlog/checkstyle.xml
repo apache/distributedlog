@@ -247,13 +247,15 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
     <module name="LocalFinalVariableName">
       <!-- Validates identifiers for local final variables against the
-        expression "^[a-z][a-zA-Z0-9]*$". -->
+        expression "^[a-z][a-zA-Z0-9_]*$". -->
+      <property name="format" value="^[a-z][a-zA-Z0-9_]*$"/>
       <property name="severity" value="error"/>
     </module>
 
     <module name="LocalVariableName">
       <!-- Validates identifiers for local variables against the
-        expression "^[a-z][a-zA-Z0-9]*$". -->
+        expression "^[a-z][a-zA-Z0-9_]*$". -->
+      <property name="format" value="^[a-z][a-zA-Z0-9_]*$"/>
       <property name="severity" value="error"/>
     </module>
 

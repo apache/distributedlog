@@ -58,7 +58,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Utility class for setting up bookkeeper ensembles
- * and bringing individual bookies up and down
+ * and bringing individual bookies up and down.
  */
 public class DLMTestUtil {
     protected static final Logger LOG = LoggerFactory.getLogger(DLMTestUtil.class);

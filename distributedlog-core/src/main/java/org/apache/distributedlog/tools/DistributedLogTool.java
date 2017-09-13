@@ -17,6 +17,10 @@
  */
 package org.apache.distributedlog.tools;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import io.netty.buffer.ByteBuf;
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,19 +54,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.distributedlog.BKDistributedLogNamespace;
-import org.apache.distributedlog.Entry;
-import org.apache.distributedlog.api.MetadataAccessor;
-import org.apache.distributedlog.api.namespace.Namespace;
-import org.apache.distributedlog.callback.NamespaceListener;
-import org.apache.distributedlog.impl.BKNamespaceDriver;
-import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
-import org.apache.distributedlog.api.namespace.NamespaceBuilder;
-import org.apache.distributedlog.namespace.NamespaceDriver;
-import org.apache.distributedlog.common.concurrent.FutureEventListener;
-import org.apache.distributedlog.common.concurrent.FutureUtils;
-import org.apache.distributedlog.util.Utils;
 import org.apache.bookkeeper.client.BKException;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeperAccessor;
@@ -79,35 +70,44 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import org.apache.distributedlog.api.AsyncLogReader;
-import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.BKDistributedLogNamespace;
 import org.apache.distributedlog.BookKeeperClient;
 import org.apache.distributedlog.BookKeeperClientBuilder;
 import org.apache.distributedlog.DLSN;
 import org.apache.distributedlog.DistributedLogConfiguration;
 import org.apache.distributedlog.DistributedLogConstants;
-import org.apache.distributedlog.api.DistributedLogManager;
-import org.apache.distributedlog.exceptions.LogNotFoundException;
-import org.apache.distributedlog.api.LogReader;
+import org.apache.distributedlog.Entry;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.LogRecordWithDLSN;
 import org.apache.distributedlog.LogSegmentMetadata;
 import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.ZooKeeperClientBuilder;
+import org.apache.distributedlog.api.AsyncLogReader;
+import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.api.DistributedLogManager;
+import org.apache.distributedlog.api.LogReader;
+import org.apache.distributedlog.api.MetadataAccessor;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.auditor.DLAuditor;
 import org.apache.distributedlog.bk.LedgerAllocator;
 import org.apache.distributedlog.bk.LedgerAllocatorUtils;
+import org.apache.distributedlog.callback.NamespaceListener;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.exceptions.LogNotFoundException;
+import org.apache.distributedlog.impl.BKNamespaceDriver;
 import org.apache.distributedlog.impl.metadata.BKDLConfig;
-import org.apache.distributedlog.metadata.MetadataUpdater;
+import org.apache.distributedlog.logsegment.LogSegmentMetadataStore;
 import org.apache.distributedlog.metadata.LogSegmentMetadataStoreUpdater;
+import org.apache.distributedlog.metadata.MetadataUpdater;
+import org.apache.distributedlog.namespace.NamespaceDriver;
+import org.apache.distributedlog.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.base.Preconditions.checkArgument;
+
+
 
 /**
  *DistributedLogTool.

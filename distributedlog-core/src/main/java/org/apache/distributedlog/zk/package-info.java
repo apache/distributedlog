@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 /**
- * zk utils for distributedlog
+ * zk utils for distributedlog.
  */
 package org.apache.distributedlog.zk;

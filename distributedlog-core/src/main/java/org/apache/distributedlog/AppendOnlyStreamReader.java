@@ -17,10 +17,10 @@
  */
 package org.apache.distributedlog;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import org.apache.distributedlog.api.DistributedLogManager;
 import org.apache.distributedlog.api.LogReader;
 import org.slf4j.Logger;

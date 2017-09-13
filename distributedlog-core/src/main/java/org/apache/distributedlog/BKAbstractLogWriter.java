@@ -18,9 +18,17 @@
 package org.apache.distributedlog;
 
 import com.google.common.annotations.VisibleForTesting;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.common.util.PermitManager;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.AlreadyClosedException;
 import org.apache.distributedlog.exceptions.LockingException;
@@ -30,17 +38,10 @@ import org.apache.distributedlog.io.Abortable;
 import org.apache.distributedlog.io.Abortables;
 import org.apache.distributedlog.io.AsyncAbortable;
 import org.apache.distributedlog.io.AsyncCloseable;
-import org.apache.distributedlog.common.concurrent.FutureEventListener;
-import org.apache.distributedlog.common.concurrent.FutureUtils;
-import org.apache.distributedlog.common.util.PermitManager;
 import org.apache.distributedlog.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 abstract class BKAbstractLogWriter implements Closeable, AsyncCloseable, Abortable, AsyncAbortable {
     static final Logger LOG = LoggerFactory.getLogger(BKAbstractLogWriter.class);

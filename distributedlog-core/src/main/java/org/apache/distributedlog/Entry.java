@@ -21,10 +21,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.distributedlog.exceptions.LogRecordTooLongException;
 import org.apache.distributedlog.exceptions.WriteException;
 import org.apache.distributedlog.io.CompressionCodec;
-import org.apache.bookkeeper.stats.NullStatsLogger;
 
 /**
  * A set of {@link LogRecord}s.

@@ -17,8 +17,8 @@
  */
 package org.apache.distributedlog;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Stopwatch;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,14 +32,14 @@ import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.distributedlog.api.AsyncLogWriter;
+import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.config.DynamicDistributedLogConfiguration;
 import org.apache.distributedlog.exceptions.StreamNotReadyException;
 import org.apache.distributedlog.exceptions.WriteCancelledException;
 import org.apache.distributedlog.exceptions.WriteException;
 import org.apache.distributedlog.feature.CoreFeatureKeys;
 import org.apache.distributedlog.util.FailpointUtils;
-import org.apache.distributedlog.common.concurrent.FutureEventListener;
-import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,14 +17,14 @@
  */
 package org.apache.distributedlog;
 
-import com.google.common.base.Optional;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Optional;
 import io.netty.channel.EventLoopGroup;
 import io.netty.util.HashedWheelTimer;
+import org.apache.bookkeeper.feature.FeatureProvider;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.bookkeeper.feature.FeatureProvider;
 
 /**
  * Builder to build bookkeeper client.
