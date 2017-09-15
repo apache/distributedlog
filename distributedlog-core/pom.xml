@@ -320,7 +320,7 @@
                 <!-- bookkeeper -->
                 <relocation>
                   <pattern>org.apache.bookkeeper</pattern>
-                  <shadedPattern>org.apache.bookkeeper</shadedPattern>
+                  <shadedPattern>dlshade.org.apache.bookkeeper</shadedPattern>
                 </relocation>
                 <!-- distributedlog -->
                 <relocation>
