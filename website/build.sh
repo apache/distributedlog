@@ -36,7 +36,7 @@ DLOG_HOME=`cd $BINDIR/.. > /dev/null;pwd`
 if [ $# -gt 1 ]; then
   DEST_DIR=$2
 else 
-  DEST_DIR=${DLOG_HOME}
+  DEST_DIR=${DLOG_HOME}/website
 fi
 
 SERVE="FALSE"
@@ -69,41 +69,42 @@ function build_docs() {
   version=$1
   tag=$2
 
-  echo "Building the documentation for version ${version} ..."
-
   DOC_SRC_HOME="${DLOG_HOME}/website/docs/${version}"
   DOC_DEST_HOME="${TMP_DEST_DIR}/docs_${version}"
 
   cd ${DOC_SRC_HOME}
+  echo ""
+  echo "@${DOC_SRC_HOME}"
+  echo "Building the documentation for version ${version} to ${DOC_DEST_HOME} ..."
 
   bundle exec jekyll build --destination ${DOC_DEST_HOME} --config _config.yml,${OVERRIDED_CONFIG}
 
-  # create the api directory
-  mkdir -p ${DOC_DEST_HOME}/api/java
-  if [ "$version" == "latest" ]; then
-    cd ${DLOG_HOME}
-    # build the javadoc
-    mvn -DskipTests clean package javadoc:aggregate \
-        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
-        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
-        -Dmaven.javadoc.failOnError=false
-    # copy the built javadoc
-    cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
-  else
-    rm -rf /tmp/distributedlog-${version}
-    git clone https://github.com/apache/distributedlog.git /tmp/distributedlog-${version}
-    cd /tmp/distributedlog-${version}
-    git checkout $tag
-    # build the javadoc
-    mvn -DskipTests clean package javadoc:aggregate \
-        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
-        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
-        -Dnotimestamp \
-        -Dmaven.javadoc.failOnError=false
-    # copy the built javadoc
-    cp -r /tmp/distributedlog-${version}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
-  fi
-  echo "Built the documentation for version ${version}."
+#  # create the api directory
+#  mkdir -p ${DOC_DEST_HOME}/api/java
+#  if [ "$version" == "latest" ]; then
+#    cd ${DLOG_HOME}
+#    # build the javadoc
+#    mvn -DskipTests clean package javadoc:aggregate \
+#        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
+#        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
+#        -Dmaven.javadoc.failOnError=false
+#    # copy the built javadoc
+#    cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
+#  else
+#    rm -rf /tmp/distributedlog-${version}
+#    git clone https://github.com/apache/distributedlog.git /tmp/distributedlog-${version}
+#    cd /tmp/distributedlog-${version}
+#    git checkout $tag
+#    # build the javadoc
+#    mvn -DskipTests clean package javadoc:aggregate \
+#        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
+#        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
+#        -Dnotimestamp \
+#        -Dmaven.javadoc.failOnError=false
+#    # copy the built javadoc
+#    cp -r /tmp/distributedlog-${version}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
+#  fi
+  echo "Built the documentation for version ${version} in ${DOC_DEST_HOME}."
 }
 
 # build the javadoc API
@@ -116,13 +117,7 @@ cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
 mkdir -p ${DEST_DIR}/content/docs
 [[ -d ${DEST_DIR}/content/docs/latest ]] && rm -r ${DEST_DIR}/content/docs/latest
 [[ -d ${DEST_DIR}/content/docs/0.4.0-incubating ]] && rm -r ${DEST_DIR}/content/docs/0.4.0-incubating
-[[ -d ${DEST_DIR}/content/docs/0.5.0]] && rm -r ${DEST_DIR}/content/docs/0.5.0
-cp -r ${TMP_DEST_DIR}/docs_latest ${DEST_DIR}/content/docs/latest
-cp -r ${TMP_DEST_DIR}/docs_0.4.0-incubating ${DEST_DIR}/content/docs/0.4.0-incubating
-cp -r ${TMP_DEST_DIR}/docs_0.5.0 ${DEST_DIR}/content/docs/0.5.0
-
-cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
-mkdir -p ${DEST_DIR}/content/docs
+[[ -d ${DEST_DIR}/content/docs/0.5.0 ]] && rm -r ${DEST_DIR}/content/docs/0.5.0
 cp -r ${TMP_DEST_DIR}/docs_latest ${DEST_DIR}/content/docs/latest
 cp -r ${TMP_DEST_DIR}/docs_0.4.0-incubating ${DEST_DIR}/content/docs/0.4.0-incubating
 cp -r ${TMP_DEST_DIR}/docs_0.5.0 ${DEST_DIR}/content/docs/0.5.0

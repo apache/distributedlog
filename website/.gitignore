@@ -3,3 +3,8 @@ _site/
 .jekyll-metadata
 _pdf
 .idea/
+content
+temp_content
+**/temp_content
+**/.pygments-cache
+vendor

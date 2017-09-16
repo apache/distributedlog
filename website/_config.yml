@@ -54,4 +54,12 @@ gems:
   - jekyll-redirect-from
 
 exclude:
+  - Makefile
+  - build.sh
+  - build-javadoc.sh
+  - docker
+  - docs
+  - content
   - scripts
+  - temp_content
+  - vendor
