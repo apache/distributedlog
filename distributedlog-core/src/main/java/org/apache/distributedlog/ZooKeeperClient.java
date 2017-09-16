@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.bookkeeper.zookeeper.BoundExponentialBackoffRetryPolicy;
@@ -202,7 +201,6 @@ public class ZooKeeperClient {
      * @return a connected ZooKeeper client
      * @throws ZooKeeperConnectionException if there was a problem connecting to the ZK cluster
      * @throws InterruptedException if interrupted while waiting for a connection to be established
-     * @throws TimeoutException if a connection could not be established within the configured
      * session timeout
      */
     public synchronized ZooKeeper get()

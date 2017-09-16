@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractFeatureProvider<T extends Feature> extends CacheableFeatureProvider<T> {
 
-    protected static final Logger logger = LoggerFactory.getLogger(AbstractFeatureProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractFeatureProvider.class);
 
     public static FeatureProvider getFeatureProvider(String rootScope,
                                                      DistributedLogConfiguration conf,

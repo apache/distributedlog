@@ -25,10 +25,11 @@ import org.apache.bookkeeper.common.annotation.InterfaceStability.Evolving;
 import org.apache.distributedlog.LogRecord;
 import org.apache.distributedlog.io.Abortable;
 
-/*
-* A generic interface class to support writing log records into
-* a persistent distributed log.
-*/
+
+/**
+ * A generic interface class to support writing log records into
+ * a persistent distributed log.
+ */
 @Public
 @Evolving
 public interface LogWriter extends Closeable, Abortable {

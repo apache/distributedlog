@@ -40,8 +40,8 @@ import org.apache.distributedlog.common.config.ConfigurationListener;
 import org.apache.distributedlog.common.config.ConfigurationSubscription;
 import org.apache.distributedlog.common.config.FileConfigurationBuilder;
 import org.apache.distributedlog.common.config.PropertiesConfigurationBuilder;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -49,6 +49,8 @@ import org.apache.distributedlog.common.config.PropertiesConfigurationBuilder;
  */
 public class DynamicConfigurationFeatureProvider extends AbstractFeatureProvider
         implements ConfigurationListener {
+    private static final Logger logger = LoggerFactory.getLogger(DynamicConfigurationFeatureProvider.class);
+
 
     private final ConcurrentBaseConfiguration featuresConf;
     private ConfigurationSubscription featuresConfSubscription;

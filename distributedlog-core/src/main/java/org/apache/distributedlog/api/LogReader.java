@@ -31,22 +31,21 @@ import org.apache.distributedlog.io.AsyncCloseable;
  * <i>LogReader</i> is a `synchronous` reader reading records from a DL log.
  *
  * <h3>Lifecycle of a Reader</h3>
- *
  * A reader is a <i>sequential</i> reader that read records from a DL log starting
  * from a given position. The position could be a <i>DLSN</i> (via {@link DistributedLogManager#getInputStream(DLSN)}
  * or a <i>Transaction ID</i> (via {@link DistributedLogManager#getInputStream(long)}.
- * <p>
- * After the reader is open, it could call {@link #readNext(boolean)} or {@link #readBulk(boolean, int)}
+ *
+ * <p>After the reader is open, it could call {@link #readNext(boolean)} or {@link #readBulk(boolean, int)}
  * to read records out the log from provided position.
- * <p>
- * Closing the reader (via {@link #close()} will release all the resources occupied
+ *
+ * <p>Closing the reader (via {@link #close()} will release all the resources occupied
  * by this reader instance.
- * <p>
- * Exceptions could be thrown during reading records. Once the exception is thrown,
+ *
+ * <p>Exceptions could be thrown during reading records. Once the exception is thrown,
  * the reader is set to an error state and it isn't usable anymore. It is the application's
  * responsibility to handle the exceptions and re-create readers if necessary.
- * <p>
- * Example:
+ *
+ * <p>Example:
  * <pre>
  * DistributedLogManager dlm = ...;
  * long nextTxId = ...;
@@ -69,7 +68,6 @@ import org.apache.distributedlog.io.AsyncCloseable;
  * </pre>
  *
  * <h3>Read Records</h3>
- *
  * Reading records from an <i>endless</i> log in `synchronous` way isn't as
  * trivial as in `asynchronous` way (via {@link AsyncLogReader}. Because it
  * lacks of callback mechanism. LogReader introduces a flag `nonBlocking` on
@@ -81,8 +79,8 @@ import org.apache.distributedlog.io.AsyncCloseable;
  * before returning read calls. While <i>NonBlocking</i> (nonBlocking = true)
  * means the reads will only check readahead cache and return whatever records
  * available in the readahead cache.
- * <p>
- * The <i>waiting</i> period varies in <i>blocking</i> mode. If the reader is
+ *
+ *  <p>The <i>waiting</i> period varies in <i>blocking</i> mode. If the reader is
  * catching up with writer (there are records in the log), the read call will
  * wait until records are read and returned. If the reader is caught up with
  * writer (there are no more records in the log at read time), the read call
@@ -91,14 +89,14 @@ import org.apache.distributedlog.io.AsyncCloseable;
  * records available in the readahead cache. In other words, if a reader sees
  * no record on blocking reads, it means the reader is `caught-up` with the
  * writer.
- * <p>
- * <i>Blocking</i> and <i>NonBlocking</i> modes are useful for building replicated
+ *
+ *  <p><i>Blocking</i> and <i>NonBlocking</i> modes are useful for building replicated
  * state machines. Applications could use <i>blocking</i> reads till caught up
  * with latest data. Once they are caught up with latest data, they could start
  * serving their service and turn to <i>non-blocking</i> read mode and tail read
  * data from the logs.
- * <p>
- * See examples below.
+ *
+ *  <p>See examples below.
  *
  * <h4>Read Single Record</h4>
  *
@@ -136,7 +134,7 @@ import org.apache.distributedlog.io.AsyncCloseable;
  * int N = 10;
  *
  *<p>// keep reading N records in blocking way until no records available in the log
- * <code>List<LogRecord> records = reader.readBulk(false, N);</code>
+ * List&lt;LogRecord&gt; records = reader.readBulk(false, N);
  * while (!records.isEmpty()) {
  *     // process the list of records
  *     ...
@@ -158,8 +156,7 @@ import org.apache.distributedlog.io.AsyncCloseable;
  *</p>
  * </pre>
  *
- * <p>
- * NOTE: Extending {@link AsyncCloseable}: BKSyncLogReader is implemented based on BKAsyncLogReader, exposing
+ * <p>NOTE: Extending {@link AsyncCloseable}: BKSyncLogReader is implemented based on BKAsyncLogReader, exposing
  * the {@link AsyncCloseable} interface so the reader could be closed asynchronously
  *
  * @see AsyncLogReader
