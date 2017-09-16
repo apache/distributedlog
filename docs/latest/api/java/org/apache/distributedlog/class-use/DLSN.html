@@ -105,36 +105,30 @@
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a href="#org.apache.distributedlog.io">org.apache.distributedlog.io</a></td>
-<td class="colLast">
-<div class="block">I/O related utilities used across the project.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.logsegment">org.apache.distributedlog.logsegment</a></td>
 <td class="colLast">
 <div class="block">Log Segment Management</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.metadata">org.apache.distributedlog.metadata</a></td>
 <td class="colLast">
 <div class="block">Metadata management for distributedlog.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.protocol.util">org.apache.distributedlog.protocol.util</a></td>
 <td class="colLast">
 <div class="block">defines the protocol related utilities.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.service">org.apache.distributedlog.service</a></td>
 <td class="colLast">
 <div class="block">DistributedLog Proxy Service.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.subscription">org.apache.distributedlog.subscription</a></td>
 <td class="colLast">
 <div class="block"><code>Future</code> based subscription API.</div>
@@ -379,22 +373,16 @@
 <td class="colLast"><span class="typeNameLabel">LogSegmentMetadata.Mutator.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogSegmentMetadata.Mutator.html#setMinActiveDLSN-org.apache.distributedlog.DLSN-">setMinActiveDLSN</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Entry.Builder.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/Entry.Builder.html#skipTo-org.apache.distributedlog.DLSN-">skipTo</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>
-<div class="block">Set the record set starts from <code>dlsn</code>.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="typeNameLabel">Entry.Reader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/Entry.Reader.html#skipTo-org.apache.distributedlog.DLSN-">skipTo</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>
 <div class="block">Skip the reader to the record whose DLSN is <code>dlsn</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="typeNameLabel">LogRecord.Reader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogRecord.Reader.html#skipTo-org.apache.distributedlog.DLSN-">skipTo</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.twitter.util.Future&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AsyncLogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/AsyncLogWriter.html#truncate-org.apache.distributedlog.DLSN-">truncate</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>
 <div class="block">Truncate the log until <i>dlsn</i>.</div>
@@ -435,6 +423,12 @@
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html#LogRecordWithDLSN-org.apache.distributedlog.DLSN-long-byte:A-long-">LogRecordWithDLSN</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn,
                  long&nbsp;txid,
                  byte[]&nbsp;data,
+                 long&nbsp;startSequenceIdOfCurrentSegment)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html#LogRecordWithDLSN-org.apache.distributedlog.DLSN-long-io.netty.buffer.ByteBuf-long-">LogRecordWithDLSN</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn,
+                 long&nbsp;txid,
+                 io.netty.buffer.ByteBuf&nbsp;buffer,
                  long&nbsp;startSequenceIdOfCurrentSegment)</code>&nbsp;</td>
 </tr>
 </tbody>
@@ -507,11 +501,15 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a></code></td>
-<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReader-org.apache.distributedlog.DLSN-">getAsyncLogReader</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReader-org.apache.distributedlog.DLSN-">getAsyncLogReader</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
+<div class="block">Get an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReaderWithLock-org.apache.distributedlog.DLSN-">getAsyncLogReaderWithLock</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReaderWithLock-org.apache.distributedlog.DLSN-">getAsyncLogReaderWithLock</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
+<div class="block">Get a log reader with lock starting from <i>fromDLSN</i>.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a>&gt;</code></td>
@@ -522,7 +520,9 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
-<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-">getInputStream</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-">getInputStream</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
+<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
@@ -537,6 +537,12 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openLogReader-org.apache.distributedlog.DLSN-">openLogReader</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AsyncLogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/AsyncLogWriter.html#truncate-org.apache.distributedlog.DLSN-">truncate</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>
 <div class="block">Truncate the log until <i>dlsn</i>.</div>
@@ -642,28 +648,6 @@
 <td class="colFirst"><code>com.twitter.util.Future&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">DistributedLogClientImpl.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/client/DistributedLogClientImpl.html#truncate-java.lang.String-org.apache.distributedlog.DLSN-">truncate</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;stream,
         <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList"><a name="org.apache.distributedlog.io">
-<!--   -->
-</a>
-<h3>Uses of <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a> in <a href="../../../../org/apache/distributedlog/io/package-summary.html">org.apache.distributedlog.io</a></h3>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../org/apache/distributedlog/io/package-summary.html">org.apache.distributedlog.io</a> that return <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></code></td>
-<td class="colLast"><span class="typeNameLabel">TransmitListener.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/io/TransmitListener.html#finalizeTransmit-long-long-">finalizeTransmit</a></span>(long&nbsp;lssn,
-                long&nbsp;entryId)</code>
-<div class="block">Finalize the transmit result and result the last
- <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog"><code>DLSN</code></a> in this transmit.</div>
-</td>
 </tr>
 </tbody>
 </table>

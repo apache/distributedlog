@@ -1,6 +1,7 @@
-com.twitter.distributedlog.subscription
 org.apache.distributedlog
-org.apache.distributedlog.annotations
+org.apache.distributedlog.api
+org.apache.distributedlog.api.namespace
+org.apache.distributedlog.api.subscription
 org.apache.distributedlog.callback
 org.apache.distributedlog.client
 org.apache.distributedlog.client.monitor
@@ -11,6 +12,13 @@ org.apache.distributedlog.client.routing
 org.apache.distributedlog.client.serverset
 org.apache.distributedlog.client.speculative
 org.apache.distributedlog.client.stats
+org.apache.distributedlog.common
+org.apache.distributedlog.common.annotations
+org.apache.distributedlog.common.concurrent
+org.apache.distributedlog.common.config
+org.apache.distributedlog.common.functions
+org.apache.distributedlog.common.stats
+org.apache.distributedlog.common.util
 org.apache.distributedlog.exceptions
 org.apache.distributedlog.feature
 org.apache.distributedlog.io
@@ -19,5 +27,8 @@ org.apache.distributedlog.logsegment
 org.apache.distributedlog.metadata
 org.apache.distributedlog.namespace
 org.apache.distributedlog.net
+org.apache.distributedlog.protocol.util
 org.apache.distributedlog.service
 org.apache.distributedlog.subscription
+org.apache.distributedlog.tests
+org.apache.distributedlog.tests.backward

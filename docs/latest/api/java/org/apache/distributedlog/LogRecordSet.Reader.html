@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6};
+var methods = {"i0":6,"i1":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -131,6 +131,12 @@ var activeTableTab = "activeTableTab";
 <div class="block">Read next log record from this record set.</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/LogRecordSet.Reader.html#release--">release</a></span>()</code>
+<div class="block">Release the resources hold by this record set reader.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -149,7 +155,7 @@ var activeTableTab = "activeTableTab";
 <a name="nextRecord--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>nextRecord</h4>
 <pre><a href="../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&nbsp;nextRecord()
@@ -161,6 +167,16 @@ var activeTableTab = "activeTableTab";
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
 </dl>
+</li>
+</ul>
+<a name="release--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>release</h4>
+<pre>void&nbsp;release()</pre>
+<div class="block">Release the resources hold by this record set reader.</div>
 </li>
 </ul>
 </li>

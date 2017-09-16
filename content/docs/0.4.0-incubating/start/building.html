@@ -15,8 +15,8 @@
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="/docs/0.4.0-incubating/js/bootstrap.min.js"></script>
-  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/start/building.html" data-proofer-ignore>
-  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/0.4.0-incubating/feed.xml">
+  <link rel="canonical" href="http://bookkeeper.apache.org/distributedlog/docs/0.4.0-incubating/start/building.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://bookkeeper.apache.org/distributedlog/docs/0.4.0-incubating/feed.xml">
   <!-- Font Awesome -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
   <!-- Google Analytics -->
@@ -209,14 +209,14 @@
             </li>
             
             <li>
-              <a href="/docs/0.4.0-incubating/admin_guide/performance.html">
-                Performance Tuning
+              <a href="/docs/0.4.0-incubating/admin_guide/loadtest.html">
+                Load Test
               </a>
             </li>
             
             <li>
-              <a href="/docs/0.4.0-incubating/admin_guide/loadtest.html">
-                Load Test
+              <a href="/docs/0.4.0-incubating/admin_guide/performance.html">
+                Performance Tuning
               </a>
             </li>
             
@@ -351,11 +351,11 @@ under the License.
 </div>
 <div class="section" id="build-distributedlog">
 <h2><a class="toc-backref" href="#id1">Build DistributedLog</a></h2>
-<p>In order to build DistributedLog you need the source code. Either <a class="reference external" href="/docs/0.4.0-incubating/download">download the source of a release</a> or <a class="reference external" href="https://github.com/apache/incubator-distributedlog">clone the git repository</a>.</p>
+<p>In order to build DistributedLog you need the source code. Either <a class="reference external" href="/docs/0.4.0-incubating/download">download the source of a release</a> or <a class="reference external" href="https://github.com/apache/distributedlog">clone the git repository</a>.</p>
 <p>In addition you need <strong>Maven 3</strong> and a <strong>JDK</strong> (Java Development Kit). DistributedLog requires <strong>at least Java 7</strong> to build. We recommend using Java 8.</p>
 <p>To clone from git, enter:</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>git clone https://github.com/apache/incubator-distributedlog
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>git clone https://github.com/apache/distributedlog
 </span></code></pre></td></tr></table></div></figure><p>The simplest way of building DistributedLog is by running:</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>mvn clean package -DskipTests
@@ -396,7 +396,7 @@ under the License.
 <span class="line-number">3</span>
 <span class="line-number">4</span>
 </pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span><span class="c1"># Switch Scala binary version between 2.10 and 2.11</span>
-</span><span class="line">tools/change-scala-version.sh 2.10
+</span><span class="line">tools/change-scala-version.sh <span class="m">2</span>.10
 </span><span class="line"><span class="c1"># Build with Scala version 2.10</span>
 </span><span class="line">mvn clean install -DskipTests
 </span></code></pre></td></tr></table></div></figure><p>DistributedLog is developed against Scala <em>2.11</em> and tested additionally against Scala <em>2.10</em>. These two versions are known to be compatible. Earlier versions (like Scala <em>2.9</em>) are <em>not</em> compatible.</p>

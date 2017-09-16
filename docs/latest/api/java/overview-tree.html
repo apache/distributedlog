@@ -104,7 +104,9 @@
 <li><a href="org/apache/distributedlog/net/package-tree.html">org.apache.distributedlog.net</a>, </li>
 <li><a href="org/apache/distributedlog/protocol/util/package-tree.html">org.apache.distributedlog.protocol.util</a>, </li>
 <li><a href="org/apache/distributedlog/service/package-tree.html">org.apache.distributedlog.service</a>, </li>
-<li><a href="org/apache/distributedlog/subscription/package-tree.html">org.apache.distributedlog.subscription</a></li>
+<li><a href="org/apache/distributedlog/subscription/package-tree.html">org.apache.distributedlog.subscription</a>, </li>
+<li><a href="org/apache/distributedlog/tests/package-tree.html">org.apache.distributedlog.tests</a>, </li>
+<li><a href="org/apache/distributedlog/tests/backward/package-tree.html">org.apache.distributedlog.tests.backward</a></li>
 </ul>
 </div>
 <div class="contentContainer">
@@ -120,6 +122,7 @@
 <li type="circle">org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClient.html" title="class in org.apache.distributedlog"><span class="typeNameLink">BookKeeperClient</span></a></li>
 <li type="circle">org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog"><span class="typeNameLink">BookKeeperClientBuilder</span></a></li>
 <li type="circle">org.apache.distributedlog.common.stats.<a href="org/apache/distributedlog/common/stats/BroadCastStatsLogger.html" title="class in org.apache.distributedlog.common.stats"><span class="typeNameLink">BroadCastStatsLogger</span></a></li>
+<li type="circle">org.apache.distributedlog.common.util.<a href="org/apache/distributedlog/common/util/ByteBufUtils.html" title="class in org.apache.distributedlog.common.util"><span class="typeNameLink">ByteBufUtils</span></a></li>
 <li type="circle">org.apache.bookkeeper.feature.CacheableFeatureProvider&lt;T&gt; (implements org.apache.bookkeeper.feature.FeatureProvider)
 <ul>
 <li type="circle">org.apache.distributedlog.feature.<a href="org/apache/distributedlog/feature/AbstractFeatureProvider.html" title="class in org.apache.distributedlog.feature"><span class="typeNameLink">AbstractFeatureProvider</span></a>&lt;T&gt;
@@ -135,6 +138,7 @@
 <li type="circle">org.apache.distributedlog.client.stats.<a href="org/apache/distributedlog/client/stats/ClientStatsLogger.html" title="class in org.apache.distributedlog.client.stats"><span class="typeNameLink">ClientStatsLogger</span></a></li>
 <li type="circle">org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/ClientUtils.html" title="class in org.apache.distributedlog.service"><span class="typeNameLink">ClientUtils</span></a></li>
 <li type="circle">org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ClusterClient.html" title="class in org.apache.distributedlog.client.proxy"><span class="typeNameLink">ClusterClient</span></a></li>
+<li type="circle">org.apache.distributedlog.tests.<a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests"><span class="typeNameLink">CompressionBenchmark</span></a></li>
 <li type="circle">org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionUtils.html" title="class in org.apache.distributedlog.io"><span class="typeNameLink">CompressionUtils</span></a></li>
 <li type="circle">org.apache.distributedlog.common.config.<a href="org/apache/distributedlog/common/config/ConfigurationSubscription.html" title="class in org.apache.distributedlog.common.config"><span class="typeNameLink">ConfigurationSubscription</span></a></li>
 <li type="circle">org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/ConsistentHashRoutingService.Builder.html" title="class in org.apache.distributedlog.client.routing"><span class="typeNameLink">ConsistentHashRoutingService.Builder</span></a> (implements org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/RoutingService.Builder.html" title="interface in org.apache.distributedlog.client.routing">RoutingService.Builder</a>)</li>
@@ -232,15 +236,6 @@
 <li type="circle">org.apache.distributedlog.client.stats.<a href="org/apache/distributedlog/client/stats/OpStats.html" title="class in org.apache.distributedlog.client.stats"><span class="typeNameLink">OpStats</span></a></li>
 <li type="circle">org.apache.distributedlog.common.stats.<a href="org/apache/distributedlog/common/stats/OpStatsListener.html" title="class in org.apache.distributedlog.common.stats"><span class="typeNameLink">OpStatsListener</span></a>&lt;T&gt; (implements org.apache.distributedlog.common.concurrent.<a href="org/apache/distributedlog/common/concurrent/FutureEventListener.html" title="interface in org.apache.distributedlog.common.concurrent">FutureEventListener</a>&lt;T&gt;)</li>
 <li type="circle">org.apache.distributedlog.client.stats.<a href="org/apache/distributedlog/client/stats/OpStatsLogger.html" title="class in org.apache.distributedlog.client.stats"><span class="typeNameLink">OpStatsLogger</span></a></li>
-<li type="circle">java.io.<a href="http://download.oracle.com/javase/6/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io"><span class="typeNameLink">OutputStream</span></a> (implements java.io.<a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.html?is-external=true" title="class or interface in java.io">Closeable</a>, java.io.<a href="http://download.oracle.com/javase/6/docs/api/java/io/Flushable.html?is-external=true" title="class or interface in java.io">Flushable</a>)
-<ul>
-<li type="circle">java.io.<a href="http://download.oracle.com/javase/6/docs/api/java/io/ByteArrayOutputStream.html?is-external=true" title="class or interface in java.io"><span class="typeNameLink">ByteArrayOutputStream</span></a>
-<ul>
-<li type="circle">org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io"><span class="typeNameLink">Buffer</span></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li type="circle">org.apache.distributedlog.client.ownership.<a href="org/apache/distributedlog/client/ownership/OwnershipCache.html" title="class in org.apache.distributedlog.client.ownership"><span class="typeNameLink">OwnershipCache</span></a> (implements org.jboss.netty.util.TimerTask)</li>
 <li type="circle">org.apache.distributedlog.client.stats.<a href="org/apache/distributedlog/client/stats/OwnershipStatsLogger.html" title="class in org.apache.distributedlog.client.stats"><span class="typeNameLink">OwnershipStatsLogger</span></a></li>
 <li type="circle">org.apache.distributedlog.client.stats.<a href="org/apache/distributedlog/client/stats/OwnershipStatsLogger.OwnershipStat.html" title="class in org.apache.distributedlog.client.stats"><span class="typeNameLink">OwnershipStatsLogger.OwnershipStat</span></a></li>
@@ -250,6 +245,7 @@
 <li type="circle">org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ProxyClient.html" title="class in org.apache.distributedlog.client.proxy"><span class="typeNameLink">ProxyClient</span></a></li>
 <li type="circle">org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ProxyClient.DefaultBuilder.html" title="class in org.apache.distributedlog.client.proxy"><span class="typeNameLink">ProxyClient.DefaultBuilder</span></a> (implements org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ProxyClient.Builder.html" title="interface in org.apache.distributedlog.client.proxy">ProxyClient.Builder</a>)</li>
 <li type="circle">org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ProxyClientManager.html" title="class in org.apache.distributedlog.client.proxy"><span class="typeNameLink">ProxyClientManager</span></a> (implements org.jboss.netty.util.TimerTask)</li>
+<li type="circle">org.apache.distributedlog.tests.backward.<a href="org/apache/distributedlog/tests/backward/ReaderTest.html" title="class in org.apache.distributedlog.tests.backward"><span class="typeNameLink">ReaderTest</span></a></li>
 <li type="circle">org.apache.distributedlog.<a href="org/apache/distributedlog/ReadUtils.html" title="class in org.apache.distributedlog"><span class="typeNameLink">ReadUtils</span></a></li>
 <li type="circle">org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/RegionsRoutingService.html" title="class in org.apache.distributedlog.client.routing"><span class="typeNameLink">RegionsRoutingService</span></a> (implements org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/RoutingService.html" title="interface in org.apache.distributedlog.client.routing">RoutingService</a>)</li>
 <li type="circle">org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/RegionsRoutingService.Builder.html" title="class in org.apache.distributedlog.client.routing"><span class="typeNameLink">RegionsRoutingService.Builder</span></a> (implements org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/RoutingService.Builder.html" title="interface in org.apache.distributedlog.client.routing">RoutingService.Builder</a>)</li>
@@ -340,6 +336,7 @@
 <li type="circle">org.apache.distributedlog.protocol.util.<a href="org/apache/distributedlog/protocol/util/TwitterFutureUtils.html" title="class in org.apache.distributedlog.protocol.util"><span class="typeNameLink">TwitterFutureUtils</span></a></li>
 <li type="circle">org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/TwitterServerSetWatcher.html" title="class in org.apache.distributedlog.client.routing"><span class="typeNameLink">TwitterServerSetWatcher</span></a> (implements org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/ServerSetWatcher.html" title="interface in org.apache.distributedlog.client.routing">ServerSetWatcher</a>)</li>
 <li type="circle">org.apache.distributedlog.common.functions.<a href="org/apache/distributedlog/common/functions/VoidFunctions.html" title="class in org.apache.distributedlog.common.functions"><span class="typeNameLink">VoidFunctions</span></a></li>
+<li type="circle">org.apache.distributedlog.tests.backward.<a href="org/apache/distributedlog/tests/backward/WriterTest.html" title="class in org.apache.distributedlog.tests.backward"><span class="typeNameLink">WriterTest</span></a></li>
 <li type="circle">org.apache.distributedlog.lock.<a href="org/apache/distributedlog/lock/ZKDistributedLock.html" title="class in org.apache.distributedlog.lock"><span class="typeNameLink">ZKDistributedLock</span></a> (implements org.apache.distributedlog.lock.<a href="org/apache/distributedlog/lock/DistributedLock.html" title="interface in org.apache.distributedlog.lock">DistributedLock</a>)</li>
 <li type="circle">org.apache.distributedlog.lock.<a href="org/apache/distributedlog/lock/ZKSessionLockFactory.html" title="class in org.apache.distributedlog.lock"><span class="typeNameLink">ZKSessionLockFactory</span></a> (implements org.apache.distributedlog.lock.<a href="org/apache/distributedlog/lock/SessionLockFactory.html" title="interface in org.apache.distributedlog.lock">SessionLockFactory</a>)</li>
 <li type="circle">org.apache.distributedlog.<a href="org/apache/distributedlog/ZooKeeperClient.html" title="class in org.apache.distributedlog"><span class="typeNameLink">ZooKeeperClient</span></a></li>
@@ -449,6 +446,7 @@
 <li type="circle">org.apache.distributedlog.common.util.<a href="org/apache/distributedlog/common/util/PermitManager.Permit.html" title="interface in org.apache.distributedlog.common.util"><span class="typeNameLink">PermitManager.Permit</span></a></li>
 <li type="circle">org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ProxyClient.Builder.html" title="interface in org.apache.distributedlog.client.proxy"><span class="typeNameLink">ProxyClient.Builder</span></a></li>
 <li type="circle">org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ProxyListener.html" title="interface in org.apache.distributedlog.client.proxy"><span class="typeNameLink">ProxyListener</span></a></li>
+<li type="circle">org.apache.distributedlog.common.util.<a href="org/apache/distributedlog/common/util/ReferenceCounted.html" title="interface in org.apache.distributedlog.common.util"><span class="typeNameLink">ReferenceCounted</span></a></li>
 <li type="circle">org.apache.distributedlog.client.resolver.<a href="org/apache/distributedlog/client/resolver/RegionResolver.html" title="interface in org.apache.distributedlog.client.resolver"><span class="typeNameLink">RegionResolver</span></a></li>
 <li type="circle">org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/RollingPolicy.html" title="interface in org.apache.distributedlog.logsegment"><span class="typeNameLink">RollingPolicy</span></a></li>
 <li type="circle">org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/RoutingService.html" title="interface in org.apache.distributedlog.client.routing"><span class="typeNameLink">RoutingService</span></a></li>
@@ -467,7 +465,7 @@
 <li type="circle">org.apache.distributedlog.client.speculative.<a href="org/apache/distributedlog/client/speculative/SpeculativeRequestExecutionPolicy.html" title="interface in org.apache.distributedlog.client.speculative"><span class="typeNameLink">SpeculativeRequestExecutionPolicy</span></a></li>
 <li type="circle">org.apache.distributedlog.client.speculative.<a href="org/apache/distributedlog/client/speculative/SpeculativeRequestExecutor.html" title="interface in org.apache.distributedlog.client.speculative"><span class="typeNameLink">SpeculativeRequestExecutor</span></a></li>
 <li type="circle">org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions"><span class="typeNameLink">StatusCode</span></a></li>
-<li type="circle">org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/TransmitListener.html" title="interface in org.apache.distributedlog.io"><span class="typeNameLink">TransmitListener</span></a>
+<li type="circle">org.apache.distributedlog.TransmitListener
 <ul>
 <li type="circle">org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Writer.html" title="interface in org.apache.distributedlog"><span class="typeNameLink">Entry.Writer</span></a></li>
 <li type="circle">org.apache.distributedlog.EntryBuffer

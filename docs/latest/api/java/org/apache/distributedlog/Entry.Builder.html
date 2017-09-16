@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -135,69 +135,39 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog">Entry</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#build--">build</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Reader.html" title="interface in org.apache.distributedlog">Entry.Reader</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#buildReader--">buildReader</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#deserializeRecordSet-boolean-">deserializeRecordSet</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Enable/disable deserialize record set.</div>
 </td>
 </tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#setEntry-io.netty.buffer.ByteBuf-">setEntry</a></span>(io.netty.buffer.ByteBuf&nbsp;buffer)</code>
+<div class="block">Set the entry buffer of the serialized bytes data of this record set.</div>
+</td>
+</tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#reset--">reset</a></span>()</code>
-<div class="block">Reset the builder.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#setData-byte:A-int-int-">setData</a></span>(byte[]&nbsp;data,
-       int&nbsp;offset,
-       int&nbsp;length)</code>
-<div class="block">Set the serialized bytes data of this record set.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#setEntryId-long-">setEntryId</a></span>(long&nbsp;entryId)</code>
 <div class="block">Set the entry id of this log record set.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#setEnvelopeEntry-boolean-">setEnvelopeEntry</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Set whether this record set is enveloped or not.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#setInputStream-java.io.InputStream-">setInputStream</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in)</code>
-<div class="block">Set the input stream of the serialized bytes data of this record set.</div>
-</td>
-</tr>
-<tr id="i8" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#setLogSegmentInfo-long-long-">setLogSegmentInfo</a></span>(long&nbsp;lssn,
                  long&nbsp;startSequenceId)</code>
 <div class="block">Set the segment info of the log segment that this record
  set belongs to.</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#skipTo-org.apache.distributedlog.DLSN-">skipTo</a></span>(<a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</code>
-<div class="block">Set the record set starts from <code>dlsn</code>.</div>
-</td>
-</tr>
-<tr id="i10" class="altColor">
-<td class="colFirst"><code><a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Builder.html#skipTo-long-">skipTo</a></span>(long&nbsp;txid)</code>
-<div class="block">Set the record set starts from <code>txid</code>.</div>
 </td>
 </tr>
 </table>
@@ -222,20 +192,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="reset--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>reset</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a>&nbsp;reset()</pre>
-<div class="block">Reset the builder.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>builder</dd>
-</dl>
-</li>
-</ul>
 <a name="setLogSegmentInfo-long-long-">
 <!--   -->
 </a>
@@ -287,70 +243,17 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </dl>
 </li>
 </ul>
-<a name="setData-byte:A-int-int-">
+<a name="setEntry-io.netty.buffer.ByteBuf-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setData</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a>&nbsp;setData(byte[]&nbsp;data,
-                             int&nbsp;offset,
-                             int&nbsp;length)</pre>
-<div class="block">Set the serialized bytes data of this record set.</div>
+<h4>setEntry</h4>
+<pre>public&nbsp;<a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a>&nbsp;setEntry(io.netty.buffer.ByteBuf&nbsp;buffer)</pre>
+<div class="block">Set the entry buffer of the serialized bytes data of this record set.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>data</code> - serialized bytes data of this record set.</dd>
-<dd><code>offset</code> - offset of the bytes data</dd>
-<dd><code>length</code> - length of the bytes data</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>builder</dd>
-</dl>
-</li>
-</ul>
-<a name="setInputStream-java.io.InputStream-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setInputStream</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a>&nbsp;setInputStream(<a href="http://download.oracle.com/javase/6/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in)</pre>
-<div class="block">Set the input stream of the serialized bytes data of this record set.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>in</code> - input stream</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>builder</dd>
-</dl>
-</li>
-</ul>
-<a name="skipTo-org.apache.distributedlog.DLSN-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>skipTo</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a>&nbsp;skipTo(<a href="http://download.oracle.com/javase/6/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
-                            <a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn)</pre>
-<div class="block">Set the record set starts from <code>dlsn</code>.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>dlsn</code> - dlsn to skip to</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>builder</dd>
-</dl>
-</li>
-</ul>
-<a name="skipTo-long-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>skipTo</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a>&nbsp;skipTo(long&nbsp;txid)</pre>
-<div class="block">Set the record set starts from <code>txid</code>.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>txid</code> - txid to skip to</dd>
+<dd><code>buffer</code> - input stream</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>builder</dd>
 </dl>
@@ -370,15 +273,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>builder</dd>
 </dl>
-</li>
-</ul>
-<a name="build--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>build</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog">Entry</a>&nbsp;build()</pre>
 </li>
 </ul>
 <a name="buildReader--">

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Apache DistributedLog</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/distributedlog/docs/0.5.0/styles/site.css">
+  <link rel="stylesheet" href="/distributedlog/docs/0.5.0/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/distributedlog/docs/0.5.0/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://bookkeeper.apache.org/distributedlog/distributedlog/docs/0.5.0/basics/introduction.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog" href="http://bookkeeper.apache.org/distributedlog/distributedlog/docs/0.5.0/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/distributedlog" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/distributedlog/docs/0.5.0/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/distributedlog/docs/0.5.0/">V0.5.0</a></li>
+        <!-- Concepts -->
+        <li><a href="/distributedlog/docs/0.5.0/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/distributedlog/docs/0.5.0/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/distributedlog/docs/0.5.0/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/distributedlog/docs/0.5.0/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/distributedlog/docs/0.5.0/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="/distributedlog/docs/0.5.0/user_guide/main.html" class="">User Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/basics/introduction.html" class="active">
+                  Introduction
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/considerations/main.html" class="">
+                  Considerations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/architecture/main.html" class="">
+                  Architecture
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/api/main.html" class="">
+                  API
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/api/core.html" class="active">
+                        Core Library API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/api/proxy.html" class="active">
+                        Proxy Client API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/api/practice.html" class="active">
+                        Best Practise
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/configuration/main.html" class="">
+                  Configuration
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/core.html" class="active">
+                        Core Library Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/proxy.html" class="active">
+                        Write Proxy Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/client.html" class="active">
+                        Client Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/perlog.html" class="active">
+                        Per Stream Configuration
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/design/main.html" class="">
+                  Detail Design
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/globalreplicatedlog/main.html" class="">
+                  Global Replicated Log
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/implementation/main.html" class="">
+                  Implementation
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/implementation/storage.html" class="active">
+                        Storage
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/references/main.html" class="">
+                  References
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/references/metrics.html" class="active">
+                        Metrics
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/references/features.html" class="active">
+                        Available Features
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+
+      
+
+      <li><a href="/distributedlog/docs/0.5.0/user_guide/main.html">User Guide</a></li>
+      
+      
+      <li class="active">Introduction</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="distributedlog-overview">
+<p class="topic-title first">DistributedLog Overview</p>
+<ul class="simple">
+<li><a class="reference internal" href="#introduction" id="id1">Introduction</a><ul>
+<li><a class="reference internal" href="#logs" id="id2">Logs</a><ul>
+<li><a class="reference internal" href="#log-records" id="id3">Log Records</a></li>
+<li><a class="reference internal" href="#log-segments" id="id4">Log Segments</a></li>
+<li><a class="reference internal" href="#namespaces" id="id5">Namespaces</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writers" id="id6">Writers</a></li>
+<li><a class="reference internal" href="#readers" id="id7">Readers</a></li>
+<li><a class="reference internal" href="#fan-in-and-fan-out" id="id8">Fan-in and Fan-out</a></li>
+<li><a class="reference internal" href="#guarantees" id="id9">Guarantees</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2><a class="toc-backref" href="#id1">Introduction</a></h2>
+<p>DistributedLog (DL) is a high performance replicated log service.
+It offers durability, replication and strong consistency, which provides a fundamental building block
+for building reliable distributed systems, e.g replicated-state-machines, general pub/sub systems,
+distributed databases, distributed queues and etc.</p>
+<p>DistributedLog maintains sequences of records in categories called <em>Logs</em> (aka <em>Log Streams</em>).
+The processes that write records to a DL log are <em>writers</em>, while the processes that read
+from logs and process the records are <em>readers</em>.</p>
+<div class="figure align-center">
+<img alt="../images/softwarestack.png" src="../images/softwarestack.png" />
+<p class="caption">Figure 1. DistributedLog Software Stack</p>
+</div>
+<div class="section" id="logs">
+<h3><a class="toc-backref" href="#id2">Logs</a></h3>
+<p>A <strong>log</strong> is an ordered, immutable sequence of <em>log records</em>.</p>
+<div class="figure align-center">
+<img alt="../images/datamodel.png" src="../images/datamodel.png" />
+<p class="caption">Figure 2. Anatomy of a log stream</p>
+</div>
+<div class="section" id="log-records">
+<h4><a class="toc-backref" href="#id3">Log Records</a></h4>
+<p>Each <strong>log record</strong> is a sequence of bytes.
+<strong>Log records</strong> are written sequentially into a <em>log stream</em>, and will be assigned with
+a unique sequence number <em>called</em> <strong>DLSN</strong> (DistributedLog Sequence Number). Besides <em>DLSN</em>,
+applications could assign its own sequence number while constructing log records. The
+application defined sequence number is called <strong>TransactionID</strong> (<em>txid</em>). Either <em>DLSN</em>
+or <em>TransactionID</em> could be used for positioning readers to start reading from a specific
+<em>log record</em>.</p>
+</div>
+<div class="section" id="log-segments">
+<h4><a class="toc-backref" href="#id4">Log Segments</a></h4>
+<p>A <strong>log</strong> is broken down into <em>segments</em>, which each log segment contains its subset of
+records. <strong>Log segments</strong> are distributed and stored in a log segment store (e.g Apache BookKeeper).
+DistributedLog rolls the log segments based on configured rolling policy - either a configurable
+period of time (e.g. every 2 hours) or a configurable maximum size (e.g. every 128MB).
+So the data of logs will be divided into equal-sized <em>log segments</em> and distributed evenly
+across log segment storage nodes. It allows the log to scale beyond a size that will fit on
+a single server and also spread read traffic among the cluster.</p>
+<p>The data of logs will either be kept forever until application <em>explicitly</em> truncates or be retained
+for a configurable period of time. <strong>Explicit Truncation</strong> is useful for building replicated
+state machines such as distributed databases. They usually require strong controls over when
+the data could be truncated. <strong>Time-based Retention</strong> is useful for real-time analytics. They only
+care about the data within a period of time.</p>
+</div>
+<div class="section" id="namespaces">
+<h4><a class="toc-backref" href="#id5">Namespaces</a></h4>
+<p>The <em>log streams</em> belong to same organization are usually categorized and managed under
+a <strong>namespace</strong>. A DL <strong>namespace</strong> is basically for applications to locate where the
+<em>log streams</em> are. Applications could <em>create</em> and <em>delete</em> streams under a namespace,
+and also be able to <em>truncate</em> a stream to given sequence number (either <em>DLSN</em> or <em>TransactionID</em>).</p>
+</div>
+</div>
+<div class="section" id="writers">
+<h3><a class="toc-backref" href="#id6">Writers</a></h3>
+<p>Writers write data into the logs of their choice. All the records are
+appended into the logs in order. The sequencing is done by the writer,
+which means there is only one active writer for a log at a given time.
+DL guarantees correctness when two writers attempt writing to
+to a same log when network partition happens - via fencing mechanism
+in log segment store.</p>
+<p>The log writers are served and managed in a service tier called <em>Write Proxy</em>.
+The <em>Write Proxy</em> is used for accepting fan-in writes from large number
+of clients. Details on <strong>Fan-in and Fan-out</strong> can be found further into this doc.</p>
+</div>
+<div class="section" id="readers">
+<h3><a class="toc-backref" href="#id7">Readers</a></h3>
+<p>Readers read records from the logs of their choice, starting from a provided
+position. The provided position could be either <em>DLSN</em> or <em>TransactionID</em>.
+The readers will read records in strict order from the logs. Different readers
+could read records starting from different positions in a same log.</p>
+<p>Unlike other pub/sub systems, DistributedLog doesn't record/manage readers' positions.
+It leaves the tracking responsibility to applications, as different applications
+might have different requirements on tracking and coordinating positions. It is hard
+to get it right with a single approach. For example, distributed databases might store
+the reader positions along with SSTables, so they would resume applying transactions
+from the positions stored in SSTables. Tracking reader positions could easily be done
+in application level using various stores (e.g. ZooKeeper, file system, or key/value stores).</p>
+<p>The log records could be cached in a service tier called <em>Read Proxy</em>, to serve
+a large number of readers.</p>
+</div>
+<div class="section" id="fan-in-and-fan-out">
+<h3><a class="toc-backref" href="#id8">Fan-in and Fan-out</a></h3>
+<p>The core of DistributedLog supports single-writer, multiple-readers semantics. The service layer
+built on top of the <em>DistributedLog Core</em> to support large scale of number of writers and readers.
+The service layer includes <strong>Write Proxy</strong> and <strong>Read Proxy</strong>. <strong>Write Proxy</strong> manages
+the writers of logs and fail over them when machines are failed. It allows supporting
+which don't care about the log ownership by aggregating writes from many sources (aka <em>Fan-in</em>).
+<strong>Read Proxy</strong> optimize reader path by caching log records in cases where hundreds or
+thousands of readers are consuming a same log stream.</p>
+</div>
+<div class="section" id="guarantees">
+<h3><a class="toc-backref" href="#id9">Guarantees</a></h3>
+<p>At a high level, DistributedLog gives the following guarantees:</p>
+<ul class="simple">
+<li>Records written by a writer to a log will be appended in the order they are written. That is, if a record <em>R1</em> is written by same writer as a record <em>R2</em>, <em>R1</em> will have a smaller sequence number than <em>R2</em>.</li>
+<li>Readers see records in the same order they were written to the log.</li>
+<li>All records are persisted on disk before acknowledgments, to gurantee durability.</li>
+<li>For a log with replication factor of N, DistributedLog tolerates up to N-1 server failures without losing any records.</li>
+</ul>
+<p>More details on these guarantees are given in the [design section](<a class="reference external" href="http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/design/main.html">http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/design/main.html</a>).</p>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/distributedlog/docs/0.5.0/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

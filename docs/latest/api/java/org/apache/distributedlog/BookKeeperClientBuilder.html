@@ -142,14 +142,14 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html#channelFactory-org.jboss.netty.channel.socket.ClientSocketChannelFactory-">channelFactory</a></span>(org.jboss.netty.channel.socket.ClientSocketChannelFactory&nbsp;channelFactory)</code>
-<div class="block">Build BookKeeper client using existing <i>channelFactory</i>.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html#dlConfig-org.apache.distributedlog.DistributedLogConfiguration-">dlConfig</a></span>(<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;dlConfig)</code>
+<div class="block"><i>dlConfig</i> used to configure bookkeeper client.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html#dlConfig-org.apache.distributedlog.DistributedLogConfiguration-">dlConfig</a></span>(<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;dlConfig)</code>
-<div class="block"><i>dlConfig</i> used to configure bookkeeper client.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html#eventLoopGroup-io.netty.channel.EventLoopGroup-">eventLoopGroup</a></span>(io.netty.channel.EventLoopGroup&nbsp;eventLoopGroup)</code>
+<div class="block">Build BookKeeper client using existing <i>channelFactory</i>.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -176,7 +176,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html#requestTimer-org.jboss.netty.util.HashedWheelTimer-">requestTimer</a></span>(org.jboss.netty.util.HashedWheelTimer&nbsp;requestTimer)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html#requestTimer-io.netty.util.HashedWheelTimer-">requestTimer</a></span>(io.netty.util.HashedWheelTimer&nbsp;requestTimer)</code>
 <div class="block">Build BookKeeper client using existing <i>request timer</i>.</div>
 </td>
 </tr>
@@ -339,29 +339,29 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </dl>
 </li>
 </ul>
-<a name="channelFactory-org.jboss.netty.channel.socket.ClientSocketChannelFactory-">
+<a name="eventLoopGroup-io.netty.channel.EventLoopGroup-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>channelFactory</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a>&nbsp;channelFactory(org.jboss.netty.channel.socket.ClientSocketChannelFactory&nbsp;channelFactory)</pre>
+<h4>eventLoopGroup</h4>
+<pre>public&nbsp;<a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a>&nbsp;eventLoopGroup(io.netty.channel.EventLoopGroup&nbsp;eventLoopGroup)</pre>
 <div class="block">Build BookKeeper client using existing <i>channelFactory</i>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>channelFactory</code> - Channel Factory used to build bookkeeper client.</dd>
+<dd><code>eventLoopGroup</code> - event loop group used to build bookkeeper client.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>bookkeeper client builder.</dd>
 </dl>
 </li>
 </ul>
-<a name="requestTimer-org.jboss.netty.util.HashedWheelTimer-">
+<a name="requestTimer-io.netty.util.HashedWheelTimer-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>requestTimer</h4>
-<pre>public&nbsp;<a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a>&nbsp;requestTimer(org.jboss.netty.util.HashedWheelTimer&nbsp;requestTimer)</pre>
+<pre>public&nbsp;<a href="../../../org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a>&nbsp;requestTimer(io.netty.util.HashedWheelTimer&nbsp;requestTimer)</pre>
 <div class="block">Build BookKeeper client using existing <i>request timer</i>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

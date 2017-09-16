@@ -110,10 +110,6 @@
 <dd>
 <div class="block">Abort the abortables in sequence.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/TransmitListener.html#abortTransmit-java.lang.Throwable-">abortTransmit(Throwable)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/TransmitListener.html" title="interface in org.apache.distributedlog.io">TransmitListener</a></dt>
-<dd>
-<div class="block">Abort the transmit.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordSetBuffer.html#abortTransmit-java.lang.Throwable-">abortTransmit(Throwable)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordSetBuffer.html" title="interface in org.apache.distributedlog">LogRecordSetBuffer</a></dt>
 <dd>
 <div class="block">Abort transmit.</div>
@@ -230,7 +226,7 @@
 <dd>
 <div class="block">Asynchronously acquire the lock.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentEntryWriter.html#asyncAddEntry-byte:A-int-int-org.apache.bookkeeper.client.AsyncCallback.AddCallback-java.lang.Object-">asyncAddEntry(byte[], int, int, AsyncCallback.AddCallback, Object)</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentEntryWriter.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryWriter</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentEntryWriter.html#asyncAddEntry-io.netty.buffer.ByteBuf-org.apache.bookkeeper.client.AsyncCallback.AddCallback-java.lang.Object-">asyncAddEntry(ByteBuf, AsyncCallback.AddCallback, Object)</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentEntryWriter.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryWriter</a></dt>
 <dd>
 <div class="block">Async add entry to the log segment.</div>
 </dd>
@@ -902,12 +898,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/stats/BroadCastStatsLogger.html#BroadCastStatsLogger--">BroadCastStatsLogger()</a></span> - Constructor for class org.apache.distributedlog.common.stats.<a href="org/apache/distributedlog/common/stats/BroadCastStatsLogger.html" title="class in org.apache.distributedlog.common.stats">BroadCastStatsLogger</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io"><span class="typeNameLink">Buffer</span></a> - Class in <a href="org/apache/distributedlog/io/package-summary.html">org.apache.distributedlog.io</a></dt>
-<dd>
-<div class="block"><a href="http://download.oracle.com/javase/6/docs/api/java/io/ByteArrayOutputStream.html?is-external=true" title="class or interface in java.io"><code>ByteArrayOutputStream</code></a> based buffer.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/Buffer.html#Buffer-int-">Buffer(int)</a></span> - Constructor for class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io">Buffer</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/DistributedLogMultiStreamWriter.Builder.html#bufferSize-int-">bufferSize(int)</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/DistributedLogMultiStreamWriter.Builder.html" title="class in org.apache.distributedlog.client">DistributedLogMultiStreamWriter.Builder</a></dt>
 <dd>
 <div class="block">Set the output buffer size.</div>
@@ -937,8 +927,6 @@
 <div class="block">Build the routing service.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/routing/SingleHostRoutingService.Builder.html#build--">build()</a></span> - Method in class org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/SingleHostRoutingService.Builder.html" title="class in org.apache.distributedlog.client.routing">SingleHostRoutingService.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#build--">build()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LocalDLMEmulator.Builder.html#build--">build()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LocalDLMEmulator.Builder.html" title="class in org.apache.distributedlog">LocalDLMEmulator.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -990,6 +978,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/ResponseUtils.html#bulkWriteSuccess--">bulkWriteSuccess()</a></span> - Static method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/ResponseUtils.html" title="class in org.apache.distributedlog.service">ResponseUtils</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/apache/distributedlog/common/util/ByteBufUtils.html" title="class in org.apache.distributedlog.common.util"><span class="typeNameLink">ByteBufUtils</span></a> - Class in <a href="org/apache/distributedlog/common/util/package-summary.html">org.apache.distributedlog.common.util</a></dt>
+<dd>
+<div class="block">Utils to handle with <code>ByteBuf</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/util/ByteBufUtils.html#ByteBufUtils--">ByteBufUtils()</a></span> - Constructor for class org.apache.distributedlog.common.util.<a href="org/apache/distributedlog/common/util/ByteBufUtils.html" title="class in org.apache.distributedlog.common.util">ByteBufUtils</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:C">
 <!--   -->
@@ -1005,10 +999,6 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataUpdater.html#changeSequenceNumber-org.apache.distributedlog.LogSegmentMetadata-long-">changeSequenceNumber(LogSegmentMetadata, long)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></dt>
 <dd>
 <div class="block">Change ledger sequence number of <i>segment</i> to given <i>logSegmentSeqNo</i>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BookKeeperClientBuilder.html#channelFactory-org.jboss.netty.channel.socket.ClientSocketChannelFactory-">channelFactory(ClientSocketChannelFactory)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></dt>
-<dd>
-<div class="block">Build BookKeeper client using existing <i>channelFactory</i>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/DistributedLogClientImpl.html#check-java.lang.String-">check(String)</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/DistributedLogClientImpl.html" title="class in org.apache.distributedlog.client">DistributedLogClientImpl</a></dt>
 <dd>&nbsp;</dd>
@@ -1188,8 +1178,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/DLException.html#code">code</a></span> - Variable in exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/DLException.html" title="class in org.apache.distributedlog.exceptions">DLException</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/CompressionCodec.Type.html#code--">code()</a></span> - Method in enum org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionCodec.Type.html" title="enum in org.apache.distributedlog.io">CompressionCodec.Type</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/concurrent/FutureUtils.html#collect-java.util.List-">collect(List&lt;CompletableFuture&lt;T&gt;&gt;)</a></span> - Static method in class org.apache.distributedlog.common.concurrent.<a href="org/apache/distributedlog/common/concurrent/FutureUtils.html" title="class in org.apache.distributedlog.common.concurrent">FutureUtils</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/LogWriter.html#commit--">commit()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a></dt>
+<dd>
+<div class="block">Flush and sync all data that is ready to be flush
+ <a href="org/apache/distributedlog/api/LogWriter.html#flush--"><code>LogWriter.flush()</code></a> into underlying persistent store.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentWriter.html#commit--">commit()</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentWriter.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentWriter</a></dt>
 <dd>
 <div class="block">Commit the current acknowledged data.</div>
@@ -1212,23 +1209,25 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/stats/OpStatsLogger.html#completeRequest-long-int-">completeRequest(long, int)</a></span> - Method in class org.apache.distributedlog.client.stats.<a href="org/apache/distributedlog/client/stats/OpStatsLogger.html" title="class in org.apache.distributedlog.client.stats">OpStatsLogger</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/TransmitListener.html#completeTransmit-long-long-">completeTransmit(long, long)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/TransmitListener.html" title="interface in org.apache.distributedlog.io">TransmitListener</a></dt>
-<dd>
-<div class="block">Complete the whole transmit.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordSetBuffer.html#completeTransmit-long-long-long-">completeTransmit(long, long, long)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordSetBuffer.html" title="interface in org.apache.distributedlog">LogRecordSetBuffer</a></dt>
 <dd>
 <div class="block">Complete transmit.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#completionTime">completionTime</a></span> - Variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog">LogSegmentMetadata.LogSegmentMetadataBuilder</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/CompressionCodec.html#compress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">compress(byte[], int, int, OpStatsLogger)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionCodec.html" title="interface in org.apache.distributedlog.io">CompressionCodec</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/CompressionCodec.html#compress-io.netty.buffer.ByteBuf-int-">compress(ByteBuf, int)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionCodec.html" title="interface in org.apache.distributedlog.io">CompressionCodec</a></dt>
 <dd>
-<div class="block">Return the compressed data as a byte array.</div>
+<div class="block">Return the compressed data as a byte buffer.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/IdentityCompressionCodec.html#compress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">compress(byte[], int, int, OpStatsLogger)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/IdentityCompressionCodec.html" title="class in org.apache.distributedlog.io">IdentityCompressionCodec</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/IdentityCompressionCodec.html#compress-io.netty.buffer.ByteBuf-int-">compress(ByteBuf, int)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/IdentityCompressionCodec.html" title="class in org.apache.distributedlog.io">IdentityCompressionCodec</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/LZ4CompressionCodec.html#compress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">compress(byte[], int, int, OpStatsLogger)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/LZ4CompressionCodec.html" title="class in org.apache.distributedlog.io">LZ4CompressionCodec</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/LZ4CompressionCodec.html#compress-io.netty.buffer.ByteBuf-int-">compress(ByteBuf, int)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/LZ4CompressionCodec.html" title="class in org.apache.distributedlog.io">LZ4CompressionCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests"><span class="typeNameLink">CompressionBenchmark</span></a> - Class in <a href="org/apache/distributedlog/tests/package-summary.html">org.apache.distributedlog.tests</a></dt>
+<dd>
+<div class="block">Benchmarking serialization and deserilization.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/CompressionBenchmark.html#CompressionBenchmark--">CompressionBenchmark()</a></span> - Constructor for class org.apache.distributedlog.tests.<a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests">CompressionBenchmark</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/DistributedLogMultiStreamWriter.Builder.html#compressionCodec-org.apache.distributedlog.io.CompressionCodec.Type-">compressionCodec(CompressionCodec.Type)</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/DistributedLogMultiStreamWriter.Builder.html" title="class in org.apache.distributedlog.client">DistributedLogMultiStreamWriter.Builder</a></dt>
 <dd>
@@ -1378,21 +1377,13 @@
 </a>
 <h2 class="title">D</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/CompressionCodec.html#decompress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress(byte[], int, int, OpStatsLogger)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionCodec.html" title="interface in org.apache.distributedlog.io">CompressionCodec</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/CompressionCodec.html#decompress-io.netty.buffer.ByteBuf-int-">decompress(ByteBuf, int)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionCodec.html" title="interface in org.apache.distributedlog.io">CompressionCodec</a></dt>
 <dd>
 <div class="block">Return the decompressed data as a byte array.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/CompressionCodec.html#decompress-byte:A-int-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress(byte[], int, int, int, OpStatsLogger)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionCodec.html" title="interface in org.apache.distributedlog.io">CompressionCodec</a></dt>
-<dd>
-<div class="block">Return the decompressed data as a byte array.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/IdentityCompressionCodec.html#decompress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress(byte[], int, int, OpStatsLogger)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/IdentityCompressionCodec.html" title="class in org.apache.distributedlog.io">IdentityCompressionCodec</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/IdentityCompressionCodec.html#decompress-io.netty.buffer.ByteBuf-int-">decompress(ByteBuf, int)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/IdentityCompressionCodec.html" title="class in org.apache.distributedlog.io">IdentityCompressionCodec</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/IdentityCompressionCodec.html#decompress-byte:A-int-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress(byte[], int, int, int, OpStatsLogger)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/IdentityCompressionCodec.html" title="class in org.apache.distributedlog.io">IdentityCompressionCodec</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/LZ4CompressionCodec.html#decompress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress(byte[], int, int, OpStatsLogger)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/LZ4CompressionCodec.html" title="class in org.apache.distributedlog.io">LZ4CompressionCodec</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/LZ4CompressionCodec.html#decompress-byte:A-int-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress(byte[], int, int, int, OpStatsLogger)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/LZ4CompressionCodec.html" title="class in org.apache.distributedlog.io">LZ4CompressionCodec</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/LZ4CompressionCodec.html#decompress-io.netty.buffer.ByteBuf-int-">decompress(ByteBuf, int)</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/LZ4CompressionCodec.html" title="class in org.apache.distributedlog.io">LZ4CompressionCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentFilter.html#DEFAULT_FILTER">DEFAULT_FILTER</a></span> - Static variable in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentFilter.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentFilter</a></dt>
 <dd>&nbsp;</dd>
@@ -1774,6 +1765,8 @@
 <dd>
 <div class="block">A set of <a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog"><code>LogRecord</code></a>s.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.html#Entry--">Entry()</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog">Entry</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog"><span class="typeNameLink">Entry.Builder</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">Build the record set object.</div>
@@ -1803,6 +1796,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/DLSocketAddress.html#equals-java.lang.Object-">equals(Object)</a></span> - Method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/DLSocketAddress.html" title="class in org.apache.distributedlog.service">DLSocketAddress</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BookKeeperClientBuilder.html#eventLoopGroup-io.netty.channel.EventLoopGroup-">eventLoopGroup(EventLoopGroup)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></dt>
+<dd>
+<div class="block">Build BookKeeper client using existing <i>channelFactory</i>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConstants.html#EVERYONE_READ_CREATOR_ALL">EVERYONE_READ_CREATOR_ALL</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConstants.html" title="class in org.apache.distributedlog">DistributedLogConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/concurrent/FutureUtils.html#exception-java.lang.Throwable-">exception(Throwable)</a></span> - Static method in class org.apache.distributedlog.common.concurrent.<a href="org/apache/distributedlog/common/concurrent/FutureUtils.html" title="class in org.apache.distributedlog.common.concurrent">FutureUtils</a></dt>
@@ -1859,11 +1856,6 @@
 <dd>
 <div class="block">Finagle name strs to access proxy services.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/TransmitListener.html#finalizeTransmit-long-long-">finalizeTransmit(long, long)</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/TransmitListener.html" title="interface in org.apache.distributedlog.io">TransmitListener</a></dt>
-<dd>
-<div class="block">Finalize the transmit result and result the last
- <a href="org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog"><code>DLSN</code></a> in this transmit.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConstants.html#FIRST_LOGSEGMENT_SEQNO">FIRST_LOGSEGMENT_SEQNO</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConstants.html" title="class in org.apache.distributedlog">DistributedLogConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/DistributedLogMultiStreamWriter.Builder.html#firstSpeculativeTimeoutMs-int-">firstSpeculativeTimeoutMs(int)</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/DistributedLogMultiStreamWriter.Builder.html" title="class in org.apache.distributedlog.client">DistributedLogMultiStreamWriter.Builder</a></dt>
@@ -1872,6 +1864,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#firstTxId">firstTxId</a></span> - Variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog">LogSegmentMetadata.LogSegmentMetadataBuilder</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/LogWriter.html#flush--">flush()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a></dt>
+<dd>
+<div class="block">All data that has been written to the stream so far will be sent to
+ persistent storage.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentWriter.html#flush--">flush()</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentWriter.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentWriter</a></dt>
 <dd>
 <div class="block">Transmit the buffered data and wait for it being persisted and return the last acknowledged
@@ -1879,11 +1876,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#FLUSH_TIMEOUT">FLUSH_TIMEOUT</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/LogWriter.html#flushAndSync--">flushAndSync()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a></dt>
-<dd>
-<div class="block">Flush and sync all data that is ready to be flush
- <a href="org/apache/distributedlog/api/LogWriter.html#setReadyToFlush--"><code>LogWriter.setReadyToFlush()</code></a> into underlying persistent store.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogWriter.html#flushAndSync--">flushAndSync()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/LogWriter.html" title="interface in org.apache.distributedlog">LogWriter</a></dt>
 <dd>
 <div class="block">Flush and sync all data that is ready to be flush
@@ -1994,10 +1986,16 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManagerImpl.html#getAppendOnlyStreamWriter--">getAppendOnlyStreamWriter()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManagerImpl.html" title="class in org.apache.distributedlog">DistributedLogManagerImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/util/ByteBufUtils.html#getArray-io.netty.buffer.ByteBuf-">getArray(ByteBuf)</a></span> - Static method in class org.apache.distributedlog.common.util.<a href="org/apache/distributedlog/common/util/ByteBufUtils.html" title="class in org.apache.distributedlog.common.util">ByteBufUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReader-long-">getAsyncLogReader(long)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get an async log reader to read records from a log starting from <code>fromTxnId</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReader-org.apache.distributedlog.DLSN-">getAsyncLogReader(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getAsyncLogReader-long-">getAsyncLogReader(long)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getAsyncLogReader-org.apache.distributedlog.DLSN-">getAsyncLogReader(DLSN)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
@@ -2007,7 +2005,9 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManagerImpl.html#getAsyncLogReader-org.apache.distributedlog.DLSN-">getAsyncLogReader(DLSN)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManagerImpl.html" title="class in org.apache.distributedlog">DistributedLogManagerImpl</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReaderWithLock-org.apache.distributedlog.DLSN-">getAsyncLogReaderWithLock(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get a log reader with lock starting from <i>fromDLSN</i>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getAsyncLogReaderWithLock-org.apache.distributedlog.DLSN-java.lang.String-">getAsyncLogReaderWithLock(DLSN, String)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
 <div class="block">Get a log reader with lock starting from <i>fromDLSN</i> and using <i>subscriberId</i>.</div>
@@ -2136,8 +2136,6 @@
 <dd>
 <div class="block">Return the owner that observed when waiter is waiting.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/Buffer.html#getData--">getData()</a></span> - Method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io">Buffer</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getDataLatencyWarnThresholdMillis--">getDataLatencyWarnThresholdMillis()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
 <div class="block">Get the warn threshold (in millis) of data access latency.</div>
@@ -2401,7 +2399,9 @@
 <div class="block">Get the input stream starting with fromTxnId for the specified log</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-">getInputStream(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getInputStream-long-">getInputStream(long)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
 <div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
@@ -2838,6 +2838,10 @@
 <dd>
 <div class="block">Return the payload of this log record.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#getPayloadBuf--">getPayloadBuf()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
+<dd>
+<div class="block">Return the payload buf of this log record.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#getPayLoadInputStream--">getPayLoadInputStream()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
 <dd>
 <div class="block">Return the payload as an <a href="http://download.oracle.com/javase/6/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io"><code>InputStream</code></a>.</div>
@@ -2885,10 +2889,6 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getQuorumConfig--">getQuorumConfig()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
 <div class="block">Get the quorum config for each log segment (ledger).</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.html#getRawData--">getRawData()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog">Entry</a></dt>
-<dd>
-<div class="block">Get raw data of this record set.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getReadAheadBatchSize--">getReadAheadBatchSize()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -3483,6 +3483,10 @@
 <dd>
 <div class="block">Load whitelisted stream configuration from another configuration object</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#loadStreamConf-java.util.Optional-">loadStreamConf(Optional&lt;DistributedLogConfiguration&gt;)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
+<dd>
+<div class="block">Load whitelisted stream configuration from another configuration object.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConstants.html#LOCAL_REGION_ID">LOCAL_REGION_ID</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConstants.html" title="class in org.apache.distributedlog">DistributedLogConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/LocalDLMEmulator.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LocalDLMEmulator</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
@@ -3653,6 +3657,14 @@
 <dd>
 <div class="block">Construct a log record with <i>TransactionId</i> and payload.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#LogRecord-long-java.nio.ByteBuffer-">LogRecord(long, ByteBuffer)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
+<dd>
+<div class="block">Construct a log record with <i>txid</i> and payload <i>buffer</i>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#LogRecord-long-io.netty.buffer.ByteBuf-">LogRecord(long, ByteBuf)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
+<dd>
+<div class="block">Used by <a href="org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog"><code>LogRecordWithDLSN</code></a> to construct a log record read by readers.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/LogRecord.Reader.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LogRecord.Reader</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">Reader class to read log records from an input <code>stream</code>.</div>
@@ -3690,6 +3702,8 @@
 <div class="block">Log record with <a href="org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog"><code>DLSN</code></a> and <code>SequenceId</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordWithDLSN.html#LogRecordWithDLSN-org.apache.distributedlog.DLSN-long-byte:A-long-">LogRecordWithDLSN(DLSN, long, byte[], long)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordWithDLSN.html#LogRecordWithDLSN-org.apache.distributedlog.DLSN-long-io.netty.buffer.ByteBuf-long-">LogRecordWithDLSN(DLSN, long, ByteBuf, long)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadata.html#logRootPath">logRootPath</a></span> - Variable in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadata.html" title="class in org.apache.distributedlog.metadata">LogMetadata</a></dt>
 <dd>&nbsp;</dd>
@@ -3817,6 +3831,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/MonitorServiceApp.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/MonitorServiceApp.html" title="class in org.apache.distributedlog.service">MonitorServiceApp</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/backward/ReaderTest.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class org.apache.distributedlog.tests.backward.<a href="org/apache/distributedlog/tests/backward/ReaderTest.html" title="class in org.apache.distributedlog.tests.backward">ReaderTest</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/backward/WriterTest.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class org.apache.distributedlog.tests.backward.<a href="org/apache/distributedlog/tests/backward/WriterTest.html" title="class in org.apache.distributedlog.tests.backward">WriterTest</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/feature/DefaultFeatureProvider.html#makeFeature-java.lang.String-">makeFeature(String)</a></span> - Method in class org.apache.distributedlog.feature.<a href="org/apache/distributedlog/feature/DefaultFeatureProvider.html" title="class in org.apache.distributedlog.feature">DefaultFeatureProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/feature/DynamicConfigurationFeatureProvider.html#makeFeature-java.lang.String-">makeFeature(String)</a></span> - Method in class org.apache.distributedlog.feature.<a href="org/apache/distributedlog/feature/DynamicConfigurationFeatureProvider.html" title="class in org.apache.distributedlog.feature">DynamicConfigurationFeatureProvider</a></dt>
@@ -3825,6 +3843,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/feature/DynamicConfigurationFeatureProvider.html#makeProvider-java.lang.String-">makeProvider(String)</a></span> - Method in class org.apache.distributedlog.feature.<a href="org/apache/distributedlog/feature/DynamicConfigurationFeatureProvider.html" title="class in org.apache.distributedlog.feature">DynamicConfigurationFeatureProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/AsyncLogWriter.html#markEndOfStream--">markEndOfStream()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/AsyncLogWriter.html" title="interface in org.apache.distributedlog.api">AsyncLogWriter</a></dt>
+<dd>
+<div class="block">Seal the log stream.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/LogWriter.html#markEndOfStream--">markEndOfStream()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a></dt>
 <dd>
 <div class="block">Flushes all the data up to this point,
@@ -3870,7 +3892,9 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#METADATA_EXCEPTION">METADATA_EXCEPTION</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/api/MetadataAccessor.html" title="interface in org.apache.distributedlog.api"><span class="typeNameLink">MetadataAccessor</span></a> - Interface in <a href="org/apache/distributedlog/api/package-summary.html">org.apache.distributedlog.api</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Provide a metadata accessor to access customized metadata associated with logs.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/exceptions/MetadataException.html" title="class in org.apache.distributedlog.exceptions"><span class="typeNameLink">MetadataException</span></a> - Exception in <a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a></dt>
 <dd>
 <div class="block">Exception is thrown when encountering metadata errors.</div>
@@ -3963,8 +3987,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/net/NetUtils.html#NetUtils--">NetUtils()</a></span> - Constructor for class org.apache.distributedlog.net.<a href="org/apache/distributedlog/net/NetUtils.html" title="class in org.apache.distributedlog.net">NetUtils</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LocalDLMEmulator.html#newBookie--">newBookie()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LocalDLMEmulator.html" title="class in org.apache.distributedlog">LocalDLMEmulator</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html#newBuilder--">newBuilder()</a></span> - Static method in class org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html" title="class in org.apache.distributedlog.api.namespace">NamespaceBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/BookKeeperClientBuilder.html#newBuilder--">newBuilder()</a></span> - Static method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></dt>
@@ -4011,7 +4033,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/ClientConfig.html#newConfig-org.apache.distributedlog.client.ClientConfig-">newConfig(ClientConfig)</a></span> - Static method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/ClientConfig.html" title="class in org.apache.distributedlog.client">ClientConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.html#newEntry-java.lang.String-int-boolean-org.apache.distributedlog.io.CompressionCodec.Type-org.apache.bookkeeper.stats.StatsLogger-">newEntry(String, int, boolean, CompressionCodec.Type, StatsLogger)</a></span> - Static method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog">Entry</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.html#newEntry-java.lang.String-int-boolean-org.apache.distributedlog.io.CompressionCodec.Type-">newEntry(String, int, boolean, CompressionCodec.Type)</a></span> - Static method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog">Entry</a></dt>
 <dd>
 <div class="block">Create a new log record set.</div>
 </dd>
@@ -4090,8 +4112,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordSet.html#numRecords-org.apache.distributedlog.LogRecord-">numRecords(LogRecord)</a></span> - Static method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordSet.html" title="class in org.apache.distributedlog">LogRecordSet</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordSet.html#numRecords-byte:A-">numRecords(byte[])</a></span> - Static method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordSet.html" title="class in org.apache.distributedlog">LogRecordSet</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/routing/ConsistentHashRoutingService.Builder.html#numReplicas-int-">numReplicas(int)</a></span> - Method in class org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/ConsistentHashRoutingService.Builder.html" title="class in org.apache.distributedlog.client.routing">ConsistentHashRoutingService.Builder</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -4113,6 +4133,12 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/routing/SingleHostRoutingService.html#of-java.net.SocketAddress-">of(SocketAddress)</a></span> - Static method in class org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/SingleHostRoutingService.html" title="class in org.apache.distributedlog.client.routing">SingleHostRoutingService</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/serverset/DLZkServerSet.html#of-java.net.URI-int-">of(URI, int)</a></span> - Static method in class org.apache.distributedlog.client.serverset.<a href="org/apache/distributedlog/client/serverset/DLZkServerSet.html" title="class in org.apache.distributedlog.client.serverset">DLZkServerSet</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/CompressionCodec.Type.html#of-int-">of(int)</a></span> - Static method in enum org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/CompressionCodec.Type.html" title="enum in org.apache.distributedlog.io">CompressionCodec.Type</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/IdentityCompressionCodec.html#of--">of()</a></span> - Static method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/IdentityCompressionCodec.html" title="class in org.apache.distributedlog.io">IdentityCompressionCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/LZ4CompressionCodec.html#of--">of()</a></span> - Static method in class org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/LZ4CompressionCodec.html" title="class in org.apache.distributedlog.io">LZ4CompressionCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordSet.html#of-org.apache.distributedlog.LogRecordWithDLSN-">of(LogRecordWithDLSN)</a></span> - Static method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordSet.html" title="class in org.apache.distributedlog">LogRecordSet</a></dt>
 <dd>&nbsp;</dd>
@@ -4254,13 +4280,13 @@
 <dd>
 <div class="block">Open a log named <i>logName</i>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/Namespace.html#openLog-java.lang.String-com.google.common.base.Optional-com.google.common.base.Optional-com.google.common.base.Optional-">openLog(String, Optional&lt;DistributedLogConfiguration&gt;, Optional&lt;DynamicDistributedLogConfiguration&gt;, Optional&lt;StatsLogger&gt;)</a></span> - Method in interface org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/Namespace.html" title="interface in org.apache.distributedlog.api.namespace">Namespace</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/Namespace.html#openLog-java.lang.String-java.util.Optional-java.util.Optional-java.util.Optional-">openLog(String, Optional&lt;DistributedLogConfiguration&gt;, Optional&lt;DynamicDistributedLogConfiguration&gt;, Optional&lt;StatsLogger&gt;)</a></span> - Method in interface org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/Namespace.html" title="interface in org.apache.distributedlog.api.namespace">Namespace</a></dt>
 <dd>
 <div class="block">Open a log named <i>logName</i> with specific log configurations.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/BKDistributedLogNamespace.html#openLog-java.lang.String-">openLog(String)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BKDistributedLogNamespace.html" title="class in org.apache.distributedlog">BKDistributedLogNamespace</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BKDistributedLogNamespace.html#openLog-java.lang.String-com.google.common.base.Optional-com.google.common.base.Optional-com.google.common.base.Optional-">openLog(String, Optional&lt;DistributedLogConfiguration&gt;, Optional&lt;DynamicDistributedLogConfiguration&gt;, Optional&lt;StatsLogger&gt;)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BKDistributedLogNamespace.html" title="class in org.apache.distributedlog">BKDistributedLogNamespace</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BKDistributedLogNamespace.html#openLog-java.lang.String-java.util.Optional-java.util.Optional-java.util.Optional-">openLog(String, Optional&lt;DistributedLogConfiguration&gt;, Optional&lt;DynamicDistributedLogConfiguration&gt;, Optional&lt;StatsLogger&gt;)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BKDistributedLogNamespace.html" title="class in org.apache.distributedlog">BKDistributedLogNamespace</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/DistributedLogNamespace.html#openLog-java.lang.String-">openLog(String)</a></span> - Method in interface org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/DistributedLogNamespace.html" title="interface in org.apache.distributedlog.namespace">DistributedLogNamespace</a></dt>
 <dd>
@@ -4270,9 +4296,21 @@
 <dd>
 <div class="block">Open a log named <i>logName</i> with specific log configurations.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BKDistributedLogNamespace.html#openLogInternal-java.net.URI-java.lang.String-com.google.common.base.Optional-com.google.common.base.Optional-">openLogInternal(URI, String, Optional&lt;DistributedLogConfiguration&gt;, Optional&lt;DynamicDistributedLogConfiguration&gt;)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BKDistributedLogNamespace.html" title="class in org.apache.distributedlog">BKDistributedLogNamespace</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BKDistributedLogNamespace.html#openLogInternal-java.net.URI-java.lang.String-java.util.Optional-java.util.Optional-">openLogInternal(URI, String, Optional&lt;DistributedLogConfiguration&gt;, Optional&lt;DynamicDistributedLogConfiguration&gt;)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BKDistributedLogNamespace.html" title="class in org.apache.distributedlog">BKDistributedLogNamespace</a></dt>
 <dd>
 <div class="block">Open the log in location <i>uri</i>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#openLogReader-long-">openLogReader(long)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
+<dd>
+<div class="block">Open an sync log reader to read records from a log starting from <code>fromTxnId</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#openLogReader-org.apache.distributedlog.DLSN-">openLogReader(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
+<dd>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#openLogWriter--">openLogWriter()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
+<dd>
+<div class="block">Open sync log writer to write records to the log stream.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentEntryStore.html#openRandomAccessReader-org.apache.distributedlog.LogSegmentMetadata-boolean-">openRandomAccessReader(LogSegmentMetadata, boolean)</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentEntryStore.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryStore</a></dt>
 <dd>
@@ -4394,7 +4432,7 @@
 </dd>
 <dt><a href="org/apache/distributedlog/io/package-summary.html">org.apache.distributedlog.io</a> - package org.apache.distributedlog.io</dt>
 <dd>
-<div class="block">I/O related utilities used across the project.</div>
+<div class="block">IO Utils for distributedlog.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/lock/package-summary.html">org.apache.distributedlog.lock</a> - package org.apache.distributedlog.lock</dt>
 <dd>
@@ -4428,6 +4466,12 @@
 <dd>
 <div class="block"><code>Future</code> based subscription API.</div>
 </dd>
+<dt><a href="org/apache/distributedlog/tests/package-summary.html">org.apache.distributedlog.tests</a> - package org.apache.distributedlog.tests</dt>
+<dd>
+<div class="block">DistributedLog Tests Package.</div>
+</dd>
+<dt><a href="org/apache/distributedlog/tests/backward/package-summary.html">org.apache.distributedlog.tests.backward</a> - package org.apache.distributedlog.tests.backward</dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#OVER_CAPACITY">OVER_CAPACITY</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/exceptions/OverCapacityException.html" title="class in org.apache.distributedlog.exceptions"><span class="typeNameLink">OverCapacityException</span></a> - Exception in <a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a></dt>
@@ -4533,6 +4577,8 @@
 <dd>
 <div class="block">Positions to next log segment than the current value.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/CompressionBenchmark.html#prepare--">prepare()</a></span> - Method in class org.apache.distributedlog.tests.<a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests">CompressionBenchmark</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/DistributedLogServer.html#preRun-org.apache.distributedlog.DistributedLogConfiguration-org.apache.distributedlog.service.config.ServerConfiguration-">preRun(DistributedLogConfiguration, ServerConfiguration)</a></span> - Method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/DistributedLogServer.html" title="class in org.apache.distributedlog.service">DistributedLogServer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/concurrent/FutureUtils.html#processList-java.util.List-java.util.function.Function-java.util.concurrent.ExecutorService-">processList(List&lt;T&gt;, Function&lt;T, CompletableFuture&lt;R&gt;&gt;, ExecutorService)</a></span> - Static method in class org.apache.distributedlog.common.concurrent.<a href="org/apache/distributedlog/common/concurrent/FutureUtils.html" title="class in org.apache.distributedlog.common.concurrent">FutureUtils</a></dt>
@@ -4649,15 +4695,17 @@
 <dd>
 <div class="block">Read entries [startEntryId, endEntryId] from a random access log segment.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.html#reader--">reader()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog">Entry</a></dt>
-<dd>
-<div class="block">Create reader to iterate over this record set.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.Reader.html#Reader-org.apache.distributedlog.RecordStream-java.io.DataInputStream-long-">Reader(RecordStream, DataInputStream, long)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.Reader.html" title="class in org.apache.distributedlog">LogRecord.Reader</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.Reader.html#Reader-org.apache.distributedlog.RecordStream-io.netty.buffer.ByteBuf-long-">Reader(RecordStream, ByteBuf, long)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.Reader.html" title="class in org.apache.distributedlog">LogRecord.Reader</a></dt>
 <dd>
 <div class="block">Construct the reader.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.Reader.html#Reader-org.apache.distributedlog.RecordStream-java.io.DataInputStream-long-boolean-">Reader(RecordStream, DataInputStream, long, boolean)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.Reader.html" title="class in org.apache.distributedlog">LogRecord.Reader</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.Reader.html#Reader-org.apache.distributedlog.RecordStream-io.netty.buffer.ByteBuf-long-boolean-">Reader(RecordStream, ByteBuf, long, boolean)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.Reader.html" title="class in org.apache.distributedlog">LogRecord.Reader</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/apache/distributedlog/tests/backward/ReaderTest.html" title="class in org.apache.distributedlog.tests.backward"><span class="typeNameLink">ReaderTest</span></a> - Class in <a href="org/apache/distributedlog/tests/backward/package-summary.html">org.apache.distributedlog.tests.backward</a></dt>
+<dd>
+<div class="block">A test program to read records.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/backward/ReaderTest.html#ReaderTest--">ReaderTest()</a></span> - Constructor for class org.apache.distributedlog.tests.backward.<a href="org/apache/distributedlog/tests/backward/ReaderTest.html" title="class in org.apache.distributedlog.tests.backward">ReaderTest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/AsyncLogReader.html#readNext--">readNext()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a></dt>
 <dd>
@@ -4683,7 +4731,7 @@
 <dd>
 <div class="block">Read an log record from the input stream.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#readPayload-java.io.DataInputStream-">readPayload(DataInputStream)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#readPayload-io.netty.buffer.ByteBuf-boolean-">readPayload(ByteBuf, boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/ReadUtils.html" title="class in org.apache.distributedlog"><span class="typeNameLink">ReadUtils</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
@@ -4710,6 +4758,10 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/DistributedLogClientBuilder.html#redirectBackoffStartMs-int-">redirectBackoffStartMs(int)</a></span> - Method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/DistributedLogClientBuilder.html" title="class in org.apache.distributedlog.service">DistributedLogClientBuilder</a></dt>
 <dd>
 <div class="block">Backoff time when redirecting to an already retried host.</div>
+</dd>
+<dt><a href="org/apache/distributedlog/common/util/ReferenceCounted.html" title="interface in org.apache.distributedlog.common.util"><span class="typeNameLink">ReferenceCounted</span></a> - Interface in <a href="org/apache/distributedlog/common/util/package-summary.html">org.apache.distributedlog.common.util</a></dt>
+<dd>
+<div class="block">An interface for indicating an object is reference counted.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#REGION_UNAVAILABLE">REGION_UNAVAILABLE</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>&nbsp;</dd>
@@ -4810,6 +4862,18 @@
 <dd>
 <div class="block">Release a permit.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/util/ReferenceCounted.html#release--">release()</a></span> - Method in interface org.apache.distributedlog.common.util.<a href="org/apache/distributedlog/common/util/ReferenceCounted.html" title="interface in org.apache.distributedlog.common.util">ReferenceCounted</a></dt>
+<dd>
+<div class="block">Release the reference.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Reader.html#release--">release()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Reader.html" title="interface in org.apache.distributedlog">Entry.Reader</a></dt>
+<dd>
+<div class="block">Release the resources held by the entry reader.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecordSet.Reader.html#release--">release()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecordSet.Reader.html" title="interface in org.apache.distributedlog">LogRecordSet.Reader</a></dt>
+<dd>
+<div class="block">Release the resources hold by this record set reader.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/DistributedLogClient.html#release-java.lang.String-">release(String)</a></span> - Method in interface org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/DistributedLogClient.html" title="interface in org.apache.distributedlog.service">DistributedLogClient</a></dt>
 <dd>
 <div class="block">Release the ownership of a stream <i>stream</i>.</div>
@@ -4875,20 +4939,12 @@
 <dd>
 <div class="block">Timeout per request in millis.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BookKeeperClientBuilder.html#requestTimer-org.jboss.netty.util.HashedWheelTimer-">requestTimer(HashedWheelTimer)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BookKeeperClientBuilder.html#requestTimer-io.netty.util.HashedWheelTimer-">requestTimer(HashedWheelTimer)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></dt>
 <dd>
 <div class="block">Build BookKeeper client using existing <i>request timer</i>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/concurrent/FutureUtils.html#rescue-java.util.concurrent.CompletableFuture-java.util.function.Function-">rescue(CompletableFuture&lt;T&gt;, Function&lt;Throwable, CompletableFuture&lt;T&gt;&gt;)</a></span> - Static method in class org.apache.distributedlog.common.concurrent.<a href="org/apache/distributedlog/common/concurrent/FutureUtils.html" title="class in org.apache.distributedlog.common.concurrent">FutureUtils</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#reset--">reset()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
-<dd>
-<div class="block">Reset the builder.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Writer.html#reset--">reset()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Writer.html" title="interface in org.apache.distributedlog">Entry.Writer</a></dt>
-<dd>
-<div class="block">Reset the writer to write records.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataResolver.html#resolve-java.net.URI-">resolve(URI)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataResolver.html" title="interface in org.apache.distributedlog.metadata">MetadataResolver</a></dt>
 <dd>
 <div class="block">Resolve the path to get the DL metadata.</div>
@@ -4926,6 +4982,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/concurrent/FutureUtils.html#result-java.util.concurrent.CompletableFuture-java.util.function.Function-long-java.util.concurrent.TimeUnit-">result(CompletableFuture&lt;T&gt;, Function&lt;Throwable, ExceptionT&gt;, long, TimeUnit)</a></span> - Static method in class org.apache.distributedlog.common.concurrent.<a href="org/apache/distributedlog/common/concurrent/FutureUtils.html" title="class in org.apache.distributedlog.common.concurrent">FutureUtils</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/util/ReferenceCounted.html#retain--">retain()</a></span> - Method in interface org.apache.distributedlog.common.util.<a href="org/apache/distributedlog/common/util/ReferenceCounted.html" title="interface in org.apache.distributedlog.common.util">ReferenceCounted</a></dt>
+<dd>
+<div class="block">Retain the reference.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#RETRYABLE_READ">RETRYABLE_READ</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/exceptions/RetryableReadException.html" title="class in org.apache.distributedlog.exceptions"><span class="typeNameLink">RetryableReadException</span></a> - Exception in <a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a></dt>
@@ -5174,10 +5234,6 @@
 <dd>
 <div class="block">Enable/Disable creating stream if not exists.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#setData-byte:A-int-int-">setData(byte[], int, int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
-<dd>
-<div class="block">Set the serialized bytes data of this record set.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setDataLatencyWarnThresholdMillis-long-">setDataLatencyWarnThresholdMillis(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
 <div class="block">Set the warn threshold of data access latency, in millis.</div>
@@ -5272,6 +5328,10 @@
 <dd>
 <div class="block">Set ensemble size of each log segment (ledger) will use.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#setEntry-io.netty.buffer.ByteBuf-">setEntry(ByteBuf)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
+<dd>
+<div class="block">Set the entry buffer of the serialized bytes data of this record set.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#setEntryId-long-">setEntryId(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
 <dd>
 <div class="block">Set the entry id of this log record set.</div>
@@ -5340,10 +5400,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#setInprogress-boolean-">setInprogress(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog">LogSegmentMetadata.LogSegmentMetadataBuilder</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#setInputStream-java.io.InputStream-">setInputStream(InputStream)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
-<dd>
-<div class="block">Set the input stream of the serialized bytes data of this record set.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.Mutator.html#setLastDLSN-org.apache.distributedlog.DLSN-">setLastDLSN(DLSN)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.Mutator.html" title="class in org.apache.distributedlog">LogSegmentMetadata.Mutator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#setLastEntryId-long-">setLastEntryId(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog">LogSegmentMetadata.LogSegmentMetadataBuilder</a></dt>
@@ -5577,11 +5633,6 @@
 <dd>
 <div class="block">Set the long poll time out for read last add confirmed requests, in milliseconds.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/LogWriter.html#setReadyToFlush--">setReadyToFlush()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a></dt>
-<dd>
-<div class="block">All data that has been written to the stream so far will be sent to
- persistent storage.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogWriter.html#setReadyToFlush--">setReadyToFlush()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/LogWriter.html" title="interface in org.apache.distributedlog">LogWriter</a></dt>
 <dd>
 <div class="block">All data that has been written to the stream so far will be sent to
@@ -5755,14 +5806,6 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/AppendOnlyStreamReader.html#skipTo-long-">skipTo(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/AppendOnlyStreamReader.html" title="class in org.apache.distributedlog">AppendOnlyStreamReader</a></dt>
 <dd>
 <div class="block">Position the reader at the given offset.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#skipTo-org.apache.distributedlog.DLSN-">skipTo(DLSN)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
-<dd>
-<div class="block">Set the record set starts from <code>dlsn</code>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Builder.html#skipTo-long-">skipTo(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Builder.html" title="class in org.apache.distributedlog">Entry.Builder</a></dt>
-<dd>
-<div class="block">Set the record set starts from <code>txid</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Reader.html#skipTo-long-">skipTo(long)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Reader.html" title="interface in org.apache.distributedlog">Entry.Reader</a></dt>
 <dd>
@@ -5992,6 +6035,14 @@
 <dl>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LocalDLMEmulator.html#teardown--">teardown()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LocalDLMEmulator.html" title="class in org.apache.distributedlog">LocalDLMEmulator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/CompressionBenchmark.html#testCompressLZ4--">testCompressLZ4()</a></span> - Method in class org.apache.distributedlog.tests.<a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests">CompressionBenchmark</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/CompressionBenchmark.html#testCompressNone--">testCompressNone()</a></span> - Method in class org.apache.distributedlog.tests.<a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests">CompressionBenchmark</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/CompressionBenchmark.html#testDecompressLZ4--">testDecompressLZ4()</a></span> - Method in class org.apache.distributedlog.tests.<a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests">CompressionBenchmark</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/CompressionBenchmark.html#testDecompressNone--">testDecompressNone()</a></span> - Method in class org.apache.distributedlog.tests.<a href="org/apache/distributedlog/tests/CompressionBenchmark.html" title="class in org.apache.distributedlog.tests">CompressionBenchmark</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/client/routing/TestName.html" title="class in org.apache.distributedlog.client.routing"><span class="typeNameLink">TestName</span></a> - Class in <a href="org/apache/distributedlog/client/routing/package-summary.html">org.apache.distributedlog.client.routing</a></dt>
 <dd>
 <div class="block">A <code>Name</code> implementation for testing purpose.</div>
@@ -6060,10 +6111,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/TransactionIdOutOfOrderException.html#TransactionIdOutOfOrderException-long-">TransactionIdOutOfOrderException(long)</a></span> - Constructor for exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/TransactionIdOutOfOrderException.html" title="class in org.apache.distributedlog.exceptions">TransactionIdOutOfOrderException</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="org/apache/distributedlog/io/TransmitListener.html" title="interface in org.apache.distributedlog.io"><span class="typeNameLink">TransmitListener</span></a> - Interface in <a href="org/apache/distributedlog/io/package-summary.html">org.apache.distributedlog.io</a></dt>
-<dd>
-<div class="block">Listener on transmit results.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/AsyncLogWriter.html#truncate-org.apache.distributedlog.DLSN-">truncate(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/AsyncLogWriter.html" title="interface in org.apache.distributedlog.api">AsyncLogWriter</a></dt>
 <dd>
 <div class="block">Truncate the log until <i>dlsn</i>.</div>
@@ -6429,11 +6476,15 @@ the order they are declared.</div>
 <dd>
 <div class="block">Write an operation to the output stream.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/protocol/util/ProtocolUtils.html#writeOpCRC32-java.lang.String-byte:A-">writeOpCRC32(String, byte[])</a></span> - Static method in class org.apache.distributedlog.protocol.util.<a href="org/apache/distributedlog/protocol/util/ProtocolUtils.html" title="class in org.apache.distributedlog.protocol.util">ProtocolUtils</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/protocol/util/ProtocolUtils.html#writeOpCRC32-java.lang.String-io.netty.buffer.ByteBuf-">writeOpCRC32(String, ByteBuf)</a></span> - Static method in class org.apache.distributedlog.protocol.util.<a href="org/apache/distributedlog/protocol/util/ProtocolUtils.html" title="class in org.apache.distributedlog.protocol.util">ProtocolUtils</a></dt>
 <dd>
 <div class="block">Generate crc32 for WriteOp.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.Writer.html#Writer-java.io.DataOutputStream-">Writer(DataOutputStream)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.Writer.html" title="class in org.apache.distributedlog">LogRecord.Writer</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/protocol/util/ProtocolUtils.html#writeOpCRC32-java.lang.String-java.nio.ByteBuffer-">writeOpCRC32(String, ByteBuffer)</a></span> - Static method in class org.apache.distributedlog.protocol.util.<a href="org/apache/distributedlog/protocol/util/ProtocolUtils.html" title="class in org.apache.distributedlog.protocol.util">ProtocolUtils</a></dt>
+<dd>
+<div class="block">Generate crc32 for WriteOp.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.Writer.html#Writer-io.netty.buffer.ByteBuf-">Writer(ByteBuf)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.Writer.html" title="class in org.apache.distributedlog">LogRecord.Writer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/Entry.Writer.html#writeRecord-org.apache.distributedlog.LogRecord-java.util.concurrent.CompletableFuture-">writeRecord(LogRecord, CompletableFuture&lt;DLSN&gt;)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/Entry.Writer.html" title="interface in org.apache.distributedlog">Entry.Writer</a></dt>
 <dd>
@@ -6449,6 +6500,12 @@ the order they are declared.</div>
 <dd>
 <div class="block">Write record set to a given <i>stream</i>.</div>
 </dd>
+<dt><a href="org/apache/distributedlog/tests/backward/WriterTest.html" title="class in org.apache.distributedlog.tests.backward"><span class="typeNameLink">WriterTest</span></a> - Class in <a href="org/apache/distributedlog/tests/backward/package-summary.html">org.apache.distributedlog.tests.backward</a></dt>
+<dd>
+<div class="block">A test program to write records.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/tests/backward/WriterTest.html#WriterTest--">WriterTest()</a></span> - Constructor for class org.apache.distributedlog.tests.backward.<a href="org/apache/distributedlog/tests/backward/WriterTest.html" title="class in org.apache.distributedlog.tests.backward">WriterTest</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/ResponseUtils.html#writeSuccess--">writeSuccess()</a></span> - Static method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/ResponseUtils.html" title="class in org.apache.distributedlog.service">ResponseUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/DistributedLogServiceImpl.html#writeWithContext-java.lang.String-java.nio.ByteBuffer-org.apache.distributedlog.thrift.service.WriteContext-">writeWithContext(String, ByteBuffer, WriteContext)</a></span> - Method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/DistributedLogServiceImpl.html" title="class in org.apache.distributedlog.service">DistributedLogServiceImpl</a></dt>

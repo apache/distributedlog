@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Core Library</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/docs/latest/styles/site.css">
+  <link rel="stylesheet" href="/docs/latest/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/docs/latest/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/api/core.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog" href="http://bookkeeper.apache.org/distributedlog/docs/latest/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/docs/latest/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/docs/latest/">V0.5.0</a></li>
+        <!-- Concepts -->
+        <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/docs/latest/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/latest/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/docs/latest/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/latest/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/docs/latest/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/docs/latest/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/docs/latest/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/docs/latest/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/docs/latest/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/docs/latest/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/docs/latest/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/docs/latest/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/docs/latest/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/docs/latest/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="/docs/latest/user_guide/main.html" class="">User Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="/docs/latest/basics/introduction.html" class="">
+                  Introduction
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/considerations/main.html" class="">
+                  Considerations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/architecture/main.html" class="">
+                  Architecture
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/api/main.html" class="">
+                  API
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/api/core.html" class="active">
+                        Core Library API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/api/proxy.html" class="active">
+                        Proxy Client API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/api/practice.html" class="active">
+                        Best Practise
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/configuration/main.html" class="">
+                  Configuration
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/core.html" class="active">
+                        Core Library Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/proxy.html" class="active">
+                        Write Proxy Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/client.html" class="active">
+                        Client Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/configuration/perlog.html" class="active">
+                        Per Stream Configuration
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/design/main.html" class="">
+                  Detail Design
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/globalreplicatedlog/main.html" class="">
+                  Global Replicated Log
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/implementation/main.html" class="">
+                  Implementation
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/implementation/storage.html" class="active">
+                        Storage
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/user_guide/references/main.html" class="">
+                  References
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/references/metrics.html" class="active">
+                        Metrics
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/docs/latest/user_guide/references/features.html" class="active">
+                        Available Features
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+      <li><a href="/docs/latest/user_guide/main.html">User Guide</a></li>
+      
+
+      
+
+      <li><a href="/docs/latest/user_guide/api/main.html">API</a></li>
+      
+      
+      <li class="active">Core Library API</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="core-library-api">
+<p class="topic-title first">Core Library API</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id2">Core Library API</a><ul>
+<li><a class="reference internal" href="#namespace-api" id="id3">Namespace API</a><ul>
+<li><a class="reference internal" href="#namespace-uri" id="id4">Namespace URI</a></li>
+<li><a class="reference internal" href="#building-a-namespace" id="id5">Building a Namespace</a></li>
+<li><a class="reference internal" href="#create-a-log" id="id6">Create a Log</a></li>
+<li><a class="reference internal" href="#open-a-log" id="id7">Open a Log</a></li>
+<li><a class="reference internal" href="#delete-a-log" id="id8">Delete a Log</a></li>
+<li><a class="reference internal" href="#log-existence" id="id9">Log Existence</a></li>
+<li><a class="reference internal" href="#get-list-of-logs" id="id10">Get List of Logs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writer-api" id="id11">Writer API</a><ul>
+<li><a class="reference internal" href="#logwriter" id="id12">LogWriter</a></li>
+<li><a class="reference internal" href="#asynclogwriter" id="id13">AsyncLogWriter</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reader-api" id="id14">Reader API</a><ul>
+<li><a class="reference internal" href="#sequence-numbers" id="id15">Sequence Numbers</a></li>
+<li><a class="reference internal" href="#logreader" id="id16">LogReader</a></li>
+<li><a class="reference internal" href="#asynclogreader" id="id17">AsyncLogReader</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id2">Core Library API</a></h2>
+<p>The distributedlog core library interacts with namespaces and logs directly.
+It is written in Java.</p>
+<div class="section" id="namespace-api">
+<h3><a class="toc-backref" href="#id3">Namespace API</a></h3>
+<p>A DL namespace is a collection of <em>log streams</em>. Applications could <em>create</em>
+or <em>delete</em> logs under a DL namespace.</p>
+<div class="section" id="namespace-uri">
+<h4><a class="toc-backref" href="#id4">Namespace URI</a></h4>
+<p>An <strong>URI</strong> is used to locate the <em>namespace</em>. The <em>Namespace URI</em> is typically
+comprised of <em>3</em> components:</p>
+<ul class="simple">
+<li>scheme: <cite>distributedlog-&lt;backend&gt;</cite>. The <em>backend</em> indicates what backend is used to store the log data.</li>
+<li>domain name: the domain name that used to talk to the <em>backend</em>. In the example as below, the domain name part is <em>zookeeper server</em>, which is used to store log metadata in bookkeeper based backend implementation.</li>
+<li>path: path points to the location that stores logs. In the example as below, it is a zookeeper path that points to the znode that stores all the logs metadata.</li>
+</ul>
+<pre class="literal-block">
+distributedlog-bk://&lt;zookeeper-server&gt;/path/to/stream
+</pre>
+<p>The available backend is only bookkeeper based backend.
+The default <cite>distributedlog</cite> scheme is aliased to <cite>distributedlog-bk</cite>.</p>
+</div>
+<div class="section" id="building-a-namespace">
+<h4><a class="toc-backref" href="#id5">Building a Namespace</a></h4>
+<p>Once you have the <em>namespace uri</em>, you could build the namespace instance.
+The namespace instance will be used for operating streams under it.</p>
+<pre class="literal-block">
+// DistributedLog Configuration
+DistributedLogConfiguration conf = new DistributedLogConfiguration();
+// Namespace URI
+URI uri = ...; // create the namespace uri
+// create a builder to build namespace instances
+DistributedLogNamespaceBuilder builder = DistributedLogNamespaceBuilder.newBuilder();
+DistributedLogNamespace namespace = builder
+    .conf(conf)             // configuration that used by namespace
+    .uri(uri)               // namespace uri
+    .statsLogger(...)       // stats logger to log stats
+    .featureProvider(...)   // feature provider on controlling features
+    .build();
+</pre>
+</div>
+<div class="section" id="create-a-log">
+<h4><a class="toc-backref" href="#id6">Create a Log</a></h4>
+<p>Creating a log is pretty straight forward by calling <cite>distributedlognamespace#createlog(logname)</cite>.
+it only creates the log under the namespace but doesn't return any handle for operating the log.</p>
+<pre class="literal-block">
+DistributedLogNamespace namespace = ...; // namespace
+try {
+    namespace.createLog(&quot;test-log&quot;);
+} catch (IOException ioe) {
+    // handling the exception on creating a log
+}
+</pre>
+</div>
+<div class="section" id="open-a-log">
+<h4><a class="toc-backref" href="#id7">Open a Log</a></h4>
+<p>A <cite>DistributedLogManager</cite> handle will be returned when opening a log by <cite>#openLog(logName)</cite>. The
+handle could be used for writing data to or reading data from the log. If the log doesn't exist
+and <cite>createStreamIfNotExists</cite> is set to true in the configuration, the log will be created
+automatically when writing first record.</p>
+<pre class="literal-block">
+DistributedLogConfiguration conf = new DistributedLogConfiguration();
+conf.setCreateStreamIfNotExists(true);
+DistributedLogNamespace namespace = DistributedLogNamespace.newBuilder()
+    .conf(conf)
+    ...
+    .build();
+DistributedLogManager logManager = namespace.openLog(&quot;test-log&quot;);
+// use the log manager to open writer to write data or open reader to read data
+...
+</pre>
+<p>Sometimes, applications may open a log with different configuration settings. It could be done via
+a overloaded <cite>#openLog</cite> method, as below:</p>
+<pre class="literal-block">
+DistributedLogConfiguration conf = new DistributedLogConfiguration();
+// set the retention period hours to 24 hours.
+conf.setRetentionPeriodHours(24);
+URI uri = ...;
+DistributedLogNamespace namespace = DistributedLogNamespace.newBuilder()
+    .conf(conf)
+    .uri(uri)
+    ...
+    .build();
+
+// Per Log Configuration
+DistributedLogConfigration logConf = new DistributedLogConfiguration();
+// set the retention period hours to 12 hours for a single stream
+logConf.setRetentionPeriodHours(12);
+
+// open the log with overrided settings
+DistributedLogManager logManager = namespace.openLog(&quot;test-log&quot;,
+    Optional.of(logConf),
+    Optiona.absent());
+</pre>
+</div>
+<div class="section" id="delete-a-log">
+<h4><a class="toc-backref" href="#id8">Delete a Log</a></h4>
+<p><cite>DistributedLogNamespace#deleteLog(logName)</cite> will deletes the log from the namespace. Deleting a log
+will attempt acquiring a lock before deletion. If a log is writing by an active writer, the lock
+would be already acquired by the writer. so the deleting will fail.</p>
+<pre class="literal-block">
+DistributedLogNamespace namespace = ...;
+try {
+    namespace.deleteLog(&quot;test-log&quot;);
+} catch (IOException ioe) {
+    // handle the exceptions
+}
+</pre>
+</div>
+<div class="section" id="log-existence">
+<h4><a class="toc-backref" href="#id9">Log Existence</a></h4>
+<p>Applications could check whether a log exists in a namespace by calling <cite>DistributedLogNamespace#logExists(logName)</cite>.</p>
+<pre class="literal-block">
+DistributedLogNamespace namespace = ...;
+if (namespace.logExists(&quot;test-log&quot;)) {
+    // actions when log exists
+} else {
+    // actions when log doesn't exist
+}
+</pre>
+</div>
+<div class="section" id="get-list-of-logs">
+<h4><a class="toc-backref" href="#id10">Get List of Logs</a></h4>
+<p>Applications could list the logs under a namespace by calling <cite>DistributedLogNamespace#getLogs()</cite>.</p>
+<pre class="literal-block">
+DistributedLogNamespace namespace = ...;
+Iterator&lt;String&gt; logs = namespace.getLogs();
+while (logs.hasNext()) {
+    String logName = logs.next();
+    // ... process the log
+}
+</pre>
+</div>
+</div>
+<div class="section" id="writer-api">
+<h3><a class="toc-backref" href="#id11">Writer API</a></h3>
+<p>There are two ways to write records into a log stream, one is using 'synchronous' <cite>LogWriter</cite>, while the other one is using
+asynchronous <cite>AsyncLogWriter</cite>.</p>
+<div class="section" id="logwriter">
+<h4><a class="toc-backref" href="#id12">LogWriter</a></h4>
+<p>The first thing to write data into a log stream is to construct the writer instance. Please note that the distributedlog core library enforce single-writer
+semantic by deploying a zookeeper locking mechanism. If there is only an active writer, the subsequent calls to <cite>#startLogSegmentNonPartitioned()</cite> will
+fail with <cite>OwnershipAcquireFailedException</cite>.</p>
+<pre class="literal-block">
+DistributedLogNamespace namespace = ....;
+DistributedLogManager dlm = namespace.openLog(&quot;test-log&quot;);
+LogWriter writer = dlm.startLogSegmentNonPartitioned();
+</pre>
+<p id="construct-log-record">Log records are constructed to represent the data written to a log stream. Each log record is associated with application defined transaction id.
+The transaction id has to be non-decreasing otherwise writing the record will be rejected with <cite>TransactionIdOutOfOrderException</cite>. Application is allowed to
+bypass the transaction id sanity checking by setting <cite>maxIdSanityCheck</cite> to false in configuration. System time and atomic numbers are good candicates used for
+transaction id.</p>
+<pre class="literal-block">
+long txid = 1L;
+byte[] data = ...;
+LogRecord record = new LogRecord(txid, data);
+</pre>
+<p>Application could either add a single record (via <cite>#write(LogRecord)</cite>) or a bunch of records (via <cite>#writeBulk(List&lt;LogRecord&gt;)</cite>) into the log stream.</p>
+<pre class="literal-block">
+writer.write(record);
+// or
+List&lt;LogRecord&gt; records = Lists.newArrayList();
+records.add(record);
+writer.writeBulk(records);
+</pre>
+<p>The write calls return immediately after the records are added into the output buffer of writer. So the data isn't guaranteed to be durable until writer
+explicitly calls <cite>#setReadyToFlush()</cite> and <cite>#flushAndSync()</cite>. Those two calls will first transmit buffered data to backend, wait for transmit acknowledges
+and commit the written data to make them visible to readers.</p>
+<pre class="literal-block">
+// flush the records
+writer.setReadyToFlush();
+// commit the records to make them visible to readers
+writer.flushAndSync();
+</pre>
+<p>The DL log streams are endless streams unless they are sealed. 'endless' means that writers keep writing records to the log streams, readers could keep
+tailing reading from the end of the streams and it never stops. Application could seal a log stream by calling <cite>#markEndOfStream()</cite>.</p>
+<pre class="literal-block">
+// seal the log stream
+writer.markEndOfStream();
+</pre>
+<p>The complete example of writing records is showed as below.</p>
+<pre class="literal-block">
+DistributedLogNamespace namespace = ....;
+DistributedLogManager dlm = namespace.openLog(&quot;test-log&quot;);
+
+LogWriter writer = dlm.startLogSegmentNonPartitioned();
+for (long txid = 1L; txid &lt;= 100L; txid++) {
+    byte[] data = ...;
+    LogRecord record = new LogRecord(txid, data);
+    writer.write(record);
+}
+// flush the records
+writer.setReadyToFlush();
+// commit the records to make them visible to readers
+writer.flushAndSync();
+
+// seal the log stream
+writer.markEndOfStream();
+</pre>
+</div>
+<div class="section" id="asynclogwriter">
+<h4><a class="toc-backref" href="#id13">AsyncLogWriter</a></h4>
+<p>Constructing an asynchronous <cite>AsyncLogWriter</cite> is as simple as synchronous <cite>LogWriter</cite>.</p>
+<pre class="literal-block">
+DistributedLogNamespace namespace = ....;
+DistributedLogManager dlm = namespace.openLog(&quot;test-log&quot;);
+AsyncLogWriter writer = dlm.startAsyncLogSegmentNonPartitioned();
+</pre>
+<p>All the writes to <cite>AsyncLogWriter</cite> are asynchronous. The futures representing write results are only satisfied when the data are persisted in the stream durably.
+A DLSN (distributedlog sequence number) will be returned for each write, which is used to represent the position (aka offset) of the record in the log stream.
+All the records adding in order are guaranteed to be persisted in order.</p>
+<pre class="literal-block" id="async-write-records">
+List&lt;Future&lt;DLSN&gt;&gt; addFutures = Lists.newArrayList();
+for (long txid = 1L; txid &lt;= 100L; txid++) {
+    byte[] data = ...;
+    LogRecord record = new LogRecord(txid, data);
+    addFutures.add(writer.write(record));
+}
+List&lt;DLSN&gt; addResults = Await.result(Future.collect(addFutures));
+</pre>
+<p>The <cite>AsyncLogWriter</cite> also provides the method to truncate a stream to a given DLSN. This is super helpful for building replicated state machines, who need
+explicit controls on when the data could be deleted.</p>
+<pre class="literal-block">
+DLSN truncateDLSN = ...;
+Future&lt;DLSN&gt; truncateFuture = writer.truncate(truncateDLSN);
+// wait for truncation result
+Await.result(truncateFuture);
+</pre>
+</div>
+</div>
+<div class="section" id="reader-api">
+<h3><a class="toc-backref" href="#id14">Reader API</a></h3>
+<div class="section" id="sequence-numbers">
+<h4><a class="toc-backref" href="#id15">Sequence Numbers</a></h4>
+<p>A log record is associated with sequence numbers. First of all, application can assign its own sequence number (called <cite>TransactionID</cite>)
+to the log record while writing it (see <a class="reference internal" href="#construct-log-record">Construct Log Record</a>). Secondly, a log record will be assigned with an unique system generated sequence number
+<cite>DLSN</cite> (distributedlog sequence number) when it is written to a log (see <a class="reference internal" href="#async-write-records">Async Write Records</a>). Besides <cite>DLSN</cite> and <cite>TransactionID</cite>,
+a monotonically increasing 64-bits <cite>SequenceId</cite> is assigned to the record at read time, indicating its position within the log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Transaction ID:</th><td class="field-body">Transaction ID is a positive 64-bits long number that is assigned by the application.
+Transaction ID is very helpful when application wants to organize the records and position the readers using their own sequencing method. A typical
+use case of <cite>Transaction ID</cite> is <cite>DistributedLog Write Proxy</cite>. The write proxy assigns non-decreasing timestamps to log records, which the timestamps
+could be used as <cite>physical time</cite> to implement <cite>TTL</cite> (Time To Live) feature in a strong consistent database.</td>
+</tr>
+<tr class="field"><th class="field-name">DLSN:</th><td class="field-body">DLSN (DistributedLog Sequence Number) is the sequence number generated during written time.
+DLSN is comparable and could be used to figure out the order between records. A DLSN is comprised with 3 components. They are <cite>Log Segment Sequence Number</cite>,
+<cite>Entry Id</cite> and <cite>Slot Id</cite>. The DLSN is usually used for comparison, positioning and truncation.</td>
+</tr>
+<tr class="field"><th class="field-name">Sequence ID:</th><td class="field-body">Sequence ID is introduced to address the drawback of <cite>DLSN</cite>, in favor of answering questions like <cite>how many records written between two DLSNs</cite>.
+Sequence ID is a 64-bits monotonic increasing number starting from zero. The sequence ids are computed during reading, and only accessible by readers.
+That means writers don't know the sequence ids of records at the point they wrote them.</td>
+</tr>
+</tbody>
+</table>
+<p>The readers could be positioned to start reading from any positions in the log, by using <cite>DLSN</cite> or <cite>Transaction ID</cite>.</p>
+</div>
+<div class="section" id="logreader">
+<h4><a class="toc-backref" href="#id16">LogReader</a></h4>
+<p><cite>LogReader</cite> is a 'synchronous' sequential reader reading records from a log stream starting from a given position. The position could be
+<cite>DLSN</cite> (via <cite>#getInputStream(DLSN)</cite>) or <cite>Transaction ID</cite> (via <cite>#getInputStream(long)</cite>). After the reader is open, it could call either
+<cite>#readNext(boolean)</cite> or <cite>#readBulk(boolean, int)</cite> to read records out of the log stream sequentially. Closing the reader (via <cite>#close()</cite>)
+will release all the resources occupied by this reader instance.</p>
+<p>Exceptions could be thrown during reading records due to various issues. Once the exception is thrown, the reader is set to an error state
+and it isn't usable anymore. It is the application's responsibility to handle the exceptions and re-create readers if necessary.</p>
+<pre class="literal-block">
+DistributedLogManager dlm = ...;
+long nextTxId = ...;
+LogReader reader = dlm.getInputStream(nextTxId);
+
+while (true) { // keep reading &amp; processing records
+    LogRecord record;
+    try {
+        record = reader.readNext(false);
+        nextTxId = record.getTransactionId();
+        // process the record
+        ...
+    } catch (IOException ioe) {
+        // handle the exception
+        ...
+        reader = dlm.getInputStream(nextTxId + 1);
+    }
+}
+</pre>
+<p>Reading records from an endless log stream in <cite>synchronous</cite> way isn't as trivial as in <cite>asynchronous</cite> way. Because it lacks of callback mechanism.
+Instead, <cite>LogReader</cite> introduces a flag <cite>nonBlocking</cite> on controlling the waiting behavior on <cite>synchronous</cite> reads. Blocking (<cite>nonBlocking = false</cite>)
+means the reads will wait for records before returning read calls, while NonBlocking (<cite>nonBlocking = true</cite>) means the reads will only check readahead
+cache and return whatever records available in readahead cache.</p>
+<p>The <cite>waiting</cite> period varies in <cite>blocking</cite> mode. If the reader is catching up with writer (there are plenty of records in the log), the read call will
+wait until records are read and returned. If the reader is already caught up with writer (there are no more records in the log at read time), the read
+call will wait for a small period of time (defined in <cite>DistributedLogConfiguration#getReadAheadWaitTime()</cite>) and return whatever records available in
+readahead cache. In other words, if a reader sees no record on blocking reads, it means the reader is <cite>caught-up</cite> with the writer.</p>
+<p>See examples below on how to read records using <cite>LogReader</cite>.</p>
+<pre class="literal-block">
+// Read individual records
+
+LogReader reader = ...;
+// keep reading records in blocking mode until no records available in the log
+LogRecord record = reader.readNext(false);
+while (null != record) {
+    // process the record
+    ...
+    // read next record
+    record = reader.readNext(false);
+}
+...
+
+// reader is caught up with writer, doing non-blocking reads to tail the log
+while (true) {
+    record = reader.readNext(true);
+    if (null == record) {
+        // no record available yet. backoff ?
+        ...
+    } else {
+        // process the new record
+        ...
+    }
+}
+</pre>
+<pre class="literal-block">
+// Read records in batch
+
+LogReader reader = ...;
+int N = 10;
+
+// keep reading N records in blocking mode until no records available in the log
+List&lt;LogRecord&gt; records = reader.readBulk(false, N);
+while (!records.isEmpty()) {
+    // process the list of records
+    ...
+    if (records.size() &lt; N) { // no more records available in the log
+        break;
+    }
+    // read next N records
+    records = reader.readBulk(false, N);
+}
+
+...
+
+// reader is caught up with writer, doing non-blocking reads to tail the log
+while (true) {
+    records = reader.readBulk(true, N);
+    // process the new records
+    ...
+}
+</pre>
+</div>
+<div class="section" id="asynclogreader">
+<h4><a class="toc-backref" href="#id17">AsyncLogReader</a></h4>
+<p>Similar as <cite>LogReader</cite>, applications could open an <cite>AsyncLogReader</cite> by positioning to different positions, either <cite>DLSN</cite> or <cite>Transaction ID</cite>.</p>
+<pre class="literal-block">
+DistributedLogManager dlm = ...;
+
+Future&lt;AsyncLogReader&gt; openFuture;
+
+// position the reader to transaction id `999`
+openFuture = dlm.openAsyncLogReader(999L);
+
+// or position the reader to DLSN
+DLSN fromDLSN = ...;
+openFuture = dlm.openAsyncLogReader(fromDLSN);
+
+AsyncLogReader reader = Await.result(openFuture);
+</pre>
+<p>Reading records from an <cite>AsyncLogReader</cite> is asynchronously. The future returned by <cite>#readNext()</cite>, <cite>#readBulk(int)</cite> or <cite>#readBulk(int, long, TimeUnit)</cite>
+represents the result of the read operation. The future is only satisfied when there are records available. Application could chain the futures
+to do sequential reads.</p>
+<p>Reading records one by one from an <cite>AsyncLogReader</cite>.</p>
+<pre class="literal-block">
+void readOneRecord(AsyncLogReader reader) {
+    reader.readNext().addEventListener(new FutureEventListener&lt;LogRecordWithDLSN&gt;() {
+        public void onSuccess(LogRecordWithDLSN record) {
+            // process the record
+            ...
+            // read next
+            readOneRecord(reader);
+        }
+        public void onFailure(Throwable cause) {
+            // handle errors and re-create reader
+            ...
+            reader = ...;
+            // read next
+            readOneRecord(reader);
+        }
+    });
+}
+
+AsyncLogReader reader = ...;
+readOneRecord(reader);
+</pre>
+<p>Reading records in batches from an <cite>AsyncLogReader</cite>.</p>
+<pre class="literal-block">
+void readBulk(AsyncLogReader reader, int N) {
+    reader.readBulk(N).addEventListener(new FutureEventListener&lt;List&lt;LogRecordWithDLSN&gt;&gt;() {
+        public void onSuccess(List&lt;LogRecordWithDLSN&gt; records) {
+            // process the records
+            ...
+            // read next
+            readBulk(reader, N);
+        }
+        public void onFailure(Throwable cause) {
+            // handle errors and re-create reader
+            ...
+            reader = ...;
+            // read next
+            readBulk(reader, N);
+        }
+    });
+}
+
+AsyncLogReader reader = ...;
+readBulk(reader, N);
+</pre>
+</div>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/docs/latest/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

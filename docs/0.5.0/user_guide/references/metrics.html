@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Apache DistributedLog</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/distributedlog/docs/0.5.0/styles/site.css">
+  <link rel="stylesheet" href="/distributedlog/docs/0.5.0/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/distributedlog/docs/0.5.0/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://bookkeeper.apache.org/distributedlog/distributedlog/docs/0.5.0/user_guide/references/metrics.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog" href="http://bookkeeper.apache.org/distributedlog/distributedlog/docs/0.5.0/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/distributedlog" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/distributedlog/docs/0.5.0/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/distributedlog/docs/0.5.0/">V0.5.0</a></li>
+        <!-- Concepts -->
+        <li><a href="/distributedlog/docs/0.5.0/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/distributedlog/docs/0.5.0/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/deployment/docker.html">
+                Docker
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/distributedlog/docs/0.5.0/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/distributedlog/docs/0.5.0/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/distributedlog/docs/0.5.0/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/0.5.0/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/distributedlog/docs/0.5.0/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<div class="row">
+  <!-- Sub Navigation -->
+  <div class="col-sm-3">
+    <ul id="sub-nav">
+      
+      
+      
+        
+        <li><a href="/distributedlog/docs/0.5.0/user_guide/main.html" class="">User Guide</a>
+          
+          <ul>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/basics/introduction.html" class="">
+                  Introduction
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/considerations/main.html" class="">
+                  Considerations
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/architecture/main.html" class="">
+                  Architecture
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/api/main.html" class="">
+                  API
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/api/core.html" class="active">
+                        Core Library API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/api/proxy.html" class="active">
+                        Proxy Client API
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/api/practice.html" class="active">
+                        Best Practise
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/configuration/main.html" class="">
+                  Configuration
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/core.html" class="active">
+                        Core Library Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/proxy.html" class="active">
+                        Write Proxy Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/client.html" class="active">
+                        Client Configuration
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/configuration/perlog.html" class="active">
+                        Per Stream Configuration
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/design/main.html" class="">
+                  Detail Design
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/globalreplicatedlog/main.html" class="">
+                  Global Replicated Log
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/implementation/main.html" class="">
+                  Implementation
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/implementation/storage.html" class="active">
+                        Storage
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/distributedlog/docs/0.5.0/user_guide/references/main.html" class="">
+                  References
+                </a>
+                
+                <ul>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/references/metrics.html" class="active">
+                        Metrics
+                      </a>
+                    </li>
+                  
+                    
+                    <li>
+                      <a href="/distributedlog/docs/0.5.0/user_guide/references/features.html" class="active">
+                        Available Features
+                      </a>
+                    </li>
+                  
+                </ul>
+                
+              </li>
+            
+          </ul>
+          
+        </li>
+      
+    </ul>
+  </div>
+  <!-- Main -->
+  <div class="col-sm-9">
+    <!-- Top anchor -->
+    <a href="#top"></a>
+
+    <!-- Breadcrumbs above the main heading -->
+    <ol class="breadcrumb">
+
+      
+      
+      
+
+      
+      
+
+      
+      <li><a href="/distributedlog/docs/0.5.0/user_guide/main.html">User Guide</a></li>
+      
+
+      
+
+      <li><a href="/distributedlog/docs/0.5.0/user_guide/references/main.html">References</a></li>
+      
+      
+      <li class="active">Metrics</li>
+    </ol>
+
+    <div class="text">
+      <!-- Content -->
+      <div class="contents topic" id="metrics">
+<p class="topic-title first">Metrics</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id2">Metrics</a><ul>
+<li><a class="reference internal" href="#monitoredfuturepool" id="id3">MonitoredFuturePool</a></li>
+<li><a class="reference internal" href="#monitoredscheduledthreadpoolexecutor" id="id4">MonitoredScheduledThreadPoolExecutor</a></li>
+<li><a class="reference internal" href="#orderedscheduler" id="id5">OrderedScheduler</a><ul>
+<li><a class="reference internal" href="#aggregated-stats" id="id6">Aggregated Stats</a></li>
+<li><a class="reference internal" href="#per-executor-stats" id="id7">Per Executor Stats</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#zookeeperclient" id="id8">ZooKeeperClient</a><ul>
+<li><a class="reference internal" href="#operation-stats" id="id9">Operation Stats</a></li>
+<li><a class="reference internal" href="#watched-event-stats" id="id10">Watched Event Stats</a></li>
+<li><a class="reference internal" href="#watcher-manager-stats" id="id11">Watcher Manager Stats</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bookkeeperclient" id="id12">BookKeeperClient</a></li>
+<li><a class="reference internal" href="#distributedreentrantlock" id="id13">DistributedReentrantLock</a></li>
+<li><a class="reference internal" href="#bkloghandler" id="id14">BKLogHandler</a></li>
+<li><a class="reference internal" href="#bklogreadhandler" id="id15">BKLogReadHandler</a></li>
+<li><a class="reference internal" href="#bklogwritehandler" id="id16">BKLogWriteHandler</a></li>
+<li><a class="reference internal" href="#bkasynclogwriter" id="id17">BKAsyncLogWriter</a></li>
+<li><a class="reference internal" href="#bkasynclogreader" id="id18">BKAsyncLogReader</a></li>
+<li><a class="reference internal" href="#bkdistributedlogmanager" id="id19">BKDistributedLogManager</a><ul>
+<li><a class="reference internal" href="#future-pools" id="id20">Future Pools</a></li>
+<li><a class="reference internal" href="#distributed-locks" id="id21">Distributed Locks</a></li>
+<li><a class="reference internal" href="#log-handlers" id="id22">Log Handlers</a></li>
+<li><a class="reference internal" href="#writers" id="id23">Writers</a></li>
+<li><a class="reference internal" href="#readers" id="id24">Readers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bkdistributedlognamespace" id="id25">BKDistributedLogNamespace</a><ul>
+<li><a class="reference internal" href="#zookeeper-clients" id="id26">ZooKeeper Clients</a></li>
+<li><a class="reference internal" href="#bookkeeper-clients" id="id27">BookKeeper Clients</a></li>
+<li><a class="reference internal" href="#utils" id="id28">Utils</a></li>
+<li><a class="reference internal" href="#distributedlogmanager" id="id29">DistributedLogManager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id2">Metrics</a></h2>
+<p>This section lists the metrics exposed by main classes.</p>
+<p>({scope} is referencing current scope value of passed in StatsLogger.)</p>
+<div class="section" id="monitoredfuturepool">
+<h3><a class="toc-backref" href="#id3">MonitoredFuturePool</a></h3>
+<p><strong>{scope}/tasks_pending</strong></p>
+<p>Gauge. How many tasks are pending in this future pool? If this value becomes high, it means that
+the future pool execution rate couldn't keep up with submission rate. That would be cause high
+<em>task_pending_time</em> hence affecting the callers that use this future pool.
+It could also cause heavy jvm gc if this pool keeps building up.</p>
+<p><strong>{scope}/task_pending_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on waiting being executed.
+It becomes high because either <em>tasks_pending</em> is building up or <em>task_execution_time</em> is high blocking other
+tasks to execute.</p>
+<p><strong>{scope}/task_execution_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on execution. If it becomes high,
+it would block other tasks to execute if there isn't enough threads in this executor, hence cause high
+<em>task_pending_time</em> and impact user end latency.</p>
+<p><strong>{scope}/task_enqueue_time</strong></p>
+<p>OpStats. The time that tasks spent on submission. The submission time would also impact user end latency.</p>
+</div>
+<div class="section" id="monitoredscheduledthreadpoolexecutor">
+<h3><a class="toc-backref" href="#id4">MonitoredScheduledThreadPoolExecutor</a></h3>
+<p><strong>{scope}/pending_tasks</strong></p>
+<p>Gauge. How many tasks are pending in this thread pool executor? If this value becomes high, it means that
+the thread pool executor execution rate couldn't keep up with submission rate. That would be cause high
+<em>task_pending_time</em> hence affecting the callers that use this executor. It could also cause heavy jvm gc if
+queue keeps building up.</p>
+<p><strong>{scope}/completed_tasks</strong></p>
+<p>Gauge. How many tasks are completed in this thread pool executor?</p>
+<p><strong>{scope}/total_tasks</strong></p>
+<p>Gauge. How many tasks are submitted to this thread pool executor?</p>
+<p><strong>{scope}/task_pending_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on waiting being executed.
+It becomes high because either <em>pending_tasks</em> is building up or <em>task_execution_time</em> is high blocking other
+tasks to execute.</p>
+<p><strong>{scope}/task_execution_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on execution. If it becomes high,
+it would block other tasks to execute if there isn't enough threads in this executor, hence cause high
+<em>task_pending_time</em> and impact user end latency.</p>
+</div>
+<div class="section" id="orderedscheduler">
+<h3><a class="toc-backref" href="#id5">OrderedScheduler</a></h3>
+<p>OrderedScheduler is a thread pool based <em>ScheduledExecutorService</em>. It is comprised with multiple
+<a class="reference internal" href="#monitoredscheduledthreadpoolexecutor">MonitoredScheduledThreadPoolExecutor</a>. Each <a class="reference internal" href="#monitoredscheduledthreadpoolexecutor">MonitoredScheduledThreadPoolExecutor</a> is wrapped into a
+<a class="reference internal" href="#monitoredfuturepool">MonitoredFuturePool</a>. So there are aggregated stats and per-executor stats exposed.</p>
+<div class="section" id="aggregated-stats">
+<h4><a class="toc-backref" href="#id6">Aggregated Stats</a></h4>
+<p><strong>{scope}/task_pending_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on waiting being executed.
+It becomes high because either <em>pending_tasks</em> is building up or <em>task_execution_time</em> is high blocking other
+tasks to execute.</p>
+<p><strong>{scope}/task_execution_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on execution. If it becomes high,
+it would block other tasks to execute if there isn't enough threads in this executor, hence cause high
+<em>task_pending_time</em> and impact user end latency.</p>
+<p><strong>{scope}/futurepool/tasks_pending</strong></p>
+<p>Gauge. How many tasks are pending in this future pool? If this value becomes high, it means that
+the future pool execution rate couldn't keep up with submission rate. That would be cause high
+<em>task_pending_time</em> hence affecting the callers that use this future pool.
+It could also cause heavy jvm gc if this pool keeps building up.</p>
+<p><strong>{scope}/futurepool/task_pending_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on waiting being executed.
+It becomes high because either <em>tasks_pending</em> is building up or <em>task_execution_time</em> is high blocking other
+tasks to execute.</p>
+<p><strong>{scope}/futurepool/task_execution_time</strong></p>
+<p>OpStats. It measures the characteristics about the time that tasks spent on execution. If it becomes high,
+it would block other tasks to execute if there isn't enough threads in this executor, hence cause high
+<em>task_pending_time</em> and impact user end latency.</p>
+<p><strong>{scope}/futurepool/task_enqueue_time</strong></p>
+<p>OpStats. The time that tasks spent on submission. The submission time would also impact user end latency.</p>
+</div>
+<div class="section" id="per-executor-stats">
+<h4><a class="toc-backref" href="#id7">Per Executor Stats</a></h4>
+<p>Stats about individual executors are exposed under <em>{scope}/{name}-executor-{id}-0</em>. <em>{name}</em> is the scheduler
+name and <em>{id}</em> is the index of the executor in the pool. The corresponding stats of its futurepool are exposed
+under <em>{scope}/{name}-executor-{id}-0/futurepool</em>. See <a class="reference internal" href="#monitoredscheduledthreadpoolexecutor">MonitoredScheduledThreadPoolExecutor</a> and <a class="reference internal" href="#monitoredfuturepool">MonitoredFuturePool</a>
+for more details.</p>
+</div>
+</div>
+<div class="section" id="zookeeperclient">
+<h3><a class="toc-backref" href="#id8">ZooKeeperClient</a></h3>
+<div class="section" id="operation-stats">
+<h4><a class="toc-backref" href="#id9">Operation Stats</a></h4>
+<p>All operation stats are exposed under {scope}/zk. The stats are <strong>latency</strong> <em>OpStats</em>
+on zookeeper operations.</p>
+<p><strong>{scope}/zk/{op}</strong></p>
+<p>latency stats on operations.
+these operations are <em>create_client</em>, <em>get_data</em>, <em>set_data</em>, <em>delete</em>, <em>get_children</em>, <em>multi</em>, <em>get_acl</em>, <em>set_acl</em> and <em>sync</em>.</p>
+</div>
+<div class="section" id="watched-event-stats">
+<h4><a class="toc-backref" href="#id10">Watched Event Stats</a></h4>
+<p>All stats on zookeeper watched events are exposed under {scope}/watcher. The stats are <em>Counter</em> about the watched events that this client received:</p>
+<p><strong>{scope}/watcher/state/{keeper_state}</strong></p>
+<p>the number of <cite>KeeperState</cite> changes that this client received. The states are <em>Disconnected</em>, <em>SyncConnected</em>,
+<em>AuthFailed</em>, <em>ConnectedReadOnly</em>, <em>SaslAuthenticated</em> and <em>Expired</em>. By monitoring metrics like <em>SyncConnected</em>
+or <em>Expired</em> it would help understanding the healthy of this zookeeper client.</p>
+<p><strong>{scope}/watcher/events/{event}</strong></p>
+<p>the number of <cite>Watcher.Event</cite> received by this client. Those events are <em>None</em>, <em>NodeCreated</em>, <em>NodeDeleted</em>,
+<em>NodeDataChanged</em>, <em>NodeChildrenChanged</em>.</p>
+</div>
+<div class="section" id="watcher-manager-stats">
+<h4><a class="toc-backref" href="#id11">Watcher Manager Stats</a></h4>
+<p>This ZooKeeperClient provides a watcher manager to manage watchers for applications. It tracks the mapping between
+paths and watcher. It is the way to provide the ability on removing watchers. The stats are <em>Gauge</em> about the number
+of watchers managed by this zookeeper client.</p>
+<p><strong>{scope}/watcher_manager/total_watches</strong></p>
+<p>total number of watches that are managed by this watcher manager. If it keeps growing, it usually means that
+watchers are leaking (resources aren't closed properly). It will cause OOM.</p>
+<p><strong>{scope}/watcher_manager/num_child_watches</strong></p>
+<p>total number of paths that are watched by this watcher manager.</p>
+</div>
+</div>
+<div class="section" id="bookkeeperclient">
+<h3><a class="toc-backref" href="#id12">BookKeeperClient</a></h3>
+<p>TODO: add bookkeeper stats there</p>
+</div>
+<div class="section" id="distributedreentrantlock">
+<h3><a class="toc-backref" href="#id13">DistributedReentrantLock</a></h3>
+<p>All stats related to locks are exposed under {scope}/lock.</p>
+<p><strong>{scope}/acquire</strong></p>
+<p>OpStats. It measures the characteristics about the time that spent on acquiring locks.</p>
+<p><strong>{scope}/release</strong></p>
+<p>OpStats. It measures the characteristics about the time that spent on releasing locks.</p>
+<p><strong>{scope}/reacquire</strong></p>
+<p>OpStats. The lock will be expired when the underneath zookeeper session expired. The
+reentrant lock will attempt to re-acquire the lock automatically when session expired.
+This metric measures the characteristics about the time that spent on re-acquiring locks.</p>
+<p><strong>{scope}/internalTryRetries</strong></p>
+<p>Counter. The number of retries that locks spend on re-creating internal locks. Typically,
+a new internal lock will be created when session expired.</p>
+<p><strong>{scope}/acquireTimeouts</strong></p>
+<p>Counter. The number of timeouts that caller experienced when acquiring locks.</p>
+<p><strong>{scope}/tryAcquire</strong></p>
+<p>OpStats. It measures the characteristics about the time that each internal lock spent on
+acquiring.</p>
+<p><strong>{scope}/tryTimeouts</strong></p>
+<p>Counter. The number of timeouts that internal locks try acquiring.</p>
+<p><strong>{scope}/unlock</strong></p>
+<p>OpStats. It measures the characteristics about the time that the caller spent on unlocking
+internal locks.</p>
+</div>
+<div class="section" id="bkloghandler">
+<h3><a class="toc-backref" href="#id14">BKLogHandler</a></h3>
+<p>The log handler is a base class on managing log segments. so all the metrics in this class are
+related log segments retrieval and exposed under {scope}/logsegments. They are all <cite>OpStats</cite> in
+the format of <cite>{scope}/logsegments/{op}</cite>. Those operations are:</p>
+<ul class="simple">
+<li>force_get_list: force to get the list of log segments.</li>
+<li>get_list: get the list of the log segments. it might just retrieve from local log segment cache.</li>
+<li>get_filtered_list: get the filtered list of log segments.</li>
+<li>get_full_list: get the full list of log segments.</li>
+<li>get_inprogress_segment: time between the inprogress log segment created and the handler read it.</li>
+<li>get_completed_segment: time between a log segment is turned to completed and the handler read it.</li>
+<li>negative_get_inprogress_segment: record the negative values for <cite>get_inprogress_segment</cite>.</li>
+<li>negative_get_completed_segment: record the negative values for <cite>get_completed_segment</cite>.</li>
+<li>recover_last_entry: recovering last entry from a log segment.</li>
+<li>recover_scanned_entries: the number of entries that are scanned during recovering.</li>
+</ul>
+<p>See <a class="reference internal" href="#bklogwritehandler">BKLogWriteHandler</a> for write handlers.</p>
+<p>See <a class="reference internal" href="#bklogreadhandler">BKLogReadHandler</a> for read handlers.</p>
+</div>
+<div class="section" id="bklogreadhandler">
+<h3><a class="toc-backref" href="#id15">BKLogReadHandler</a></h3>
+<p>The core logic in log reader handle is readahead worker. Most of readahead stats are exposed under
+{scope}/readahead_worker.</p>
+<p><strong>{scope}/readahead_worker/wait</strong></p>
+<p>Counter. Number of waits that readahead worker is waiting. If this keeps increasing, it usually means
+readahead keep getting full because of reader slows down reading.</p>
+<p><strong>{scope}/readahead_worker/repositions</strong></p>
+<p>Counter. Number of repositions that readhead worker encounters. Reposition means that a readahead worker
+finds that it isn't advancing to a new log segment and force re-positioning.</p>
+<p><strong>{scope}/readahead_worker/entry_piggy_back_hits</strong></p>
+<p>Counter. It increases when the last add confirmed being advanced because of the piggy-back lac.</p>
+<p><strong>{scope}/readahead_worker/entry_piggy_back_misses</strong></p>
+<p>Counter. It increases when the last add confirmed isn't advanced by a read entry because it doesn't
+iggy back a newer lac.</p>
+<p><strong>{scope}/readahead_worker/read_entries</strong></p>
+<p>OpStats. Stats on number of entries read per readahead read batch.</p>
+<p><strong>{scope}/readahead_worker/read_lac_counter</strong></p>
+<p>Counter. Stats on the number of readLastConfirmed operations</p>
+<p><strong>{scope}/readahead_worker/read_lac_and_entry_counter</strong></p>
+<p>Counter. Stats on the number of readLastConfirmedAndEntry operations.</p>
+<p><strong>{scope}/readahead_worker/cache_full</strong></p>
+<p>Counter. It increases each time readahead worker finds cache become full. If it keeps increasing,
+that means reader slows down reading.</p>
+<p><strong>{scope}/readahead_worker/resume</strong></p>
+<p>OpStats. Stats on readahead worker resuming reading from wait state.</p>
+<p><strong>{scope}/readahead_worker/long_poll_interruption</strong></p>
+<p>OpStats. Stats on the number of interruptions happened to long poll. the interruptions are usually
+because of receiving zookeeper notifications.</p>
+<p><strong>{scope}/readahead_worker/notification_execution</strong></p>
+<p>OpStats. Stats on executions over the notifications received from zookeeper.</p>
+<p><strong>{scope}/readahead_worker/metadata_reinitialization</strong></p>
+<p>OpStats. Stats on metadata reinitialization after receiving notifcation from log segments updates.</p>
+<p><strong>{scope}/readahead_worker/idle_reader_warn</strong></p>
+<p>Counter. It increases each time the readahead worker detects itself becoming idle.</p>
+</div>
+<div class="section" id="bklogwritehandler">
+<h3><a class="toc-backref" href="#id16">BKLogWriteHandler</a></h3>
+<p>Log write handlers are responsible for log segment creation/deletions. All the metrics are exposed under
+{scope}/segments.</p>
+<p><strong>{scope}/segments/open</strong></p>
+<p>OpStats. Latency characteristics on starting a new log segment.</p>
+<p><strong>{scope}/segments/close</strong></p>
+<p>OpStats. Latency characteristics on completing an inprogress log segment.</p>
+<p><strong>{scope}/segments/recover</strong></p>
+<p>OpStats. Latency characteristics on recovering a log segment.</p>
+<p><strong>{scope}/segments/delete</strong></p>
+<p>OpStats. Latency characteristics on deleting a log segment.</p>
+</div>
+<div class="section" id="bkasynclogwriter">
+<h3><a class="toc-backref" href="#id17">BKAsyncLogWriter</a></h3>
+<p><strong>{scope}/log_writer/write</strong></p>
+<p>OpStats. latency characteristics about the time that write operations spent.</p>
+<p><strong>{scope}/log_writer/write/queued</strong></p>
+<p>OpStats. latency characteristics about the time that write operations spent in the queue.
+<cite>{scope}/log_writer/write</cite> latency is high might because the write operations are pending
+in the queue for long time due to log segment rolling.</p>
+<p><strong>{scope}/log_writer/bulk_write</strong></p>
+<p>OpStats. latency characteristics about the time that bulk_write operations spent.</p>
+<p><strong>{scope}/log_writer/bulk_write/queued</strong></p>
+<p>OpStats. latency characteristics about the time that bulk_write operations spent in the queue.
+<cite>{scope}/log_writer/bulk_write</cite> latency is high might because the write operations are pending
+in the queue for long time due to log segment rolling.</p>
+<p><strong>{scope}/log_writer/get_writer</strong></p>
+<p>OpStats. the time spent on getting the writer. it could spike when there is log segment rolling
+happened during getting the writer. it is a good stat to look into when the latency is caused by
+queuing time.</p>
+<p><strong>{scope}/log_writer/pending_request_dispatch</strong></p>
+<p>Counter. the number of queued operations that are dispatched after log segment is rolled. it is
+an metric on measuring how many operations has been queued because of log segment rolling.</p>
+</div>
+<div class="section" id="bkasynclogreader">
+<h3><a class="toc-backref" href="#id18">BKAsyncLogReader</a></h3>
+<p><strong>{scope}/async_reader/future_set</strong></p>
+<p>OpStats. Time spent on satisfying futures of read requests. if it is high, it means that the caller
+takes time on processing the result of read requests. The side effect is blocking consequent reads.</p>
+<p><strong>{scope}/async_reader/schedule</strong></p>
+<p>OpStats. Time spent on scheduling next reads.</p>
+<p><strong>{scope}/async_reader/background_read</strong></p>
+<p>OpStats. Time spent on background reads.</p>
+<p><strong>{scope}/async_reader/read_next_exec</strong></p>
+<p>OpStats. Time spent on executing <cite>reader#readNext()</cite></p>
+<p><strong>{scope}/async_reader/time_between_read_next</strong></p>
+<p>OpStats. Time spent on between two consequent <cite>reader#readNext()</cite>. if it is high, it means that
+the caller is slowing down on calling <cite>reader#readNext()</cite>.</p>
+<p><strong>{scope}/async_reader/delay_until_promise_satisfied</strong></p>
+<p>OpStats. Total latency for the read requests.</p>
+<p><strong>{scope}/async_reader/idle_reader_error</strong></p>
+<p>Counter. The number idle reader errors.</p>
+</div>
+<div class="section" id="bkdistributedlogmanager">
+<h3><a class="toc-backref" href="#id19">BKDistributedLogManager</a></h3>
+<div class="section" id="future-pools">
+<h4><a class="toc-backref" href="#id20">Future Pools</a></h4>
+<p>The stats about future pools that used by writers are exposed under {scope}/writer_future_pool,
+while the stats about future pools that used by readers are exposed under {scope}/reader_future_pool.
+See <a class="reference internal" href="#monitoredfuturepool">MonitoredFuturePool</a> for detail stats.</p>
+</div>
+<div class="section" id="distributed-locks">
+<h4><a class="toc-backref" href="#id21">Distributed Locks</a></h4>
+<p>The stats about the locks used by writers are exposed under {scope}/lock while those used by readers
+are exposed under {scope}/read_lock/lock. See <a class="reference internal" href="#distributedreentrantlock">DistributedReentrantLock</a> for detail stats.</p>
+</div>
+<div class="section" id="log-handlers">
+<h4><a class="toc-backref" href="#id22">Log Handlers</a></h4>
+<p><strong>{scope}/logsegments</strong></p>
+<p>All basic stats of log handlers are exposed under {scope}/logsegments. See <a class="reference internal" href="#bkloghandler">BKLogHandler</a> for detail stats.</p>
+<p><strong>{scope}/segments</strong></p>
+<p>The stats about write log handlers are exposed under {scope}/segments. See <a class="reference internal" href="#bklogwritehandler">BKLogWriteHandler</a> for detail stats.</p>
+<p><strong>{scope}/readhead_worker</strong></p>
+<p>The stats about read log handlers are exposed under {scope}/readahead_worker.
+See <a class="reference internal" href="#bklogreadhandler">BKLogReadHandler</a> for detail stats.</p>
+</div>
+<div class="section" id="writers">
+<h4><a class="toc-backref" href="#id23">Writers</a></h4>
+<p>All writer related metrics are exposed under {scope}/log_writer. See <a class="reference internal" href="#bkasynclogwriter">BKAsyncLogWriter</a> for detail stats.</p>
+</div>
+<div class="section" id="readers">
+<h4><a class="toc-backref" href="#id24">Readers</a></h4>
+<p>All reader related metrics are exposed under {scope}/async_reader. See <a class="reference internal" href="#bkasynclogreader">BKAsyncLogReader</a> for detail stats.</p>
+</div>
+</div>
+<div class="section" id="bkdistributedlognamespace">
+<h3><a class="toc-backref" href="#id25">BKDistributedLogNamespace</a></h3>
+<div class="section" id="zookeeper-clients">
+<h4><a class="toc-backref" href="#id26">ZooKeeper Clients</a></h4>
+<p>There are various of zookeeper clients created per namespace for different purposes. They are:</p>
+<p><strong>{scope}/dlzk_factory_writer_shared</strong></p>
+<p>Stats about the zookeeper client shared by all DL writers.</p>
+<p><strong>{scope}/dlzk_factory_reader_shared</strong></p>
+<p>Stats about the zookeeper client shared by all DL readers.</p>
+<p><strong>{scope}/bkzk_factory_writer_shared</strong></p>
+<p>Stats about the zookeeper client used by bookkeeper client that shared by all DL writers.</p>
+<p><strong>{scope}/bkzk_factory_reader_shared</strong></p>
+<p>Stats about the zookeeper client used by bookkeeper client that shared by all DL readers.</p>
+<p>See <a class="reference internal" href="#zookeeperclient">ZooKeeperClient</a> for zookeeper detail stats.</p>
+</div>
+<div class="section" id="bookkeeper-clients">
+<h4><a class="toc-backref" href="#id27">BookKeeper Clients</a></h4>
+<p>All the bookkeeper client related stats are exposed directly to current {scope}. See <a class="reference internal" href="#bookkeeperclient">BookKeeperClient</a>
+for detail stats.</p>
+</div>
+<div class="section" id="utils">
+<h4><a class="toc-backref" href="#id28">Utils</a></h4>
+<p><strong>{scope}/factory/thread_pool</strong></p>
+<p>Stats about the ordered scheduler used by this namespace. See <a class="reference internal" href="#orderedscheduler">OrderedScheduler</a> for detail stats.</p>
+<p><strong>{scope}/factory/readahead_thread_pool</strong></p>
+<p>Stats about the readahead thread pool executor used by this namespace. See <a class="reference internal" href="#monitoredscheduledthreadpoolexecutor">MonitoredScheduledThreadPoolExecutor</a>
+for detail stats.</p>
+<p><strong>{scope}/writeLimiter</strong></p>
+<p>Stats about the global write limiter used by list namespace.</p>
+</div>
+<div class="section" id="distributedlogmanager">
+<h4><a class="toc-backref" href="#id29">DistributedLogManager</a></h4>
+<p>All the core stats about reader and writer are exposed under current {scope} via <a class="reference internal" href="#bkdistributedlogmanager">BKDistributedLogManager</a>.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/distributedlog/docs/0.5.0/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

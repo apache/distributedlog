@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6};
+var methods = {"i0":6,"i1":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/apache/distributedlog/io/AsyncDeleteable.html" title="interface in org.apache.distributedlog.io"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/apache/distributedlog/io/CompressionCodec.Type.html" title="enum in org.apache.distributedlog.io"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -147,30 +147,16 @@ var activeTableTab = "activeTableTab";
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/io/CompressionCodec.html#compress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">compress</a></span>(byte[]&nbsp;data,
-        int&nbsp;offset,
-        int&nbsp;length,
-        org.apache.bookkeeper.stats.OpStatsLogger&nbsp;compressionStat)</code>
-<div class="block">Return the compressed data as a byte array.</div>
+<td class="colFirst"><code>io.netty.buffer.ByteBuf</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/io/CompressionCodec.html#compress-io.netty.buffer.ByteBuf-int-">compress</a></span>(io.netty.buffer.ByteBuf&nbsp;uncompressed,
+        int&nbsp;headerLen)</code>
+<div class="block">Return the compressed data as a byte buffer.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/io/CompressionCodec.html#decompress-byte:A-int-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress</a></span>(byte[]&nbsp;data,
-          int&nbsp;offset,
-          int&nbsp;length,
-          int&nbsp;decompressedSize,
-          org.apache.bookkeeper.stats.OpStatsLogger&nbsp;decompressionStat)</code>
-<div class="block">Return the decompressed data as a byte array.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/io/CompressionCodec.html#decompress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">decompress</a></span>(byte[]&nbsp;data,
-          int&nbsp;offset,
-          int&nbsp;length,
-          org.apache.bookkeeper.stats.OpStatsLogger&nbsp;decompressionStat)</code>
+<td class="colFirst"><code>io.netty.buffer.ByteBuf</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/io/CompressionCodec.html#decompress-io.netty.buffer.ByteBuf-int-">decompress</a></span>(io.netty.buffer.ByteBuf&nbsp;compressed,
+          int&nbsp;decompressedSize)</code>
 <div class="block">Return the decompressed data as a byte array.</div>
 </td>
 </tr>
@@ -189,70 +175,37 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="compress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">
+<a name="compress-io.netty.buffer.ByteBuf-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>compress</h4>
-<pre>byte[]&nbsp;compress(byte[]&nbsp;data,
-                int&nbsp;offset,
-                int&nbsp;length,
-                org.apache.bookkeeper.stats.OpStatsLogger&nbsp;compressionStat)</pre>
-<div class="block">Return the compressed data as a byte array.</div>
+<pre>io.netty.buffer.ByteBuf&nbsp;compress(io.netty.buffer.ByteBuf&nbsp;uncompressed,
+                                 int&nbsp;headerLen)</pre>
+<div class="block">Return the compressed data as a byte buffer.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>data</code> - The data to be compressed</dd>
-<dd><code>offset</code> - The offset in the bytes of data to compress</dd>
-<dd><code>length</code> - The number of bytes of data to compress</dd>
-<dd><code>compressionStat</code> - The stat to use for timing the compression operation</dd>
+<dd><code>uncompressed</code> - The data to be compressed</dd>
+<dd><code>headerLen</code> - Account the header len for compressed buffer.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The compressed data
           The returned byte array is sized to the length of the compressed data</dd>
 </dl>
 </li>
 </ul>
-<a name="decompress-byte:A-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>decompress</h4>
-<pre>byte[]&nbsp;decompress(byte[]&nbsp;data,
-                  int&nbsp;offset,
-                  int&nbsp;length,
-                  org.apache.bookkeeper.stats.OpStatsLogger&nbsp;decompressionStat)</pre>
-<div class="block">Return the decompressed data as a byte array.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>data</code> - The data to be decompressed</dd>
-<dd><code>offset</code> - The offset in the bytes of data to decompress</dd>
-<dd><code>length</code> - The number of bytes of data to decompress</dd>
-<dd><code>decompressionStat</code> - The stat to use for timing the decompression operation</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The decompressed data</dd>
-</dl>
-</li>
-</ul>
-<a name="decompress-byte:A-int-int-int-org.apache.bookkeeper.stats.OpStatsLogger-">
+<a name="decompress-io.netty.buffer.ByteBuf-int-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>decompress</h4>
-<pre>byte[]&nbsp;decompress(byte[]&nbsp;data,
-                  int&nbsp;offset,
-                  int&nbsp;length,
-                  int&nbsp;decompressedSize,
-                  org.apache.bookkeeper.stats.OpStatsLogger&nbsp;decompressionStat)</pre>
+<pre>io.netty.buffer.ByteBuf&nbsp;decompress(io.netty.buffer.ByteBuf&nbsp;compressed,
+                                   int&nbsp;decompressedSize)</pre>
 <div class="block">Return the decompressed data as a byte array.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>data</code> - The data to the decompressed</dd>
-<dd><code>offset</code> - The offset in the bytes of data to decompress</dd>
-<dd><code>length</code> - The number of bytes of data to decompress</dd>
-<dd><code>decompressedSize</code> - The exact size of the decompressed data</dd>
-<dd><code>decompressionStat</code> - The stat to use for timing the decompression operation</dd>
+<dd><code>compressed</code> - The data to the decompressed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The decompressed data</dd>
 </dl>
@@ -286,7 +239,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/apache/distributedlog/io/AsyncDeleteable.html" title="interface in org.apache.distributedlog.io"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/apache/distributedlog/io/CompressionCodec.Type.html" title="enum in org.apache.distributedlog.io"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

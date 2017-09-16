@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Apache DistributedLog (incubating)</title>
+  <title>Apache DistributedLog</title>
   <meta name="description" content="Apache DistributedLog is an high performance replicated log.
 ">
 
@@ -15,8 +15,8 @@
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="/docs/latest/js/bootstrap.min.js"></script>
-  <link rel="canonical" href="http://distributedlog.incubator.apache.org/docs/latest/admin_guide/bookkeeper.html" data-proofer-ignore>
-  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog (incubating)" href="http://distributedlog.incubator.apache.org/docs/latest/feed.xml">
+  <link rel="canonical" href="http://bookkeeper.apache.org/distributedlog/docs/latest/admin_guide/bookkeeper.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog" href="http://bookkeeper.apache.org/distributedlog/docs/latest/feed.xml">
   <!-- Font Awesome -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
   <!-- Google Analytics -->
@@ -53,7 +53,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <!-- Overview -->
-        <li><a href="/docs/latest/">V0.5.0-incubating</a></li>
+        <li><a href="/docs/latest/">V0.6.0</a></li>
         <!-- Concepts -->
         <li><a href="/docs/latest/basics/introduction">Concepts</a></li>
         <!-- Quick Start -->
@@ -209,14 +209,14 @@
             </li>
             
             <li>
-              <a href="/docs/latest/admin_guide/performance.html">
-                Performance Tuning
+              <a href="/docs/latest/admin_guide/loadtest.html">
+                Load Test
               </a>
             </li>
             
             <li>
-              <a href="/docs/latest/admin_guide/loadtest.html">
-                Load Test
+              <a href="/docs/latest/admin_guide/performance.html">
+                Performance Tuning
               </a>
             </li>
             
@@ -353,18 +353,6 @@ under the License.
             
               
               <li>
-                <a href="/docs/latest/admin_guide/operations.html" class="">
-                  Operations
-                </a>
-                
-                <ul>
-                  
-                </ul>
-                
-              </li>
-            
-              
-              <li>
                 <a href="/docs/latest/deployment/cluster.html" class="">
                   Cluster Setup
                 </a>
@@ -389,8 +377,8 @@ under the License.
             
               
               <li>
-                <a href="/docs/latest/admin_guide/performance.html" class="">
-                  Performance Tuning
+                <a href="/docs/latest/admin_guide/operations.html" class="">
+                  Operations
                 </a>
                 
                 <ul>
@@ -403,6 +391,18 @@ under the License.
               <li>
                 <a href="/docs/latest/admin_guide/loadtest.html" class="">
                   Load Test
+                </a>
+                
+                <ul>
+                  
+                </ul>
+                
+              </li>
+            
+              
+              <li>
+                <a href="/docs/latest/admin_guide/performance.html" class="">
+                  Performance Tuning
                 </a>
                 
                 <ul>
@@ -544,10 +544,10 @@ We are working actively with BookKeeper community to merge all twitter's changes
 <span class="line-number">2</span>
 </pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ <span class="nb">cd</span> bookkeeper
 </span><span class="line">$ mvn clean package assembly:single -DskipTests
-</span></code></pre></td></tr></table></div></figure><p>However, since <cite>bookkeeper-server</cite> is one of the dependency of <cite>distributedlog-service</cite>.
-You could simply run bookkeeper using same set of scripts provided in <cite>distributedlog-service</cite>.
+</span></code></pre></td></tr></table></div></figure><p>However, since <cite>bookkeeper-server</cite> is one of the dependency of <cite>distributedlog-proxy-server</cite>.
+You could simply run bookkeeper using same set of scripts provided in <cite>distributedlog-proxy-server</cite>.
 In the following sections, we will describe how to run bookkeeper using the scripts provided in
-<cite>distributedlog-service</cite>.</p>
+<cite>distributedlog-proxy-server</cite>.</p>
 </div>
 <div class="section" id="run-from-distributedlog-source">
 <h3><a class="toc-backref" href="#id5">Run from distributedlog source</a></h3>
@@ -559,7 +559,7 @@ In the following sections, we will describe how to run bookkeeper using the scri
 </span></code></pre></td></tr></table></div></figure></div>
 <div class="section" id="configuration">
 <h4><a class="toc-backref" href="#id7">Configuration</a></h4>
-<p>The configuration file <cite>bookie.conf</cite> under <cite>distributedlog-service/conf</cite> is a template of production
+<p>The configuration file <cite>bookie.conf</cite> under <cite>distributedlog-proxy-server/conf</cite> is a template of production
 configuration to run a bookie node. Most of the configuration settings are good for production usage.
 You might need to configure following settings according to your environment and hardware platform.</p>
 <div class="section" id="port">
@@ -656,14 +656,14 @@ numLongPollWorkerThreads=4
 </div>
 <div class="section" id="run">
 <h4><a class="toc-backref" href="#id15">Run</a></h4>
-<p>As <cite>bookkeeper-server</cite> is shipped as part of <cite>distributedlog-service</cite>, you could use the <cite>dlog-daemon.sh</cite>
+<p>As <cite>bookkeeper-server</cite> is shipped as part of <cite>distributedlog-proxy-server</cite>, you could use the <cite>dlog-daemon.sh</cite>
 script to start <cite>bookie</cite> as daemon thread.</p>
 <p>Start the bookie:</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ ./distributedlog-service/bin/dlog-daemon.sh start bookie --conf /path/to/bookie/conf
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ ./distributedlog-proxy-server/bin/dlog-daemon.sh start bookie --conf /path/to/bookie/conf
 </span></code></pre></td></tr></table></div></figure><p>Stop the bookie:</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ ./distributedlog-service/bin/dlog-daemon.sh stop bookie
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span></span>$ ./distributedlog-proxy-server/bin/dlog-daemon.sh stop bookie
 </span></code></pre></td></tr></table></div></figure><p>Please check <a class="reference external" href="http://bookkeeper.apache.org/">bookkeeper</a> website for more details.</p>
 </div>
 </div>

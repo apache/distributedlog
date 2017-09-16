@@ -6,8 +6,8 @@
 </description>
     <link>http://bookkeeper.apache.org/distributedlog/distributedlog/</link>
     <atom:link href="http://bookkeeper.apache.org/distributedlog/distributedlog/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 15 Aug 2017 15:00:55 -0700</pubDate>
-    <lastBuildDate>Tue, 15 Aug 2017 15:00:55 -0700</lastBuildDate>
+    <pubDate>Sat, 16 Sep 2017 09:08:30 +0000</pubDate>
+    <lastBuildDate>Sat, 16 Sep 2017 09:08:30 +0000</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -51,7 +51,7 @@ via &lt;a href=&quot;https://bookkeeper.apache.org/distributedlog/community/#mai
 the &lt;a href=&quot;https://issues.apache.org/jira/browse/DL&quot;&gt;Apache Jira issues&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-        <pubDate>Tue, 25 Apr 2017 03:00:00 -0700</pubDate>
+        <pubDate>Tue, 25 Apr 2017 10:00:00 +0000</pubDate>
         <link>http://bookkeeper.apache.org/distributedlog/distributedlog/releases/2017/04/25/the-first-release.html</link>
         <guid isPermaLink="true">http://bookkeeper.apache.org/distributedlog/distributedlog/releases/2017/04/25/the-first-release.html</guid>
         
@@ -303,7 +303,7 @@ or when the owner of the log stream fails.&lt;/p&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Mon, 19 Sep 2016 03:00:00 -0700</pubDate>
+        <pubDate>Mon, 19 Sep 2016 10:00:00 +0000</pubDate>
         <link>http://bookkeeper.apache.org/distributedlog/distributedlog/technical-review/2016/09/19/kafka-vs-distributedlog.html</link>
         <guid isPermaLink="true">http://bookkeeper.apache.org/distributedlog/distributedlog/technical-review/2016/09/19/kafka-vs-distributedlog.html</guid>
         

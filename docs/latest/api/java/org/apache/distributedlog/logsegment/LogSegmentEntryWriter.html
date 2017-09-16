@@ -137,9 +137,7 @@ extends <a href="../../../../org/apache/distributedlog/common/util/Sizable.html"
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryWriter.html#asyncAddEntry-byte:A-int-int-org.apache.bookkeeper.client.AsyncCallback.AddCallback-java.lang.Object-">asyncAddEntry</a></span>(byte[]&nbsp;data,
-             int&nbsp;offset,
-             int&nbsp;length,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryWriter.html#asyncAddEntry-io.netty.buffer.ByteBuf-org.apache.bookkeeper.client.AsyncCallback.AddCallback-java.lang.Object-">asyncAddEntry</a></span>(io.netty.buffer.ByteBuf&nbsp;entry,
              org.apache.bookkeeper.client.AsyncCallback.AddCallback&nbsp;callback,
              <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;ctx)</code>
 <div class="block">Async add entry to the log segment.</div>
@@ -205,15 +203,13 @@ extends <a href="../../../../org/apache/distributedlog/common/util/Sizable.html"
 <div class="block">Close the entry writer.</div>
 </li>
 </ul>
-<a name="asyncAddEntry-byte:A-int-int-org.apache.bookkeeper.client.AsyncCallback.AddCallback-java.lang.Object-">
+<a name="asyncAddEntry-io.netty.buffer.ByteBuf-org.apache.bookkeeper.client.AsyncCallback.AddCallback-java.lang.Object-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>asyncAddEntry</h4>
-<pre>void&nbsp;asyncAddEntry(byte[]&nbsp;data,
-                   int&nbsp;offset,
-                   int&nbsp;length,
+<pre>void&nbsp;asyncAddEntry(io.netty.buffer.ByteBuf&nbsp;entry,
                    org.apache.bookkeeper.client.AsyncCallback.AddCallback&nbsp;callback,
                    <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;ctx)</pre>
 <div class="block">Async add entry to the log segment.
@@ -222,9 +218,7 @@ extends <a href="../../../../org/apache/distributedlog/common/util/Sizable.html"
  byte[], int, int, AsyncCallback.AddCallback, Object)</code></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>data</code> - data to add</dd>
-<dd><code>offset</code> - offset in the data</dd>
-<dd><code>length</code> - length of the data</dd>
+<dd><code>entry</code> - data to add</dd>
 <dd><code>callback</code> - callback</dd>
 <dd><code>ctx</code> - ctx</dd>
 <dt><span class="seeLabel">See Also:</span></dt>

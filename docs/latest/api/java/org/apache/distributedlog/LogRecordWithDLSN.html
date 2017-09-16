@@ -200,6 +200,12 @@ extends <a href="../../../org/apache/distributedlog/LogRecord.html" title="class
                  byte[]&nbsp;data,
                  long&nbsp;startSequenceIdOfCurrentSegment)</code>&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/LogRecordWithDLSN.html#LogRecordWithDLSN-org.apache.distributedlog.DLSN-long-io.netty.buffer.ByteBuf-long-">LogRecordWithDLSN</a></span>(<a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn,
+                 long&nbsp;txid,
+                 io.netty.buffer.ByteBuf&nbsp;buffer,
+                 long&nbsp;startSequenceIdOfCurrentSegment)</code>&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -237,7 +243,7 @@ extends <a href="../../../org/apache/distributedlog/LogRecord.html" title="class
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.apache.distributedlog.<a href="../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></h3>
-<code><a href="../../../org/apache/distributedlog/LogRecord.html#getMetadata--">getMetadata</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getPayload--">getPayload</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getPayLoadInputStream--">getPayLoadInputStream</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getPositionWithinLogSegment--">getPositionWithinLogSegment</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getTransactionId--">getTransactionId</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isControl--">isControl</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isControl-long-">isControl</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isRecordSet--">isRecordSet</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isRecordSet-long-">isRecordSet</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#readPayload-java.io.DataInputStream-">readPayload</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setControl--">setControl</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setMetadata-long-">setMetadata</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setRecordSet--">setRecordSet</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setTransactionId-long-">setTransactionId</a></code></li>
+<code><a href="../../../org/apache/distributedlog/LogRecord.html#getMetadata--">getMetadata</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getPayload--">getPayload</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getPayloadBuf--">getPayloadBuf</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getPayLoadInputStream--">getPayLoadInputStream</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getPositionWithinLogSegment--">getPositionWithinLogSegment</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#getTransactionId--">getTransactionId</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isControl--">isControl</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isControl-long-">isControl</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isRecordSet--">isRecordSet</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#isRecordSet-long-">isRecordSet</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#readPayload-io.netty.buffer.ByteBuf-boolean-">readPayload</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setControl--">setControl</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setMetadata-long-">setMetadata</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setRecordSet--">setRecordSet</a>, <a href="../../../org/apache/distributedlog/LogRecord.html#setTransactionId-long-">setTransactionId</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -263,12 +269,24 @@ extends <a href="../../../org/apache/distributedlog/LogRecord.html" title="class
 <a name="LogRecordWithDLSN-org.apache.distributedlog.DLSN-long-byte:A-long-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>LogRecordWithDLSN</h4>
 <pre>public&nbsp;LogRecordWithDLSN(<a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn,
                          long&nbsp;txid,
                          byte[]&nbsp;data,
+                         long&nbsp;startSequenceIdOfCurrentSegment)</pre>
+</li>
+</ul>
+<a name="LogRecordWithDLSN-org.apache.distributedlog.DLSN-long-io.netty.buffer.ByteBuf-long-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>LogRecordWithDLSN</h4>
+<pre>public&nbsp;LogRecordWithDLSN(<a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;dlsn,
+                         long&nbsp;txid,
+                         io.netty.buffer.ByteBuf&nbsp;buffer,
                          long&nbsp;startSequenceIdOfCurrentSegment)</pre>
 </li>
 </ul>

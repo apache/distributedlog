@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -126,42 +126,57 @@ var activeTableTab = "activeTableTab";
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io">Buffer</a></code></td>
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#abortTransmit-java.lang.Throwable-">abortTransmit</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&nbsp;reason)</code>
+<div class="block">Abort the transmit.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#completeTransmit-long-long-">completeTransmit</a></span>(long&nbsp;lssn,
+                long&nbsp;entryId)</code>
+<div class="block">Complete the whole transmit.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#finalizeTransmit-long-long-">finalizeTransmit</a></span>(long&nbsp;lssn,
+                long&nbsp;entryId)</code>
+<div class="block">Finalize the transmit result and result the last
+ <a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog"><code>DLSN</code></a> in this transmit.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>io.netty.buffer.ByteBuf</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#getBuffer--">getBuffer</a></span>()</code>
 <div class="block">Get the buffer to transmit.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#getMaxTxId--">getMaxTxId</a></span>()</code>
 <div class="block">Return max tx id in current record set.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#getNumBytes--">getNumBytes</a></span>()</code>
 <div class="block">Return number of bytes in current record set.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#getNumRecords--">getNumRecords</a></span>()</code>
 <div class="block">Return number of records in current record set.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#hasUserRecords--">hasUserRecords</a></span>()</code>
 <div class="block">Return if this record set contains user records.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#reset--">reset</a></span>()</code>
-<div class="block">Reset the writer to write records.</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/Entry.Writer.html#writeRecord-org.apache.distributedlog.LogRecord-java.util.concurrent.CompletableFuture-">writeRecord</a></span>(<a href="../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&nbsp;record,
            <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;&nbsp;transmitPromise)</code>
@@ -169,13 +184,6 @@ var activeTableTab = "activeTableTab";
 </td>
 </tr>
 </table>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.apache.distributedlog.io.TransmitListener">
-<!--   -->
-</a>
-<h3>Methods inherited from interface&nbsp;org.apache.distributedlog.io.<a href="../../../org/apache/distributedlog/io/TransmitListener.html" title="interface in org.apache.distributedlog.io">TransmitListener</a></h3>
-<code><a href="../../../org/apache/distributedlog/io/TransmitListener.html#abortTransmit-java.lang.Throwable-">abortTransmit</a>, <a href="../../../org/apache/distributedlog/io/TransmitListener.html#completeTransmit-long-long-">completeTransmit</a>, <a href="../../../org/apache/distributedlog/io/TransmitListener.html#finalizeTransmit-long-long-">finalizeTransmit</a></code></li>
-</ul>
 </li>
 </ul>
 </li>
@@ -210,16 +218,6 @@ var activeTableTab = "activeTableTab";
 <dd><code><a href="../../../org/apache/distributedlog/exceptions/LogRecordTooLongException.html" title="class in org.apache.distributedlog.exceptions">LogRecordTooLongException</a></code> - if the record is too long</dd>
 <dd><code><a href="../../../org/apache/distributedlog/exceptions/WriteException.html" title="class in org.apache.distributedlog.exceptions">WriteException</a></code> - when encountered exception writing the record</dd>
 </dl>
-</li>
-</ul>
-<a name="reset--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>reset</h4>
-<pre>void&nbsp;reset()</pre>
-<div class="block">Reset the writer to write records.</div>
 </li>
 </ul>
 <a name="hasUserRecords--">
@@ -282,19 +280,70 @@ var activeTableTab = "activeTableTab";
 <a name="getBuffer--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getBuffer</h4>
-<pre><a href="../../../org/apache/distributedlog/io/Buffer.html" title="class in org.apache.distributedlog.io">Buffer</a>&nbsp;getBuffer()
-          throws <a href="../../../org/apache/distributedlog/exceptions/InvalidEnvelopedEntryException.html" title="class in org.apache.distributedlog.exceptions">InvalidEnvelopedEntryException</a>,
-                 <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get the buffer to transmit.</div>
+<pre>io.netty.buffer.ByteBuf&nbsp;getBuffer()
+                           throws <a href="../../../org/apache/distributedlog/exceptions/InvalidEnvelopedEntryException.html" title="class in org.apache.distributedlog.exceptions">InvalidEnvelopedEntryException</a>,
+                                  <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block">Get the buffer to transmit.
+
+ <p>The caller is responsible for releasing the reference of the returned bytebuf object.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the buffer to transmit.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../org/apache/distributedlog/exceptions/InvalidEnvelopedEntryException.html" title="class in org.apache.distributedlog.exceptions">InvalidEnvelopedEntryException</a></code> - if the record set buffer is invalid</dd>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - when encountered IOException during serialization</dd>
+</dl>
+</li>
+</ul>
+<a name="finalizeTransmit-long-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>finalizeTransmit</h4>
+<pre><a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;finalizeTransmit(long&nbsp;lssn,
+                      long&nbsp;entryId)</pre>
+<div class="block">Finalize the transmit result and result the last
+ <a href="../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog"><code>DLSN</code></a> in this transmit.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>lssn</code> - log segment sequence number</dd>
+<dd><code>entryId</code> - entry id</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>last dlsn in this transmit</dd>
+</dl>
+</li>
+</ul>
+<a name="completeTransmit-long-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>completeTransmit</h4>
+<pre>void&nbsp;completeTransmit(long&nbsp;lssn,
+                      long&nbsp;entryId)</pre>
+<div class="block">Complete the whole transmit.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>lssn</code> - log segment sequence number</dd>
+<dd><code>entryId</code> - entry id</dd>
+</dl>
+</li>
+</ul>
+<a name="abortTransmit-java.lang.Throwable-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>abortTransmit</h4>
+<pre>void&nbsp;abortTransmit(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang">Throwable</a>&nbsp;reason)</pre>
+<div class="block">Abort the transmit.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>reason</code> - reason to abort transmit</dd>
 </dl>
 </li>
 </ul>
