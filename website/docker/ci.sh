@@ -19,7 +19,7 @@ set -e -x -u
 
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-export IMAGE_NAME="bookkeeper/docs"
+export IMAGE_NAME="distributedlog/docs"
 
 pushd ${SCRIPT_DIR}
 
@@ -46,19 +46,19 @@ RUN groupadd --non-unique -g ${GROUP_ID} ${USER_NAME} && \
 ENV  HOME /home/${USER_NAME}
 UserSpecificDocker
 
-BOOKKEEPER_DOC_ROOT=${SCRIPT_DIR}/..
+DLOG_DOC_ROOT=${SCRIPT_DIR}/..
 
-pushd ${BOOKKEEPER_DOC_ROOT}
+pushd ${DLOG_DOC_ROOT}
 
 docker run \
   --rm=true \
-  -w ${BOOKKEEPER_DOC_ROOT} \
+  -w ${DLOG_DOC_ROOT} \
   -u "${USER}" \
-  -v "${BOOKKEEPER_DOC_ROOT}:${BOOKKEEPER_DOC_ROOT}" \
+  -v "${DLOG_DOC_ROOT}:${DLOG_DOC_ROOT}" \
   -v "${LOCAL_HOME}:/home/${USER_NAME}" \
   -e JEKYLL_ENV='production' \
   ${IMAGE_NAME}-${USER_NAME} \
-  bash -c "make setup && make apache"
+  bash -c "make setup && make apache && make production"
 
 popd
 
