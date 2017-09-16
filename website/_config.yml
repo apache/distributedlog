@@ -11,12 +11,13 @@ description: > # this means to ignore newlines until "baseurl:"
   Apache DistributedLog is an high performance replicated log.
 
 # versions
-DL_VERSION_STABLE: 0.3.51-RC1
+DL_VERSION_STABLE: 0.4.0-incubating
 DL_VERSION_LATEST: 0.6.0-SNAPSHOT
 stable_doc_version: 0.4.0-incubating
 
 # the subpath of your site, e.g. /blog
 baseurl: ""
+logo_url: "/"
 
 # the base hostname & protocol for your site
 url: "http://bookkeeper.apache.org/distributedlog"
@@ -39,9 +40,6 @@ collections:
 - distributedlog_team
 - mentors
 
-# Things to ignore in the build
-exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile', 'docs', 'build.sh']
-
 # Things to keep in the build
 keep_files: ['docs']
 
@@ -54,4 +52,22 @@ gems:
   - jekyll-redirect-from
 
 exclude:
+  - Gemfile
+  - Gemfile.lock
+  - Makefile
+  - Rakefile
+  - README.md
+  - apache_content
+  - build.sh
+  - build-javadoc.sh
+  - content
+  - docker
+  - docs
+  - local_content
+  - production_content
   - scripts
+  - temp_content
+  - temp_apache_content
+  - temp_local_content
+  - temp_production_content
+  - vendor

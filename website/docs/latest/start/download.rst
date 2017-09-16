@@ -18,25 +18,39 @@ You can verify your download by checking its md5 and sha1.
 0.5.0
 ~~~~~~~~~~~~~~~~
 
-This is the second Apache release and the first release after graduating from Apache Incubator. Download here_.
+This is the second Apache release and the first release after graduating from Apache Incubator. Download `here`__.
 
-- `Release Notes`_
+.. _Download050: https://dist.apache.org/repos/dist/release/bookkeeper/distributedlog/0.5.0
 
-.. _here: https://dist.apache.org/repos/dist/release/bookkeeper/distributedlog/0.5.0
-.. _Release Notes: ../../releaseNotes
+__ Download050_ 
+
+- `Release Notes`__
+
+.. _ReleaseNotes050: ../../0.5.0/releaseNotes
+
+__ ReleaseNotes050_
 
 
 0.4.0-incubating
 ~~~~~~~~~~~~~~~~
 
-This is the first Apache release. Download here_.
+This is the first Apache release. Download `here`__.
 
-- `Release Notes`_
-- `Announce Blog Post`_
+.. _Download040: https://dist.apache.org/repos/dist/release/bookkeeper/distributedlog/0.4.0-incubating
 
-.. _here: https://dist.apache.org/repos/dist/release/bookkeeper/distributedlog/0.4.0-incubating
-.. _Release Notes: https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12320620&version=12337980
-.. _Announce Blog Post: /distributedlog/releases/2017/04/23/the-first-release.html
+__ Download040_
+
+- `Release Notes`__
+
+.. _ReleaseNotes040: https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12320620&version=12337980
+
+__ ReleaseNotes040_
+
+- `Announce Blog Post`__
+
+.. _AnnounceBlogPost040: /distributedlog/releases/2017/04/23/the-first-release.html
+
+__ AnnounceBlogPost040_
 
 
 The releases before Apache Incubating are also listed as below:
