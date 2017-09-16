@@ -57,9 +57,9 @@ exclude:
   - Makefile
   - build.sh
   - build-javadoc.sh
+  - content
   - docker
   - docs
-  - content
   - scripts
   - temp_content
   - vendor

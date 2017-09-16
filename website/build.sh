@@ -65,7 +65,7 @@ echo "Built the website @ ${TMP_WEBSITE_DIR}."
 
 # build the documents
 
-function build_docs() {
+build_docs() {
   version=$1
   tag=$2
 
@@ -79,32 +79,14 @@ function build_docs() {
 
   bundle exec jekyll build --destination ${DOC_DEST_HOME} --config _config.yml,${OVERRIDED_CONFIG}
 
-#  # create the api directory
-#  mkdir -p ${DOC_DEST_HOME}/api/java
-#  if [ "$version" == "latest" ]; then
-#    cd ${DLOG_HOME}
-#    # build the javadoc
-#    mvn -DskipTests clean package javadoc:aggregate \
-#        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
-#        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
-#        -Dmaven.javadoc.failOnError=false
-#    # copy the built javadoc
-#    cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
-#  else
-#    rm -rf /tmp/distributedlog-${version}
-#    git clone https://github.com/apache/distributedlog.git /tmp/distributedlog-${version}
-#    cd /tmp/distributedlog-${version}
-#    git checkout $tag
-#    # build the javadoc
-#    mvn -DskipTests clean package javadoc:aggregate \
-#        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
-#        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
-#        -Dnotimestamp \
-#        -Dmaven.javadoc.failOnError=false
-#    # copy the built javadoc
-#    cp -r /tmp/distributedlog-${version}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
-#  fi
   echo "Built the documentation for version ${version} in ${DOC_DEST_HOME}."
+}
+
+copy_docs() {
+  version=$1
+
+  [[ -d ${DEST_DIR}/content/docs/${version} ]] && rm -r ${DEST_DIR}/content/docs/${version}
+  cp -r ${TMP_DEST_DIR}/docs_${version} ${DEST_DIR}/content/docs/${version}
 }
 
 # build the javadoc API
@@ -115,12 +97,9 @@ build_docs "0.5.0" "v0.5.0"
 
 cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
 mkdir -p ${DEST_DIR}/content/docs
-[[ -d ${DEST_DIR}/content/docs/latest ]] && rm -r ${DEST_DIR}/content/docs/latest
-[[ -d ${DEST_DIR}/content/docs/0.4.0-incubating ]] && rm -r ${DEST_DIR}/content/docs/0.4.0-incubating
-[[ -d ${DEST_DIR}/content/docs/0.5.0 ]] && rm -r ${DEST_DIR}/content/docs/0.5.0
-cp -r ${TMP_DEST_DIR}/docs_latest ${DEST_DIR}/content/docs/latest
-cp -r ${TMP_DEST_DIR}/docs_0.4.0-incubating ${DEST_DIR}/content/docs/0.4.0-incubating
-cp -r ${TMP_DEST_DIR}/docs_0.5.0 ${DEST_DIR}/content/docs/0.5.0
+copy_docs "latest"
+copy_docs "0.4.0-incubating"
+copy_docs "0.5.0"
 
 if [[ "${SERVE}" == "TRUE" ]]; then
   cd ${DLOG_HOME}/website

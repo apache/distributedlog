@@ -18,23 +18,14 @@
 ################################################################################
 
 usage() {
-  echo "Usage: build <env> [dest] [serve]."
+  echo "Usage: build [dest]."
 }
-
-if [ $# -lt 1 ]; then
-  usage
-  exit 1
-fi
-
-DLOG_ENV=$1
-
-OVERRIDED_CONFIG=_config-${DLOG_ENV}.yml
 
 BINDIR=`dirname "$0"`
 DLOG_HOME=`cd $BINDIR/.. > /dev/null;pwd`
 
-if [ $# -gt 1 ]; then
-  DEST_DIR=$2
+if [ $# -gt 0 ]; then
+  DEST_DIR=$1
 else 
   DEST_DIR=${DLOG_HOME}/website
 fi
