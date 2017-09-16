@@ -10,13 +10,11 @@ title: Apache DistributedLog
 description: > # this means to ignore newlines until "baseurl:"
   Apache DistributedLog is an high performance replicated log.
 
-# versions
-DL_VERSION_STABLE: 0.3.51-RC1
-DL_VERSION_LATEST: 0.6.0-SNAPSHOT
-stable_doc_version: 0.4.0-incubating
-
 # the subpath of your site, e.g. /blog
 baseurl: ""
+
+distributedlog_version: "0.5.0"
+distributedlog_version_short: "0.5.0"
 
 # the base hostname & protocol for your site
 url: "http://bookkeeper.apache.org/distributedlog"
@@ -24,26 +22,23 @@ url: "http://bookkeeper.apache.org/distributedlog"
 twitter_username: distributedlog
 twitter_url: https://twitter.com/distributedlog
 github_url: https://github.com/apache/distributedlog
-getslack_url: https://getdl-slack.herokuapp.com
-slack_url: https://apachedistributedlog.slack.com
 wiki_url: https://cwiki.apache.org/confluence/display/DL/Apache+DistributedLog+Home
 jira_url: https://issues.apache.org/jira/browse/DL
-developer_setup_url: https://cwiki.apache.org/confluence/display/DL/Developer+Setup
-contribute_how_to_url: https://cwiki.apache.org/confluence/display/DL/Contributing+to+DistributedLog
-coding_guide_url: https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=65867477
 
 # Build settings
 markdown: kramdown
 
-collections:
-- distributedlog_team
-- mentors
+kramdown:
+  auto_ids: true
+
+redcarpet:
+  # https://george-hawkins.github.io/basic-gfm-jekyll/redcarpet-extensions.html
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink",
+               "tables", "with_toc_data", "strikethrough", "superscript",
+               "lax_spacing"]
 
 # Things to ignore in the build
-exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile', 'docs', 'build.sh']
-
-# Things to keep in the build
-keep_files: ['docs']
+exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
 
 # Downloads directory
 downloads: downloads
@@ -52,6 +47,3 @@ tracking_id: UA-83870961-1
 
 gems:
   - jekyll-redirect-from
-
-exclude:
-  - scripts
