@@ -1,5 +1,6 @@
 ---
 title: Apache DistributedLog 0.5.0 Release Notes
+layout: default
 ---
 
 This is the second Apache release of DistributedLog and the first release as a sub-project of Apache BookKeeper!

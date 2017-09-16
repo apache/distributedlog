@@ -18,7 +18,7 @@
 ################################################################################
 
 usage() {
-  echo "Usage: build <env> [dest] [serve]."
+  echo "Usage: build <env> [dest]."
 }
 
 if [ $# -lt 1 ]; then
@@ -27,8 +27,6 @@ if [ $# -lt 1 ]; then
 fi
 
 DLOG_ENV=$1
-
-OVERRIDED_CONFIG=_config-${DLOG_ENV}.yml
 
 BINDIR=`dirname "$0"`
 DLOG_HOME=`cd $BINDIR/.. > /dev/null;pwd`
@@ -39,55 +37,53 @@ else
   DEST_DIR=${DLOG_HOME}/website
 fi
 
-SERVE="FALSE"
-if [ $# -gt 3 ]; then
-  SERVE="TRUE"
-fi
-
 CONTENT_DIR=${DLOG_ENV}_content
 TMP_DEST_DIR=${DEST_DIR}/temp_${CONTENT_DIR}
 TMP_WEBSITE_DIR=${TMP_DEST_DIR}/website
 
-rm -rf ${DEST_DIR}/${CONTENT_DIR}
-rm -rf ${TMP_DEST_DIR}
-
-if [ ! -d "${DLOG_HOME}/website/docs" ]; then
-  mkdir ${DLOG_HOME}/website/docs
-fi
-
-echo "Building the website to ${TMP_WEBSITE_DIR} ..."
-
-# build the website
-cd ${DLOG_HOME}/website
-
-bundle exec jekyll build --destination ${TMP_WEBSITE_DIR} --config _config.yml,${OVERRIDED_CONFIG}
-
-echo "Built the website @ ${TMP_WEBSITE_DIR}."
-
 # build the documents
 
-build_docs() {
+function build_docs() {
   version=$1
   tag=$2
 
-  DOC_SRC_HOME="${DLOG_HOME}/website/docs/${version}"
   DOC_DEST_HOME="${TMP_DEST_DIR}/docs_${version}"
 
-  cd ${DOC_SRC_HOME}
-  echo ""
-  echo "@${DOC_SRC_HOME}"
-  echo "Building the documentation for version ${version} to ${DOC_DEST_HOME} ..."
+  echo "Building the javadoc for version ${version} to ${DOC_DEST_HOME} ..."
 
-  bundle exec jekyll build --destination ${DOC_DEST_HOME} --config _config.yml,${OVERRIDED_CONFIG}
-
-  echo "Built the documentation for version ${version} in ${DOC_DEST_HOME}."
+  # create the api directory
+  mkdir -p ${DOC_DEST_HOME}/api/java
+  if [ "$version" == "latest" ]; then
+    cd ${DLOG_HOME}
+    # build the javadoc
+    mvn -DskipTests clean package javadoc:aggregate \
+        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
+        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
+        -Dmaven.javadoc.failOnError=false
+    # copy the built javadoc
+    cp -r ${DLOG_HOME}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
+  else
+    rm -rf /tmp/distributedlog-${version}
+    git clone https://github.com/apache/distributedlog.git /tmp/distributedlog-${version}
+    cd /tmp/distributedlog-${version}
+    git checkout $tag
+    # build the javadoc
+    mvn -DskipTests clean package javadoc:aggregate \
+        -Ddoctitle="Apache DistributedLog for Java, version ${version}" \
+        -Dwindowtitle="Apache DistributedLog for Java, version ${version}" \
+        -Dnotimestamp \
+        -Dmaven.javadoc.failOnError=false
+    # copy the built javadoc
+    cp -r /tmp/distributedlog-${version}/target/site/apidocs/* ${DOC_DEST_HOME}/api/java
+  fi
+  echo "Built the javadoc for version ${version} in ${DOC_DEST_HOME}."
 }
 
 copy_docs() {
   version=$1
-
-  [[ -d ${DEST_DIR}/${CONTENT_DIR}/docs/${version} ]] && rm -r ${DEST_DIR}/${CONTENT_DIR}/docs/${version}
-  cp -r ${TMP_DEST_DIR}/docs_${version} ${DEST_DIR}/${CONTENT_DIR}/docs/${version}
+  [[ -d ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api/java ]] && rm -r ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api/java
+  mkdir -p ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api
+  cp -r ${TMP_DEST_DIR}/docs_${version}/api/java ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api/java 
 }
 
 # build the javadoc API
@@ -95,14 +91,6 @@ copy_docs() {
 build_docs "latest"
 build_docs "0.4.0-incubating" "v0.4.0-incubating_2.11"
 build_docs "0.5.0" "v0.5.0"
-
-cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/${CONTENT_DIR}
-mkdir -p ${DEST_DIR}/${CONTENT_DIR}/docs
 copy_docs "latest"
 copy_docs "0.4.0-incubating"
 copy_docs "0.5.0"
-
-if [[ "${SERVE}" == "TRUE" ]]; then
-  cd ${DLOG_HOME}/website
-  bundle exec jekyll serve --destination ${DEST_DIR}/${CONTENT_DIR} --config _config.yml,${OVERRIDED_CONFIG} --incremental
-fi

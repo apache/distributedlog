@@ -12,6 +12,7 @@ description: > # this means to ignore newlines until "baseurl:"
 
 # the subpath of your site, e.g. /blog
 baseurl: ""
+logo_url: "/"
 
 distributedlog_version: "0.4.0-incubating"
 distributedlog_version_short: "0.4.0"

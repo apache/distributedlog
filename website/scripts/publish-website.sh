@@ -21,16 +21,25 @@
 # NOTE: this is the script used by CI to push to apache. If you are looking for
 #       staging the changes, try the `staging-website.sh` script.
 
-PROD_DIR=$1
-APACHE_DIR=$2
+CONTENT_ROOT_DIR=$1
 TMP_DIR=/tmp/distributedlog-site-tmp
-ORIGIN_REPO=$(git remote show origin | grep 'Push  URL' | awk -F// '{print $NF}')
+ORIGIN_REPO=$(git remote show apache | grep 'Push  URL' | awk -F// '{print $NF}')
+# ORIGIN_REPO=$(git remote show origin | grep 'Push  URL' | awk -F// '{print $NF}')
 echo "ORIGIN_REPO: $ORIGIN_REPO"
+
+copy_javadoc() {
+  root_dir=$1
+  for dir in `ls $root_dir/docs`; do
+    mkdir -p $root_dir/content/docs/$dir/api/java/
+    cp -r $root_dir/docs/$dir/api/java/* $root_dir/content/docs/$dir/api/java/
+  done
+}
 
 (
   rm -rf $TMP_DIR
   mkdir -p $TMP_DIR
   cd $TMP_DIR
+  REVISION=$(git rev-parse --short HEAD)
 
   # clone the remote repo
   git clone "https://$ORIGIN_REPO" .
@@ -38,8 +47,10 @@ echo "ORIGIN_REPO: $ORIGIN_REPO"
   git config user.email "distributedlog-dev@bookkeeper.apache.org"
   git checkout asf-site
   # copy the apache generated dir
-  # cp -r $PROD_DIR/content/* $TMP_DIR/content/
-  cp -r $APACHE_DIR/content/* $TMP_DIR/
+  cp -r $CONTENT_ROOT_DIR/production_content/* $TMP_DIR/content/
+  cp -r $CONTENT_ROOT_DIR/apache_content/* $TMP_DIR/
+  # copy the javadoc to content
+  copy_javadoc $TMP_DIR
 
   git add -A .
   git diff-index --quiet HEAD || (git commit -m "Updated site at revision $REVISION" && git push -q origin HEAD:asf-site)

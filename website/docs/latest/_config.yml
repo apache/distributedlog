@@ -12,9 +12,10 @@ description: > # this means to ignore newlines until "baseurl:"
 
 # the subpath of your site, e.g. /blog
 baseurl: ""
+logo_url: "/"
 
-distributedlog_version: "0.5.0-SNAPSHOT"
-distributedlog_version_short: "0.5.0"
+distributedlog_version: "0.6.0-SNAPSHOT"
+distributedlog_version_short: "0.6.0"
 
 # the base hostname & protocol for your site
 url: "http://bookkeeper.apache.org/distributedlog"
