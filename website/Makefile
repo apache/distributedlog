@@ -14,9 +14,6 @@ setup:
 	rm get-pip.py
 	pip install docutils pygments
 
-apache:
-	build.sh production
-
 local:
 	./build.sh local
 
@@ -25,6 +22,9 @@ staging:
 
 production:
 	./build.sh production
+
+apache:
+	./build.sh apache
 
 serve: 
 	./build.sh local /tmp true

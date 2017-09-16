@@ -4,7 +4,12 @@ _site/
 _pdf
 .idea/
 content
-temp_content
+local_content
+temp_local_content
+production_content
+temp_production_content
+apache_content
+temp_apache_content
 **/temp_content
 **/.pygments-cache
 vendor

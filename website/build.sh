@@ -44,10 +44,11 @@ if [ $# -gt 3 ]; then
   SERVE="TRUE"
 fi
 
-TMP_DEST_DIR=${DEST_DIR}/temp_content
+CONTENT_DIR=${DLOG_ENV}_content
+TMP_DEST_DIR=${DEST_DIR}/temp_${CONTENT_DIR}
 TMP_WEBSITE_DIR=${TMP_DEST_DIR}/website
 
-rm -rf ${DEST_DIR}/content
+rm -rf ${DEST_DIR}/${CONTENT_DIR}
 rm -rf ${TMP_DEST_DIR}
 
 if [ ! -d "${DLOG_HOME}/website/docs" ]; then
@@ -85,8 +86,8 @@ build_docs() {
 copy_docs() {
   version=$1
 
-  [[ -d ${DEST_DIR}/content/docs/${version} ]] && rm -r ${DEST_DIR}/content/docs/${version}
-  cp -r ${TMP_DEST_DIR}/docs_${version} ${DEST_DIR}/content/docs/${version}
+  [[ -d ${DEST_DIR}/${CONTENT_DIR}/docs/${version} ]] && rm -r ${DEST_DIR}/${CONTENT_DIR}/docs/${version}
+  cp -r ${TMP_DEST_DIR}/docs_${version} ${DEST_DIR}/${CONTENT_DIR}/docs/${version}
 }
 
 # build the javadoc API
@@ -95,13 +96,13 @@ build_docs "latest"
 build_docs "0.4.0-incubating" "v0.4.0-incubating_2.11"
 build_docs "0.5.0" "v0.5.0"
 
-cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/content
-mkdir -p ${DEST_DIR}/content/docs
+cp -r ${TMP_DEST_DIR}/website ${DEST_DIR}/${CONTENT_DIR}
+mkdir -p ${DEST_DIR}/${CONTENT_DIR}/docs
 copy_docs "latest"
 copy_docs "0.4.0-incubating"
 copy_docs "0.5.0"
 
 if [[ "${SERVE}" == "TRUE" ]]; then
   cd ${DLOG_HOME}/website
-  bundle exec jekyll serve --destination ${DEST_DIR}/content --config _config.yml,${OVERRIDED_CONFIG} --incremental
+  bundle exec jekyll serve --destination ${DEST_DIR}/${CONTENT_DIR} --config _config.yml,${OVERRIDED_CONFIG} --incremental
 fi

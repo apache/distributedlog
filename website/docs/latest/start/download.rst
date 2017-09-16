@@ -26,7 +26,7 @@ __ Download050_
 
 - `Release Notes`__
 
-.. _ReleaseNotes050: ../../releaseNotes
+.. _ReleaseNotes050: ../../0.5.0/releaseNotes
 
 __ ReleaseNotes050_
 

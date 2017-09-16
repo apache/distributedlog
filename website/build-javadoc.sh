@@ -18,19 +18,27 @@
 ################################################################################
 
 usage() {
-  echo "Usage: build [dest]."
+  echo "Usage: build <env> [dest]."
 }
+
+if [ $# -lt 1 ]; then
+  usage
+  exit 1
+fi
+
+DLOG_ENV=$1
 
 BINDIR=`dirname "$0"`
 DLOG_HOME=`cd $BINDIR/.. > /dev/null;pwd`
 
-if [ $# -gt 0 ]; then
-  DEST_DIR=$1
+if [ $# -gt 1 ]; then
+  DEST_DIR=$2
 else 
   DEST_DIR=${DLOG_HOME}/website
 fi
 
-TMP_DEST_DIR=${DEST_DIR}/temp_content
+CONTENT_DIR=${DLOG_ENV}_content
+TMP_DEST_DIR=${DEST_DIR}/temp_${CONTENT_DIR}
 TMP_WEBSITE_DIR=${TMP_DEST_DIR}/website
 
 # build the documents
@@ -73,9 +81,9 @@ function build_docs() {
 
 copy_docs() {
   version=$1
-  [[ -d ${DEST_DIR}/content/docs/${version}/api/java ]] && rm -r ${DEST_DIR}/content/docs/${version}/api/java
-  mkdir -p ${DEST_DIR}/content/docs/${version}/api
-  cp -r ${TMP_DEST_DIR}/docs_${version}/api/java ${DEST_DIR}/content/docs/${version}/api/java 
+  [[ -d ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api/java ]] && rm -r ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api/java
+  mkdir -p ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api
+  cp -r ${TMP_DEST_DIR}/docs_${version}/api/java ${DEST_DIR}/${CONTENT_DIR}/docs/${version}/api/java 
 }
 
 # build the javadoc API
