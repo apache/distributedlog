@@ -22,6 +22,7 @@
   <suppress checks="JavadocPackage" files=".*[\\/]examples[\\/].*"/>
   
   <!-- suppress all checks in the generated directories -->
+  <suppress checks=".*" files=".*[\\/]distributedlog\.thrift[\\/].*"/>
   <suppress checks=".*" files=".+[\\/]generated[\\/].+\.java" />
   <suppress checks=".*" files=".+[\\/]generated-sources[\\/].+\.java" />
   <suppress checks=".*" files=".+[\\/]generated-test-sources[\\/].+\.java" />

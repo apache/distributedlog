@@ -21,31 +21,6 @@
   <suppress checks="JavadocPackage" files=".*[\\/]maven-archetypes[\\/].*"/>
   <suppress checks="JavadocPackage" files=".*[\\/]examples[\\/].*"/>
 
-  <!-- suppress packages by packages -->
-  <!-- TODO: enable checkstyle package by package in https://github.com/apache/distributedlog/issues/165 -->
-  <suppress checks=".*" files=".*[\\/]distributedlog[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.acl[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.admin[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.auditor[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.bk[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.callback[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.config[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.exceptions[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.feature[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.function[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.impl[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.injector[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.limiter[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.lock[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.logsegment[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.metadata[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.namespace[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.net[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.selector[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.tools[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.util[\\/].*"/>
-  <suppress checks=".*" files=".*[\\/]distributedlog\.zk[\\/].*"/>
-
   <!-- suppress all checks in the generated directories -->
   <suppress checks=".*" files=".*[\\/]distributedlog\.thrift[\\/].*"/>
   <suppress checks=".*" files=".+[\\/]generated[\\/].+\.java" />

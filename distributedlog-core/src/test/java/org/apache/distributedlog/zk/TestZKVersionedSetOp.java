@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Test Case for versioned set operation
+ * Test Case for versioned set operation.
  */
 public class TestZKVersionedSetOp {
 

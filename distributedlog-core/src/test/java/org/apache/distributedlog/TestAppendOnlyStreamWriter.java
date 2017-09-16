@@ -38,6 +38,10 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
+
+/**
+ * Test Case for {@link AppendOnlyStreamWriter}.
+ */
 public class TestAppendOnlyStreamWriter extends TestDistributedLogBase {
     static final Logger LOG = LoggerFactory.getLogger(TestAppendOnlyStreamWriter.class);
 
