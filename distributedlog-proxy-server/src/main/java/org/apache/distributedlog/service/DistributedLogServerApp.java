@@ -103,13 +103,13 @@ public class DistributedLogServerApp {
             logger.error("Failed to start distributedlog server : ", ie);
             Runtime.getRuntime().exit(-1);
         } catch (ClassNotFoundException cnf) {
-            logger.error("Failed to start distributedlog server : ", cnf);
-            Runtime.getRuntime().exit(-1);
+          logger.error("Failed to start distributedlog server : ", cnf);
+          Runtime.getRuntime().exit(-1);
         }
     }
 
     private void runCmd(CommandLine cmdline)
-            throws IllegalArgumentException, IOException, ConfigurationException, ClassNotFoundException {
+        throws IllegalArgumentException, IOException, ConfigurationException, ClassNotFoundException {
         final StatsReceiver statsReceiver = NullStatsReceiver.get();
         Optional<String> confOptional = getOptionalStringArg(cmdline, "c");
         DistributedLogConfiguration dlConf = new DistributedLogConfiguration();
@@ -119,7 +119,7 @@ public class DistributedLogServerApp {
                 dlConf.loadConf(new File(configFile).toURI().toURL());
             } catch (ConfigurationException e) {
                 throw new IllegalArgumentException("Failed to load distributedlog configuration from "
-                        + configFile + ".");
+                    + configFile + ".");
             } catch (MalformedURLException e) {
                 throw new IllegalArgumentException("Failed to load distributedlog configuration from malformed "
                         + configFile + ".");
