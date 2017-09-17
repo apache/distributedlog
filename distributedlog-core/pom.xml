@@ -355,6 +355,7 @@
           <failOnViolation>true</failOnViolation>
           <includeResources>false</includeResources>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <excludes>**/thrift/**/*</excludes>
         </configuration>
         <executions>
           <execution>
