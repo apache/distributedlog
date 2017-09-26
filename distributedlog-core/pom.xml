@@ -307,10 +307,10 @@
                   <pattern>org.apache.thrift</pattern>
                   <shadedPattern>dlshade.org.apache.thrift</shadedPattern>
                 </relocation>
-                 <!-- apache zookeeper-->
+                <!-- apache zookeeper -->
                 <relocation>
                   <pattern>org.apache.zookeeper</pattern>
-                  <shadedPattern>org.apache.zookeeper</shadedPattern>
+                  <shadedPattern>dlshade.org.apache.zookeeper</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.apache.jute</pattern>
