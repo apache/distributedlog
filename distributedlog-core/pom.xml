@@ -198,6 +198,34 @@
             </configuration>
           </execution>
           <execution>
+            <id>shade-bk</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>shaded-bk</shadedClassifierName>
+              <minimizeJar>true</minimizeJar>
+              <shadeTestJar>true</shadeTestJar>
+              <artifactSet>
+                <includes>
+                  <include>org.apache.bookkeeper.stats:bookkeeper-stats-api</include>
+                  <include>org.apache.bookkeeper:bookkeeper-server</include>
+                </includes>
+              </artifactSet>
+              <minimizeJar>true</minimizeJar>
+              <relocations>
+                <!-- bookkeeper -->
+                <relocation>
+                  <pattern>org.apache.bookkeeper</pattern>
+                  <shadedPattern>dlshade.org.apache.bookkeeper</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+          <execution>
             <id>shade-all</id>
             <phase>package</phase>
             <goals>
@@ -209,7 +237,6 @@
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>shaded</shadedClassifierName>
               <minimizeJar>true</minimizeJar>
-              <shadeTestJar>true</shadeTestJar>
               <artifactSet>
                 <includes>
                   <include>commons-codec:commons-codec</include>
@@ -232,7 +259,7 @@
                   <include>org.apache.httpcomponents:httpclient</include>
                   <include>org.apache.httpcomponents:httpcore</include>
                   <include>org.apache.thrift:libthrift</include>
-                  <!--<include>org.apache.zookeeper:zookeeper</include>-->
+                  <include>org.apache.zookeeper:zookeeper</include>
                   <include>org.inferred:freebuilder</include>
                 </includes>
               </artifactSet>
@@ -280,11 +307,11 @@
                   <pattern>org.apache.thrift</pattern>
                   <shadedPattern>dlshade.org.apache.thrift</shadedPattern>
                 </relocation>
-                <!-- apache zookeeper -->
-                <!--<relocation>-->
-                  <!--<pattern>org.apache.zookeeper</pattern>-->
-                  <!--<shadedPattern>org.apache.zookeeper</shadedPattern>-->
-                <!--</relocation>-->
+                 <!-- apache zookeeper-->
+                <relocation>
+                  <pattern>org.apache.zookeeper</pattern>
+                  <shadedPattern>org.apache.zookeeper</shadedPattern>
+                </relocation>
                 <relocation>
                   <pattern>org.apache.jute</pattern>
                   <shadedPattern>dlshade.org.apache.jute</shadedPattern>
@@ -321,7 +348,7 @@
                 <!-- bookkeeper -->
                 <relocation>
                   <pattern>org.apache.bookkeeper</pattern>
-                  <shadedPattern>dlshade.org.apache.bookkeeper</shadedPattern>
+                  <shadedPattern>org.apache.bookkeeper</shadedPattern>
                 </relocation>
                 <!-- distributedlog -->
                 <relocation>
