@@ -272,11 +272,6 @@
                   <pattern>org.apache.thrift</pattern>
                   <shadedPattern>dlshade.org.apache.thrift</shadedPattern>
                 </relocation>
-                <!-- apache zookeeper -->
-                <relocation>
-                  <pattern>org.apache.zookeeper</pattern>
-                  <shadedPattern>dlshade.org.apache.zookeeper</shadedPattern>
-                </relocation>
                 <relocation>
                   <pattern>org.apache.jute</pattern>
                   <shadedPattern>dlshade.org.apache.jute</shadedPattern>
@@ -315,10 +310,10 @@
                   <pattern>org.apache.bookkeeper</pattern>
                   <shadedPattern>dlshade.org.apache.bookkeeper</shadedPattern>
                 </relocation>
-                <!-- distributedlog -->
+                <!-- apache zookeeper is special here-->
                 <relocation>
-                  <pattern>org.apache.distributedlog</pattern>
-                  <shadedPattern>org.apache.distributedlog</shadedPattern>
+                  <pattern>org.apache.zookeeper</pattern>
+                  <shadedPattern>org.apache.zookeeper</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
