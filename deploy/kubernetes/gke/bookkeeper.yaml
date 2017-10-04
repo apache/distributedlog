@@ -33,6 +33,7 @@ data:
     # the default manager is flat, which is not good for supporting large number of ledgers
     BK_ledgerManagerType: "hierarchical"
     BK_statsProviderClass: org.apache.bookkeeper.stats.PrometheusMetricsProvider
+    DLOG_ROOT_LOGGER: "INFO,stderr"
 ---
 
 ## BookKeeper servers need to access the local disks and the pods
@@ -72,7 +73,7 @@ spec:
                     cpu: "2000m"
                 # 
                 command: [ "/bin/bash", "/opt/distributedlog/bin/entrypoint.sh" ]
-                args: ["/opt/bookkeeper/bin/bookkeeper", "bookie"]
+                args: [ "/opt/distributedlog/bin/dlog", "org.apache.bookkeeper.proto.BookieServer", "--conf", "/opt/bookkeeper/conf/bk_server.conf" ]
                 ports:
                   - name: client
                     containerPort: 3181
