@@ -36,7 +36,7 @@ replication and strong consistency as essentials for building reliable real-time
 
 - **Quickstarts**: [Run DistributedLog]({{ site.baseurl }}/start/quickstart) on your local machine or follow the tutorial to [write a simple program]({{ site.baseurl }}/tutorials/basic-1) to interact with _DistributedLog_.
 
-- **Setup**: The [docker]({{ site.baseurl }}/deployment/docker) and [cluster]({{ site.baseurl }}/deployment/cluster) setup guides show how to deploy DistributedLog Stack.
+- **Setup**: The [kubernetes]({{ site.baseurl }}/deployment/kubernetes) and [cluster]({{ site.baseurl }}/deployment/cluster) setup guides show how to deploy DistributedLog Stack.
 
 - **Programming Guide**: You can check out our guides about [basic concepts]({{ site.baseurl }}/basics/introduction) and the [Core Library API]({{ site.baseurl }}/user_guide/api/core) or [Proxy Client API]({{ site.baseurl }}/user_guide/api/proxy) to learn how to use DistributedLog to build your reliable real-time services.
 
