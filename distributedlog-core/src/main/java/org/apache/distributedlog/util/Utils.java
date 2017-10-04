@@ -17,6 +17,10 @@
  */
 package org.apache.distributedlog.util;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.io.Closeables;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
@@ -27,29 +31,24 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nullable;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.common.io.Closeables;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.bookkeeper.client.BKException;
+import org.apache.bookkeeper.versioning.LongVersion;
+import org.apache.bookkeeper.versioning.Versioned;
 import org.apache.distributedlog.DistributedLogConstants;
 import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.common.functions.VoidFunctions;
 import org.apache.distributedlog.exceptions.BKTransmitException;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
 import org.apache.distributedlog.exceptions.UnexpectedException;
 import org.apache.distributedlog.exceptions.ZKException;
-import org.apache.distributedlog.common.functions.VoidFunctions;
 import org.apache.distributedlog.io.AsyncAbortable;
 import org.apache.distributedlog.io.AsyncCloseable;
-import org.apache.bookkeeper.meta.ZkVersion;
-import org.apache.bookkeeper.versioning.Versioned;
-import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 
@@ -72,8 +71,7 @@ public class Utils {
     }
 
     /**
-     * Current time from some fixed base time - so useful for cross machine
-     * comparison
+     * Current time from some fixed base time - so useful for cross machine comparison.
      *
      * @return current time in milliseconds.
      */
@@ -83,7 +81,7 @@ public class Utils {
 
     /**
      * Milliseconds elapsed since the time specified, the input is nanoTime
-     * the only conversion happens when computing the elapsed time
+     * the only conversion happens when computing the elapsed time.
      *
      * @param startMsecTime the start of the interval that we are measuring
      * @return elapsed time in milliseconds.
@@ -170,7 +168,8 @@ public class Utils {
                         return;
                     }
                     String parent = pathToCreate.substring(0, lastSlash);
-                    if (parentPathShouldNotCreate.isPresent() && Objects.equal(parentPathShouldNotCreate.get(), parent)) {
+                    if (parentPathShouldNotCreate.isPresent()
+                            && Objects.equal(parentPathShouldNotCreate.get(), parent)) {
                         // we should stop here
                         callback.processResult(rc, path, ctx, name);
                         return;
@@ -179,10 +178,11 @@ public class Utils {
                             CreateMode.PERSISTENT, new AsyncCallback.StringCallback() {
                                 @Override
                                 public void processResult(int rc, String path, Object ctx, String name) {
-                                    if (rc == KeeperException.Code.OK.intValue() || rc == KeeperException.Code.NODEEXISTS.intValue()) {
+                                    if (rc == KeeperException.Code.OK.intValue()
+                                            || rc == KeeperException.Code.NODEEXISTS.intValue()) {
                                         // succeeded in creating the parent, now create the original path
-                                        zkAsyncCreateFullPathOptimisticRecursive(zkc, pathToCreate, parentPathShouldNotCreate,
-                                                data, acl, createMode, callback, ctx);
+                                        zkAsyncCreateFullPathOptimisticRecursive(zkc, pathToCreate,
+                                                parentPathShouldNotCreate, data, acl, createMode, callback, ctx);
                                     } else {
                                         callback.processResult(rc, path, ctx, name);
                                     }
@@ -191,9 +191,11 @@ public class Utils {
                 }
             }, ctx);
         } catch (ZooKeeperClient.ZooKeeperConnectionException zkce) {
-            callback.processResult(DistributedLogConstants.ZK_CONNECTION_EXCEPTION_RESULT_CODE, zkce.getMessage(), ctx, pathToCreate);
+            callback.processResult(DistributedLogConstants.ZK_CONNECTION_EXCEPTION_RESULT_CODE,
+                    zkce.getMessage(), ctx, pathToCreate);
         } catch (InterruptedException ie) {
-            callback.processResult(DistributedLogConstants.DL_INTERRUPTED_EXCEPTION_RESULT_CODE, ie.getMessage(), ctx, pathToCreate);
+            callback.processResult(DistributedLogConstants.DL_INTERRUPTED_EXCEPTION_RESULT_CODE,
+                    ie.getMessage(), ctx, pathToCreate);
         }
     }
 
@@ -223,7 +225,7 @@ public class Utils {
     }
 
     /**
-     * Asynchronously create zookeeper path recursively and optimistically
+     * Asynchronously create zookeeper path recursively and optimistically.
      *
      * @param zkc Zookeeper client
      * @param pathToCreate  Zookeeper full path
@@ -337,7 +339,7 @@ public class Utils {
                     if (null == stat) {
                         promise.complete(new Versioned<byte[]>(null, null));
                     } else {
-                        promise.complete(new Versioned<byte[]>(data, new ZkVersion(stat.getVersion())));
+                        promise.complete(new Versioned<byte[]>(data, new LongVersion(stat.getVersion())));
                     }
                 } else if (KeeperException.Code.NONODE.intValue() == rc) {
                     promise.complete(new Versioned<byte[]>(null, null));
@@ -349,7 +351,8 @@ public class Utils {
         return promise;
     }
 
-    public static CompletableFuture<ZkVersion> zkSetData(ZooKeeperClient zkc, String path, byte[] data, ZkVersion version) {
+    public static CompletableFuture<LongVersion> zkSetData(ZooKeeperClient zkc,
+                                                         String path, byte[] data, LongVersion version) {
         ZooKeeper zk;
         try {
             zk = zkc.get();
@@ -374,13 +377,14 @@ public class Utils {
      *          version used to set data
      * @return future representing the version after this operation.
      */
-    public static CompletableFuture<ZkVersion> zkSetData(ZooKeeper zk, String path, byte[] data, ZkVersion version) {
-        final CompletableFuture<ZkVersion> promise = new CompletableFuture<ZkVersion>();
-        zk.setData(path, data, version.getZnodeVersion(), new AsyncCallback.StatCallback() {
+    public static CompletableFuture<LongVersion> zkSetData(
+            ZooKeeper zk, String path, byte[] data, LongVersion version) {
+        final CompletableFuture<LongVersion> promise = new CompletableFuture<LongVersion>();
+        zk.setData(path, data, (int) version.getLongVersion(), new AsyncCallback.StatCallback() {
             @Override
             public void processResult(int rc, String path, Object ctx, Stat stat) {
                 if (KeeperException.Code.OK.intValue() == rc) {
-                    promise.complete(new ZkVersion(stat.getVersion()));
+                    promise.complete(new LongVersion(stat.getVersion()));
                     return;
                 }
                 promise.completeExceptionally(
@@ -391,7 +395,7 @@ public class Utils {
         return promise;
     }
 
-    public static CompletableFuture<Void> zkDelete(ZooKeeperClient zkc, String path, ZkVersion version) {
+    public static CompletableFuture<Void> zkDelete(ZooKeeperClient zkc, String path, LongVersion version) {
         ZooKeeper zk;
         try {
             zk = zkc.get();
@@ -414,9 +418,9 @@ public class Utils {
      *          version used to set data
      * @return future representing the version after this operation.
      */
-    public static CompletableFuture<Void> zkDelete(ZooKeeper zk, String path, ZkVersion version) {
+    public static CompletableFuture<Void> zkDelete(ZooKeeper zk, String path, LongVersion version) {
         final CompletableFuture<Void> promise = new CompletableFuture<Void>();
-        zk.delete(path, version.getZnodeVersion(), new AsyncCallback.VoidCallback() {
+        zk.delete(path, (int) version.getLongVersion(), new AsyncCallback.VoidCallback() {
             @Override
             public void processResult(int rc, String path, Object ctx) {
                 if (KeeperException.Code.OK.intValue() == rc) {
@@ -444,7 +448,7 @@ public class Utils {
      * false if the node doesn't exist, otherwise future will throw exception
      *
      */
-    public static CompletableFuture<Boolean> zkDeleteIfNotExist(ZooKeeperClient zkc, String path, ZkVersion version) {
+    public static CompletableFuture<Boolean> zkDeleteIfNotExist(ZooKeeperClient zkc, String path, LongVersion version) {
         ZooKeeper zk;
         try {
             zk = zkc.get();
@@ -454,10 +458,10 @@ public class Utils {
             return FutureUtils.exception(zkException(e, path));
         }
         final CompletableFuture<Boolean> promise = new CompletableFuture<Boolean>();
-        zk.delete(path, version.getZnodeVersion(), new AsyncCallback.VoidCallback() {
+        zk.delete(path, (int) version.getLongVersion(), new AsyncCallback.VoidCallback() {
             @Override
             public void processResult(int rc, String path, Object ctx) {
-                if (KeeperException.Code.OK.intValue() == rc ) {
+                if (KeeperException.Code.OK.intValue() == rc) {
                     promise.complete(true);
                 } else if (KeeperException.Code.NONODE.intValue() == rc) {
                     promise.complete(false);
@@ -719,7 +723,7 @@ public class Utils {
     }
 
     /**
-     * Abort async <i>abortable</i>
+     * Abort async <i>abortable</i>.
      *
      * @param abortable the {@code AsyncAbortable} object to be aborted, or null, in which case this method
      *                  does nothing.

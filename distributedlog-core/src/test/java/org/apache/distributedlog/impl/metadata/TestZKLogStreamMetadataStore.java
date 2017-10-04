@@ -17,24 +17,32 @@
  */
 package org.apache.distributedlog.impl.metadata;
 
+import static org.apache.distributedlog.impl.metadata.ZKLogStreamMetadataStore.*;
+import static org.apache.distributedlog.metadata.LogMetadata.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.common.collect.Lists;
+import java.net.URI;
+import java.util.List;
+import org.apache.bookkeeper.util.ZkUtils;
+import org.apache.bookkeeper.versioning.LongVersion;
+import org.apache.bookkeeper.versioning.Versioned;
 import org.apache.distributedlog.DLMTestUtil;
 import org.apache.distributedlog.DistributedLogConfiguration;
-import org.apache.distributedlog.api.MetadataAccessor;
-import org.apache.distributedlog.TestZooKeeperClientBuilder;
-import org.apache.distributedlog.api.namespace.Namespace;
-import org.apache.distributedlog.metadata.DLMetadata;
-import org.apache.distributedlog.metadata.LogMetadataForWriter;
-import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.DistributedLogConstants;
-import org.apache.distributedlog.exceptions.LogNotFoundException;
+import org.apache.distributedlog.TestZooKeeperClientBuilder;
 import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.ZooKeeperClusterTestCase;
+import org.apache.distributedlog.api.MetadataAccessor;
+import org.apache.distributedlog.api.namespace.Namespace;
+import org.apache.distributedlog.api.namespace.NamespaceBuilder;
+import org.apache.distributedlog.exceptions.LogNotFoundException;
+import org.apache.distributedlog.metadata.DLMetadata;
+import org.apache.distributedlog.metadata.LogMetadataForWriter;
 import org.apache.distributedlog.util.DLUtils;
 import org.apache.distributedlog.util.Utils;
-import org.apache.bookkeeper.meta.ZkVersion;
-import org.apache.bookkeeper.util.ZkUtils;
-import org.apache.bookkeeper.versioning.Versioned;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.Transaction;
@@ -47,21 +55,14 @@ import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.util.List;
-
-import static org.apache.distributedlog.metadata.LogMetadata.*;
-import static org.apache.distributedlog.impl.metadata.ZKLogStreamMetadataStore.*;
-import static org.junit.Assert.*;
-
 /**
- * Test {@link ZKLogStreamMetadataStore}
+ * Test {@link ZKLogStreamMetadataStore}.
  */
 public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
 
     private static final Logger logger = LoggerFactory.getLogger(TestZKLogStreamMetadataStore.class);
 
-    private final static int sessionTimeoutMs = 30000;
+    private static final  int sessionTimeoutMs = 30000;
 
     @Rule
     public TestName testName = new TestName();
@@ -184,7 +185,7 @@ public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
 
         for (Versioned<byte[]> metadata : metadatas) {
             assertTrue(pathExists(metadata));
-            assertTrue(((ZkVersion) metadata.getVersion()).getZnodeVersion() >= 0);
+            assertTrue(((LongVersion) metadata.getVersion()).getLongVersion() >= 0L);
         }
 
         Versioned<byte[]> logSegmentsData = logMetadata.getMaxLSSNData();

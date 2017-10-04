@@ -18,33 +18,32 @@
 package org.apache.distributedlog.bk;
 
 import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import org.apache.bookkeeper.client.LedgerHandle;
+import org.apache.bookkeeper.versioning.LongVersion;
+import org.apache.bookkeeper.versioning.Version;
+import org.apache.bookkeeper.versioning.Versioned;
 import org.apache.distributedlog.BookKeeperClient;
 import org.apache.distributedlog.DistributedLogConstants;
-import org.apache.distributedlog.util.DLUtils;
+import org.apache.distributedlog.ZooKeeperClient;
 import org.apache.distributedlog.common.concurrent.FutureEventListener;
+import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.util.DLUtils;
 import org.apache.distributedlog.util.Transaction;
 import org.apache.distributedlog.util.Transaction.OpListener;
-import org.apache.distributedlog.ZooKeeperClient;
-import org.apache.distributedlog.common.concurrent.FutureUtils;
 import org.apache.distributedlog.util.Utils;
 import org.apache.distributedlog.zk.ZKTransaction;
 import org.apache.distributedlog.zk.ZKVersionedSetOp;
-import org.apache.bookkeeper.client.LedgerHandle;
-import org.apache.bookkeeper.meta.ZkVersion;
-import org.apache.bookkeeper.versioning.Version;
-import org.apache.bookkeeper.versioning.Versioned;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Allocator to allocate ledgers.
@@ -53,7 +52,7 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
 
     static final Logger LOG = LoggerFactory.getLogger(SimpleLedgerAllocator.class);
 
-    static enum Phase {
+    enum Phase {
         ALLOCATING, ALLOCATED, HANDING_OVER, HANDED_OVER, ERROR
     }
 
@@ -92,7 +91,7 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
     // allocation phase
     Phase phase = Phase.HANDED_OVER;
     // version
-    ZkVersion version = new ZkVersion(-1);
+    LongVersion version = new LongVersion(-1);
     // outstanding allocation
     CompletableFuture<LedgerHandle> allocatePromise;
     // outstanding tryObtain transaction
@@ -135,7 +134,7 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
                         public void processResult(int rc, String path, Object ctx, String name, Stat stat) {
                             if (KeeperException.Code.OK.intValue() == rc) {
                                 promise.complete(new Versioned<byte[]>(DistributedLogConstants.EMPTY_BYTES,
-                                        new ZkVersion(stat.getVersion())));
+                                        new LongVersion(stat.getVersion())));
                             } else if (KeeperException.Code.NODEEXISTS.intValue() == rc) {
                                 FutureUtils.proxyTo(
                                   Utils.zkGetData(zkc, allocatePath, false),
@@ -203,7 +202,7 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
      *          Allocation Data.
      */
     private void initialize(Versioned<byte[]> allocationData) {
-        setVersion((ZkVersion) allocationData.getVersion());
+        setVersion((LongVersion) allocationData.getVersion());
         byte[] data = allocationData.getValue();
         if (null != data && data.length > 0) {
             // delete the allocated ledger since this is left by last allocation.
@@ -218,7 +217,8 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
 
     private synchronized void deleteLedgerLeftFromPreviousAllocationIfNecessary() {
         if (null != ledgerIdLeftFromPrevAllocation) {
-            LOG.info("Deleting allocated-but-unused ledger left from previous allocation {}.", ledgerIdLeftFromPrevAllocation);
+            LOG.info("Deleting allocated-but-unused ledger left from previous allocation {}.",
+                    ledgerIdLeftFromPrevAllocation);
             deleteLedger(ledgerIdLeftFromPrevAllocation);
             ledgerIdLeftFromPrevAllocation = null;
         }
@@ -256,10 +256,10 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
 
     @Override
     public void onCommit(Version r) {
-        confirmObtain((ZkVersion) r);
+        confirmObtain((LongVersion) r);
     }
 
-    private void confirmObtain(ZkVersion zkVersion) {
+    private void confirmObtain(LongVersion zkVersion) {
         boolean shouldAllocate = false;
         OpListener<LedgerHandle> listenerToNotify = null;
         LedgerHandle lhToNotify = null;
@@ -293,8 +293,8 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
         OpListener<LedgerHandle> listenerToNotify;
         synchronized (this) {
             listenerToNotify = tryObtainListener;
-            if (t instanceof KeeperException &&
-                    ((KeeperException) t).code() == KeeperException.Code.BADVERSION) {
+            if (t instanceof KeeperException
+                    && ((KeeperException) t).code() == KeeperException.Code.BADVERSION) {
                 LOG.info("Set ledger allocator {} to ERROR state after hit bad version : version = {}",
                         allocatePath, getVersion());
                 setPhase(Phase.ERROR);
@@ -339,7 +339,7 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
             return;
         }
         org.apache.zookeeper.Op zkSetDataOp = org.apache.zookeeper.Op.setData(
-                allocatePath, DistributedLogConstants.EMPTY_BYTES, version.getZnodeVersion());
+                allocatePath, DistributedLogConstants.EMPTY_BYTES, (int) version.getLongVersion());
         ZKVersionedSetOp commitOp = new ZKVersionedSetOp(zkSetDataOp, this);
         tryObtainTxn.addOp(commitOp);
         setPhase(Phase.HANDING_OVER);
@@ -363,11 +363,11 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
         failAllocation(cause);
     }
 
-    private synchronized ZkVersion getVersion() {
+    private synchronized LongVersion getVersion() {
         return version;
     }
 
-    private synchronized void setVersion(ZkVersion newVersion) {
+    private synchronized void setVersion(LongVersion newVersion) {
         Version.Occurred occurred = newVersion.compare(version);
         if (occurred == Version.Occurred.AFTER) {
             LOG.info("Ledger allocator for {} moved version from {} to {}.",
@@ -382,9 +382,9 @@ public class SimpleLedgerAllocator implements LedgerAllocator, FutureEventListen
     private void markAsAllocated(final LedgerHandle lh) {
         byte[] data = DLUtils.logSegmentId2Bytes(lh.getId());
         Utils.zkSetData(zkc, allocatePath, data, getVersion())
-            .whenComplete(new FutureEventListener<ZkVersion>() {
+            .whenComplete(new FutureEventListener<LongVersion>() {
                 @Override
-                public void onSuccess(ZkVersion version) {
+                public void onSuccess(LongVersion version) {
                     // we only issue deleting ledger left from previous allocation when we could allocate first ledger
                     // as zookeeper version could prevent us doing stupid things.
                     deleteLedgerLeftFromPreviousAllocationIfNecessary();

@@ -17,17 +17,17 @@
  */
 package org.apache.distributedlog.zk;
 
-import org.apache.distributedlog.util.Transaction.OpListener;
-import org.apache.bookkeeper.meta.ZkVersion;
+import javax.annotation.Nullable;
+import org.apache.bookkeeper.versioning.LongVersion;
 import org.apache.bookkeeper.versioning.Version;
+import org.apache.distributedlog.util.Transaction.OpListener;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.Op;
 import org.apache.zookeeper.OpResult;
 
-import javax.annotation.Nullable;
 
 /**
- * ZooKeeper Operation that plays with {@link org.apache.bookkeeper.versioning.Version}
+ * ZooKeeper Operation that plays with {@link org.apache.bookkeeper.versioning.Version}.
  */
 public class ZKVersionedSetOp extends ZKOp {
 
@@ -44,7 +44,7 @@ public class ZKVersionedSetOp extends ZKOp {
         assert(opResult instanceof OpResult.SetDataResult);
         OpResult.SetDataResult setDataResult = (OpResult.SetDataResult) opResult;
         if (null != listener) {
-            listener.onCommit(new ZkVersion(setDataResult.getStat().getVersion()));
+            listener.onCommit(new LongVersion(setDataResult.getStat().getVersion()));
         }
     }
 
