@@ -129,6 +129,33 @@ On the bookie pod, you can run simpletest to verify the installation. The simple
 $ BOOKIE_CONF=/opt/bookkeeper/conf/bk_server.conf /opt/distributedlog/bin/dlog bkshell simpletest
 ```
 
+### Monitoring
+
+Apache BookKeeper provides stats provider for being able to integrate with different monitoring systems. The default monitoring stack for Apache BookKeeper
+on Kubernetes has consists of [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/).
+
+You can deploy one instance of Prometheus and one instance of Grafana by running following command:
+
+```bash
+$ kubectl apply -f monitoring.yaml
+```
+
+#### Prometheus
+
+All BookKeeper/DistributedLog metrics in Kubernetes are collected by a Prometheus instance running inside the cluster. Typically, there is no need to access
+Prometheus directly. Instead, you can use the Grafana interface that displays the data stored in Prometheus.
+
+#### Grafana
+
+In your Kubernetes cluster, you can use Grafana to view dashbaords for JVM stats, ZooKeeper, and BookKeeper. You can get access to the pod serving Grafana
+using kubectl’s port-forward command:
+
+```bash
+$ kubectl port-forward $(kubectl get pods | grep grafana | awk '{print $1}') 3000
+```
+
+You can then access the dashboard in your web browser at [localhost:3000](http://localhost:3000).
+
 ### Create DistributedLog Namespace
 
 At this moment, you have a bookkeeper cluster up running on kubernetes. Now, You can create a distributedlog namespace and start playing with it.
@@ -139,7 +166,7 @@ namespace `distributedlog://zookeeper/distributedlog` for you when starting the 
 You can create a distributedlog namespace using the `dlog` tool.
 
 ```bash
-kubectl run dlog --rm=true --attach --image=apachedistributedlog/distributedlog:0.5.0 --restart=OnFailure -- /opt/distributedlog/bin/dlog admin bind -l /bookkeeper/ledgers -s zookeeper -c distributedlog://zookeeper/distributedlog
+$ kubectl run dlog --rm=true --attach --image=apachedistributedlog/distributedlog:0.5.0 --restart=OnFailure -- /opt/distributedlog/bin/dlog admin bind -l /bookkeeper/ledgers -s zookeeper -c distributedlog://zookeeper/distributedlog
 ```
 
 After you have a distributedlog namespace, you can play around the namespace by using `dlog` tool to create, delete, list and show the streams.
@@ -149,7 +176,7 @@ After you have a distributedlog namespace, you can play around the namespace by 
 Create 10 streams prefixed with `mystream-`.
 
 ```bash
-kubectl run dlog --rm=true --attach --image=apachedistributedlog/distributedlog:0.5.0 --restart=OnFailure -- /opt/distributedlog/bin/dlog tool create -u distributedlog://zookeeper/distributedlog -r mystream- -e 0-9 -f
+$ kubectl run dlog --rm=true --attach --image=apachedistributedlog/distributedlog:0.5.0 --restart=OnFailure -- /opt/distributedlog/bin/dlog tool create -u distributedlog://zookeeper/distributedlog -r mystream- -e 0-9 -f
 ```
 
 #### List Streams
@@ -157,7 +184,7 @@ kubectl run dlog --rm=true --attach --image=apachedistributedlog/distributedlog:
 List the streams under the namespace.
 
 ```bash
-kubectl run dlog --rm=true --attach --image=apachedistributedlog/distributedlog:0.5.0 --restart=OnFailure -- /opt/distributedlog/bin/dlog tool list -u distributedlog://zookeeper/distributedlog
+$ kubectl run dlog --rm=true --attach --image=apachedistributedlog/distributedlog:0.5.0 --restart=OnFailure -- /opt/distributedlog/bin/dlog tool list -u distributedlog://zookeeper/distributedlog
 ```
 
 An example of the output of this command is:
@@ -177,6 +204,24 @@ mystream-4
 mystream-3
 --------------------------------
 ```
+
+### Write and Read Records
+
+You can run a simple benchmark on testing writing and read from distributedlog streams.
+
+Start one instance of benchmark-writer to write to 100 streams. (The streams are automatically created by the benchmark writer)
+
+```bash
+$ kubectl apply -f benchmark-writer.yaml
+```
+
+Start one instance of benchmark-reader to read from those 100 streams.
+
+```bash
+$ kubectl apply -f benchmark-reader.yaml
+```
+
+You can monitor the Grafana dashboard for the traffic comes from benchmark writer and reader.
 
 ### Un-Deploy
 

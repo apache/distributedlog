@@ -32,8 +32,8 @@ data:
     BK_zkServers: zookeeper
     # the default manager is flat, which is not good for supporting large number of ledgers
     BK_ledgerManagerType: "hierarchical"
-    BK_statsProviderClass: org.apache.bookkeeper.stats.PrometheusMetricsProvider
-    DLOG_ROOT_LOGGER: "INFO,stderr"
+    BK_statsProviderClass: org.apache.bookkeeper.stats.prometheus.PrometheusMetricsProvider
+    BK_DLOG_ROOT_LOGGER: "INFO,stderr"
 ---
 
 ## BookKeeper servers need to access the local disks and the pods
@@ -63,7 +63,7 @@ spec:
         spec:
             containers:
               - name: bookie
-                image: apachedistributedlog/distributedlog:0.5.0
+                image: apachedistributedlog/distributedlog:latest
                 resources:
                   requests:
                     memory: "3Gi"

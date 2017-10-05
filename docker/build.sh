@@ -25,7 +25,7 @@ MVN_VERSION=`./get-version.sh`
 ALL_MODULE="distributedlog-dist"
 DOCKER_IMAGE_NAME="distributedlog"
 DOCKER_GRAFANA_NAME="distributedlog-grafana"
-DOCKER_IMAGE_VERSION="nightly"
+DOCKER_IMAGE_VERSION="latest"
 
 echo "distributedlog version: ${MVN_VERSION}"
 

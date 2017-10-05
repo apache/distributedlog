@@ -47,7 +47,7 @@ set -x
 # Fail if any of the subsequent commands fail
 set -e
 
-docker tag distributedlog-grafana:nightly $DOCKER_ORG/distributedlog-grafana:nightly
+docker tag distributedlog-grafana:latest $DOCKER_ORG/distributedlog-grafana:latest
 
 # Push all images and tags
-docker push $DOCKER_ORG/distributedlog-grafana:nightly
+docker push $DOCKER_ORG/distributedlog-grafana:latest
