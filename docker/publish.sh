@@ -47,9 +47,9 @@ set -x
 # Fail if any of the subsequent commands fail
 set -e
 
-docker tag distributedlog:nightly $DOCKER_ORG/distributedlog:nightly
-# docker tag distributedlog:nightly $DOCKER_ORG/distributedlog:$MVN_VERSION
+docker tag distributedlog:latest $DOCKER_ORG/distributedlog:latest
+# docker tag distributedlog:latest $DOCKER_ORG/distributedlog:$MVN_VERSION
 
 # Push all images and tags
-docker push $DOCKER_ORG/distributedlog:nightly
+docker push $DOCKER_ORG/distributedlog:latest
 # docker push $DOCKER_ORG/distributedlog:$MVN_VERSION
