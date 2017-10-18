@@ -52,6 +52,7 @@ import org.apache.distributedlog.api.MetadataAccessor;
 import org.apache.distributedlog.api.namespace.Namespace;
 import org.apache.distributedlog.api.namespace.NamespaceBuilder;
 import org.apache.distributedlog.common.concurrent.FutureUtils;
+import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.exceptions.LogExistsException;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.exceptions.ZKException;
@@ -68,6 +69,7 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.Transaction;
 import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 import org.junit.After;
 import org.junit.Before;
@@ -553,6 +555,27 @@ public class TestZKLogStreamMetadataStore extends ZooKeeperClusterTestCase {
             logIdentifier,
             3);
 
+        FutureUtils.result(metadataStore.renameLog(uri, logName, newLogName));
+    }
+
+    @Test(timeout = 60000, expected = LockingException.class)
+    public void testRenameLockedLog() throws Exception {
+        String logName = testName.getMethodName();
+        String logIdentifier = "<default>";
+        int numSegments = 5;
+        createLog(
+            zkc,
+            uri,
+            logName,
+            logIdentifier,
+            numSegments);
+
+        // create a lock
+        String logRootPath = getLogRootPath(uri, logName, logIdentifier);
+        String lockPath = logRootPath + LOCK_PATH;
+        zkc.get().create(lockPath + "/test", new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+
+        String newLogName = "path/to/new/" + logName;
         FutureUtils.result(metadataStore.renameLog(uri, logName, newLogName));
     }
 
