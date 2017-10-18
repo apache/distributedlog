@@ -50,6 +50,7 @@ import org.apache.distributedlog.common.util.SchedulerUtils;
 import org.apache.distributedlog.exceptions.DLInterruptedException;
 import org.apache.distributedlog.exceptions.InvalidStreamNameException;
 import org.apache.distributedlog.exceptions.LockCancelledException;
+import org.apache.distributedlog.exceptions.LockingException;
 import org.apache.distributedlog.exceptions.LogExistsException;
 import org.apache.distributedlog.exceptions.LogNotFoundException;
 import org.apache.distributedlog.exceptions.UnexpectedException;
@@ -817,6 +818,9 @@ public class ZKLogStreamMetadataStore implements LogStreamMetadataStore {
                     future.complete(null);
                 } else if (Code.NODEEXISTS.intValue() == rc) {
                     future.completeExceptionally(new LogExistsException("Someone just created new log " + newLogPath));
+                } else if (Code.NOTEMPTY.intValue() == rc) {
+                    future.completeExceptionally(new LockingException(oldLogPath + LOCK_PATH,
+                        "Someone is holding a lock on log " + oldLogPath));
                 } else {
                     future.completeExceptionally(new ZKException("Failed to rename log "
                         + oldLogPath + " to " + newLogPath + " at path " + path, Code.get(rc)));
