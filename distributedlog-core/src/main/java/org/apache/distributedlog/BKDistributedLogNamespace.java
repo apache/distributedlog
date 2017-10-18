@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  * <h4>DistributedLogManager</h4>
  * All the core stats about reader and writer are exposed under current scope via {@link BKDistributedLogManager}.
  */
-public class BKDistributedLogNamespace implements Namespace {
+public class BKDistributedLogNamespace implements Namespace, AutoCloseable {
     static final Logger LOG = LoggerFactory.getLogger(BKDistributedLogNamespace.class);
 
     private final String clientId;
@@ -298,16 +298,17 @@ public class BKDistributedLogNamespace implements Namespace {
 
     /**
      * Close the distributed log manager factory, freeing any resources it may hold.
+     * close the resource in reverse order v.s. in which they are started
      */
     @Override
     public void close() {
         if (!closed.compareAndSet(false, true)) {
             return;
         }
-        // shutdown the driver
-        Utils.close(driver);
         // close the write limiter
         this.writeLimiter.close();
+        // shutdown the driver
+        Utils.close(driver);
         // Shutdown the schedulers
         SchedulerUtils.shutdownScheduler(scheduler, conf.getSchedulerShutdownTimeoutMs(),
                 TimeUnit.MILLISECONDS);
