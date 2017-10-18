@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  * <h4>DistributedLogManager</h4>
  * All the core stats about reader and writer are exposed under current scope via {@link BKDistributedLogManager}.
  */
-public class BKDistributedLogNamespace implements Namespace, AutoCloseable {
+public class BKDistributedLogNamespace implements Namespace {
     static final Logger LOG = LoggerFactory.getLogger(BKDistributedLogNamespace.class);
 
     private final String clientId;
