@@ -222,6 +222,7 @@
                   <include>net.jpountz.lz4:lz4</include>
                   <include>org.apache.bookkeeper.stats:bookkeeper-stats-api</include>
                   <include>org.apache.bookkeeper:bookkeeper-server</include>
+                  <include>org.apache.bookkeeper:bookkeeper-common</include>
                   <include>org.apache.commons:commons-lang3</include>
                   <include>org.apache.distributedlog:distributedlog-common</include>
                   <include>org.apache.distributedlog:distributedlog-protocol</include>
