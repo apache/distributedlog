@@ -124,7 +124,7 @@
     <stats-util.version>0.0.58</stats-util.version>
     <zookeeper.version>3.5.3-beta</zookeeper.version>
     <!-- plugin dependencies -->
-    <apache-rat-plugin.version>0.7</apache-rat-plugin.version>
+    <apache-rat-plugin.version>0.12</apache-rat-plugin.version>
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
     <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
     <findbugs-maven-plugin.version>3.0.3</findbugs-maven-plugin.version>
@@ -259,6 +259,7 @@
             <!-- Grafana -->
             <exclude>docker/grafana/dashboards/*.json</exclude>
           </excludes>
+          <consoleOutput>true</consoleOutput>
         </configuration>
       </plugin>
       <!-- Report jacoco coverage to coveralls.io -->
