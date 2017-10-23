@@ -23,7 +23,7 @@
 
 CONTENT_ROOT_DIR=$1
 TMP_DIR=/tmp/distributedlog-site-tmp
-ORIGIN_REPO=$(git remote show apache | grep 'Push  URL' | awk -F// '{print $NF}')
+ORIGIN_REPO=$(git remote show origin | grep 'Push  URL' | awk -F// '{print $NF}')
 # ORIGIN_REPO=$(git remote show origin | grep 'Push  URL' | awk -F// '{print $NF}')
 echo "ORIGIN_REPO: $ORIGIN_REPO"
 
