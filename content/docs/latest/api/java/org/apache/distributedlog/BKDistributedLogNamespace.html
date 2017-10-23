@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -286,6 +286,13 @@ implements <a href="../../../org/apache/distributedlog/api/namespace/Namespace.h
 <div class="block">Register namespace listener on stream updates under the namespace.</div>
 </td>
 </tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/BKDistributedLogNamespace.html#renameLog-java.lang.String-java.lang.String-">renameLog</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;oldName,
+         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newName)</code>
+<div class="block">Rename a log from <i>oldName</i> to <i>newName</i>.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -471,6 +478,27 @@ implements <a href="../../../org/apache/distributedlog/api/namespace/Namespace.h
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../org/apache/distributedlog/exceptions/InvalidStreamNameException.html" title="class in org.apache.distributedlog.exceptions">InvalidStreamNameException</a></code> - if log name is invalid.</dd>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - when encountered issues with backend.</dd>
+</dl>
+</li>
+</ul>
+<a name="renameLog-java.lang.String-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>renameLog</h4>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;&nbsp;renameLog(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;oldName,
+                                         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newName)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../org/apache/distributedlog/api/namespace/Namespace.html#renameLog-java.lang.String-java.lang.String-">Namespace</a></code></span></div>
+<div class="block">Rename a log from <i>oldName</i> to <i>newName</i>.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../org/apache/distributedlog/api/namespace/Namespace.html#renameLog-java.lang.String-java.lang.String-">renameLog</a></code>&nbsp;in interface&nbsp;<code><a href="../../../org/apache/distributedlog/api/namespace/Namespace.html" title="interface in org.apache.distributedlog.api.namespace">Namespace</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>oldName</code> - old log name</dd>
+<dd><code>newName</code> - new log name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a future represents the rename result.</dd>
 </dl>
 </li>
 </ul>

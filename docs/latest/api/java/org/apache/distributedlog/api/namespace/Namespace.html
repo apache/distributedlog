@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -237,6 +237,13 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/AutoClos
 <div class="block">Register namespace listener on stream updates under the namespace.</div>
 </td>
 </tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/distributedlog/api/namespace/Namespace.html#renameLog-java.lang.String-java.lang.String-">renameLog</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;oldName,
+         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newName)</code>
+<div class="block">Rename a log from <i>oldName</i> to <i>newName</i>.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -303,6 +310,29 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/AutoClos
 <dd><code><a href="../../../../../org/apache/distributedlog/exceptions/InvalidStreamNameException.html" title="class in org.apache.distributedlog.exceptions">InvalidStreamNameException</a></code> - if log name is invalid</dd>
 <dd><code><a href="../../../../../org/apache/distributedlog/exceptions/LogNotFoundException.html" title="class in org.apache.distributedlog.exceptions">LogNotFoundException</a></code> - if log doesn't exist</dd>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - when encountered issues with backend</dd>
+</dl>
+</li>
+</ul>
+<a name="renameLog-java.lang.String-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>renameLog</h4>
+<pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;&nbsp;renameLog(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;oldName,
+                                  <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newName)</pre>
+<div class="block">Rename a log from <i>oldName</i> to <i>newName</i>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>oldName</code> - old log name</dd>
+<dd><code>newName</code> - new log name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a future represents the rename result.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../../org/apache/distributedlog/exceptions/InvalidStreamNameException.html" title="class in org.apache.distributedlog.exceptions">InvalidStreamNameException</a></code> - if log name is invalid</dd>
+<dd><code><a href="../../../../../org/apache/distributedlog/exceptions/LogNotFoundException.html" title="class in org.apache.distributedlog.exceptions">LogNotFoundException</a></code> - if old log doesn't exist</dd>
+<dd><code><a href="../../../../../org/apache/distributedlog/exceptions/LogExistsException.html" title="class in org.apache.distributedlog.exceptions">LogExistsException</a></code> - if the new log exists</dd>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - when encountered issues with backend.</dd>
 </dl>
 </li>
 </ul>

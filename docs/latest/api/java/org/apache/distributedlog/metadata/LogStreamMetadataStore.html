@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -182,6 +182,14 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <div class="block">Create a transaction for the metadata operations happening in the metadata store.</div>
 </td>
 </tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogStreamMetadataStore.html#renameLog-java.net.URI-java.lang.String-java.lang.String-">renameLog</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net">URI</a>&nbsp;uri,
+         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;oldStreamName,
+         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newStreamName)</code>
+<div class="block">Rename the log from <i>oldStreamName</i> to <i>newStreamName</i>.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.io.Closeable">
@@ -308,6 +316,26 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <dd><code>streamName</code> - the name of the log stream</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>future represents the result of the deletion.</dd>
+</dl>
+</li>
+</ul>
+<a name="renameLog-java.net.URI-java.lang.String-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>renameLog</h4>
+<pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;&nbsp;renameLog(<a href="http://download.oracle.com/javase/6/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net">URI</a>&nbsp;uri,
+                                  <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;oldStreamName,
+                                  <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newStreamName)</pre>
+<div class="block">Rename the log from <i>oldStreamName</i> to <i>newStreamName</i>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>uri</code> - the location to store the metadata of the log</dd>
+<dd><code>oldStreamName</code> - the old name of the log stream</dd>
+<dd><code>newStreamName</code> - the new name of the log stream</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>future represents the result of the rename operation.</dd>
 </dl>
 </li>
 </ul>
