@@ -120,6 +120,8 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">LogSegmentMetadataStoreUpdater</span>
 extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
 implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></pre>
+<div class="block">The implementation is responsible
+ for updating the metadata.</div>
 </li>
 </ul>
 </div>
@@ -207,14 +209,14 @@ implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdat
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentActive-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentActive</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment)</code>
-<div class="block">Change the truncation status of a <i>log segment</i> to be active</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to be active.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
                                <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;minActiveDLSN)</code>
-<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -228,7 +230,7 @@ implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdat
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentTruncated-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentTruncated</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment)</code>
-<div class="block">Change the truncation status of a <i>log segment</i> to truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to truncated.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -241,7 +243,7 @@ implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdat
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>org.apache.distributedlog.util.Transaction&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#transaction--">transaction</a></span>()</code>
-<div class="block">Start a transaction on metadata updates</div>
+<div class="block">Start a transaction on metadata updates.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
@@ -339,7 +341,7 @@ implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdat
 <h4>transaction</h4>
 <pre>public&nbsp;org.apache.distributedlog.util.Transaction&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;transaction()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#transaction--">MetadataUpdater</a></code></span></div>
-<div class="block">Start a transaction on metadata updates</div>
+<div class="block">Start a transaction on metadata updates.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#transaction--">transaction</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></code></dd>
@@ -397,7 +399,7 @@ implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdat
 <li class="blockList">
 <h4>setLogSegmentActive</h4>
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;&nbsp;setLogSegmentActive(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment)</pre>
-<div class="block">Change the truncation status of a <i>log segment</i> to be active</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to be active.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentActive-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentActive</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></code></dd>
@@ -415,7 +417,7 @@ implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdat
 <li class="blockList">
 <h4>setLogSegmentTruncated</h4>
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;&nbsp;setLogSegmentTruncated(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment)</pre>
-<div class="block">Change the truncation status of a <i>log segment</i> to truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to truncated.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentTruncated-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentTruncated</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></code></dd>
@@ -456,7 +458,7 @@ implements <a href="../../../../org/apache/distributedlog/metadata/MetadataUpdat
 <h4>setLogSegmentPartiallyTruncated</h4>
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;&nbsp;setLogSegmentPartiallyTruncated(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
                                                                              <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;minActiveDLSN)</pre>
-<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></code></dd>

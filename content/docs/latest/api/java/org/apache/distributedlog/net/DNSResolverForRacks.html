@@ -121,16 +121,16 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">DNSResolverForRacks</span>
 extends <a href="../../../../org/apache/distributedlog/net/DNSResolver.html" title="class in org.apache.distributedlog.net">DNSResolver</a></pre>
 <div class="block">Resolve the dns by racks.
- <p>
- It resolves domain name like `(region)-(rack)-xxx-xxx.*` to network location
+
+  <p>It resolves domain name like `(region)-(rack)-xxx-xxx.*` to network location
  `/(region)/(rack)`. If resolution failed, it returns `/default-region/default-rack`.
- <p>
- region could be override in <code>hostRegionOverrides</code>. for example, if the
+
+  <p>region could be override in <code>hostRegionOverrides</code>. for example, if the
  host name is <i>regionA-rack1-xx-yyy</i>, it would be resolved to `/regionA/rack1`
  without any overrides. If the specified overrides is <i>regionA-rack1-xx-yyy:regionB</i>,
  the resolved network location would be <i>/regionB/rack1</i>.
- <p>
- Region overrides provide optimization hits to bookkeeper if two `logical` regions are
+
+  <p>Region overrides provide optimization hits to bookkeeper if two `logical` regions are
  in same or close locations.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -209,6 +209,13 @@ extends <a href="../../../../org/apache/distributedlog/net/DNSResolver.html" tit
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
 <code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.apache.bookkeeper.net.DNSToSwitchMapping">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;org.apache.bookkeeper.net.DNSToSwitchMapping</h3>
+<code>useHostName</code></li>
 </ul>
 </li>
 </ul>

@@ -109,6 +109,7 @@ var activeTableTab = "activeTableTab";
  @InterfaceStability.Evolving
 public interface <span class="typeNameLabel">AsyncLogReader</span>
 extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" title="interface in org.apache.distributedlog.io">AsyncCloseable</a></pre>
+<div class="block">AsyncLogReader.</div>
 </li>
 </ul>
 </div>
@@ -165,7 +166,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html#readNext--">readNext</a></span>()</code>
-<div class="block">Read the next record from the log stream</div>
+<div class="block">Read the next record from the log stream.</div>
 </td>
 </tr>
 </table>
@@ -211,7 +212,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>readNext</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;&nbsp;readNext()</pre>
-<div class="block">Read the next record from the log stream</div>
+<div class="block">Read the next record from the log stream.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A promise that when satisfied will contain the Log Record with its DLSN.</dd>
@@ -246,8 +247,8 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
                                                     long&nbsp;waitTime,
                                                     <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent">TimeUnit</a>&nbsp;timeUnit)</pre>
 <div class="block">Read next <i>numEntries</i> entries in a given <i>waitTime</i>.
- <p>
- The future is satisfied when either reads <i>numEntries</i> entries or reaches <i>waitTime</i>.
+
+  <p>The future is satisfied when either reads <i>numEntries</i> entries or reaches <i>waitTime</i>.
  The only exception is if there isn't any new entries written within <i>waitTime</i>, it would
  wait until new entries are available.</div>
 <dl>

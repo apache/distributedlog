@@ -136,7 +136,7 @@ public interface <span class="typeNameLabel">LogMetadataStore</span></pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogMetadataStore.html#getLogs--">getLogs</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogMetadataStore.html#getLogs-java.lang.String-">getLogs</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;logNamePrefix)</code>
 <div class="block">Retrieves logs from the namespace.</div>
 </td>
 </tr>
@@ -193,15 +193,17 @@ public interface <span class="typeNameLabel">LogMetadataStore</span></pre>
 </dl>
 </li>
 </ul>
-<a name="getLogs--">
+<a name="getLogs-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getLogs</h4>
-<pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;&nbsp;getLogs()</pre>
+<pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;&nbsp;getLogs(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;logNamePrefix)</pre>
 <div class="block">Retrieves logs from the namespace.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>logNamePrefix</code> - log name prefix.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>iterator of logs of the namespace.</dd>
 </dl>

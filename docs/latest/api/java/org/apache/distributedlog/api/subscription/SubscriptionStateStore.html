@@ -107,6 +107,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">SubscriptionStateStore</span>
 extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.html?is-external=true" title="class or interface in java.io">Closeable</a></pre>
+<div class="block">Store to manage subscription states.</div>
 </li>
 </ul>
 </div>
@@ -128,13 +129,13 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/distributedlog/api/subscription/SubscriptionStateStore.html#advanceCommitPosition-org.apache.distributedlog.DLSN-">advanceCommitPosition</a></span>(<a href="../../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;newPosition)</code>
-<div class="block">Advances the position associated with the subscriber</div>
+<div class="block">Advances the position associated with the subscriber.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/distributedlog/api/subscription/SubscriptionStateStore.html#getLastCommitPosition--">getLastCommitPosition</a></span>()</code>
-<div class="block">Get the last committed position stored for this subscription</div>
+<div class="block">Get the last committed position stored for this subscription.</div>
 </td>
 </tr>
 </table>
@@ -166,7 +167,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <li class="blockList">
 <h4>getLastCommitPosition</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;&nbsp;getLastCommitPosition()</pre>
-<div class="block">Get the last committed position stored for this subscription</div>
+<div class="block">Get the last committed position stored for this subscription.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>future represents the last commit position</dd>
@@ -180,7 +181,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <li class="blockList">
 <h4>advanceCommitPosition</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;&nbsp;advanceCommitPosition(<a href="../../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;newPosition)</pre>
-<div class="block">Advances the position associated with the subscriber</div>
+<div class="block">Advances the position associated with the subscriber.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>newPosition</code> - - new commit position</dd>

@@ -103,9 +103,11 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">SessionLock</span></pre>
 <div class="block">One time lock.
- <p>The lock is only alive during a given period. It should
+
+  <p>The lock is only alive during a given period. It should
  be not usable if the lock is expired.
- <p>Listener could be registered by <a href="../../../../org/apache/distributedlog/lock/SessionLock.html#setLockListener-org.apache.distributedlog.lock.LockListener-"><code>setLockListener(LockListener)</code></a>
+
+  <p>Listener could be registered by <a href="../../../../org/apache/distributedlog/lock/SessionLock.html#setLockListener-org.apache.distributedlog.lock.LockListener-"><code>setLockListener(LockListener)</code></a>
  to receive state changes of the lock.</div>
 </li>
 </ul>
@@ -192,7 +194,8 @@ var activeTableTab = "activeTableTab";
 <h4>setLockListener</h4>
 <pre><a href="../../../../org/apache/distributedlog/lock/SessionLock.html" title="interface in org.apache.distributedlog.lock">SessionLock</a>&nbsp;setLockListener(org.apache.distributedlog.lock.LockListener&nbsp;lockListener)</pre>
 <div class="block">Set lock listener for lock state changes.
- <p>Typically a listener should be set before try locking.</div>
+
+  <p>Typically a listener should be set before try locking.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>lockListener</code> - lock listener for state changes.</dd>
@@ -221,7 +224,8 @@ var activeTableTab = "activeTableTab";
 <h4>isLockExpired</h4>
 <pre>boolean&nbsp;isLockExpired()</pre>
 <div class="block">Whether the lock is expired or not?
- <p>If a lock is expired, it will not be reusable any more. Because it is an one-time lock.</div>
+
+  <p>If a lock is expired, it will not be reusable any more. Because it is an one-time lock.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the lock is expired, otherwise false.</dd>
@@ -239,19 +243,19 @@ var activeTableTab = "activeTableTab";
       throws <a href="../../../../org/apache/distributedlog/exceptions/OwnershipAcquireFailedException.html" title="class in org.apache.distributedlog.exceptions">OwnershipAcquireFailedException</a>,
              <a href="../../../../org/apache/distributedlog/exceptions/LockingException.html" title="class in org.apache.distributedlog.exceptions">LockingException</a></pre>
 <div class="block">Acquire the lock if it is free within given waiting time.
- <p>
- Calling this method will attempt to acquire the lock. If the lock
+
+  <p>Calling this method will attempt to acquire the lock. If the lock
  is already acquired by others, the caller will wait for <i>timeout</i>
  period. If the caller could claim the lock within <i>timeout</i> period,
  the caller acquire the lock. Otherwise, it would fail with <a href="../../../../org/apache/distributedlog/exceptions/OwnershipAcquireFailedException.html" title="class in org.apache.distributedlog.exceptions"><code>OwnershipAcquireFailedException</code></a>.
- <p>
- <a href="../../../../org/apache/distributedlog/lock/SessionLock.html#unlock--"><code>unlock()</code></a> should be called to unlock a claimed lock. The caller
+
+  <p><a href="../../../../org/apache/distributedlog/lock/SessionLock.html#unlock--"><code>unlock()</code></a> should be called to unlock a claimed lock. The caller
  doesn't need to unlock to clean up resources if <i>tryLock</i> fails.
- <p>
- <i>tryLock</i> here is effectively the combination of following asynchronous calls.
+
+  <p><i>tryLock</i> here is effectively the combination of following asynchronous calls.
  <pre>
      ZKDistributedLock lock = ...;
-     CompletableFuture<LockWaiter> attemptFuture = lock.asyncTryLock(...);
+     CompletableFuture&lt;LockWaiter&gt; attemptFuture = lock.asyncTryLock(...);
 
      boolean acquired = waiter.waitForAcquireQuietly();
      if (acquired) {
@@ -279,8 +283,8 @@ var activeTableTab = "activeTableTab";
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/lock/LockWaiter.html" title="class in org.apache.distributedlog.lock">LockWaiter</a>&gt;&nbsp;asyncTryLock(long&nbsp;timeout,
                                            <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent">TimeUnit</a>&nbsp;unit)</pre>
 <div class="block">Acquire the lock in asynchronous way.
- <p>
- Calling this method will attempt to place a lock waiter to acquire this lock.
+
+  <p>Calling this method will attempt to place a lock waiter to acquire this lock.
  The future returned by this method represents the result of this attempt. It doesn't mean
  the caller acquired the lock or not. The application should check <a href="../../../../org/apache/distributedlog/lock/LockWaiter.html#getAcquireFuture--"><code>LockWaiter.getAcquireFuture()</code></a>
  to see if it acquired the lock or not.</div>

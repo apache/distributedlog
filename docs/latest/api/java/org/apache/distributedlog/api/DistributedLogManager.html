@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":6,"i25":6,"i26":6,"i27":6,"i28":6,"i29":6,"i30":6,"i31":6,"i32":6,"i33":6,"i34":6,"i35":6,"i36":6,"i37":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":6,"i25":6,"i26":6,"i27":6,"i28":6,"i29":6,"i30":6,"i31":6,"i32":6,"i33":6,"i34":6,"i35":6,"i36":6,"i37":6,"i38":6,"i39":6,"i40":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -156,13 +156,13 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/AppendOnlyStreamReader.html" title="class in org.apache.distributedlog">AppendOnlyStreamReader</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getAppendOnlyStreamReader--">getAppendOnlyStreamReader</a></span>()</code>
-<div class="block">Get a reader to read a log stream as a sequence of bytes</div>
+<div class="block">Get a reader to read a log stream as a sequence of bytes.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/AppendOnlyStreamWriter.html" title="class in org.apache.distributedlog">AppendOnlyStreamWriter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getAppendOnlyStreamWriter--">getAppendOnlyStreamWriter</a></span>()</code>
-<div class="block">Begin appending to the end of the log stream which is being treated as a sequence of bytes</div>
+<div class="block">Begin appending to the end of the log stream which is being treated as a sequence of bytes.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -209,171 +209,187 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 </td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getFirstTxId--">getFirstTxId</a></span>()</code>
-<div class="block">Get the earliest Transaction Id available in the log</div>
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getFirstLogRecord--">getFirstLogRecord</a></span>()</code>
+<div class="block">Get the first log record in the stream.</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-">getInputStream</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
-<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getFirstLogRecordAsync--">getFirstLogRecordAsync</a></span>()</code>
+<div class="block">Get first log record with DLSN in the log - async.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-long-">getInputStream</a></span>(long&nbsp;fromTxnId)</code>
-<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getFirstTxId--">getFirstTxId</a></span>()</code>
+<div class="block">Get the earliest Transaction Id available in the log.</div>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSN--">getLastDLSN</a></span>()</code>
-<div class="block">Get Latest DLSN in the log</div>
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-">getInputStream</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
+<div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
 </td>
 </tr>
 <tr id="i14" class="altColor">
-<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSNAsync--">getLastDLSNAsync</a></span>()</code>
-<div class="block">Get Latest DLSN in the log - async</div>
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-long-">getInputStream</a></span>(long&nbsp;fromTxnId)</code>
+<div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
 </td>
 </tr>
 <tr id="i15" class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecord--">getLastLogRecord</a></span>()</code>
-<div class="block">Get the last log record in the stream</div>
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSN--">getLastDLSN</a></span>()</code>
+<div class="block">Get Latest DLSN in the log.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
-<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecordAsync--">getLastLogRecordAsync</a></span>()</code>
-<div class="block">Get Latest log record with DLSN in the log - async</div>
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSNAsync--">getLastDLSNAsync</a></span>()</code>
+<div class="block">Get Latest DLSN in the log - async.</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastTxId--">getLastTxId</a></span>()</code>
-<div class="block">Get Latest Transaction Id in the log</div>
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecord--">getLastLogRecord</a></span>()</code>
+<div class="block">Get the last log record in the stream.</div>
 </td>
 </tr>
 <tr id="i18" class="altColor">
-<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastTxIdAsync--">getLastTxIdAsync</a></span>()</code>
-<div class="block">Get Latest Transaction Id in the log - async</div>
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecordAsync--">getLastLogRecordAsync</a></span>()</code>
+<div class="block">Get Latest log record with DLSN in the log - async.</div>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLogRecordCount--">getLogRecordCount</a></span>()</code>
-<div class="block">Get the number of log records in the active portion of the log
- Any log segments that have already been truncated will not be included</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastTxId--">getLastTxId</a></span>()</code>
+<div class="block">Get Latest Transaction Id in the log.</div>
 </td>
 </tr>
 <tr id="i20" class="altColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastTxIdAsync--">getLastTxIdAsync</a></span>()</code>
+<div class="block">Get Latest Transaction Id in the log - async.</div>
+</td>
+</tr>
+<tr id="i21" class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLogRecordCount--">getLogRecordCount</a></span>()</code>
+<div class="block">Get the number of log records in the active portion of the log.</div>
+</td>
+</tr>
+<tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLogRecordCountAsync-org.apache.distributedlog.DLSN-">getLogRecordCountAsync</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;beginDLSN)</code>
 <div class="block">Get the number of log records in the active portion of the log - async.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLogSegments--">getLogSegments</a></span>()</code>
 <div class="block">Get log segments.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i24" class="altColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLogSegmentsAsync--">getLogSegmentsAsync</a></span>()</code>
+<div class="block">Get the log segments asynchronously.</div>
+</td>
+</tr>
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/namespace/NamespaceDriver.html" title="interface in org.apache.distributedlog.namespace">NamespaceDriver</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getNamespaceDriver--">getNamespaceDriver</a></span>()</code>
 <div class="block">Get the namespace driver used by this manager.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getStreamName--">getStreamName</a></span>()</code>
-<div class="block">Get the name of the stream managed by this log manager</div>
+<div class="block">Get the name of the stream managed by this log manager.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/subscription/SubscriptionsStore.html" title="interface in org.apache.distributedlog.api.subscription">SubscriptionsStore</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getSubscriptionsStore--">getSubscriptionsStore</a></span>()</code>
 <div class="block">Get the subscriptions store provided by the distributedlog manager.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#isEndOfStreamMarked--">isEndOfStreamMarked</a></span>()</code>
-<div class="block">Check if an end of stream marker was added to the stream
- A stream with an end of stream marker cannot be appended to</div>
+<div class="block">Check if an end of stream marker was added to the stream.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openAsyncLogReader-org.apache.distributedlog.DLSN-">openAsyncLogReader</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openAsyncLogReader-long-">openAsyncLogReader</a></span>(long&nbsp;fromTxnId)</code>
 <div class="block">Open an async log reader to read records from a log starting from <code>fromTxnId</code>.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/api/AsyncLogWriter.html" title="interface in org.apache.distributedlog.api">AsyncLogWriter</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openAsyncLogWriter--">openAsyncLogWriter</a></span>()</code>
 <div class="block">Open async log writer to write records to the log stream.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openLogReader-org.apache.distributedlog.DLSN-">openLogReader</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openLogReader-long-">openLogReader</a></span>(long&nbsp;fromTxnId)</code>
 <div class="block">Open an sync log reader to read records from a log starting from <code>fromTxnId</code>.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openLogWriter--">openLogWriter</a></span>()</code>
 <div class="block">Open sync log writer to write records to the log stream.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#purgeLogsOlderThan-long-">purgeLogsOlderThan</a></span>(long&nbsp;minTxIdToKeep)</code>
 <div class="block">The DistributedLogManager may archive/purge any logs for transactionId
  less than or equal to minImageTxId.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#recover--">recover</a></span>()</code>
 <div class="block">Run recovery on the log.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#registerListener-org.apache.distributedlog.callback.LogSegmentListener-">registerListener</a></span>(<a href="../../../../org/apache/distributedlog/callback/LogSegmentListener.html" title="interface in org.apache.distributedlog.callback">LogSegmentListener</a>&nbsp;listener)</code>
 <div class="block">Register <i>listener</i> on log segment updates of this stream.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/AsyncLogWriter.html" title="interface in org.apache.distributedlog.api">AsyncLogWriter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#startAsyncLogSegmentNonPartitioned--">startAsyncLogSegmentNonPartitioned</a></span>()</code>
-<div class="block">Begin writing to the log stream identified by the name</div>
+<div class="block">Begin writing to the log stream identified by the name.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#startLogSegmentNonPartitioned--">startLogSegmentNonPartitioned</a></span>()</code>
-<div class="block">Begin writing to the log stream identified by the name</div>
+<div class="block">Begin writing to the log stream identified by the name.</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#unregisterListener-org.apache.distributedlog.callback.LogSegmentListener-">unregisterListener</a></span>(<a href="../../../../org/apache/distributedlog/callback/LogSegmentListener.html" title="interface in org.apache.distributedlog.callback">LogSegmentListener</a>&nbsp;listener)</code>
 <div class="block">Unregister <i>listener</i> on log segment updates from this stream.</div>
@@ -415,7 +431,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>getStreamName</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getStreamName()</pre>
-<div class="block">Get the name of the stream managed by this log manager</div>
+<div class="block">Get the name of the stream managed by this log manager.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>streamName</dd>
@@ -450,6 +466,20 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <dd>log segments</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getLogSegmentsAsync--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLogSegmentsAsync</h4>
+<pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;&gt;&nbsp;getLogSegmentsAsync()</pre>
+<div class="block">Get the log segments asynchronously.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the log segments</dd>
 </dl>
 </li>
 </ul>
@@ -523,7 +553,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>startLogSegmentNonPartitioned</h4>
 <pre><a href="../../../../org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api">LogWriter</a>&nbsp;startLogSegmentNonPartitioned()
                                  throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Begin writing to the log stream identified by the name</div>
+<div class="block">Begin writing to the log stream identified by the name.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the writer interface to generate log records</dd>
@@ -540,7 +570,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>startAsyncLogSegmentNonPartitioned</h4>
 <pre><a href="../../../../org/apache/distributedlog/api/AsyncLogWriter.html" title="interface in org.apache.distributedlog.api">AsyncLogWriter</a>&nbsp;startAsyncLogSegmentNonPartitioned()
                                            throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Begin writing to the log stream identified by the name</div>
+<div class="block">Begin writing to the log stream identified by the name.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the writer interface to generate log records</dd>
@@ -576,7 +606,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>openLogReader</h4>
 <pre><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a>&nbsp;openLogReader(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)
                  throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>fromDLSN</code> - dlsn to start reading from</dd>
@@ -610,7 +640,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>openAsyncLogReader</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a>&gt;&nbsp;openAsyncLogReader(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</pre>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>fromDLSN</code> - dlsn to start reading from</dd>
@@ -627,7 +657,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getInputStream</h4>
 <pre><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a>&nbsp;getInputStream(long&nbsp;fromTxnId)
                   throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+<div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>fromTxnId</code> - - the first transaction id we want to read</dd>
@@ -646,7 +676,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getInputStream</h4>
 <pre><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a>&nbsp;getInputStream(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)
                   throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+<div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>fromDLSN</code> - - the first DLSN we want to read</dd>
@@ -768,7 +798,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getAppendOnlyStreamWriter</h4>
 <pre><a href="../../../../org/apache/distributedlog/AppendOnlyStreamWriter.html" title="class in org.apache.distributedlog">AppendOnlyStreamWriter</a>&nbsp;getAppendOnlyStreamWriter()
                                           throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Begin appending to the end of the log stream which is being treated as a sequence of bytes</div>
+<div class="block">Begin appending to the end of the log stream which is being treated as a sequence of bytes.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the writer interface to generate log records</dd>
@@ -785,7 +815,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getAppendOnlyStreamReader</h4>
 <pre><a href="../../../../org/apache/distributedlog/AppendOnlyStreamReader.html" title="class in org.apache.distributedlog">AppendOnlyStreamReader</a>&nbsp;getAppendOnlyStreamReader()
                                           throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get a reader to read a log stream as a sequence of bytes</div>
+<div class="block">Get a reader to read a log stream as a sequence of bytes.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the writer interface to generate log records</dd>
@@ -818,7 +848,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getLastLogRecord</h4>
 <pre><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&nbsp;getLastLogRecord()
                             throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get the last log record in the stream</div>
+<div class="block">Get the last log record in the stream.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the last log record in the stream</dd>
@@ -834,7 +864,38 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>getLastLogRecordAsync</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;&nbsp;getLastLogRecordAsync()</pre>
-<div class="block">Get Latest log record with DLSN in the log - async</div>
+<div class="block">Get Latest log record with DLSN in the log - async.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>latest log record with DLSN</dd>
+</dl>
+</li>
+</ul>
+<a name="getFirstLogRecord--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFirstLogRecord</h4>
+<pre><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&nbsp;getFirstLogRecord()
+                             throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block">Get the first log record in the stream.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the first log record in the stream</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if a stream cannot be found.</dd>
+</dl>
+</li>
+</ul>
+<a name="getFirstLogRecordAsync--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFirstLogRecordAsync</h4>
+<pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;&nbsp;getFirstLogRecordAsync()</pre>
+<div class="block">Get first log record with DLSN in the log - async.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>latest log record with DLSN</dd>
@@ -849,7 +910,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getFirstTxId</h4>
 <pre>long&nbsp;getFirstTxId()
            throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get the earliest Transaction Id available in the log</div>
+<div class="block">Get the earliest Transaction Id available in the log.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>earliest transaction id</dd>
@@ -866,7 +927,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getLastTxId</h4>
 <pre>long&nbsp;getLastTxId()
           throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get Latest Transaction Id in the log</div>
+<div class="block">Get Latest Transaction Id in the log.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>latest transaction id</dd>
@@ -882,7 +943,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>getLastTxIdAsync</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;getLastTxIdAsync()</pre>
-<div class="block">Get Latest Transaction Id in the log - async</div>
+<div class="block">Get Latest Transaction Id in the log - async.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>latest transaction id</dd>
@@ -911,7 +972,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getLastDLSN</h4>
 <pre><a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;getLastDLSN()
           throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get Latest DLSN in the log</div>
+<div class="block">Get Latest DLSN in the log.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>last dlsn</dd>
@@ -927,7 +988,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>getLastDLSNAsync</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;&nbsp;getLastDLSNAsync()</pre>
-<div class="block">Get Latest DLSN in the log - async</div>
+<div class="block">Get Latest DLSN in the log - async.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>latest transaction id</dd>
@@ -942,7 +1003,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>getLogRecordCount</h4>
 <pre>long&nbsp;getLogRecordCount()
                 throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Get the number of log records in the active portion of the log
+<div class="block">Get the number of log records in the active portion of the log.
  Any log segments that have already been truncated will not be included</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -992,7 +1053,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>isEndOfStreamMarked</h4>
 <pre>boolean&nbsp;isEndOfStreamMarked()
                      throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Check if an end of stream marker was added to the stream
+<div class="block">Check if an end of stream marker was added to the stream.
  A stream with an end of stream marker cannot be appended to</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

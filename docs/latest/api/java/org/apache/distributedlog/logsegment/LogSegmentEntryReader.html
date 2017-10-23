@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 public interface <span class="typeNameLabel">LogSegmentEntryReader</span>
 extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" title="interface in org.apache.distributedlog.io">AsyncCloseable</a></pre>
 <div class="block">An interface class to read the enveloped entry (serialized bytes of
- <a href="../../../../org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog"><code>Entry</code></a>) from a log segment</div>
+ <a href="../../../../org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog"><code>Entry</code></a>) from a log segment.</div>
 </li>
 </ul>
 </div>
@@ -130,7 +130,9 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static interface&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.StateChangeListener.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader.StateChangeListener</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.StateChangeListener.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader.StateChangeListener</a></span></code>
+<div class="block">An interface Listener for StateChange.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -201,7 +203,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.html#registerListener-org.apache.distributedlog.logsegment.LogSegmentEntryReader.StateChangeListener-">registerListener</a></span>(<a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.StateChangeListener.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader.StateChangeListener</a>&nbsp;listener)</code>
-<div class="block">Register the state change listener</div>
+<div class="block">Register the state change listener.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
@@ -213,7 +215,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.html#unregisterListener-org.apache.distributedlog.logsegment.LogSegmentEntryReader.StateChangeListener-">unregisterListener</a></span>(<a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.StateChangeListener.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader.StateChangeListener</a>&nbsp;listener)</code>
-<div class="block">Unregister the state change listener</div>
+<div class="block">Unregister the state change listener.</div>
 </td>
 </tr>
 </table>
@@ -256,7 +258,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>registerListener</h4>
 <pre><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader</a>&nbsp;registerListener(<a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.StateChangeListener.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader.StateChangeListener</a>&nbsp;listener)</pre>
-<div class="block">Register the state change listener</div>
+<div class="block">Register the state change listener.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>listener</code> - register the state change listener</dd>
@@ -272,7 +274,7 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <li class="blockList">
 <h4>unregisterListener</h4>
 <pre><a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader</a>&nbsp;unregisterListener(<a href="../../../../org/apache/distributedlog/logsegment/LogSegmentEntryReader.StateChangeListener.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader.StateChangeListener</a>&nbsp;listener)</pre>
-<div class="block">Unregister the state change listener</div>
+<div class="block">Unregister the state change listener.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>listener</code> - register the state change listener</dd>
@@ -317,16 +319,13 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
 <h4>readNext</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/Entry.Reader.html" title="interface in org.apache.distributedlog">Entry.Reader</a>&gt;&gt;&nbsp;readNext(int&nbsp;numEntries)</pre>
 <div class="block">Read next <i>numEntries</i> entries from current log segment.
- <p>
- <i>numEntries</i> will be best-effort.</div>
+
+  <p><i>numEntries</i> will be best-effort.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>numEntries</code> - num entries to read from current log segment</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A promise that when satisified will contain a non-empty list of entries with their content.</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>{@link</code> - org.apache.distributedlog.exceptions.EndOfLogSegmentException} when
-          read entries beyond the end of a <i>closed</i> log segment.</dd>
 </dl>
 </li>
 </ul>

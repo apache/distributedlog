@@ -116,7 +116,7 @@
 </dd>
 <dt><a href="org/apache/distributedlog/feature/AbstractFeatureProvider.html" title="class in org.apache.distributedlog.feature"><span class="typeNameLink">AbstractFeatureProvider</span></a>&lt;<a href="org/apache/distributedlog/feature/AbstractFeatureProvider.html" title="type parameter in AbstractFeatureProvider">T</a> extends org.apache.bookkeeper.feature.Feature&gt; - Class in <a href="org/apache/distributedlog/feature/package-summary.html">org.apache.distributedlog.feature</a></dt>
 <dd>
-<div class="block">Decider based feature provider</div>
+<div class="block">Decider based feature provider.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/feature/AbstractFeatureProvider.html#AbstractFeatureProvider-java.lang.String-org.apache.distributedlog.DistributedLogConfiguration-org.apache.bookkeeper.stats.StatsLogger-">AbstractFeatureProvider(String, DistributedLogConfiguration, StatsLogger)</a></span> - Constructor for class org.apache.distributedlog.feature.<a href="org/apache/distributedlog/feature/AbstractFeatureProvider.html" title="class in org.apache.distributedlog.feature">AbstractFeatureProvider</a></dt>
 <dd>&nbsp;</dd>
@@ -164,7 +164,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/subscription/SubscriptionStateStore.html#advanceCommitPosition-org.apache.distributedlog.DLSN-">advanceCommitPosition(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.subscription.<a href="org/apache/distributedlog/api/subscription/SubscriptionStateStore.html" title="interface in org.apache.distributedlog.api.subscription">SubscriptionStateStore</a></dt>
 <dd>
-<div class="block">Advances the position associated with the subscriber</div>
+<div class="block">Advances the position associated with the subscriber.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/subscription/SubscriptionsStore.html#advanceCommitPosition-java.lang.String-org.apache.distributedlog.DLSN-">advanceCommitPosition(String, DLSN)</a></span> - Method in interface org.apache.distributedlog.subscription.<a href="org/apache/distributedlog/subscription/SubscriptionsStore.html" title="interface in org.apache.distributedlog.subscription">SubscriptionsStore</a></dt>
 <dd>
@@ -197,9 +197,13 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/AlreadyTruncatedTransactionException.html#AlreadyTruncatedTransactionException-java.lang.String-">AlreadyTruncatedTransactionException(String)</a></span> - Constructor for exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/AlreadyTruncatedTransactionException.html" title="class in org.apache.distributedlog.exceptions">AlreadyTruncatedTransactionException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/AppendOnlyStreamReader.html" title="class in org.apache.distributedlog"><span class="typeNameLink">AppendOnlyStreamReader</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">AppendOnlyStreamReader.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/AppendOnlyStreamWriter.html" title="class in org.apache.distributedlog"><span class="typeNameLink">AppendOnlyStreamWriter</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">AppendOnlyStreamWriter.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/AppendOnlyStreamWriter.html#AppendOnlyStreamWriter-org.apache.distributedlog.BKAsyncLogWriter-long-">AppendOnlyStreamWriter(BKAsyncLogWriter, long)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/AppendOnlyStreamWriter.html" title="class in org.apache.distributedlog">AppendOnlyStreamWriter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/AsyncLogWriter.html#asyncAbort--">asyncAbort()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/AsyncLogWriter.html" title="interface in org.apache.distributedlog">AsyncLogWriter</a></dt>
@@ -274,13 +278,17 @@
 <div class="block">A <code>AsyncDeleteable</code> is a source or destination of data that can be deleted asynchronously.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api"><span class="typeNameLink">AsyncLogReader</span></a> - Interface in <a href="org/apache/distributedlog/api/package-summary.html">org.apache.distributedlog.api</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">AsyncLogReader.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/AsyncLogReader.html" title="interface in org.apache.distributedlog"><span class="typeNameLink">AsyncLogReader</span></a> - Interface in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">A log reader to read records in asynchronous way.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/api/AsyncLogWriter.html" title="interface in org.apache.distributedlog.api"><span class="typeNameLink">AsyncLogWriter</span></a> - Interface in <a href="org/apache/distributedlog/api/package-summary.html">org.apache.distributedlog.api</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">AsyncLogWriter.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/AsyncLogWriter.html" title="interface in org.apache.distributedlog"><span class="typeNameLink">AsyncLogWriter</span></a> - Interface in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">A writer that appends log records asynchronously.</div>
@@ -436,11 +444,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#BKDL_COMPRESSION_TYPE">BKDL_COMPRESSION_TYPE</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">CompressionCodec.Type     String to use (See CompressionUtils)
-  ---------------------     ------------------------------------
-          NONE               none
-          LZ4                lz4
-          UNKNOWN            any other instance of String.class</div>
+<div class="block">CompressionCodec.Type     String to use (See CompressionUtils).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#BKDL_COMPRESSION_TYPE_DEFAULT">BKDL_COMPRESSION_TYPE_DEFAULT</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -1008,7 +1012,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LocalDLMEmulator.html#checkBookiesUp-int-int-">checkBookiesUp(int, int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LocalDLMEmulator.html" title="class in org.apache.distributedlog">LocalDLMEmulator</a></dt>
 <dd>
-<div class="block">Check that a number of bookies are available</div>
+<div class="block">Check that a number of bookies are available.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/BookKeeperClient.html#checkClosedOrInError--">checkClosedOrInError()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClient.html" title="class in org.apache.distributedlog">BookKeeperClient</a></dt>
 <dd>&nbsp;</dd>
@@ -1066,7 +1070,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html#clientId-java.lang.String-">clientId(String)</a></span> - Method in class org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html" title="class in org.apache.distributedlog.api.namespace">NamespaceBuilder</a></dt>
 <dd>
-<div class="block">Client Id used for accessing the namespace</div>
+<div class="block">Client Id used for accessing the namespace.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/DistributedLogNamespaceBuilder.html#clientId-java.lang.String-">clientId(String)</a></span> - Method in class org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/DistributedLogNamespaceBuilder.html" title="class in org.apache.distributedlog.namespace">DistributedLogNamespaceBuilder</a></dt>
 <dd>
@@ -1100,6 +1104,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/MetadataAccessor.html#close--">close()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/MetadataAccessor.html" title="interface in org.apache.distributedlog.api">MetadataAccessor</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Close the distributed log metadata, freeing any resources it may hold.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/Namespace.html#close--">close()</a></span> - Method in interface org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/Namespace.html" title="interface in org.apache.distributedlog.api.namespace">Namespace</a></dt>
@@ -1281,7 +1286,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/ZooKeeperClientBuilder.html#connectionTimeoutMs-int-">connectionTimeoutMs(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/ZooKeeperClientBuilder.html" title="class in org.apache.distributedlog">ZooKeeperClientBuilder</a></dt>
 <dd>
-<div class="block">Set zookeeper connection timeout in milliseconds</div>
+<div class="block">Set zookeeper connection timeout in milliseconds.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LocalDLMEmulator.html#connectZooKeeper-java.lang.String-int-">connectZooKeeper(String, int)</a></span> - Static method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LocalDLMEmulator.html" title="class in org.apache.distributedlog">LocalDLMEmulator</a></dt>
 <dd>&nbsp;</dd>
@@ -1299,7 +1304,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/feature/CoreFeatureKeys.html" title="enum in org.apache.distributedlog.feature"><span class="typeNameLink">CoreFeatureKeys</span></a> - Enum in <a href="org/apache/distributedlog/feature/package-summary.html">org.apache.distributedlog.feature</a></dt>
 <dd>
-<div class="block">List of feature keys used by distributedlog core</div>
+<div class="block">List of feature keys used by distributedlog core.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/DistributedLogClientImpl.html#create-java.lang.String-">create(String)</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/DistributedLogClientImpl.html" title="class in org.apache.distributedlog.client">DistributedLogClientImpl</a></dt>
 <dd>&nbsp;</dd>
@@ -1362,7 +1367,9 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#createMetadataUpdater-org.apache.distributedlog.DistributedLogConfiguration-org.apache.distributedlog.logsegment.LogSegmentMetadataStore-">createMetadataUpdater(DistributedLogConfiguration, LogSegmentMetadataStore)</a></span> - Static method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">LogSegmentMetadataStoreUpdater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/MetadataAccessor.html#createOrUpdateMetadata-byte:A-">createOrUpdateMetadata(byte[])</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/MetadataAccessor.html" title="interface in org.apache.distributedlog.api">MetadataAccessor</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogStreamMetadataStore.html#createReadLock-org.apache.distributedlog.metadata.LogMetadataForReader-com.google.common.base.Optional-">createReadLock(LogMetadataForReader, Optional&lt;String&gt;)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogStreamMetadataStore.html" title="interface in org.apache.distributedlog.metadata">LogStreamMetadataStore</a></dt>
 <dd>
 <div class="block">Create the read lock for the log stream.</div>
@@ -1454,7 +1461,9 @@
 <div class="block">Delete a log segment <code>segment</code> under transaction <code>txn</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/MetadataAccessor.html#deleteMetadata--">deleteMetadata()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/MetadataAccessor.html" title="interface in org.apache.distributedlog.api">MetadataAccessor</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/subscription/SubscriptionsStore.html#deleteSubscriber-java.lang.String-">deleteSubscriber(String)</a></span> - Method in interface org.apache.distributedlog.api.subscription.<a href="org/apache/distributedlog/api/subscription/SubscriptionsStore.html" title="interface in org.apache.distributedlog.api.subscription">SubscriptionsStore</a></dt>
 <dd>
 <div class="block">Delete the subscriber <i>subscriberId</i> permanently.</div>
@@ -1505,7 +1514,7 @@
 </dd>
 <dt><a href="org/apache/distributedlog/lock/DistributedLock.html" title="interface in org.apache.distributedlog.lock"><span class="typeNameLink">DistributedLock</span></a> - Interface in <a href="org/apache/distributedlog/lock/package-summary.html">org.apache.distributedlog.lock</a></dt>
 <dd>
-<div class="block">Interface for distributed locking</div>
+<div class="block">Interface for distributed locking.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/common/annotations/DistributedLogAnnotations.html" title="class in org.apache.distributedlog.common.annotations"><span class="typeNameLink">DistributedLogAnnotations</span></a> - Class in <a href="org/apache/distributedlog/common/annotations/package-summary.html">org.apache.distributedlog.common.annotations</a></dt>
 <dd>
@@ -1625,7 +1634,7 @@
 </dd>
 <dt><a href="org/apache/distributedlog/metadata/DLConfig.html" title="interface in org.apache.distributedlog.metadata"><span class="typeNameLink">DLConfig</span></a> - Interface in <a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a></dt>
 <dd>
-<div class="block">Specific config of a given implementation of DL</div>
+<div class="block">Specific config of a given implementation of DL.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/exceptions/DLException.html" title="class in org.apache.distributedlog.exceptions"><span class="typeNameLink">DLException</span></a> - Exception in <a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a></dt>
 <dd>
@@ -1716,7 +1725,9 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/net/DNSResolver.html#domainNameToNetworkLocation">domainNameToNetworkLocation</a></span> - Variable in class org.apache.distributedlog.net.<a href="org/apache/distributedlog/net/DNSResolver.html" title="class in org.apache.distributedlog.net">DNSResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/metadata/DryrunLogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata"><span class="typeNameLink">DryrunLogSegmentMetadataStoreUpdater</span></a> - Class in <a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Class to update the zookeeper-based log metadata store.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/DryrunLogSegmentMetadataStoreUpdater.html#DryrunLogSegmentMetadataStoreUpdater-org.apache.distributedlog.DistributedLogConfiguration-org.apache.distributedlog.logsegment.LogSegmentMetadataStore-">DryrunLogSegmentMetadataStoreUpdater(DistributedLogConfiguration, LogSegmentMetadataStore)</a></span> - Constructor for class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/DryrunLogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">DryrunLogSegmentMetadataStoreUpdater</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/feature/DynamicConfigurationFeatureProvider.html" title="class in org.apache.distributedlog.feature"><span class="typeNameLink">DynamicConfigurationFeatureProvider</span></a> - Class in <a href="org/apache/distributedlog/feature/package-summary.html">org.apache.distributedlog.feature</a></dt>
@@ -1727,7 +1738,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html#dynConf-org.apache.distributedlog.config.DynamicDistributedLogConfiguration-">dynConf(DynamicDistributedLogConfiguration)</a></span> - Method in class org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html" title="class in org.apache.distributedlog.api.namespace">NamespaceBuilder</a></dt>
 <dd>
-<div class="block">Dynamic DistributedLog Configuration used for the namespace</div>
+<div class="block">Dynamic DistributedLog Configuration used for the namespace.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/DistributedLogNamespaceBuilder.html#dynConf-org.apache.distributedlog.config.DynamicDistributedLogConfiguration-">dynConf(DynamicDistributedLogConfiguration)</a></span> - Method in class org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/DistributedLogNamespaceBuilder.html" title="class in org.apache.distributedlog.namespace">DistributedLogNamespaceBuilder</a></dt>
 <dd>
@@ -1956,7 +1967,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getAlertWhenPositioningOnTruncated--">getAlertWhenPositioningOnTruncated()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Get if we should alert when reader is positioned on a truncated segment</div>
+<div class="block">Get if we should alert when reader is positioned on a truncated segment.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/proxy/ProxyClientManager.html#getAllClients--">getAllClients()</a></span> - Method in class org.apache.distributedlog.client.proxy.<a href="org/apache/distributedlog/client/proxy/ProxyClientManager.html" title="class in org.apache.distributedlog.client.proxy">ProxyClientManager</a></dt>
 <dd>
@@ -1968,7 +1979,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getAppendOnlyStreamReader--">getAppendOnlyStreamReader()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get a reader to read a log stream as a sequence of bytes</div>
+<div class="block">Get a reader to read a log stream as a sequence of bytes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getAppendOnlyStreamReader--">getAppendOnlyStreamReader()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -1978,7 +1989,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getAppendOnlyStreamWriter--">getAppendOnlyStreamWriter()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Begin appending to the end of the log stream which is being treated as a sequence of bytes</div>
+<div class="block">Begin appending to the end of the log stream which is being treated as a sequence of bytes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getAppendOnlyStreamWriter--">getAppendOnlyStreamWriter()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2230,7 +2241,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getEnableForceRead--">getEnableForceRead()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Get if we should enable force read</div>
+<div class="block">Get if we should enable force read.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getEnableLedgerAllocatorPool--">getEnableLedgerAllocatorPool()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -2244,7 +2255,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getEnableReadAhead--">getEnableReadAhead()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Get if we should enable read ahead</div>
+<div class="block">Get if we should enable read ahead.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getEnableRecordCounts--">getEnableRecordCounts()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -2324,6 +2335,14 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManagerImpl.html#getFirstDLSNAsync--">getFirstDLSNAsync()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManagerImpl.html" title="class in org.apache.distributedlog">DistributedLogManagerImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getFirstLogRecord--">getFirstLogRecord()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
+<dd>
+<div class="block">Get the first log record in the stream.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getFirstLogRecordAsync--">getFirstLogRecordAsync()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
+<dd>
+<div class="block">Get first log record with DLSN in the log - async.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getFirstLogSegmentSequenceNumber--">getFirstLogSegmentSequenceNumber()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
 <div class="block">Get the value at which ledger sequence number should start for streams that are being
@@ -2336,7 +2355,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getFirstTxId--">getFirstTxId()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get the earliest Transaction Id available in the log</div>
+<div class="block">Get the earliest Transaction Id available in the log.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getFirstTxId--">getFirstTxId()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2388,7 +2407,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getIgnoreTruncationStatus--">getIgnoreTruncationStatus()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Get if we should ignore truncation status when reading the records</div>
+<div class="block">Get if we should ignore truncation status when reading the records.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getImmediateFlushEnabled--">getImmediateFlushEnabled()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -2396,11 +2415,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-long-">getInputStream(long)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+<div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-">getInputStream(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+<div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getInputStream-long-">getInputStream(long)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2430,7 +2449,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/subscription/SubscriptionStateStore.html#getLastCommitPosition--">getLastCommitPosition()</a></span> - Method in interface org.apache.distributedlog.api.subscription.<a href="org/apache/distributedlog/api/subscription/SubscriptionStateStore.html" title="interface in org.apache.distributedlog.api.subscription">SubscriptionStateStore</a></dt>
 <dd>
-<div class="block">Get the last committed position stored for this subscription</div>
+<div class="block">Get the last committed position stored for this subscription.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/subscription/SubscriptionsStore.html#getLastCommitPosition-java.lang.String-">getLastCommitPosition(String)</a></span> - Method in interface org.apache.distributedlog.subscription.<a href="org/apache/distributedlog/subscription/SubscriptionsStore.html" title="interface in org.apache.distributedlog.subscription">SubscriptionsStore</a></dt>
 <dd>
@@ -2446,7 +2465,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSN--">getLastDLSN()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get Latest DLSN in the log</div>
+<div class="block">Get Latest DLSN in the log.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getLastDLSN--">getLastDLSN()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2458,7 +2477,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSNAsync--">getLastDLSNAsync()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get Latest DLSN in the log - async</div>
+<div class="block">Get Latest DLSN in the log - async.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getLastDLSNAsync--">getLastDLSNAsync()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2470,7 +2489,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecord--">getLastLogRecord()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get the last log record in the stream</div>
+<div class="block">Get the last log record in the stream.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getLastLogRecord--">getLastLogRecord()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2480,7 +2499,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecordAsync--">getLastLogRecordAsync()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get Latest log record with DLSN in the log - async</div>
+<div class="block">Get Latest log record with DLSN in the log - async.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getLastLogRecordAsync--">getLastLogRecordAsync()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2496,7 +2515,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLastTxId--">getLastTxId()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get Latest Transaction Id in the log</div>
+<div class="block">Get Latest Transaction Id in the log.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/AsyncLogWriter.html#getLastTxId--">getLastTxId()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/AsyncLogWriter.html" title="interface in org.apache.distributedlog">AsyncLogWriter</a></dt>
 <dd>
@@ -2514,7 +2533,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLastTxIdAsync--">getLastTxIdAsync()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get Latest Transaction Id in the log - async</div>
+<div class="block">Get Latest Transaction Id in the log - async.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getLastTxIdAsync--">getLastTxIdAsync()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2574,8 +2593,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLogRecordCount--">getLogRecordCount()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get the number of log records in the active portion of the log
- Any log segments that have already been truncated will not be included</div>
+<div class="block">Get the number of log records in the active portion of the log.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#getLogRecordCount--">getLogRecordCount()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -2609,9 +2627,15 @@
 <dd>
 <div class="block">Retrieve the logs under the namespace.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/Namespace.html#getLogs-java.lang.String-">getLogs(String)</a></span> - Method in interface org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/Namespace.html" title="interface in org.apache.distributedlog.api.namespace">Namespace</a></dt>
+<dd>
+<div class="block">Retrieve the logs under a given <i>logNamePrefix</i>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/BKDistributedLogNamespace.html#getLogs--">getLogs()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BKDistributedLogNamespace.html" title="class in org.apache.distributedlog">BKDistributedLogNamespace</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadataStore.html#getLogs--">getLogs()</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadataStore.html" title="interface in org.apache.distributedlog.metadata">LogMetadataStore</a></dt>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/BKDistributedLogNamespace.html#getLogs-java.lang.String-">getLogs(String)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BKDistributedLogNamespace.html" title="class in org.apache.distributedlog">BKDistributedLogNamespace</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadataStore.html#getLogs-java.lang.String-">getLogs(String)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadataStore.html" title="interface in org.apache.distributedlog.metadata">LogMetadataStore</a></dt>
 <dd>
 <div class="block">Retrieves logs from the namespace.</div>
 </dd>
@@ -2684,6 +2708,10 @@
 <dd>
 <div class="block">Retrieve log segments from the cache.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getLogSegmentsAsync--">getLogSegmentsAsync()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
+<dd>
+<div class="block">Get the log segments asynchronously.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DLSN.html#getLogSegmentSequenceNo--">getLogSegmentSequenceNo()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></dt>
 <dd>
 <div class="block">Return the sequence number of the log segment that the record is written to.</div>
@@ -2739,7 +2767,9 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadata.html#getMaxTxIdPath--">getMaxTxIdPath()</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadata.html" title="class in org.apache.distributedlog.metadata">LogMetadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/MetadataAccessor.html#getMetadata--">getMetadata()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/MetadataAccessor.html" title="interface in org.apache.distributedlog.api">MetadataAccessor</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#getMetadata--">getMetadata()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/NamespaceDriver.html#getMetadataAccessor-java.lang.String-">getMetadataAccessor(String)</a></span> - Method in interface org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/NamespaceDriver.html" title="interface in org.apache.distributedlog.namespace">NamespaceDriver</a></dt>
@@ -2751,6 +2781,10 @@
 <div class="block">Get the warn threshold (in millis) of metadata access latency.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.html#getMinActiveDLSN--">getMinActiveDLSN()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.html#getMinActiveEntryId--">getMinActiveEntryId()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.html#getMinActiveSlotId--">getMinActiveSlotId()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getMinDelayBetweenImmediateFlushMs--">getMinDelayBetweenImmediateFlushMs()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -2919,11 +2953,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getReaderIdleErrorThresholdMillis--">getReaderIdleErrorThresholdMillis()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Get the time in milliseconds as the threshold for when an idle reader should throw errors</div>
+<div class="block">Get the time in milliseconds as the threshold for when an idle reader should throw errors.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getReaderIdleWarnThresholdMillis--">getReaderIdleWarnThresholdMillis()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Get the time in milliseconds as the threshold for when an idle reader should dump warnings</div>
+<div class="block">Get the time in milliseconds as the threshold for when an idle reader should dump warnings.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getReadLACLongPollTimeout--">getReadLACLongPollTimeout()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -3015,15 +3049,16 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/AsyncLogWriter.html#getStreamName--">getStreamName()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/AsyncLogWriter.html" title="interface in org.apache.distributedlog.api">AsyncLogWriter</a></dt>
 <dd>
-<div class="block">Get the name of the stream this writer writes data to</div>
+<div class="block">Get the name of the stream this writer writes data to.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getStreamName--">getStreamName()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Get the name of the stream managed by this log manager</div>
+<div class="block">Get the name of the stream managed by this log manager.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/MetadataAccessor.html#getStreamName--">getStreamName()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/MetadataAccessor.html" title="interface in org.apache.distributedlog.api">MetadataAccessor</a></dt>
 <dd>
-<div class="block">Get the name of the stream managed by this log manager</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Get the name of the stream managed by this log manager.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/AsyncLogReader.html#getStreamName--">getStreamName()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/AsyncLogReader.html" title="interface in org.apache.distributedlog">AsyncLogReader</a></dt>
 <dd>
@@ -3103,6 +3138,8 @@
 <dd>
 <div class="block">Return application defined transaction id.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.html#getTruncationStatus--">getTruncationStatus()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getUnpartitionedStreamName--">getUnpartitionedStreamName()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
 <div class="block">Get name of the unpartitioned stream.</div>
@@ -3357,8 +3394,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#isEndOfStreamMarked--">isEndOfStreamMarked()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Check if an end of stream marker was added to the stream
- A stream with an end of stream marker cannot be appended to</div>
+<div class="block">Check if an end of stream marker was added to the stream.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#isEndOfStreamMarked--">isEndOfStreamMarked()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -3473,15 +3509,15 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#loadConf-org.apache.distributedlog.DistributedLogConfiguration-">loadConf(DistributedLogConfiguration)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">You can load configuration from other configuration</div>
+<div class="block">You can load configuration from other configuration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#loadConf-org.apache.commons.configuration.Configuration-">loadConf(Configuration)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Load configuration from other configuration object</div>
+<div class="block">Load configuration from other configuration object.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#loadStreamConf-com.google.common.base.Optional-">loadStreamConf(Optional&lt;DistributedLogConfiguration&gt;)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Load whitelisted stream configuration from another configuration object</div>
+<div class="block">Load whitelisted stream configuration from another configuration object.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#loadStreamConf-java.util.Optional-">loadStreamConf(Optional&lt;DistributedLogConfiguration&gt;)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -3492,10 +3528,12 @@
 <dt><a href="org/apache/distributedlog/LocalDLMEmulator.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LocalDLMEmulator</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">Utility class for setting up bookkeeper ensembles
- and bringing individual bookies up and down</div>
+ and bringing individual bookies up and down.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/LocalDLMEmulator.Builder.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LocalDLMEmulator.Builder</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Builder to build LocalDLMEmulator.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConstants.html#LOCK_IMMEDIATE">LOCK_IMMEDIATE</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConstants.html" title="class in org.apache.distributedlog">DistributedLogConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConstants.html#LOCK_OP_TIMEOUT_DEFAULT">LOCK_OP_TIMEOUT_DEFAULT</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConstants.html" title="class in org.apache.distributedlog">DistributedLogConstants</a></dt>
@@ -3544,11 +3582,11 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/lock/LockStateChangedException.html" title="class in org.apache.distributedlog.lock"><span class="typeNameLink">LockStateChangedException</span></a> - Exception in <a href="org/apache/distributedlog/lock/package-summary.html">org.apache.distributedlog.lock</a></dt>
 <dd>
-<div class="block">Exception thrown when lock state changed</div>
+<div class="block">Exception thrown when lock state changed.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/lock/LockTimeoutException.html" title="class in org.apache.distributedlog.lock"><span class="typeNameLink">LockTimeoutException</span></a> - Exception in <a href="org/apache/distributedlog/lock/package-summary.html">org.apache.distributedlog.lock</a></dt>
 <dd>
-<div class="block">Exception thrown when acquiring lock timeout</div>
+<div class="block">Exception thrown when acquiring lock timeout.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/lock/LockWaiter.html" title="class in org.apache.distributedlog.lock"><span class="typeNameLink">LockWaiter</span></a> - Class in <a href="org/apache/distributedlog/lock/package-summary.html">org.apache.distributedlog.lock</a></dt>
 <dd>
@@ -3582,7 +3620,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogStreamMetadataStore.html#logExists-java.net.URI-java.lang.String-">logExists(URI, String)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogStreamMetadataStore.html" title="interface in org.apache.distributedlog.metadata">LogStreamMetadataStore</a></dt>
 <dd>
-<div class="block">Ensure the existence of a log stream</div>
+<div class="block">Ensure the existence of a log stream.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/DistributedLogNamespace.html#logExists-java.lang.String-">logExists(String)</a></span> - Method in interface org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/DistributedLogNamespace.html" title="interface in org.apache.distributedlog.namespace">DistributedLogNamespace</a></dt>
 <dd>
@@ -3594,29 +3632,27 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/LogExistsException.html#LogExistsException-java.lang.String-">LogExistsException(String)</a></span> - Constructor for exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/LogExistsException.html" title="class in org.apache.distributedlog.exceptions">LogExistsException</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/apache/distributedlog/feature/AbstractFeatureProvider.html#logger">logger</a></span> - Static variable in class org.apache.distributedlog.feature.<a href="org/apache/distributedlog/feature/AbstractFeatureProvider.html" title="class in org.apache.distributedlog.feature">AbstractFeatureProvider</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadata.html#logIdentifier">logIdentifier</a></span> - Variable in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadata.html" title="class in org.apache.distributedlog.metadata">LogMetadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/metadata/LogMetadata.html" title="class in org.apache.distributedlog.metadata"><span class="typeNameLink">LogMetadata</span></a> - Class in <a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a></dt>
 <dd>
-<div class="block">Class to represent the layout and metadata of the zookeeper-based log metadata</div>
+<div class="block">Class to represent the layout and metadata of the zookeeper-based log metadata.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadata.html#LogMetadata-java.net.URI-java.lang.String-java.lang.String-">LogMetadata(URI, String, String)</a></span> - Constructor for class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadata.html" title="class in org.apache.distributedlog.metadata">LogMetadata</a></dt>
 <dd>
-<div class="block">metadata representation of a log</div>
+<div class="block">metadata representation of a log.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/metadata/LogMetadataForReader.html" title="class in org.apache.distributedlog.metadata"><span class="typeNameLink">LogMetadataForReader</span></a> - Class in <a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a></dt>
 <dd>
-<div class="block">Log Metadata for Reader</div>
+<div class="block">Log Metadata for Reader.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/metadata/LogMetadataForWriter.html" title="class in org.apache.distributedlog.metadata"><span class="typeNameLink">LogMetadataForWriter</span></a> - Class in <a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a></dt>
 <dd>
-<div class="block">Log Metadata for writer</div>
+<div class="block">Log Metadata for writer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadataForWriter.html#LogMetadataForWriter-java.net.URI-java.lang.String-java.lang.String-org.apache.bookkeeper.versioning.Versioned-org.apache.bookkeeper.versioning.Versioned-org.apache.bookkeeper.versioning.Versioned-">LogMetadataForWriter(URI, String, String, Versioned&lt;byte[]&gt;, Versioned&lt;byte[]&gt;, Versioned&lt;byte[]&gt;)</a></span> - Constructor for class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadataForWriter.html" title="class in org.apache.distributedlog.metadata">LogMetadataForWriter</a></dt>
 <dd>
-<div class="block">metadata representation of a log</div>
+<div class="block">metadata representation of a log.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/metadata/LogMetadataStore.html" title="interface in org.apache.distributedlog.metadata"><span class="typeNameLink">LogMetadataStore</span></a> - Interface in <a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a></dt>
 <dd>
@@ -3663,7 +3699,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogRecord.html#LogRecord-long-io.netty.buffer.ByteBuf-">LogRecord(long, ByteBuf)</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a></dt>
 <dd>
-<div class="block">Used by <a href="org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog"><code>LogRecordWithDLSN</code></a> to construct a log record read by readers.</div>
+<div class="block">Construct a log record with <i>txid</i> and ByteBuf <i>payload</i>.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/LogRecord.Reader.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LogRecord.Reader</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
@@ -3714,13 +3750,15 @@
 <dt><a href="org/apache/distributedlog/logsegment/LogSegmentEntryReader.html" title="interface in org.apache.distributedlog.logsegment"><span class="typeNameLink">LogSegmentEntryReader</span></a> - Interface in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
 <dd>
 <div class="block">An interface class to read the enveloped entry (serialized bytes of
- <a href="org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog"><code>Entry</code></a>) from a log segment</div>
+ <a href="org/apache/distributedlog/Entry.html" title="class in org.apache.distributedlog"><code>Entry</code></a>) from a log segment.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/logsegment/LogSegmentEntryReader.StateChangeListener.html" title="interface in org.apache.distributedlog.logsegment"><span class="typeNameLink">LogSegmentEntryReader.StateChangeListener</span></a> - Interface in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">An interface Listener for StateChange.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/logsegment/LogSegmentEntryStore.html" title="interface in org.apache.distributedlog.logsegment"><span class="typeNameLink">LogSegmentEntryStore</span></a> - Interface in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
 <dd>
-<div class="block">Log Segment Store to read log segments</div>
+<div class="block">Log Segment Store to read log segments.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/logsegment/LogSegmentEntryWriter.html" title="interface in org.apache.distributedlog.logsegment"><span class="typeNameLink">LogSegmentEntryWriter</span></a> - Interface in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
 <dd>
@@ -3729,7 +3767,7 @@
 </dd>
 <dt><a href="org/apache/distributedlog/logsegment/LogSegmentFilter.html" title="interface in org.apache.distributedlog.logsegment"><span class="typeNameLink">LogSegmentFilter</span></a> - Interface in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
 <dd>
-<div class="block">Filter to filter log segments</div>
+<div class="block">Filter to filter log segments.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#logSegmentId">logSegmentId</a></span> - Variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog">LogSegmentMetadata.LogSegmentMetadataBuilder</a></dt>
 <dd>&nbsp;</dd>
@@ -3741,26 +3779,32 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/callback/LogSegmentListener.html" title="interface in org.apache.distributedlog.callback"><span class="typeNameLink">LogSegmentListener</span></a> - Interface in <a href="org/apache/distributedlog/callback/package-summary.html">org.apache.distributedlog.callback</a></dt>
 <dd>
-<div class="block">Listener on log segments changes for a given stream used by <code>BKLogReadHandler</code></div>
+<div class="block">Listener on log segments changes for a given stream used by <code>BKLogReadHandler</code>.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LogSegmentMetadata</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">Utility class for storing the metadata associated
- with a single edit log segment, stored in a single ledger</div>
+ with a single edit log segment, stored in a single ledger.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LogSegmentMetadata.LogSegmentMetadataBuilder</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">LogSegmentMetadataBuilder to build LogSegmentMetadata.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataVersion.html" title="enum in org.apache.distributedlog"><span class="typeNameLink">LogSegmentMetadata.LogSegmentMetadataVersion</span></a> - Enum in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">LogSegmentMetadataVersion.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/LogSegmentMetadata.Mutator.html" title="class in org.apache.distributedlog"><span class="typeNameLink">LogSegmentMetadata.Mutator</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">Mutator to mutate the metadata of a log segment.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/LogSegmentMetadata.TruncationStatus.html" title="enum in org.apache.distributedlog"><span class="typeNameLink">LogSegmentMetadata.TruncationStatus</span></a> - Enum in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">TruncationStatus.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/logsegment/LogSegmentMetadataCache.html" title="class in org.apache.distributedlog.logsegment"><span class="typeNameLink">LogSegmentMetadataCache</span></a> - Class in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
 <dd>
-<div class="block">Cache the log segment metadata</div>
+<div class="block">Cache the log segment metadata.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentMetadataCache.html#LogSegmentMetadataCache-org.apache.distributedlog.DistributedLogConfiguration-com.google.common.base.Ticker-">LogSegmentMetadataCache(DistributedLogConfiguration, Ticker)</a></span> - Constructor for class org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentMetadataCache.html" title="class in org.apache.distributedlog.logsegment">LogSegmentMetadataCache</a></dt>
 <dd>&nbsp;</dd>
@@ -3769,7 +3813,10 @@
 <div class="block">Interface for log segment metadata store.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata"><span class="typeNameLink">LogSegmentMetadataStoreUpdater</span></a> - Class in <a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The implementation is responsible
+ for updating the metadata.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#LogSegmentMetadataStoreUpdater-org.apache.distributedlog.DistributedLogConfiguration-org.apache.distributedlog.logsegment.LogSegmentMetadataStore-">LogSegmentMetadataStoreUpdater(DistributedLogConfiguration, LogSegmentMetadataStore)</a></span> - Constructor for class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">LogSegmentMetadataStoreUpdater</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/callback/LogSegmentNamesListener.html" title="interface in org.apache.distributedlog.callback"><span class="typeNameLink">LogSegmentNamesListener</span></a> - Interface in <a href="org/apache/distributedlog/callback/package-summary.html">org.apache.distributedlog.callback</a></dt>
@@ -3805,7 +3852,10 @@
 <div class="block">The interface to manage the log stream metadata.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/api/LogWriter.html" title="interface in org.apache.distributedlog.api"><span class="typeNameLink">LogWriter</span></a> - Interface in <a href="org/apache/distributedlog/api/package-summary.html">org.apache.distributedlog.api</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">A generic interface class to support writing log records into
+ a persistent distributed log.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/LogWriter.html" title="interface in org.apache.distributedlog"><span class="typeNameLink">LogWriter</span></a> - Interface in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">A generic interface class to support writing log records into
@@ -3893,7 +3943,10 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/api/MetadataAccessor.html" title="interface in org.apache.distributedlog.api"><span class="typeNameLink">MetadataAccessor</span></a> - Interface in <a href="org/apache/distributedlog/api/package-summary.html">org.apache.distributedlog.api</a></dt>
 <dd>
-<div class="block">Provide a metadata accessor to access customized metadata associated with logs.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">this class is here for legacy reason. It is not recommended to use this class for storing customized
+             metadata.</span></div>
+</div>
 </dd>
 <dt><a href="org/apache/distributedlog/exceptions/MetadataException.html" title="class in org.apache.distributedlog.exceptions"><span class="typeNameLink">MetadataException</span></a> - Exception in <a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a></dt>
 <dd>
@@ -3953,7 +4006,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/ZooKeeperClientBuilder.html#name-java.lang.String-">name(String)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/ZooKeeperClientBuilder.html" title="class in org.apache.distributedlog">ZooKeeperClientBuilder</a></dt>
 <dd>
-<div class="block">Set zookeeper client name</div>
+<div class="block">Set zookeeper client name.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/api/namespace/Namespace.html" title="interface in org.apache.distributedlog.api.namespace"><span class="typeNameLink">Namespace</span></a> - Interface in <a href="org/apache/distributedlog/api/namespace/package-summary.html">org.apache.distributedlog.api.namespace</a></dt>
 <dd>
@@ -3968,13 +4021,17 @@
 <div class="block">Manager to manage all the stores required by a namespace.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/namespace/NamespaceDriver.Role.html" title="enum in org.apache.distributedlog.namespace"><span class="typeNameLink">NamespaceDriver.Role</span></a> - Enum in <a href="org/apache/distributedlog/namespace/package-summary.html">org.apache.distributedlog.namespace</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Role associated with the store.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/namespace/NamespaceDriverManager.html" title="class in org.apache.distributedlog.namespace"><span class="typeNameLink">NamespaceDriverManager</span></a> - Class in <a href="org/apache/distributedlog/namespace/package-summary.html">org.apache.distributedlog.namespace</a></dt>
 <dd>
 <div class="block">The basic service for managing a set of namespace drivers.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/callback/NamespaceListener.html" title="interface in org.apache.distributedlog.callback"><span class="typeNameLink">NamespaceListener</span></a> - Interface in <a href="org/apache/distributedlog/callback/package-summary.html">org.apache.distributedlog.callback</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Namespace Listener.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/namespace/NamespaceWatcher.html" title="class in org.apache.distributedlog.namespace"><span class="typeNameLink">NamespaceWatcher</span></a> - Class in <a href="org/apache/distributedlog/namespace/package-summary.html">org.apache.distributedlog.namespace</a></dt>
 <dd>
 <div class="block">Namespace Watcher watching namespace changes.</div>
@@ -3983,7 +4040,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/net/NetUtils.html" title="class in org.apache.distributedlog.net"><span class="typeNameLink">NetUtils</span></a> - Class in <a href="org/apache/distributedlog/net/package-summary.html">org.apache.distributedlog.net</a></dt>
 <dd>
-<div class="block">Utils about network</div>
+<div class="block">Utils about network.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/net/NetUtils.html#NetUtils--">NetUtils()</a></span> - Constructor for class org.apache.distributedlog.net.<a href="org/apache/distributedlog/net/NetUtils.html" title="class in org.apache.distributedlog.net">NetUtils</a></dt>
 <dd>&nbsp;</dd>
@@ -4252,7 +4309,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#openAsyncLogReader-org.apache.distributedlog.DLSN-">openAsyncLogReader(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#openAsyncLogReader-long-">openAsyncLogReader(long)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -4306,7 +4363,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#openLogReader-org.apache.distributedlog.DLSN-">openLogReader(DLSN)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#openLogWriter--">openLogWriter()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
@@ -4353,7 +4410,9 @@
 <div class="block">Namespace API and the builder to build namespace instance.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/api/subscription/package-summary.html">org.apache.distributedlog.api.subscription</a> - package org.apache.distributedlog.api.subscription</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">subscription specific package.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/callback/package-summary.html">org.apache.distributedlog.callback</a> - package org.apache.distributedlog.callback</dt>
 <dd>
 <div class="block">Callbacks for distributedlog operations.</div>
@@ -4424,11 +4483,11 @@
 </dd>
 <dt><a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a> - package org.apache.distributedlog.exceptions</dt>
 <dd>
-<div class="block">Defines exceptions used across distributedlog project.</div>
+<div class="block">DistributedLog zk Exception.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/feature/package-summary.html">org.apache.distributedlog.feature</a> - package org.apache.distributedlog.feature</dt>
 <dd>
-<div class="block">Feature & FeatureProvider for distributedlog</div>
+<div class="block">Feature & FeatureProvider for distributedlog.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/io/package-summary.html">org.apache.distributedlog.io</a> - package org.apache.distributedlog.io</dt>
 <dd>
@@ -4436,11 +4495,11 @@
 </dd>
 <dt><a href="org/apache/distributedlog/lock/package-summary.html">org.apache.distributedlog.lock</a> - package org.apache.distributedlog.lock</dt>
 <dd>
-<div class="block">Distributed locking mechanism in distributedlog</div>
+<div class="block">Distributed locking mechanism in distributedlog.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a> - package org.apache.distributedlog.logsegment</dt>
 <dd>
-<div class="block">Log Segment Management</div>
+<div class="block">Log Segment Management.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/metadata/package-summary.html">org.apache.distributedlog.metadata</a> - package org.apache.distributedlog.metadata</dt>
 <dd>
@@ -4671,7 +4730,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/LogReader.html#readBulk-boolean-int-">readBulk(boolean, int)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></dt>
 <dd>
-<div class="block">Read the next <i>numLogRecords</i> log records from the stream</div>
+<div class="block">Read the next <i>numLogRecords</i> log records from the stream.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/AsyncLogReader.html#readBulk-int-">readBulk(int)</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/AsyncLogReader.html" title="interface in org.apache.distributedlog">AsyncLogReader</a></dt>
 <dd>
@@ -4709,7 +4768,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/AsyncLogReader.html#readNext--">readNext()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a></dt>
 <dd>
-<div class="block">Read the next record from the log stream</div>
+<div class="block">Read the next record from the log stream.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/LogReader.html#readNext-boolean-">readNext(boolean)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></dt>
 <dd>
@@ -4735,7 +4794,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/ReadUtils.html" title="class in org.apache.distributedlog"><span class="typeNameLink">ReadUtils</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
-<div class="block">Utility function for readers</div>
+<div class="block">Utility function for readers.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/ReadUtils.html#ReadUtils--">ReadUtils()</a></span> - Constructor for class org.apache.distributedlog.<a href="org/apache/distributedlog/ReadUtils.html" title="class in org.apache.distributedlog">ReadUtils</a></dt>
 <dd>&nbsp;</dd>
@@ -4830,7 +4889,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentEntryReader.html#registerListener-org.apache.distributedlog.logsegment.LogSegmentEntryReader.StateChangeListener-">registerListener(LogSegmentEntryReader.StateChangeListener)</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentEntryReader.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader</a></dt>
 <dd>
-<div class="block">Register the state change listener</div>
+<div class="block">Register the state change listener.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/NamespaceWatcher.html#registerListener-org.apache.distributedlog.callback.NamespaceListener-">registerListener(NamespaceListener)</a></span> - Method in class org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/NamespaceWatcher.html" title="class in org.apache.distributedlog.namespace">NamespaceWatcher</a></dt>
 <dd>
@@ -5003,7 +5062,9 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/ZooKeeperClientBuilder.html#retryThreadCount-int-">retryThreadCount(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/ZooKeeperClientBuilder.html" title="class in org.apache.distributedlog">ZooKeeperClientBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/logsegment/RollingPolicy.html" title="interface in org.apache.distributedlog.logsegment"><span class="typeNameLink">RollingPolicy</span></a> - Interface in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Policy for rolling.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/client/routing/RoutingService.html" title="interface in org.apache.distributedlog.client.routing"><span class="typeNameLink">RoutingService</span></a> - Interface in <a href="org/apache/distributedlog/client/routing/package-summary.html">org.apache.distributedlog.client.routing</a></dt>
 <dd>
 <div class="block">Routing Service provides mechanism how to route requests.</div>
@@ -5152,7 +5213,7 @@
 </dd>
 <dt><a href="org/apache/distributedlog/lock/SessionLockFactory.html" title="interface in org.apache.distributedlog.lock"><span class="typeNameLink">SessionLockFactory</span></a> - Interface in <a href="org/apache/distributedlog/lock/package-summary.html">org.apache.distributedlog.lock</a></dt>
 <dd>
-<div class="block">Factory to create <a href="org/apache/distributedlog/lock/SessionLock.html" title="interface in org.apache.distributedlog.lock"><code>SessionLock</code></a></div>
+<div class="block">Factory to create <a href="org/apache/distributedlog/lock/SessionLock.html" title="interface in org.apache.distributedlog.lock"><code>SessionLock</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/ZooKeeperClientBuilder.html#sessionTimeoutMs-int-">sessionTimeoutMs(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/ZooKeeperClientBuilder.html" title="class in org.apache.distributedlog">ZooKeeperClientBuilder</a></dt>
 <dd>
@@ -5178,7 +5239,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setAlertWhenPositioningOnTruncated-boolean-">setAlertWhenPositioningOnTruncated(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set if we should alert when reader is positioned on a truncated segment</div>
+<div class="block">Set if we should alert when reader is positioned on a truncated segment.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setBKClientNumberIOThreads-int-">setBKClientNumberIOThreads(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5292,7 +5353,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setEnableForceRead-boolean-">setEnableForceRead(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set if we should enable force read</div>
+<div class="block">Set if we should enable force read.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setEnableLedgerAllocatorPool-boolean-">setEnableLedgerAllocatorPool(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5375,8 +5436,7 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setFirstLogSegmentSequenceNumber-long-">setFirstLogSegmentSequenceNumber(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
 <div class="block">Set the value at which ledger sequence number should start for streams that are being
- upgraded and did not have ledger sequence number to start with or for newly created
- streams</div>
+upgraded and did not have ledger sequence number to start with or for newly created streams.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setFirstNumEntriesPerReadLastRecordScan-int-">setFirstNumEntriesPerReadLastRecordScan(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5392,11 +5452,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setIgnoreTruncationStatus-boolean-">setIgnoreTruncationStatus(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set if we should ignore truncation status when reading the records</div>
+<div class="block">Set if we should ignore truncation status when reading the records.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setImmediateFlushEnabled-boolean-">setImmediateFlushEnabled(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Enable/Disable immediate flush</div>
+<div class="block">Enable/Disable immediate flush.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#setInprogress-boolean-">setInprogress(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog">LogSegmentMetadata.LogSegmentMetadataBuilder</a></dt>
 <dd>&nbsp;</dd>
@@ -5416,7 +5476,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setLedgerAllocatorPoolPath-java.lang.String-">setLedgerAllocatorPoolPath(String)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set the root path of ledger allocator pool</div>
+<div class="block">Set the root path of ledger allocator pool.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/lock/SessionLock.html#setLockListener-org.apache.distributedlog.lock.LockListener-">setLockListener(LockListener)</a></span> - Method in interface org.apache.distributedlog.lock.<a href="org/apache/distributedlog/lock/SessionLock.html" title="interface in org.apache.distributedlog.lock">SessionLock</a></dt>
 <dd>
@@ -5440,11 +5500,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentActive-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentActive(LogSegmentMetadata)</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">LogSegmentMetadataStoreUpdater</a></dt>
 <dd>
-<div class="block">Change the truncation status of a <i>log segment</i> to be active</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to be active.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentActive-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentActive(LogSegmentMetadata)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></dt>
 <dd>
-<div class="block">Change the truncation status of a <i>log segment</i> to be active</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to be active.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setLogSegmentCacheEnabled-boolean-">setLogSegmentCacheEnabled(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5469,13 +5529,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated(LogSegmentMetadata, DLSN)</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">LogSegmentMetadataStoreUpdater</a></dt>
 <dd>
-<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated(Transaction&lt;Object&gt;, LogSegmentMetadata, DLSN)</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">LogSegmentMetadataStoreUpdater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated(LogSegmentMetadata, DLSN)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></dt>
 <dd>
-<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated(Transaction&lt;Object&gt;, LogSegmentMetadata, DLSN)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></dt>
 <dd>
@@ -5497,13 +5557,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentTruncated-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentTruncated(LogSegmentMetadata)</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">LogSegmentMetadataStoreUpdater</a></dt>
 <dd>
-<div class="block">Change the truncation status of a <i>log segment</i> to truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to truncated.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentTruncated-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentTruncated(Transaction&lt;Object&gt;, LogSegmentMetadata)</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html" title="class in org.apache.distributedlog.metadata">LogSegmentMetadataStoreUpdater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentTruncated-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentTruncated(LogSegmentMetadata)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></dt>
 <dd>
-<div class="block">Change the truncation status of a <i>log segment</i> to truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to truncated.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentTruncated-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.LogSegmentMetadata-">setLogSegmentTruncated(Transaction&lt;Object&gt;, LogSegmentMetadata)</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></dt>
 <dd>
@@ -5541,7 +5601,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setMinDelayBetweenImmediateFlushMs-int-">setMinDelayBetweenImmediateFlushMs(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set minimum delay between immediate flushes in milliseconds</div>
+<div class="block">Set minimum delay between immediate flushes in milliseconds.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setNumLockStateThreads-int-">setNumLockStateThreads(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5605,7 +5665,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setReadAheadNoSuchLedgerExceptionOnReadLACErrorThresholdMillis-long-">setReadAheadNoSuchLedgerExceptionOnReadLACErrorThresholdMillis(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set the error threshold that readahead will reinitialize ledger handle after keeping receiving no such ledger exceptions.</div>
+<div class="block">Set the error threshold that readahead will reinitialize ledger handle
+ after keeping receiving no such ledger exceptions.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setReadAheadSkipBrokenEntries-boolean-">setReadAheadSkipBrokenEntries(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5613,7 +5674,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setReadAheadWaitTime-int-">setReadAheadWaitTime(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set the wait time between successive attempts to poll for new log records, in milliseconds</div>
+<div class="block">Set the wait time between successive attempts to poll for new log records, in milliseconds.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setReadAheadWaitTimeOnEndOfStream-int-">setReadAheadWaitTimeOnEndOfStream(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5623,11 +5684,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setReaderIdleErrorThresholdMillis-int-">setReaderIdleErrorThresholdMillis(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set the time in milliseconds as the threshold for when an idle reader should throw errors</div>
+<div class="block">Set the time in milliseconds as the threshold for when an idle reader should throw errors.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setReaderIdleWarnThresholdMillis-int-">setReaderIdleWarnThresholdMillis(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set the time in milliseconds as the threshold for when an idle reader should dump warnings</div>
+<div class="block">Set the time in milliseconds as the threshold for when an idle reader should dump warnings.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setReadLACLongPollTimeout-int-">setReadLACLongPollTimeout(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5708,7 +5769,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setUnpartitionedStreamName-java.lang.String-">setUnpartitionedStreamName(String)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Set name of the unpartitioned stream</div>
+<div class="block">Set name of the unpartitioned stream.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setUseDaemonThread-boolean-">setUseDaemonThread(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -5800,7 +5861,9 @@
 <div class="block">Calculate the size for this instance.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/logsegment/SizeBasedRollingPolicy.html" title="class in org.apache.distributedlog.logsegment"><span class="typeNameLink">SizeBasedRollingPolicy</span></a> - Class in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">SizeBased Policy for rolling.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/SizeBasedRollingPolicy.html#SizeBasedRollingPolicy-long-">SizeBasedRollingPolicy(long)</a></span> - Constructor for class org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/SizeBasedRollingPolicy.html" title="class in org.apache.distributedlog.logsegment">SizeBasedRollingPolicy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/AppendOnlyStreamReader.html#skipTo-long-">skipTo(long)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/AppendOnlyStreamReader.html" title="class in org.apache.distributedlog">AppendOnlyStreamReader</a></dt>
@@ -5849,7 +5912,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#startAsyncLogSegmentNonPartitioned--">startAsyncLogSegmentNonPartitioned()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Begin writing to the log stream identified by the name</div>
+<div class="block">Begin writing to the log stream identified by the name.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#startAsyncLogSegmentNonPartitioned--">startAsyncLogSegmentNonPartitioned()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -5859,7 +5922,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#startLogSegmentNonPartitioned--">startLogSegmentNonPartitioned()</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
-<div class="block">Begin writing to the log stream identified by the name</div>
+<div class="block">Begin writing to the log stream identified by the name.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManager.html#startLogSegmentNonPartitioned--">startLogSegmentNonPartitioned()</a></span> - Method in interface org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManager.html" title="interface in org.apache.distributedlog">DistributedLogManager</a></dt>
 <dd>
@@ -5887,7 +5950,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html#statsLogger-org.apache.bookkeeper.stats.StatsLogger-">statsLogger(StatsLogger)</a></span> - Method in class org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/NamespaceBuilder.html" title="class in org.apache.distributedlog.api.namespace">NamespaceBuilder</a></dt>
 <dd>
-<div class="block">Stats Logger used for stats collection</div>
+<div class="block">Stats Logger used for stats collection.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/BookKeeperClientBuilder.html#statsLogger-org.apache.bookkeeper.stats.StatsLogger-">statsLogger(StatsLogger)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/BookKeeperClientBuilder.html" title="class in org.apache.distributedlog">BookKeeperClientBuilder</a></dt>
 <dd>
@@ -5949,7 +6012,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentMetadataStore.html#storeMaxTxnId-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.metadata.LogMetadataForWriter-org.apache.bookkeeper.versioning.Versioned-org.apache.distributedlog.util.Transaction.OpListener-">storeMaxTxnId(Transaction&lt;Object&gt;, LogMetadataForWriter, Versioned&lt;Long&gt;, Transaction.OpListener&lt;Version&gt;)</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentMetadataStore.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentMetadataStore</a></dt>
 <dd>
-<div class="block">Store the maximum transaction id for <code>path</code></div>
+<div class="block">Store the maximum transaction id for <code>path</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#STREAM_NOT_READY">STREAM_NOT_READY</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>
@@ -5999,14 +6062,16 @@
 </dd>
 <dt><a href="org/apache/distributedlog/api/subscription/SubscriptionsStore.html" title="interface in org.apache.distributedlog.api.subscription"><span class="typeNameLink">SubscriptionsStore</span></a> - Interface in <a href="org/apache/distributedlog/api/subscription/package-summary.html">org.apache.distributedlog.api.subscription</a></dt>
 <dd>
-<div class="block">Store to manage subscriptions</div>
+<div class="block">Store to manage subscriptions.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/subscription/SubscriptionsStore.html" title="interface in org.apache.distributedlog.subscription"><span class="typeNameLink">SubscriptionsStore</span></a> - Interface in <a href="org/apache/distributedlog/subscription/package-summary.html">org.apache.distributedlog.subscription</a></dt>
 <dd>
 <div class="block">Store to manage subscriptions.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/api/subscription/SubscriptionStateStore.html" title="interface in org.apache.distributedlog.api.subscription"><span class="typeNameLink">SubscriptionStateStore</span></a> - Interface in <a href="org/apache/distributedlog/api/subscription/package-summary.html">org.apache.distributedlog.api.subscription</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Store to manage subscription states.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#SUCCESS">SUCCESS</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/ResponseUtils.html#successHeader--">successHeader()</a></span> - Static method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/ResponseUtils.html" title="class in org.apache.distributedlog.service">ResponseUtils</a></dt>
@@ -6058,7 +6123,9 @@
 <div class="block">Enable thriftmux for the dl server.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/logsegment/TimeBasedRollingPolicy.html" title="class in org.apache.distributedlog.logsegment"><span class="typeNameLink">TimeBasedRollingPolicy</span></a> - Class in <a href="org/apache/distributedlog/logsegment/package-summary.html">org.apache.distributedlog.logsegment</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">TimeBased Policy for rolling.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/TimeBasedRollingPolicy.html#TimeBasedRollingPolicy-long-">TimeBasedRollingPolicy(long)</a></span> - Constructor for class org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/TimeBasedRollingPolicy.html" title="class in org.apache.distributedlog.logsegment">TimeBasedRollingPolicy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/DLSocketAddress.html#toLockId-java.net.InetSocketAddress-int-">toLockId(InetSocketAddress, int)</a></span> - Static method in class org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/DLSocketAddress.html" title="class in org.apache.distributedlog.service">DLSocketAddress</a></dt>
@@ -6099,7 +6166,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/MetadataUpdater.html#transaction--">transaction()</a></span> - Method in interface org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/MetadataUpdater.html" title="interface in org.apache.distributedlog.metadata">MetadataUpdater</a></dt>
 <dd>
-<div class="block">Start a transaction on metadata updates</div>
+<div class="block">Start a transaction on metadata updates.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/StatusCode.html#TRANSACTION_OUT_OF_ORDER">TRANSACTION_OUT_OF_ORDER</a></span> - Static variable in interface org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/StatusCode.html" title="interface in org.apache.distributedlog.exceptions">StatusCode</a></dt>
 <dd>&nbsp;</dd>
@@ -6213,7 +6280,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/LogSegmentEntryReader.html#unregisterListener-org.apache.distributedlog.logsegment.LogSegmentEntryReader.StateChangeListener-">unregisterListener(LogSegmentEntryReader.StateChangeListener)</a></span> - Method in interface org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/LogSegmentEntryReader.html" title="interface in org.apache.distributedlog.logsegment">LogSegmentEntryReader</a></dt>
 <dd>
-<div class="block">Unregister the state change listener</div>
+<div class="block">Unregister the state change listener.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/NamespaceWatcher.html#unregisterListener-org.apache.distributedlog.callback.NamespaceListener-">unregisterListener(NamespaceListener)</a></span> - Method in class org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/NamespaceWatcher.html" title="class in org.apache.distributedlog.namespace">NamespaceWatcher</a></dt>
 <dd>
@@ -6281,7 +6348,7 @@
 <dl>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#validate--">validate()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
-<div class="block">Validate the configuration</div>
+<div class="block">Validate the configuration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/logsegment/PerStreamLogSegmentCache.html#validateLogSegmentSequenceNumber">validateLogSegmentSequenceNumber</a></span> - Variable in class org.apache.distributedlog.logsegment.<a href="org/apache/distributedlog/logsegment/PerStreamLogSegmentCache.html" title="class in org.apache.distributedlog.logsegment">PerStreamLogSegmentCache</a></dt>
 <dd>&nbsp;</dd>
@@ -6538,7 +6605,7 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/exceptions/ZKException.html" title="class in org.apache.distributedlog.exceptions"><span class="typeNameLink">ZKException</span></a> - Exception in <a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a></dt>
 <dd>
-<div class="block">TODO: move ZKException to distributedlog-protocol</div>
+<div class="block">TODO: move ZKException to distributedlog-protocol.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/ZKException.html#ZKException-java.lang.String-org.apache.zookeeper.KeeperException.Code-">ZKException(String, KeeperException.Code)</a></span> - Constructor for exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/ZKException.html" title="class in org.apache.distributedlog.exceptions">ZKException</a></dt>
 <dd>&nbsp;</dd>
@@ -6581,15 +6648,21 @@ the order they are declared.</div>
 <div class="block">ZooKeeper Client wrapper over <code>ZooKeeperClient</code>.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/ZooKeeperClient.Credentials.html" title="interface in org.apache.distributedlog"><span class="typeNameLink">ZooKeeperClient.Credentials</span></a> - Interface in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">interface used to authenticate zk client.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/ZooKeeperClient.DigestCredentials.html" title="class in org.apache.distributedlog"><span class="typeNameLink">ZooKeeperClient.DigestCredentials</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">interface impl used to authenticate zk client.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/ZooKeeperClient.ZooKeeperConnectionException.html" title="class in org.apache.distributedlog"><span class="typeNameLink">ZooKeeperClient.ZooKeeperConnectionException</span></a> - Exception in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">Indicates an error connecting to a zookeeper cluster.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/ZooKeeperClient.ZooKeeperSessionExpireNotifier.html" title="interface in org.apache.distributedlog"><span class="typeNameLink">ZooKeeperClient.ZooKeeperSessionExpireNotifier</span></a> - Interface in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Notify a zk session expire event.</div>
+</dd>
 <dt><a href="org/apache/distributedlog/ZooKeeperClientBuilder.html" title="class in org.apache.distributedlog"><span class="typeNameLink">ZooKeeperClientBuilder</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">Builder to build zookeeper client.</div>

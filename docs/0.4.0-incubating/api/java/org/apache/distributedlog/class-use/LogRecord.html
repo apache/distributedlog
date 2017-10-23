@@ -142,14 +142,14 @@
 <td class="colLast"><span class="typeNameLabel">LogSegmentMetadata.LogSegmentMetadataBuilder.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#setRecordCount-org.apache.distributedlog.LogRecord-">setRecordCount</a></span>(<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&nbsp;record)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">LogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogWriter.html#write-org.apache.distributedlog.LogRecord-">write</a></span>(<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&nbsp;record)</code>
+<td class="colFirst"><code>com.twitter.util.Future&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">AsyncLogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/AsyncLogWriter.html#write-org.apache.distributedlog.LogRecord-">write</a></span>(<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&nbsp;record)</code>
 <div class="block">Write a log record to the stream.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>com.twitter.util.Future&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">AsyncLogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/AsyncLogWriter.html#write-org.apache.distributedlog.LogRecord-">write</a></span>(<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&nbsp;record)</code>
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="typeNameLabel">LogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogWriter.html#write-org.apache.distributedlog.LogRecord-">write</a></span>(<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&nbsp;record)</code>
 <div class="block">Write a log record to the stream.</div>
 </td>
 </tr>
@@ -176,15 +176,15 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><span class="typeNameLabel">LogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogWriter.html#writeBulk-java.util.List-">writeBulk</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&gt;&nbsp;records)</code>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>com.twitter.util.Future&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.twitter.util.Future&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;&gt;&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AsyncLogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/AsyncLogWriter.html#writeBulk-java.util.List-">writeBulk</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&gt;&nbsp;record)</code>
 <div class="block">Write log records to the stream in bulk.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><span class="typeNameLabel">LogWriter.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/LogWriter.html#writeBulk-java.util.List-">writeBulk</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecord.html" title="class in org.apache.distributedlog">LogRecord</a>&gt;&nbsp;records)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
 </tr>
 </tbody>

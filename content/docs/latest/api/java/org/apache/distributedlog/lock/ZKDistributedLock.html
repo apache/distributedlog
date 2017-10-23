@@ -127,8 +127,8 @@ implements <a href="../../../../org/apache/distributedlog/lock/DistributedLock.h
  The lock is only allowed to acquire once. If the lock is acquired successfully,
  the caller holds the ownership until it loses the ownership either because of
  others already acquired the lock when session expired or explicitly close it.
- <p>
- The caller could use <a href="../../../../org/apache/distributedlog/lock/ZKDistributedLock.html#checkOwnership--"><code>checkOwnership()</code></a> or <a href="../../../../org/apache/distributedlog/lock/ZKDistributedLock.html#checkOwnershipAndReacquire--"><code>checkOwnershipAndReacquire()</code></a>
+
+  <p>The caller could use <a href="../../../../org/apache/distributedlog/lock/ZKDistributedLock.html#checkOwnership--"><code>checkOwnership()</code></a> or <a href="../../../../org/apache/distributedlog/lock/ZKDistributedLock.html#checkOwnershipAndReacquire--"><code>checkOwnershipAndReacquire()</code></a>
  to check if it still holds the lock. If it doesn't hold the lock, the caller should
  give up the ownership and close the lock.
  <h3>Metrics</h3>

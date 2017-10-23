@@ -132,20 +132,18 @@ var activeTableTab = "activeTableTab";
 extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <div class="block">DistributedLog Configuration.
 
- <p>
- DistributedLog configuration is basically a properties based configuration, which extends from
+ <p>DistributedLog configuration is basically a properties based configuration, which extends from
  Apache commons <code>CompositeConfiguration</code>. All the DL settings are in camel case and prefixed
  with a meaningful component name. for example, `zkSessionTimeoutSeconds` means <i>SessionTimeoutSeconds</i>
  for component `zk`.
 
- <h3>BookKeeper Configuration</h3>
+ <p></p><h3>BookKeeper Configuration</h3>
 
- BookKeeper client configuration settings could be loaded via DistributedLog configuration. All those
+ <p></p>BookKeeper client configuration settings could be loaded via DistributedLog configuration. All those
  settings are prefixed with <i>`bkc.`</i>. For example, <i>bkc.zkTimeout</i> in distributedlog configuration
  will be applied as <i>`zkTimeout`</i> in bookkeeper client configuration.
 
  <h3>How to load configuration</h3>
-
  The default distributedlog configuration is constructed by instantiated a new instance. This
  distributedlog configuration will automatically load the settings that specified via
  <code>SystemConfiguration</code>.
@@ -153,7 +151,6 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
  <pre>
       DistributedLogConfiguration conf = new DistributedLogConfiguration();
  </pre>
-
  The recommended way is to load configuration from URL that points to a configuration file
  (<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#loadConf-java.net.URL-"><code>loadConf(URL)</code></a>).
 
@@ -363,11 +360,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#BKDL_COMPRESSION_TYPE">BKDL_COMPRESSION_TYPE</a></span></code>
-<div class="block">CompressionCodec.Type     String to use (See CompressionUtils)
-  ---------------------     ------------------------------------
-          NONE               none
-          LZ4                lz4
-          UNKNOWN            any other instance of String.class</div>
+<div class="block">CompressionCodec.Type     String to use (See CompressionUtils).</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -1284,7 +1277,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getAlertWhenPositioningOnTruncated--">getAlertWhenPositioningOnTruncated</a></span>()</code>
-<div class="block">Get if we should alert when reader is positioned on a truncated segment</div>
+<div class="block">Get if we should alert when reader is positioned on a truncated segment.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -1477,7 +1470,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getEnableForceRead--">getEnableForceRead</a></span>()</code>
-<div class="block">Get if we should enable force read</div>
+<div class="block">Get if we should enable force read.</div>
 </td>
 </tr>
 <tr id="i34" class="altColor">
@@ -1497,7 +1490,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getEnableReadAhead--">getEnableReadAhead</a></span>()</code>
-<div class="block">Get if we should enable read ahead</div>
+<div class="block">Get if we should enable read ahead.</div>
 </td>
 </tr>
 <tr id="i37" class="rowColor">
@@ -1595,7 +1588,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i52" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getIgnoreTruncationStatus--">getIgnoreTruncationStatus</a></span>()</code>
-<div class="block">Get if we should ignore truncation status when reading the records</div>
+<div class="block">Get if we should ignore truncation status when reading the records.</div>
 </td>
 </tr>
 <tr id="i53" class="rowColor">
@@ -1838,13 +1831,13 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i92" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getReaderIdleErrorThresholdMillis--">getReaderIdleErrorThresholdMillis</a></span>()</code>
-<div class="block">Get the time in milliseconds as the threshold for when an idle reader should throw errors</div>
+<div class="block">Get the time in milliseconds as the threshold for when an idle reader should throw errors.</div>
 </td>
 </tr>
 <tr id="i93" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getReaderIdleWarnThresholdMillis--">getReaderIdleWarnThresholdMillis</a></span>()</code>
-<div class="block">Get the time in milliseconds as the threshold for when an idle reader should dump warnings</div>
+<div class="block">Get the time in milliseconds as the threshold for when an idle reader should dump warnings.</div>
 </td>
 </tr>
 <tr id="i94" class="altColor">
@@ -2026,13 +2019,13 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i123" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#loadConf-org.apache.commons.configuration.Configuration-">loadConf</a></span>(org.apache.commons.configuration.Configuration&nbsp;otherConf)</code>
-<div class="block">Load configuration from other configuration object</div>
+<div class="block">Load configuration from other configuration object.</div>
 </td>
 </tr>
 <tr id="i124" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#loadConf-org.apache.distributedlog.DistributedLogConfiguration-">loadConf</a></span>(<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;baseConf)</code>
-<div class="block">You can load configuration from other configuration</div>
+<div class="block">You can load configuration from other configuration.</div>
 </td>
 </tr>
 <tr id="i125" class="rowColor">
@@ -2044,7 +2037,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i126" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#loadStreamConf-com.google.common.base.Optional-">loadStreamConf</a></span>(com.google.common.base.Optional&lt;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&gt;&nbsp;streamConfiguration)</code>
-<div class="block">Load whitelisted stream configuration from another configuration object</div>
+<div class="block">Load whitelisted stream configuration from another configuration object.</div>
 </td>
 </tr>
 <tr id="i127" class="rowColor">
@@ -2062,7 +2055,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i129" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setAlertWhenPositioningOnTruncated-boolean-">setAlertWhenPositioningOnTruncated</a></span>(boolean&nbsp;alertWhenPositioningOnTruncated)</code>
-<div class="block">Set if we should alert when reader is positioned on a truncated segment</div>
+<div class="block">Set if we should alert when reader is positioned on a truncated segment.</div>
 </td>
 </tr>
 <tr id="i130" class="altColor">
@@ -2224,7 +2217,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i156" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setEnableForceRead-boolean-">setEnableForceRead</a></span>(boolean&nbsp;enableForceRead)</code>
-<div class="block">Set if we should enable force read</div>
+<div class="block">Set if we should enable force read.</div>
 </td>
 </tr>
 <tr id="i157" class="rowColor">
@@ -2329,8 +2322,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setFirstLogSegmentSequenceNumber-long-">setFirstLogSegmentSequenceNumber</a></span>(long&nbsp;firstLogSegmentSequenceNumber)</code>
 <div class="block">Set the value at which ledger sequence number should start for streams that are being
- upgraded and did not have ledger sequence number to start with or for newly created
- streams</div>
+upgraded and did not have ledger sequence number to start with or for newly created streams.</div>
 </td>
 </tr>
 <tr id="i174" class="altColor">
@@ -2348,13 +2340,13 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i176" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setIgnoreTruncationStatus-boolean-">setIgnoreTruncationStatus</a></span>(boolean&nbsp;ignoreTruncationStatus)</code>
-<div class="block">Set if we should ignore truncation status when reading the records</div>
+<div class="block">Set if we should ignore truncation status when reading the records.</div>
 </td>
 </tr>
 <tr id="i177" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setImmediateFlushEnabled-boolean-">setImmediateFlushEnabled</a></span>(boolean&nbsp;enabled)</code>
-<div class="block">Enable/Disable immediate flush</div>
+<div class="block">Enable/Disable immediate flush.</div>
 </td>
 </tr>
 <tr id="i178" class="altColor">
@@ -2372,7 +2364,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i180" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setLedgerAllocatorPoolPath-java.lang.String-">setLedgerAllocatorPoolPath</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
-<div class="block">Set the root path of ledger allocator pool</div>
+<div class="block">Set the root path of ledger allocator pool.</div>
 </td>
 </tr>
 <tr id="i181" class="rowColor">
@@ -2480,7 +2472,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i198" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setMinDelayBetweenImmediateFlushMs-int-">setMinDelayBetweenImmediateFlushMs</a></span>(int&nbsp;minDelayMs)</code>
-<div class="block">Set minimum delay between immediate flushes in milliseconds</div>
+<div class="block">Set minimum delay between immediate flushes in milliseconds.</div>
 </td>
 </tr>
 <tr id="i199" class="rowColor">
@@ -2564,7 +2556,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i212" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setReadAheadNoSuchLedgerExceptionOnReadLACErrorThresholdMillis-long-">setReadAheadNoSuchLedgerExceptionOnReadLACErrorThresholdMillis</a></span>(long&nbsp;thresholdMillis)</code>
-<div class="block">Set the error threshold that readahead will reinitialize ledger handle after keeping receiving no such ledger exceptions.</div>
+<div class="block">Set the error threshold that readahead will reinitialize ledger handle
+ after keeping receiving no such ledger exceptions.</div>
 </td>
 </tr>
 <tr id="i213" class="rowColor">
@@ -2576,7 +2569,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i214" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setReadAheadWaitTime-int-">setReadAheadWaitTime</a></span>(int&nbsp;readAheadWaitTime)</code>
-<div class="block">Set the wait time between successive attempts to poll for new log records, in milliseconds</div>
+<div class="block">Set the wait time between successive attempts to poll for new log records, in milliseconds.</div>
 </td>
 </tr>
 <tr id="i215" class="rowColor">
@@ -2590,13 +2583,13 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i216" class="altColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setReaderIdleErrorThresholdMillis-int-">setReaderIdleErrorThresholdMillis</a></span>(int&nbsp;warnThreshold)</code>
-<div class="block">Set the time in milliseconds as the threshold for when an idle reader should throw errors</div>
+<div class="block">Set the time in milliseconds as the threshold for when an idle reader should throw errors.</div>
 </td>
 </tr>
 <tr id="i217" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setReaderIdleWarnThresholdMillis-int-">setReaderIdleWarnThresholdMillis</a></span>(int&nbsp;warnThreshold)</code>
-<div class="block">Set the time in milliseconds as the threshold for when an idle reader should dump warnings</div>
+<div class="block">Set the time in milliseconds as the threshold for when an idle reader should dump warnings.</div>
 </td>
 </tr>
 <tr id="i218" class="altColor">
@@ -2668,7 +2661,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i229" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setUnpartitionedStreamName-java.lang.String-">setUnpartitionedStreamName</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;streamName)</code>
-<div class="block">Set name of the unpartitioned stream</div>
+<div class="block">Set name of the unpartitioned stream.</div>
 </td>
 </tr>
 <tr id="i230" class="altColor">
@@ -2734,7 +2727,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <tr id="i240" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#validate--">validate</a></span>()</code>
-<div class="block">Validate the configuration</div>
+<div class="block">Validate the configuration.</div>
 </td>
 </tr>
 </table>
@@ -2743,14 +2736,14 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.apache.commons.configuration.CompositeConfiguration</h3>
-<code>addConfiguration, addPropertyDirect, clear, clearPropertyDirect, clone, containsKey, getConfiguration, getInMemoryConfiguration, getKeys, getKeys, getList, getNumberOfConfigurations, getProperty, getSource, getStringArray, isEmpty, removeConfiguration, setDelimiterParsingDisabled, setListDelimiter</code></li>
+<code>addConfiguration, addConfiguration, addPropertyDirect, clear, clearPropertyDirect, clone, containsKey, getConfiguration, getInMemoryConfiguration, getKeys, getKeys, getList, getNumberOfConfigurations, getProperty, getSource, getStringArray, isEmpty, removeConfiguration, setDelimiterParsingDisabled, setListDelimiter</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.org.apache.commons.configuration.AbstractConfiguration">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.apache.commons.configuration.AbstractConfiguration</h3>
-<code>addErrorLogListener, addProperty, append, clearProperty, copy, createInterpolator, getBigDecimal, getBigDecimal, getBigInteger, getBigInteger, getBoolean, getBoolean, getBoolean, getByte, getByte, getByte, getDefaultListDelimiter, getDelimiter, getDouble, getDouble, getDouble, getFloat, getFloat, getFloat, getInt, getInt, getInteger, getInterpolator, getList, getListDelimiter, getLogger, getLong, getLong, getLong, getProperties, getProperties, getShort, getShort, getShort, getString, getString, getSubstitutor, interpolate, interpolate, interpolatedConfiguration, interpolateHelper, isDelimiterParsingDisabled, isThrowExceptionOnMissing, resolveContainerStore, setDefaultListDelimiter, setDelimiter, setLogger, setProperty, setThrowExceptionOnMissing, subset</code></li>
+<code>addErrorLogListener, addProperty, append, clearProperty, copy, createInterpolator, getBigDecimal, getBigDecimal, getBigInteger, getBigInteger, getBoolean, getBoolean, getBoolean, getByte, getByte, getByte, getDefaultListDelimiter, getDelimiter, getDouble, getDouble, getDouble, getFloat, getFloat, getFloat, getInt, getInt, getInteger, getInterpolator, getList, getListDelimiter, getLogger, getLong, getLong, getLong, getProperties, getProperties, getShort, getShort, getShort, getString, getString, getSubstitutor, interpolate, interpolate, interpolatedConfiguration, interpolateHelper, isDelimiterParsingDisabled, isScalarValue, isThrowExceptionOnMissing, resolveContainerStore, setDefaultListDelimiter, setDelimiter, setLogger, setProperty, setThrowExceptionOnMissing, subset</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.org.apache.commons.configuration.event.EventSource">
@@ -3958,7 +3951,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <li class="blockList">
 <h4>BKDL_COMPRESSION_TYPE</h4>
 <pre>public static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> BKDL_COMPRESSION_TYPE</pre>
-<div class="block">CompressionCodec.Type     String to use (See CompressionUtils)
+<div class="block">CompressionCodec.Type     String to use (See CompressionUtils).
   ---------------------     ------------------------------------
           NONE               none
           LZ4                lz4
@@ -6185,7 +6178,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>loadConf</h4>
 <pre>public&nbsp;void&nbsp;loadConf(<a href="http://download.oracle.com/javase/6/docs/api/java/net/URL.html?is-external=true" title="class or interface in java.net">URL</a>&nbsp;confURL)
               throws org.apache.commons.configuration.ConfigurationException</pre>
-<div class="block">You can load configurations in precedence order. The first one takes
+<div class="block">You can load configurations in precedence order. The first one takes.
  precedence over any loaded later.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -6202,7 +6195,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <li class="blockList">
 <h4>loadConf</h4>
 <pre>public&nbsp;void&nbsp;loadConf(<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;baseConf)</pre>
-<div class="block">You can load configuration from other configuration</div>
+<div class="block">You can load configuration from other configuration.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>baseConf</code> - Other Configuration</dd>
@@ -6216,7 +6209,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <li class="blockList">
 <h4>loadConf</h4>
 <pre>public&nbsp;void&nbsp;loadConf(org.apache.commons.configuration.Configuration&nbsp;otherConf)</pre>
-<div class="block">Load configuration from other configuration object</div>
+<div class="block">Load configuration from other configuration object.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>otherConf</code> - Other configuration object</dd>
@@ -6230,7 +6223,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <li class="blockList">
 <h4>loadStreamConf</h4>
 <pre>public&nbsp;void&nbsp;loadStreamConf(com.google.common.base.Optional&lt;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&gt;&nbsp;streamConfiguration)</pre>
-<div class="block">Load whitelisted stream configuration from another configuration object</div>
+<div class="block">Load whitelisted stream configuration from another configuration object.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>streamConfiguration</code> - stream configuration overrides</dd>
@@ -6302,8 +6295,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <pre>public&nbsp;int&nbsp;getZKSessionTimeoutSeconds()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getZKSessionTimeoutMilliseconds--"><code>getZKSessionTimeoutMilliseconds()</code></a></span></div>
 <div class="block">Get ZK Session timeout in seconds.
- <p>
- This is the session timeout applied for zookeeper client used by distributedlog.
+
+ <p>This is the session timeout applied for zookeeper client used by distributedlog.
  Use <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getBKClientZKSessionTimeoutMilliSeconds--"><code>getBKClientZKSessionTimeoutMilliSeconds()</code></a> for zookeeper client used
  by bookkeeper client.</div>
 <dl>
@@ -6320,8 +6313,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getZKSessionTimeoutMilliseconds</h4>
 <pre>public&nbsp;int&nbsp;getZKSessionTimeoutMilliseconds()</pre>
 <div class="block">Get ZK Session timeout in milliseconds.
- <p>
- This is the session timeout applied for zookeeper client used by distributedlog.
+
+ <p>This is the session timeout applied for zookeeper client used by distributedlog.
  Use <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getBKClientZKSessionTimeoutMilliSeconds--"><code>getBKClientZKSessionTimeoutMilliSeconds()</code></a> for zookeeper client used
  by bookkeeper client.</div>
 <dl>
@@ -6356,6 +6349,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getZKRequestRateLimit</h4>
 <pre>public&nbsp;double&nbsp;getZKRequestRateLimit()</pre>
 <div class="block">Get zookeeper access rate limit.
+
  <p>The rate limiter is basically a guava <code>RateLimiter</code>.
  It is rate limiting the requests that sent by zookeeper client. If the value is non-positive,
  the rate limiting is disable. By default it is disable (value = 0).</div>
@@ -6391,6 +6385,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getZKNumRetries</h4>
 <pre>public&nbsp;int&nbsp;getZKNumRetries()</pre>
 <div class="block">Get num of retries per request for zookeeper client.
+
  <p>Retries only happen on retryable failures like session expired,
  session moved. for permanent failures, the request will fail immediately.
  The default value is 3.</div>
@@ -6426,6 +6421,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getZKRetryBackoffStartMillis</h4>
 <pre>public&nbsp;int&nbsp;getZKRetryBackoffStartMillis()</pre>
 <div class="block">Get the start backoff time of zookeeper operation retries, in milliseconds.
+
  <p>The retry time will increase in bound exponential way, and become flat
  after hit max backoff time (<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getZKRetryBackoffMaxMillis--"><code>getZKRetryBackoffMaxMillis()</code></a>).
  The default start backoff time is 5000 milliseconds.</div>
@@ -6464,6 +6460,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getZKRetryBackoffMaxMillis</h4>
 <pre>public&nbsp;int&nbsp;getZKRetryBackoffMaxMillis()</pre>
 <div class="block">Get the max backoff time of zookeeper operation retries, in milliseconds.
+
  <p>The retry time will increase in bound exponential way starting from
  <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getZKRetryBackoffStartMillis--"><code>getZKRetryBackoffStartMillis()</code></a>, and become flat after hit this max
  backoff time.
@@ -6536,8 +6533,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getBKClientZKSessionTimeoutMilliSeconds</h4>
 <pre>public&nbsp;int&nbsp;getBKClientZKSessionTimeoutMilliSeconds()</pre>
 <div class="block">Get BK's zookeeper session timout in milliseconds.
- <p>
- This is the session timeout applied for zookeeper client used by bookkeeper client.
+
+ <p>This is the session timeout applied for zookeeper client used by bookkeeper client.
  Use <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getZKSessionTimeoutMilliseconds--"><code>getZKSessionTimeoutMilliseconds()</code></a> for zookeeper client used
  by distributedlog.</div>
 <dl>
@@ -6572,6 +6569,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getBKClientZKRequestRateLimit</h4>
 <pre>public&nbsp;double&nbsp;getBKClientZKRequestRateLimit()</pre>
 <div class="block">Get zookeeper access rate limit for zookeeper client used in bookkeeper client.
+
  <p>The rate limiter is basically a guava <code>RateLimiter</code>.
  It is rate limiting the requests that sent by zookeeper client. If the value is non-positive,
  the rate limiting is disable. By default it is disable (value = 0).</div>
@@ -6608,6 +6606,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getBKClientZKNumRetries</h4>
 <pre>public&nbsp;int&nbsp;getBKClientZKNumRetries()</pre>
 <div class="block">Get num of retries for zookeeper client that used by bookkeeper client.
+
  <p>Retries only happen on retryable failures like session expired,
  session moved. for permanent failures, the request will fail immediately.
  The default value is 3. Setting it to zero or negative will retry infinitely.</div>
@@ -6625,6 +6624,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getBKClientZKRetryBackoffStartMillis</h4>
 <pre>public&nbsp;int&nbsp;getBKClientZKRetryBackoffStartMillis()</pre>
 <div class="block">Get the start backoff time of zookeeper operation retries, in milliseconds.
+
  <p>The retry time will increase in bound exponential way, and become flat
  after hit max backoff time (<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getBKClientZKRetryBackoffMaxMillis--"><code>getBKClientZKRetryBackoffMaxMillis()</code></a>.
  The default start backoff time is 5000 milliseconds.</div>
@@ -6644,6 +6644,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getBKClientZKRetryBackoffMaxMillis</h4>
 <pre>public&nbsp;int&nbsp;getBKClientZKRetryBackoffMaxMillis()</pre>
 <div class="block">Get the max backoff time of zookeeper operation retries, in milliseconds.
+
  <p>The retry time will increase in bound exponential way starting from
  <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getBKClientZKRetryBackoffStartMillis--"><code>getBKClientZKRetryBackoffStartMillis()</code></a>, and become flat after
  hit this max backoff time.
@@ -6665,14 +6666,14 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <pre>public&nbsp;int&nbsp;getEnsembleSize()</pre>
 <div class="block">Get ensemble size of each log segment (ledger) will use.
  By default it is 3.
- <p>
- A log segment's data is stored in an ensemble of bookies in
+
+ <p>A log segment's data is stored in an ensemble of bookies in
  a stripping way. Each entry will be added in a <code>write-quorum</code>
  size of bookies. The add operation will complete once it receives
  responses from a <code>ack-quorum</code> size of bookies. The stripping
  is done in a round-robin way in bookkeeper.
- <p>
- For example, we configure the ensemble-size to 5, write-quorum-size to 3,
+
+ <p>For example, we configure the ensemble-size to 5, write-quorum-size to 3,
  and ack-quorum-size to 2. The data will be stored in following stripping way.
  <pre>
  | entry id | bk1 | bk2 | bk3 | bk4 | bk5 |
@@ -6683,8 +6684,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
  |     4    |  x  |  x  |     |     |  x  |
  |     5    |  x  |  x  |  x  |     |     |
  </pre>
- <p>
- We don't recommend stripping within a log segment to increase bandwidth.
+
+ <p>We don't recommend stripping within a log segment to increase bandwidth.
  We'd recommend to strip by `partition` in higher level of distributedlog
  to increase performance. so typically the ensemble size will set to be
  the same value as write quorum size.</div>
@@ -6811,6 +6812,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getRowAwareEnsemblePlacementEnabled</h4>
 <pre>public&nbsp;boolean&nbsp;getRowAwareEnsemblePlacementEnabled()</pre>
 <div class="block">Get if row aware ensemble placement is enabled.
+
  <p>If enabled, <a href="../../../org/apache/distributedlog/net/DNSResolverForRows.html" title="class in org.apache.distributedlog.net"><code>DNSResolverForRows</code></a> will be used for dns resolution
  rather than <a href="../../../org/apache/distributedlog/net/DNSResolverForRacks.html" title="class in org.apache.distributedlog.net"><code>DNSResolverForRacks</code></a>, if no other dns resolver set via
  <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#setEnsemblePlacementDnsResolverClass-java.lang.Class-"><code>setEnsemblePlacementDnsResolverClass(Class)</code></a>.
@@ -6850,6 +6852,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends org.apache.bookkeeper.net.DNSToSwitchMapping&gt;&nbsp;getEnsemblePlacementDnsResolverClass()
                                                                                                    throws org.apache.commons.configuration.ConfigurationException</pre>
 <div class="block">Get the DNS resolver class for bookkeeper ensemble placement.
+
  <p>By default, <a href="../../../org/apache/distributedlog/net/DNSResolverForRacks.html" title="class in org.apache.distributedlog.net"><code>DNSResolverForRacks</code></a> will be used if
  <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getRowAwareEnsemblePlacementEnabled--"><code>getRowAwareEnsemblePlacementEnabled()</code></a> is disabled and
  <a href="../../../org/apache/distributedlog/net/DNSResolverForRows.html" title="class in org.apache.distributedlog.net"><code>DNSResolverForRows</code></a> will be used if <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getRowAwareEnsemblePlacementEnabled--"><code>getRowAwareEnsemblePlacementEnabled()</code></a>
@@ -6890,6 +6893,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getBkDNSResolverOverrides</h4>
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getBkDNSResolverOverrides()</pre>
 <div class="block">Get mapping used to override the region mapping derived by the default resolver.
+
  <p>It is a string of pairs of host-region mappings (host:region) separated by semicolon.
  By default it is empty string.</div>
 <dl>
@@ -6910,6 +6914,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>setBkDNSResolverOverrides</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setBkDNSResolverOverrides(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;overrides)</pre>
 <div class="block">Set mapping used to override the region mapping derived by the default resolver
+
  <p>It is a string of pairs of host-region mappings (host:region) separated by semicolon.
  By default it is empty string.</div>
 <dl>
@@ -6930,8 +6935,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>setBKDigestPW</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setBKDigestPW(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;bkDigestPW)</pre>
 <div class="block">Set password used by bookkeeper client for digestion.
- <p>
- NOTE: not recommend to change. will be derepcated in future.</div>
+
+ <p>NOTE: not recommend to change. will be derepcated in future.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>bkDigestPW</code> - BK password digest</dd>
@@ -6948,8 +6953,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>getBKDigestPW</h4>
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getBKDigestPW()</pre>
 <div class="block">Get password used by bookkeeper client for digestion.
- <p>
- NOTE: not recommend to change. will be deprecated in future.</div>
+
+ <p>NOTE: not recommend to change. will be deprecated in future.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>password used by bookkeeper client for digestion</dd>
@@ -7072,8 +7077,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <pre>public&nbsp;int&nbsp;getBKClientReadTimeout()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Get BK client read timeout in seconds.
- <p>
- Please use <code>ClientConfiguration.getReadEntryTimeout()</code>
+
+ <p>Please use <code>ClientConfiguration.getReadEntryTimeout()</code>
  instead of this setting.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -7111,8 +7116,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <pre>public&nbsp;int&nbsp;getBKClientWriteTimeout()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Get BK client write timeout in seconds.
- <p>
- Please use <code>ClientConfiguration.getAddEntryTimeout()</code>
+
+  <p>Please use <code>ClientConfiguration.getAddEntryTimeout()</code>
  instead of this setting.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -7130,7 +7135,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <h4>setBKClientWriteTimeout</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setBKClientWriteTimeout(int&nbsp;writeTimeout)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
-<div class="block">Set BK client write timeout in seconds</div>
+<div class="block">Set BK client write timeout in seconds.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>writeTimeout</code> - write timeout in seconds.</dd>
@@ -7150,8 +7155,8 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 <pre>public&nbsp;int&nbsp;getBKClientNumberWorkerThreads()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Get BK client number of worker threads.
- <p>
- Please use <code>ClientConfiguration.getNumWorkerThreads()</code>
+
+ <p>Please use <code>ClientConfiguration.getNumWorkerThreads()</code>
  instead of this setting.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -7223,6 +7228,7 @@ extends org.apache.commons.configuration.CompositeConfiguration</pre>
 public&nbsp;int&nbsp;getNumReadAheadWorkerThreads()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Get the number of dedicated readahead worker threads used by distributedlog namespace.
+
  <p>If this value is non-positive, it would share the normal executor (see <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getNumWorkerThreads--"><code>getNumWorkerThreads()</code></a>
  for readahead. otherwise, it would use a dedicated executor for readhead. By default,
  it is 0.</div>
@@ -7298,8 +7304,8 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
  By default it is 0 - the thread will be created dynamically by a executor service.
  The executor service is an unbounded pool. Application can use `total_tasks - completed_tasks`
  on monitoring the number of threads that are used for releasing resources.
- <p>
- The setting is only applied for v2 implementation.</div>
+
+ <p>The setting is only applied for v2 implementation.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>number of resource release threads used by distributedlog namespace.</dd>
@@ -7453,6 +7459,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setDLLedgerMetadataSkipMinVersionCheck(boolean&nbsp;skipMinVersionCheck)
                                                                    throws <a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></pre>
 <div class="block">Set if we should skip the enforcement of min ledger metadata version.
+
  <p>NOTE: please be aware the side effects of skipping min ledger metadata
  version checking.</div>
 <dl>
@@ -7477,6 +7484,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <div class="block">Get the value at which ledger sequence number should start for streams that are being
  upgraded and did not have ledger sequence number to start with or for newly created
  streams. By default, it is 1.
+
  <p>In most of the cases this value should not be changed. It is useful for backfilling
  in the case of migrating log segments whose metadata don't have log segment sequence number.</div>
 <dl>
@@ -7494,8 +7502,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setFirstLogSegmentSequenceNumber(long&nbsp;firstLogSegmentSequenceNumber)
                                                              throws <a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></pre>
 <div class="block">Set the value at which ledger sequence number should start for streams that are being
- upgraded and did not have ledger sequence number to start with or for newly created
- streams</div>
+upgraded and did not have ledger sequence number to start with or for newly created streams.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>firstLogSegmentSequenceNumber</code> - first ledger sequence number</dd>
@@ -7544,6 +7551,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getEnableRecordCounts</h4>
 <pre>public&nbsp;boolean&nbsp;getEnableRecordCounts()</pre>
 <div class="block">Whether we should publish record counts in the log records and metadata.
+
  <p>By default it is true. This is a legacy setting for log segment version 1. It
  should be considered removed.</div>
 <dl>
@@ -7580,6 +7588,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 public&nbsp;boolean&nbsp;getSanityCheckTxnID()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Whether sanity check txn id on starting log segments.
+
  <p>If it is enabled, DL writer would throw
  <a href="../../../org/apache/distributedlog/exceptions/TransactionIdOutOfOrderException.html" title="class in org.apache.distributedlog.exceptions"><code>TransactionIdOutOfOrderException</code></a>
  when it received a smaller transaction id than current maximum transaction id.</div>
@@ -7617,6 +7626,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getEncodeRegionIDInLogSegmentMetadata</h4>
 <pre>public&nbsp;boolean&nbsp;getEncodeRegionIDInLogSegmentMetadata()</pre>
 <div class="block">Whether encode region id in log segment metadata.
+
  <p>In global DL use case, encoding region id in log segment medata would
  help understanding what region that a log segment is created. The region
  id field in log segment metadata would help for moniotring and troubleshooting.</div>
@@ -7652,8 +7662,8 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getLogSegmentNameVersion</h4>
 <pre>public&nbsp;int&nbsp;getLogSegmentNameVersion()</pre>
 <div class="block">Get log segment name version.
- <p>
- <ul>
+
+ <p><ul>
  <li>version 0: inprogress_(start_txid) |
  logrecs_(start_txid)_(end_txid)</li>
  <li>version 1: inprogress_(logsegment_sequence_number) |
@@ -7692,6 +7702,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getUnpartitionedStreamName</h4>
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getUnpartitionedStreamName()</pre>
 <div class="block">Get name of the unpartitioned stream.
+
  <p>It is a legacy setting. consider removing it in future.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -7706,7 +7717,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setUnpartitionedStreamName</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setUnpartitionedStreamName(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;streamName)</pre>
-<div class="block">Set name of the unpartitioned stream</div>
+<div class="block">Set name of the unpartitioned stream.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>streamName</code> - name of the unpartitioned stream</dd>
@@ -7845,6 +7856,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getLogFlushTimeoutSeconds</h4>
 <pre>public&nbsp;int&nbsp;getLogFlushTimeoutSeconds()</pre>
 <div class="block">Get Log Flush timeout in seconds.
+
  <p>This is a setting used by DL writer on flushing data. It is typically used
  by synchronous writer and log segment writer. By default it is 30 seconds.</div>
 <dl>
@@ -7913,6 +7925,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getFailFastOnStreamNotReady</h4>
 <pre>public&nbsp;boolean&nbsp;getFailFastOnStreamNotReady()</pre>
 <div class="block">Whether to fail immediately if the stream is not ready rather than queueing the request.
+
  <p>If it is enabled, it would fail the write request immediately if the stream isn't ready.
  Consider turning it on for the use cases that could retry writing to other streams
  (aka non-strict ordering guarantee). It would result fast failure hence the client would
@@ -7982,6 +7995,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>isDurableWriteEnabled</h4>
 <pre>public&nbsp;boolean&nbsp;isDurableWriteEnabled()</pre>
 <div class="block">Check whether the durable write is enabled.
+
  <p>It is enabled by default.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8013,10 +8027,12 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getOutputBufferSize</h4>
 <pre>public&nbsp;int&nbsp;getOutputBufferSize()</pre>
 <div class="block">Get output buffer size for DL writers, in bytes.
+
  <p>Large buffer will result in higher compression ratio and
  it would use the bandwidth more efficiently and improve throughput.
  Set it to 0 would ask DL writers to transmit the data immediately,
  which it could achieve low latency.
+
  <p>The default value is 1KB.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8050,6 +8066,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getPeriodicFlushFrequencyMilliSeconds</h4>
 <pre>public&nbsp;int&nbsp;getPeriodicFlushFrequencyMilliSeconds()</pre>
 <div class="block">Get Periodic Log Flush Frequency in milliseconds.
+
  <p>If the setting is set with a positive value, the data in output buffer
  will be flushed in this provided interval. The default value is 0.</div>
 <dl>
@@ -8086,6 +8103,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getImmediateFlushEnabled</h4>
 <pre>public&nbsp;boolean&nbsp;getImmediateFlushEnabled()</pre>
 <div class="block">Is immediate flush enabled.
+
  <p>If it is enabled, it would flush control record immediately after adding
  data completed. The default value is false.</div>
 <dl>
@@ -8101,7 +8119,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setImmediateFlushEnabled</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setImmediateFlushEnabled(boolean&nbsp;enabled)</pre>
-<div class="block">Enable/Disable immediate flush</div>
+<div class="block">Enable/Disable immediate flush.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>enabled</code> - flag to enable/disable immediate flush.</dd>
@@ -8120,6 +8138,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getMinDelayBetweenImmediateFlushMs</h4>
 <pre>public&nbsp;int&nbsp;getMinDelayBetweenImmediateFlushMs()</pre>
 <div class="block">Get minimum delay between immediate flushes in milliseconds.
+
  <p>This setting only takes effects when <a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html#getImmediateFlushEnabled--"><code>getImmediateFlushEnabled()</code></a>
  is enabled. It torelants the bursty of traffic when immediate flush is enabled,
  which prevents sending too many control records to the bookkeeper.</div>
@@ -8138,7 +8157,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setMinDelayBetweenImmediateFlushMs</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setMinDelayBetweenImmediateFlushMs(int&nbsp;minDelayMs)</pre>
-<div class="block">Set minimum delay between immediate flushes in milliseconds</div>
+<div class="block">Set minimum delay between immediate flushes in milliseconds.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>minDelayMs</code> - minimum delay between immediate flushes in milliseconds.</dd>
@@ -8157,6 +8176,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getPeriodicKeepAliveMilliSeconds</h4>
 <pre>public&nbsp;int&nbsp;getPeriodicKeepAliveMilliSeconds()</pre>
 <div class="block">Get Periodic Keep Alive Frequency in milliseconds.
+
  <p>If the setting is set with a positive value, it would periodically write a control record
  to keep the stream active. The default value is 0.</div>
 <dl>
@@ -8222,9 +8242,11 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getExplicitTruncationByApplication</h4>
 <pre>public&nbsp;boolean&nbsp;getExplicitTruncationByApplication()</pre>
 <div class="block">Is truncation managed explicitly by the application.
+
  <p>If this is set then time based retention is only a hint to perform
  deferred cleanup. However we never remove a segment that has not been
  already marked truncated.
+
  <p>It is disabled by default.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8258,8 +8280,10 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getLogSegmentRollingIntervalMinutes</h4>
 <pre>public&nbsp;int&nbsp;getLogSegmentRollingIntervalMinutes()</pre>
 <div class="block">Get log segment rolling interval in minutes.
+
  <p>If the setting is set to a positive value, DL writer will roll log segments
  based on time. Otherwise, it will roll log segments based on size.
+
  <p>The default value is 2 hours.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8295,9 +8319,11 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getMaxLogSegmentBytes</h4>
 <pre>public&nbsp;long&nbsp;getMaxLogSegmentBytes()</pre>
 <div class="block">Get Max LogSegment Size in Bytes.
+
  <p>This setting only takes effects when time based rolling is disabled.
  DL writer will roll into a new log segment only after current one reaches
  this threshold.
+
  <p>The default value is 256MB.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8333,6 +8359,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getLogSegmentRollingConcurrency</h4>
 <pre>public&nbsp;int&nbsp;getLogSegmentRollingConcurrency()</pre>
 <div class="block">Get log segment rolling concurrency.
+
  <p>It limits how many writers could roll log segments concurrently.
  The default value is 1.</div>
 <dl>
@@ -8371,7 +8398,8 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>isWriteLockEnabled</h4>
 <pre>public&nbsp;boolean&nbsp;isWriteLockEnabled()</pre>
 <div class="block">Is lock enabled when opening a writer to write a stream?
- <p> We don't generally require a lock to write a stream to guarantee correctness. The lock
+
+ <p>We don't generally require a lock to write a stream to guarantee correctness. The lock
  is more on tracking ownerships. The built-in fencing mechanism is used guarantee correctness
  during stream owner failover. It is okay to disable lock if your application knows which nodes
  have to write which streams.</div>
@@ -8549,7 +8577,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setLedgerAllocatorPoolPath</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setLedgerAllocatorPoolPath(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
-<div class="block">Set the root path of ledger allocator pool</div>
+<div class="block">Set the root path of ledger allocator pool.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>path</code> - path of ledger allocator pool.</dd>
@@ -8631,6 +8659,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getPerWriterOutstandingWriteLimit</h4>
 <pre>public&nbsp;int&nbsp;getPerWriterOutstandingWriteLimit()</pre>
 <div class="block">Get the per stream outstanding write limit for dl.
+
  <p>If the setting is set with a positive value, the per stream
  write limiting is enabled. By default it is disabled.</div>
 <dl>
@@ -8667,6 +8696,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getGlobalOutstandingWriteLimit</h4>
 <pre>public&nbsp;int&nbsp;getGlobalOutstandingWriteLimit()</pre>
 <div class="block">Get the global write limit for dl.
+
  <p>If the setting is set with a positive value, the global
  write limiting is enabled. By default it is disabled.</div>
 <dl>
@@ -8703,8 +8733,10 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getOutstandingWriteLimitDarkmode</h4>
 <pre>public&nbsp;boolean&nbsp;getOutstandingWriteLimitDarkmode()</pre>
 <div class="block">Whether to darkmode outstanding writes limit.
+
  <p>If it is running in darkmode, it would not reject requests when
  it is over limit, but just record them in the stats.
+
  <p>By default, it is in darkmode.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8802,7 +8834,8 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>getReaderIdleWarnThresholdMillis</h4>
 <pre>public&nbsp;int&nbsp;getReaderIdleWarnThresholdMillis()</pre>
-<div class="block">Get the time in milliseconds as the threshold for when an idle reader should dump warnings
+<div class="block">Get the time in milliseconds as the threshold for when an idle reader should dump warnings.
+
  <p>The default value is 2 minutes.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8819,7 +8852,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setReaderIdleWarnThresholdMillis</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setReaderIdleWarnThresholdMillis(int&nbsp;warnThreshold)</pre>
-<div class="block">Set the time in milliseconds as the threshold for when an idle reader should dump warnings</div>
+<div class="block">Set the time in milliseconds as the threshold for when an idle reader should dump warnings.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>warnThreshold</code> - time after which we should dump the read ahead state</dd>
@@ -8837,7 +8870,8 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>getReaderIdleErrorThresholdMillis</h4>
 <pre>public&nbsp;int&nbsp;getReaderIdleErrorThresholdMillis()</pre>
-<div class="block">Get the time in milliseconds as the threshold for when an idle reader should throw errors
+<div class="block">Get the time in milliseconds as the threshold for when an idle reader should throw errors.
+
  <p>The default value is <i>Integer.MAX_VALUE</i>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -8854,7 +8888,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setReaderIdleErrorThresholdMillis</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setReaderIdleErrorThresholdMillis(int&nbsp;warnThreshold)</pre>
-<div class="block">Set the time in milliseconds as the threshold for when an idle reader should throw errors</div>
+<div class="block">Set the time in milliseconds as the threshold for when an idle reader should throw errors.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>warnThreshold</code> - time after which we should throw idle reader errors</dd>
@@ -8872,7 +8906,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>getIgnoreTruncationStatus</h4>
 <pre>public&nbsp;boolean&nbsp;getIgnoreTruncationStatus()</pre>
-<div class="block">Get if we should ignore truncation status when reading the records</div>
+<div class="block">Get if we should ignore truncation status when reading the records.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>if we should ignore truncation status</dd>
@@ -8886,7 +8920,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setIgnoreTruncationStatus</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setIgnoreTruncationStatus(boolean&nbsp;ignoreTruncationStatus)</pre>
-<div class="block">Set if we should ignore truncation status when reading the records</div>
+<div class="block">Set if we should ignore truncation status when reading the records.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ignoreTruncationStatus</code> - if we should ignore truncation status</dd>
@@ -8900,7 +8934,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>getAlertWhenPositioningOnTruncated</h4>
 <pre>public&nbsp;boolean&nbsp;getAlertWhenPositioningOnTruncated()</pre>
-<div class="block">Get if we should alert when reader is positioned on a truncated segment</div>
+<div class="block">Get if we should alert when reader is positioned on a truncated segment.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>if we should alert when reader is positioned on a truncated segment</dd>
@@ -8914,7 +8948,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setAlertWhenPositioningOnTruncated</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setAlertWhenPositioningOnTruncated(boolean&nbsp;alertWhenPositioningOnTruncated)</pre>
-<div class="block">Set if we should alert when reader is positioned on a truncated segment</div>
+<div class="block">Set if we should alert when reader is positioned on a truncated segment.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>alertWhenPositioningOnTruncated</code> - if we should alert when reader is positioned on a truncated segment</dd>
@@ -8977,7 +9011,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>getEnableReadAhead</h4>
 <pre>public&nbsp;boolean&nbsp;getEnableReadAhead()</pre>
-<div class="block">Get if we should enable read ahead</div>
+<div class="block">Get if we should enable read ahead.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>if read ahead is enabled</dd>
@@ -8991,7 +9025,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setEnableForceRead</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setEnableForceRead(boolean&nbsp;enableForceRead)</pre>
-<div class="block">Set if we should enable force read</div>
+<div class="block">Set if we should enable force read.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>enableForceRead</code> - Enable force read</dd>
@@ -9005,7 +9039,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>getEnableForceRead</h4>
 <pre>public&nbsp;boolean&nbsp;getEnableForceRead()</pre>
-<div class="block">Get if we should enable force read</div>
+<div class="block">Get if we should enable force read.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>if should use separate ZK Clients</dd>
@@ -9020,6 +9054,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getReadAheadMaxRecords</h4>
 <pre>public&nbsp;int&nbsp;getReadAheadMaxRecords()</pre>
 <div class="block">Get the max records cached by readahead cache.
+
  <p>The default value is 10. Increase this value to improve throughput,
  but be careful about the memory.</div>
 <dl>
@@ -9054,6 +9089,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getReadAheadBatchSize</h4>
 <pre>public&nbsp;int&nbsp;getReadAheadBatchSize()</pre>
 <div class="block">Get number of entries read as a batch by readahead worker.
+
  <p>The default value is 2. Increase the value to increase the concurrency
  of reading entries from bookkeeper.</div>
 <dl>
@@ -9102,7 +9138,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setReadAheadWaitTime</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setReadAheadWaitTime(int&nbsp;readAheadWaitTime)</pre>
-<div class="block">Set the wait time between successive attempts to poll for new log records, in milliseconds</div>
+<div class="block">Set the wait time between successive attempts to poll for new log records, in milliseconds.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>readAheadWaitTime</code> - read ahead wait time</dd>
@@ -9122,6 +9158,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <pre>public&nbsp;int&nbsp;getReadAheadWaitTimeOnEndOfStream()</pre>
 <div class="block">Get the wait time if it reaches end of stream and
  <b>there isn't any inprogress logsegment in the stream</b>, in millis.
+
  <p>The default value is 10 seconds.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -9162,6 +9199,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <div class="block">If readahead keeps receiving <code>BKException.BKNoSuchLedgerExistsException</code> on
  reading last add confirmed in given period, it would stop polling last add confirmed and re-initialize the ledger
  handle and retry. The threshold is specified in milliseconds.
+
  <p>The default value is 10 seconds.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -9177,7 +9215,8 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>setReadAheadNoSuchLedgerExceptionOnReadLACErrorThresholdMillis</h4>
 <pre>public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a>&nbsp;setReadAheadNoSuchLedgerExceptionOnReadLACErrorThresholdMillis(long&nbsp;thresholdMillis)</pre>
-<div class="block">Set the error threshold that readahead will reinitialize ledger handle after keeping receiving no such ledger exceptions.</div>
+<div class="block">Set the error threshold that readahead will reinitialize ledger handle
+ after keeping receiving no such ledger exceptions.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>thresholdMillis</code> - error threshold in milliseconds, that readahead will reinitialize ledger handle after keeping receiving
@@ -9781,7 +9820,6 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <pre>public&nbsp;boolean&nbsp;getFederatedCheckExistenceWhenCacheMiss()</pre>
 <div class="block">Whether check the existence of a log if querying local cache of a federated namespace missed.
  Enabling it will issue zookeeper queries to check all sub namespaces under a federated namespace.
-
  NOTE: by default it is on for all admin related tools. for write proxies, consider turning off for
  performance.</div>
 <dl>
@@ -9930,6 +9968,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getMaxAcquiredPartitionsPerProxy</h4>
 <pre>public&nbsp;int&nbsp;getMaxAcquiredPartitionsPerProxy()</pre>
 <div class="block">Get the maximum number of partitions of each stream allowed to be acquired per proxy.
+
  <p>This setting is able to configure per stream. This is the default setting if it is
  not configured per stream. Default value is -1, which means no limit on the number of
  partitions could be acquired each stream.</div>
@@ -9965,6 +10004,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <h4>getMaxCachedPartitionsPerProxy</h4>
 <pre>public&nbsp;int&nbsp;getMaxCachedPartitionsPerProxy()</pre>
 <div class="block">Get the maximum number of partitions of each stream allowed to cache per proxy.
+
  <p>This setting is able to configure per stream. This is the default setting if it is
  not configured per stream. Default value is -1, which means no limit on the number of
  partitions could be acquired each stream.</div>
@@ -10224,7 +10264,7 @@ public&nbsp;<a href="../../../org/apache/distributedlog/DistributedLogConfigurat
 <li class="blockList">
 <h4>validate</h4>
 <pre>public&nbsp;void&nbsp;validate()</pre>
-<div class="block">Validate the configuration</div>
+<div class="block">Validate the configuration.</div>
 </li>
 </ul>
 </li>

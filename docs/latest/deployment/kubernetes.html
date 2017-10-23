@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Docker</title>
+  <meta name="description" content="Apache DistributedLog is an high performance replicated log.
+">
+
+  <link rel="stylesheet" href="/distributedlog/docs/latest/styles/site.css">
+  <link rel="stylesheet" href="/distributedlog/docs/latest/css/theme.css">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="/distributedlog/docs/latest/js/bootstrap.min.js"></script>
+  <link rel="canonical" href="http://bookkeeper.apache.org/distributedlog/distributedlog/docs/latest/deployment/kubernetes.html" data-proofer-ignore>
+  <link rel="alternate" type="application/rss+xml" title="Apache DistributedLog" href="http://bookkeeper.apache.org/distributedlog/distributedlog/docs/latest/feed.xml">
+  <!-- Font Awesome -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.min.js"></script>
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83870961-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+
+
+  <body role="document">
+
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/distributedlog" class="navbar-brand" >
+        <img alt="Brand" style="height: 28px" src="/distributedlog/docs/latest/images/distributedlog_logo_navbar.png">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!-- Overview -->
+        <li><a href="/distributedlog/docs/latest/">V0.6.0</a></li>
+        <!-- Concepts -->
+        <li><a href="/distributedlog/docs/latest/basics/introduction">Concepts</a></li>
+        <!-- Quick Start -->
+        <li>
+          <a href="/distributedlog/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Start<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            
+            <li>
+              <a href="/distributedlog/docs/latest/start/building.html">
+                Build DistributedLog from Source
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/start/download.html">
+                Download Releases
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Quickstart</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/latest/start/quickstart.html">
+                Setup & Run Example
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/basic-1.html">
+                API - Write Records (via core library)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/basic-2.html">
+                API - Write Records (via write proxy)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/basic-5.html">
+                API - Read Records
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Deployment</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/latest/deployment/cluster.html">
+                Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/deployment/global-cluster.html">
+                Global Cluster Setup
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/deployment/kubernetes.html">
+                Kubernetes
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- API -->
+        <li>
+          <a href="/distributedlog/docs/latest/start" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">API<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/distributedlog/docs/latest/api/java">Java</a></li>
+          </ul>
+        </li>
+        <!-- User Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li>
+              <a href="/distributedlog/docs/latest/basics/introduction.html">
+                Introduction
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/considerations/main.html">
+                Considerations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/architecture/main.html">
+                Architecture
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/api/main.html">
+                API
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/configuration/main.html">
+                Configuration
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/design/main.html">
+                Detail Design
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/globalreplicatedlog/main.html">
+                Global Replicated Log
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/implementation/main.html">
+                Implementation
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/user_guide/references/main.html">
+                References
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Admin Guide -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Guide<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/distributedlog/docs/latest/deployment/cluster">Cluster Setup</a></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/latest/admin_guide/operations.html">
+                Operations
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/admin_guide/loadtest.html">
+                Load Test
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/admin_guide/performance.html">
+                Performance Tuning
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/admin_guide/hardware.html">
+                Hardware
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/admin_guide/monitoring.html">
+                Monitoring
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/admin_guide/zookeeper.html">
+                ZooKeeper
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/admin_guide/bookkeeper.html">
+                BookKeeper
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        <!-- Tutorials -->
+        <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"><strong>Basic</strong></li>
+            <li><a href="/distributedlog/docs/latest/tutorials/basic-1">Write Records (via Core Library)</a></li>
+            <li><a href="/distributedlog/docs/latest/tutorials/basic-2">Write Records (via Write Proxy)</a></li>
+            <li><a href="/distributedlog/docs/latest/tutorials/basic-3">Write Records to multiple streams</a></li>
+            <li><a href="/distributedlog/docs/latest/tutorials/basic-4">Atomic Write Records</a></li>
+            <li><a href="/distributedlog/docs/latest/tutorials/basic-5">Tailing Read Records</a></li>
+            <li><a href="/distributedlog/docs/latest/tutorials/basic-6">Rewind Read Records</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Messaging</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/messaging-1.html">
+                Write records to partitioned streams
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/messaging-2.html">
+                Write records to multiple streams (load balancer)
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/messaging-3.html">
+                At-least-once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/messaging-4.html">
+                Exact-Once Processing
+              </a>
+            </li>
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/messaging-5.html">
+                Implement a kafka-like pub/sub system
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Replicated State Machines</strong></li>
+            
+            
+            <li>
+              <a href="/distributedlog/docs/latest/tutorials/replicatedstatemachines.html">
+                Build replicated state machines
+              </a>
+            </li>
+            
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header"><strong>Analytics</strong></li>
+            <li><a href="/distributedlog/docs/latest/tutorials/analytics-mapreduce">Process log streams using MapReduce</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="">
+
+
+    <div class="container" role="main">
+
+      <div class="row">
+        
+        <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<div class="col-md-8 col-md-offset-2">
+  <p>Apache DistributedLog can be easily deployed in <a href="https://kubernetes.io/">Kubernetes</a> clusters. The managed clusters on <a href="https://cloud.google.com/compute/">Google Container Engine</a> is the most convenient way.</p>
+
+<p>The deployment method shown in this guide relies on <a href="http://yaml.org/">YAML</a> definitions for Kubernetes <a href="https://kubernetes.io/docs/resources-reference/v1.6/">resources</a>. The <a href="https://github.com/apache/distributedlog/tree/master/deploy/kubernetes"><code class="highlighter-rouge">kubernetes</code></a> subdirectory holds resource definitions for:</p>
+
+<ul>
+  <li>A three-node ZooKeeper cluster</li>
+  <li>A BookKeeper cluster with a bookie runs on each node.</li>
+  <li>A three-node Proxy cluster.</li>
+</ul>
+
+<p>If you already have setup a BookKeeper cluster following the instructions of <a href="http://bookkeeper.apache.org/docs/latest/deployment/kubernetes/">Deploying Apache BookKeeper on Kubernetes</a> in Apache BookKeeper website,
+you can skip deploying bookkeeper and start from <a href="#create_namespace">Create a DistributedLog Namespace</a>.</p>
+
+<h2 id="setup-on-google-container-engine">Setup on Google Container Engine</h2>
+
+<p>To get started, get source code of <a href="https://github.com/apache/distributedlog/tree/master/deploy/kubernetes"><code class="highlighter-rouge">kubernetes</code></a> yaml definitions from github by git clone.</p>
+
+<p>If you’d like to change the number of bookies, ZooKeeper nodes, or proxy nodes in your deployment, modify the <code class="highlighter-rouge">replicas</code> parameter in the <code class="highlighter-rouge">spec</code> section of the appropriate <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/"><code class="highlighter-rouge">Deployment</code></a> or <a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/"><code class="highlighter-rouge">StatefulSet</code></a> resource.</p>
+
+<p><a href="https://cloud.google.com/container-engine">Google Container Engine</a> (GKE) automates the creation and management of Kubernetes clusters in <a href="https://cloud.google.com/compute/">Google Compute Engine</a> (GCE).</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<p>To get started, you’ll need:</p>
+
+<ul>
+  <li>A Google Cloud Platform account, which you can sign up for at <a href="https://cloud.google.com">cloud.google.com</a></li>
+  <li>An existing Cloud Platform project</li>
+  <li>The <a href="https://cloud.google.com/sdk/downloads">Google Cloud SDK</a> (in particular the <a href="https://cloud.google.com/sdk/gcloud/"><code class="highlighter-rouge">gcloud</code></a> and <a href=""><code class="highlighter-rouge">kubectl</code></a> tools).</li>
+</ul>
+
+<h3 id="create-a-new-kubernetes-cluster">Create a new Kubernetes cluster</h3>
+
+<p>You can create a new GKE cluster using the <a href="https://cloud.google.com/sdk/gcloud/reference/container/clusters/create"><code class="highlighter-rouge">container clusters create</code></a> command for <code class="highlighter-rouge">gcloud</code>. This command enables you to specify the number of nodes in the cluster, the machine types of those nodes, and more.</p>
+
+<p>As an example, we’ll create a new GKE cluster for Kubernetes version <a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v175">1.7.5</a> in the <a href="https://cloud.google.com/compute/docs/regions-zones/regions-zones#available">us-central1-a</a> zone. The cluster will be named <code class="highlighter-rouge">bookkeeper-gke-cluster</code> and will consist of three VMs, each using two locally attached SSDs and running on <a href="https://cloud.google.com/compute/docs/machine-types">n1-standard-8</a> machines. These SSDs will be used by Bookie instances, one for the BookKeeper journal and the other for storing the actual data.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>gcloud config <span class="nb">set </span>compute/zone us-central1-a
+<span class="gp">$ </span>gcloud config <span class="nb">set </span>project your-project-name
+<span class="gp">$ </span>gcloud container clusters create bookkeeper-gke-cluster <span class="se">\</span>
+  --machine-type<span class="o">=</span>n1-standard-8 <span class="se">\</span>
+  --num-nodes<span class="o">=</span>3 <span class="se">\</span>
+  --local-ssd-count<span class="o">=</span>2 <span class="se">\</span>
+  --cluster-version<span class="o">=</span>1.7.5
+</code></pre>
+</div>
+
+<p>By default, bookies will run on all the machines that have locally attached SSD disks. In this example, all of those machines will have two SSDs, but you can add different types of machines to the cluster later. You can control which machines host bookie servers using <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels">labels</a>.</p>
+
+<h3 id="dashboard">Dashboard</h3>
+
+<p>You can observe your cluster in the <a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/">Kubernetes Dashboard</a> by downloading the credentials for your Kubernetes cluster and opening up a proxy to the cluster:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>gcloud container clusters get-credentials bookkeeper-gke-cluster <span class="se">\</span>
+  --zone<span class="o">=</span>us-central1-a <span class="se">\</span>
+  --project<span class="o">=</span>your-project-name
+<span class="gp">$ </span>kubectl proxy
+</code></pre>
+</div>
+
+<p>By default, the proxy will be opened on port 8001. Now you can navigate to <a href="http://localhost:8001/ui">localhost:8001/ui</a> in your browser to access the dashboard. At first your GKE cluster will be empty, but that will change as you begin deploying.</p>
+
+<p>When you create a cluster, your <code class="highlighter-rouge">kubectl</code> config in <code class="highlighter-rouge">~/.kube/config</code> (on MacOS and Linux) will be updated for you, so you probably won’t need to change your configuration. Nonetheless, you can ensure that <code class="highlighter-rouge">kubectl</code> can interact with your cluster by listing the nodes in the cluster:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl get nodes
+</code></pre>
+</div>
+
+<p>If <code class="highlighter-rouge">kubectl</code> is working with your cluster, you can proceed to deploy ZooKeeper and Bookies.</p>
+
+<h3 id="zookeeper">ZooKeeper</h3>
+
+<p>You <em>must</em> deploy ZooKeeper as the first component, as it is a dependency for the others.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f zookeeper.yaml
+</code></pre>
+</div>
+
+<p>Wait until all three ZooKeeper server pods are up and have the status <code class="highlighter-rouge">Running</code>. You can check on the status of the ZooKeeper pods at any time:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl get pods -l <span class="nv">component</span><span class="o">=</span>zookeeper
+NAME      READY     STATUS             RESTARTS   AGE
+zk-0      1/1       Running            0          18m
+zk-1      1/1       Running            0          17m
+zk-2      0/1       Running            6          15m
+</code></pre>
+</div>
+
+<p>This step may take several minutes, as Kubernetes needs to download the Docker image on the VMs.</p>
+
+<p>If you want to connect to one of the remote zookeeper server, you can use<a href="https://github.com/rgs1/zk_shell">zk-shell</a>, you need to forward a local port to the
+remote zookeeper server:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl port-forward zk-0 2181:2181
+<span class="gp">$ </span>zk-shell localhost 2181
+</code></pre>
+</div>
+
+<h3 id="deploy-bookies">Deploy Bookies</h3>
+
+<p>Once ZooKeeper cluster is Running, you can then deploy the bookies.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f bookkeeper.yaml
+</code></pre>
+</div>
+
+<p>You can check on the status of the Bookie pods for these components either in the Kubernetes Dashboard or using <code class="highlighter-rouge">kubectl</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl get pods
+</code></pre>
+</div>
+
+<p>While all BookKeeper pods is Running, by zk-shell you could find all available bookies under /ledgers/</p>
+
+<p>You can also verify the deployment by ssh to a bookie pod.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl <span class="nb">exec</span> -it &lt;pod_name&gt; -- bash
+</code></pre>
+</div>
+
+<p>On the bookie pod, you can run simpletest to verify the installation. The simpletest will create a ledger and append a few entries into the ledger.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nv">BOOKIE_CONF</span><span class="o">=</span>/opt/bookkeeper/conf/bk_server.conf /opt/distributedlog/bin/dlog bkshell simpletest
+</code></pre>
+</div>
+
+<h3 id="monitoring">Monitoring</h3>
+
+<p>Apache BookKeeper provides stats provider for being able to integrate with different monitoring systems. The default monitoring stack for Apache BookKeeper
+on Kubernetes has consists of <a href="https://prometheus.io/">Prometheus</a> and <a href="https://grafana.com/">Grafana</a>.</p>
+
+<p>You can deploy one instance of Prometheus and one instance of Grafana by running following command:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f monitoring.yaml
+</code></pre>
+</div>
+
+<h4 id="prometheus">Prometheus</h4>
+
+<p>All BookKeeper/DistributedLog metrics in Kubernetes are collected by a Prometheus instance running inside the cluster. Typically, there is no need to access
+Prometheus directly. Instead, you can use the Grafana interface that displays the data stored in Prometheus.</p>
+
+<h4 id="grafana">Grafana</h4>
+
+<p>In your Kubernetes cluster, you can use Grafana to view dashbaords for JVM stats, ZooKeeper, and BookKeeper. You can get access to the pod serving Grafana
+using kubectl’s port-forward command:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl port-forward <span class="k">$(</span>kubectl get pods | grep grafana | awk <span class="s1">'{print $1}'</span><span class="k">)</span> 3000
+</code></pre>
+</div>
+
+<p>You can then access the dashboard in your web browser at <a href="http://localhost:3000">localhost:3000</a>.</p>
+
+<h3 id="create-distributedlog-namespace">Create DistributedLog Namespace</h3>
+
+<p>At this moment, you have a bookkeeper cluster up running on kubernetes. Now, You can create a distributedlog namespace and start playing with it.
+If you setup the bookkeeper cluster following the above instructions, it uses <code class="highlighter-rouge">apachedistributedlog/distributedlog:0.5.0</code> image for running bookies.
+You can skip creating distributedlog namespace here and move to next section. Because it already created a default
+namespace <code class="highlighter-rouge">distributedlog://zookeeper/distributedlog</code> for you when starting the bookies.</p>
+
+<p>You can create a distributedlog namespace using the <code class="highlighter-rouge">dlog</code> tool.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl run dlog --rm<span class="o">=</span><span class="nb">true</span> --attach --image<span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 --restart<span class="o">=</span>OnFailure -- /opt/distributedlog/bin/dlog admin <span class="nb">bind</span> -l /bookkeeper/ledgers -s zookeeper -c distributedlog://zookeeper/distributedlog
+</code></pre>
+</div>
+
+<p>After you have a distributedlog namespace, you can play around the namespace by using <code class="highlighter-rouge">dlog</code> tool to create, delete, list and show the streams.</p>
+
+<h4 id="create-streams">Create Streams</h4>
+
+<p>Create 10 streams prefixed with <code class="highlighter-rouge">mystream-</code>.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl run dlog --rm<span class="o">=</span><span class="nb">true</span> --attach --image<span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 --restart<span class="o">=</span>OnFailure -- /opt/distributedlog/bin/dlog tool create -u distributedlog://zookeeper/distributedlog -r mystream- -e 0-9 -f
+</code></pre>
+</div>
+
+<h4 id="list-streams">List Streams</h4>
+
+<p>List the streams under the namespace.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl run dlog --rm<span class="o">=</span><span class="nb">true</span> --attach --image<span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 --restart<span class="o">=</span>OnFailure -- /opt/distributedlog/bin/dlog tool list -u distributedlog://zookeeper/distributedlog
+</code></pre>
+</div>
+
+<p>An example of the output of this command is:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Streams under distributedlog://zookeeper/distributedlog :
+--------------------------------
+mystream-0
+mystream-9
+mystream-6
+mystream-5
+mystream-8
+mystream-7
+mystream-2
+mystream-1
+mystream-4
+mystream-3
+--------------------------------
+</code></pre>
+</div>
+
+<h3 id="write-and-read-records">Write and Read Records</h3>
+
+<p>You can run a simple benchmark on testing writing and read from distributedlog streams.</p>
+
+<p>Start one instance of benchmark-writer to write to 100 streams. (The streams are automatically created by the benchmark writer)</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f benchmark-writer.yaml
+</code></pre>
+</div>
+
+<p>Start one instance of benchmark-reader to read from those 100 streams.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f benchmark-reader.yaml
+</code></pre>
+</div>
+
+<p>You can monitor the Grafana dashboard for the traffic comes from benchmark writer and reader.</p>
+
+<h3 id="un-deploy">Un-Deploy</h3>
+
+<p>Delete BookKeeper
+<code class="highlighter-rouge">bash
+$ kubectl delete -f bookkeeper.yaml    
+</code></p>
+
+<p>Delete ZooKeeper
+<code class="highlighter-rouge">bash
+$ kubectl delete -f zookeeper.yaml    
+</code></p>
+
+<p>Delete cluster
+<code class="highlighter-rouge">bash
+$ gcloud container clusters delete bookkeeper-gke-cluster    
+</code></p>
+
+</div>
+
+
+
+      </div>
+
+
+    <hr>
+  <div class="row">
+      <div class="col-xs-12">
+          <footer>
+              <p class="text-center">&copy; Copyright 2016
+                  <a href="http://www.apache.org">The Apache Software Foundation.</a> All Rights Reserved.
+              </p>
+              <p class="text-center">
+                  <a href="/distributedlog/docs/latest/feed.xml">RSS Feed</a>
+              </p>
+          </footer>
+      </div>
+  </div>
+  <!-- container div end -->
+</div>
+
+
+    <script>
+  (function () {
+    'use strict';
+    anchors.options.placement = 'right';
+    anchors.add();
+  })();
+</script>
+
+  </body>
+
+</html>

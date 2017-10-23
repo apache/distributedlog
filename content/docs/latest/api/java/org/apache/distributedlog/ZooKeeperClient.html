@@ -142,11 +142,15 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static interface&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/ZooKeeperClient.Credentials.html" title="interface in org.apache.distributedlog">ZooKeeperClient.Credentials</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/ZooKeeperClient.Credentials.html" title="interface in org.apache.distributedlog">ZooKeeperClient.Credentials</a></span></code>
+<div class="block">interface used to authenticate zk client.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/ZooKeeperClient.DigestCredentials.html" title="class in org.apache.distributedlog">ZooKeeperClient.DigestCredentials</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/ZooKeeperClient.DigestCredentials.html" title="class in org.apache.distributedlog">ZooKeeperClient.DigestCredentials</a></span></code>
+<div class="block">interface impl used to authenticate zk client.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
@@ -156,7 +160,9 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static interface&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/ZooKeeperClient.ZooKeeperSessionExpireNotifier.html" title="interface in org.apache.distributedlog">ZooKeeperClient.ZooKeeperSessionExpireNotifier</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/ZooKeeperClient.ZooKeeperSessionExpireNotifier.html" title="interface in org.apache.distributedlog">ZooKeeperClient.ZooKeeperSessionExpireNotifier</a></span></code>
+<div class="block">Notify a zk session expire event.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -276,8 +282,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <dd>a connected ZooKeeper client</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../org/apache/distributedlog/ZooKeeperClient.ZooKeeperConnectionException.html" title="class in org.apache.distributedlog">ZooKeeperClient.ZooKeeperConnectionException</a></code> - if there was a problem connecting to the ZK cluster</dd>
-<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if interrupted while waiting for a connection to be established</dd>
-<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/TimeoutException.html?is-external=true" title="class or interface in java.util.concurrent">TimeoutException</a></code> - if a connection could not be established within the configured
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if interrupted while waiting for a connection to be established
  session timeout</dd>
 </dl>
 </li>

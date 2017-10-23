@@ -173,7 +173,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
              <a href="../../../../org/apache/distributedlog/metadata/LogMetadataForWriter.html" title="class in org.apache.distributedlog.metadata">LogMetadataForWriter</a>&nbsp;logMetadata,
              org.apache.bookkeeper.versioning.Versioned&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;transactionId,
              org.apache.distributedlog.util.Transaction.OpListener&lt;org.apache.bookkeeper.versioning.Version&gt;&nbsp;listener)</code>
-<div class="block">Store the maximum transaction id for <code>path</code></div>
+<div class="block">Store the maximum transaction id for <code>path</code>.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -262,7 +262,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
                    <a href="../../../../org/apache/distributedlog/metadata/LogMetadataForWriter.html" title="class in org.apache.distributedlog.metadata">LogMetadataForWriter</a>&nbsp;logMetadata,
                    org.apache.bookkeeper.versioning.Versioned&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;transactionId,
                    org.apache.distributedlog.util.Transaction.OpListener&lt;org.apache.bookkeeper.versioning.Version&gt;&nbsp;listener)</pre>
-<div class="block">Store the maximum transaction id for <code>path</code></div>
+<div class="block">Store the maximum transaction id for <code>path</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>txn</code> - transaction to execute for storing transaction id</dd>
@@ -283,8 +283,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
                       org.apache.distributedlog.util.Transaction.OpListener&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;&nbsp;opListener)</pre>
 <div class="block">Create a log segment <code>segment</code> under transaction <code>txn</code>.
 
- NOTE: this operation shouldn't be a blocking call. and it shouldn't execute the operation
-       immediately. the operation should be executed via <code>Transaction.execute()</code></div>
+ <p>NOTE: this operation shouldn't be a blocking call. and it shouldn't execute the operation
+       immediately. the operation should be executed via <code>Transaction.execute()</code></p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>txn</code> - transaction to execute for this operation</dd>
@@ -304,8 +304,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
                       org.apache.distributedlog.util.Transaction.OpListener&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;&nbsp;opListener)</pre>
 <div class="block">Delete a log segment <code>segment</code> under transaction <code>txn</code>.
 
- NOTE: this operation shouldn't be a blocking call. and it shouldn't execute the operation
-       immediately. the operation should be executed via <code>Transaction.execute()</code></div>
+ <p>NOTE: this operation shouldn't be a blocking call. and it shouldn't execute the operation
+       immediately. the operation should be executed via <code>Transaction.execute()</code></p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>txn</code> - transaction to execute for this operation</dd>
@@ -323,8 +323,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
                       <a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment)</pre>
 <div class="block">Update a log segment <code>segment</code> under transaction <code>txn</code>.
 
- NOTE: this operation shouldn't be a blocking call. and it shouldn't execute the operation
-       immediately. the operation should be executed via <code>Transaction.execute()</code></div>
+ <p>NOTE: this operation shouldn't be a blocking call. and it shouldn't execute the operation
+       immediately. the operation should be executed via <code>Transaction.execute()</code></p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>txn</code> - transaction to execute for this operation</dd>

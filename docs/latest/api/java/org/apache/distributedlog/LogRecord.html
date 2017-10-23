@@ -274,10 +274,10 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected </code></td>
+<td class="colFirst"><code>&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/apache/distributedlog/LogRecord.html#LogRecord-long-io.netty.buffer.ByteBuf-">LogRecord</a></span>(long&nbsp;txid,
          io.netty.buffer.ByteBuf&nbsp;payload)</code>
-<div class="block">Used by <a href="../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog"><code>LogRecordWithDLSN</code></a> to construct a log record read by readers.</div>
+<div class="block">Construct a log record with <i>txid</i> and ByteBuf <i>payload</i>.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -491,9 +491,9 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <ul class="blockListLast">
 <li class="blockList">
 <h4>LogRecord</h4>
-<pre>protected&nbsp;LogRecord(long&nbsp;txid,
-                    io.netty.buffer.ByteBuf&nbsp;payload)</pre>
-<div class="block">Used by <a href="../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog"><code>LogRecordWithDLSN</code></a> to construct a log record read by readers.</div>
+<pre>public&nbsp;LogRecord(long&nbsp;txid,
+                 io.netty.buffer.ByteBuf&nbsp;payload)</pre>
+<div class="block">Construct a log record with <i>txid</i> and ByteBuf <i>payload</i>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>txid</code> - transaction id</dd>

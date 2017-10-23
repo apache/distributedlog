@@ -112,22 +112,21 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <div class="block"><i>LogReader</i> is a `synchronous` reader reading records from a DL log.
 
  <h3>Lifecycle of a Reader</h3>
-
  A reader is a <i>sequential</i> reader that read records from a DL log starting
  from a given position. The position could be a <i>DLSN</i> (via <a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-"><code>DistributedLogManager.getInputStream(DLSN)</code></a>
  or a <i>Transaction ID</i> (via <a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-long-"><code>DistributedLogManager.getInputStream(long)</code></a>.
- <p>
- After the reader is open, it could call <a href="../../../../org/apache/distributedlog/api/LogReader.html#readNext-boolean-"><code>readNext(boolean)</code></a> or <a href="../../../../org/apache/distributedlog/api/LogReader.html#readBulk-boolean-int-"><code>readBulk(boolean, int)</code></a>
+
+ <p>After the reader is open, it could call <a href="../../../../org/apache/distributedlog/api/LogReader.html#readNext-boolean-"><code>readNext(boolean)</code></a> or <a href="../../../../org/apache/distributedlog/api/LogReader.html#readBulk-boolean-int-"><code>readBulk(boolean, int)</code></a>
  to read records out the log from provided position.
- <p>
- Closing the reader (via <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.html?is-external=true#close--" title="class or interface in java.io"><code>Closeable.close()</code></a> will release all the resources occupied
+
+ <p>Closing the reader (via <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.html?is-external=true#close--" title="class or interface in java.io"><code>Closeable.close()</code></a> will release all the resources occupied
  by this reader instance.
- <p>
- Exceptions could be thrown during reading records. Once the exception is thrown,
+
+ <p>Exceptions could be thrown during reading records. Once the exception is thrown,
  the reader is set to an error state and it isn't usable anymore. It is the application's
  responsibility to handle the exceptions and re-create readers if necessary.
- <p>
- Example:
+
+ <p>Example:
  <pre>
  DistributedLogManager dlm = ...;
  long nextTxId = ...;
@@ -150,7 +149,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
  </pre>
 
  <h3>Read Records</h3>
-
  Reading records from an <i>endless</i> log in `synchronous` way isn't as
  trivial as in `asynchronous` way (via <a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api"><code>AsyncLogReader</code></a>. Because it
  lacks of callback mechanism. LogReader introduces a flag `nonBlocking` on
@@ -162,8 +160,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
  before returning read calls. While <i>NonBlocking</i> (nonBlocking = true)
  means the reads will only check readahead cache and return whatever records
  available in the readahead cache.
- <p>
- The <i>waiting</i> period varies in <i>blocking</i> mode. If the reader is
+
+  <p>The <i>waiting</i> period varies in <i>blocking</i> mode. If the reader is
  catching up with writer (there are records in the log), the read call will
  wait until records are read and returned. If the reader is caught up with
  writer (there are no more records in the log at read time), the read call
@@ -172,14 +170,14 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
  records available in the readahead cache. In other words, if a reader sees
  no record on blocking reads, it means the reader is `caught-up` with the
  writer.
- <p>
- <i>Blocking</i> and <i>NonBlocking</i> modes are useful for building replicated
+
+  <p><i>Blocking</i> and <i>NonBlocking</i> modes are useful for building replicated
  state machines. Applications could use <i>blocking</i> reads till caught up
  with latest data. Once they are caught up with latest data, they could start
  serving their service and turn to <i>non-blocking</i> read mode and tail read
  data from the logs.
- <p>
- See examples below.
+
+  <p>See examples below.
 
  <h4>Read Single Record</h4>
 
@@ -216,8 +214,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
  LogReader reader = ...
  int N = 10;
 
- // keep reading N records in blocking way until no records available in the log
- List<LogRecord> records = reader.readBulk(false, N);
+<p>// keep reading N records in blocking way until no records available in the log
+ List&lt;LogRecord&gt; records = reader.readBulk(false, N);
  while (!records.isEmpty()) {
      // process the list of records
      ...
@@ -236,11 +234,10 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
      // process the new records
      ...
  }
-
+</p>
  </pre>
 
- <p>
- NOTE: Extending <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" title="interface in org.apache.distributedlog.io"><code>AsyncCloseable</code></a>: BKSyncLogReader is implemented based on BKAsyncLogReader, exposing
+ <p>NOTE: Extending <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" title="interface in org.apache.distributedlog.io"><code>AsyncCloseable</code></a>: BKSyncLogReader is implemented based on BKAsyncLogReader, exposing
  the <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" title="interface in org.apache.distributedlog.io"><code>AsyncCloseable</code></a> interface so the reader could be closed asynchronously</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -283,7 +280,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/LogReader.html#readBulk-boolean-int-">readBulk</a></span>(boolean&nbsp;nonBlocking,
         int&nbsp;numLogRecords)</code>
-<div class="block">Read the next <i>numLogRecords</i> log records from the stream</div>
+<div class="block">Read the next <i>numLogRecords</i> log records from the stream.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -330,12 +327,12 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <pre><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&nbsp;readNext(boolean&nbsp;nonBlocking)
                     throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">Read the next log record from the stream.
- <p>
- If <i>nonBlocking</i> is set to true, the call returns immediately by just polling
+
+  <p>If <i>nonBlocking</i> is set to true, the call returns immediately by just polling
  records from read ahead cache. It would return <i>null</i> if there isn't any records
  available in the read ahead cache.
- <p>
- If <i>nonBlocking</i> is set to false, it would does blocking call. The call will
+
+  <p>If <i>nonBlocking</i> is set to false, it would does blocking call. The call will
  block until return a record if there are records in the stream (aka catching up).
  Otherwise it would wait up to <a href="../../../../org/apache/distributedlog/DistributedLogConfiguration.html#getReadAheadWaitTime--"><code>DistributedLogConfiguration.getReadAheadWaitTime()</code></a>
  milliseconds and return null if there isn't any more records in the stream.</div>
@@ -359,7 +356,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;&nbsp;readBulk(boolean&nbsp;nonBlocking,
                                  int&nbsp;numLogRecords)
                           throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Read the next <i>numLogRecords</i> log records from the stream</div>
+<div class="block">Read the next <i>numLogRecords</i> log records from the stream.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>nonBlocking</code> - should the read make blocking calls to the backend or rely on the

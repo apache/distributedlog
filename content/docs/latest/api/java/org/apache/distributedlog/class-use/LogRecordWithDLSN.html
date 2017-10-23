@@ -264,11 +264,17 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></code></td>
-<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecord--">getLastLogRecord</a></span>()</code>
-<div class="block">Get the last log record in the stream</div>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getFirstLogRecord--">getFirstLogRecord</a></span>()</code>
+<div class="block">Get the first log record in the stream.</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></code></td>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecord--">getLastLogRecord</a></span>()</code>
+<div class="block">Get the last log record in the stream.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a></code></td>
 <td class="colLast"><span class="typeNameLabel">LogReader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/LogReader.html#readNext-boolean-">readNext</a></span>(boolean&nbsp;nonBlocking)</code>
 <div class="block">Read the next log record from the stream.</div>
@@ -285,24 +291,30 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecordAsync--">getLastLogRecordAsync</a></span>()</code>
-<div class="block">Get Latest log record with DLSN in the log - async</div>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getFirstLogRecordAsync--">getFirstLogRecordAsync</a></span>()</code>
+<div class="block">Get first log record with DLSN in the log - async.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">LogReader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/LogReader.html#readBulk-boolean-int-">readBulk</a></span>(boolean&nbsp;nonBlocking,
-        int&nbsp;numLogRecords)</code>
-<div class="block">Read the next <i>numLogRecords</i> log records from the stream</div>
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastLogRecordAsync--">getLastLogRecordAsync</a></span>()</code>
+<div class="block">Get Latest log record with DLSN in the log - async.</div>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">LogReader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/LogReader.html#readBulk-boolean-int-">readBulk</a></span>(boolean&nbsp;nonBlocking,
+        int&nbsp;numLogRecords)</code>
+<div class="block">Read the next <i>numLogRecords</i> log records from the stream.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AsyncLogReader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html#readBulk-int-">readBulk</a></span>(int&nbsp;numEntries)</code>
 <div class="block">Read next <i>numEntries</i> entries.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AsyncLogReader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html#readBulk-int-long-java.util.concurrent.TimeUnit-">readBulk</a></span>(int&nbsp;numEntries,
         long&nbsp;waitTime,
@@ -310,10 +322,10 @@
 <div class="block">Read next <i>numEntries</i> entries in a given <i>waitTime</i>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AsyncLogReader.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html#readNext--">readNext</a></span>()</code>
-<div class="block">Read the next record from the log stream</div>
+<div class="block">Read the next record from the log stream.</div>
 </td>
 </tr>
 </tbody>
@@ -332,15 +344,15 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">LogSegmentMetadataStoreUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#updateLastRecord-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.LogRecordWithDLSN-">updateLastRecord</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
+                <a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&nbsp;record)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">MetadataUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#updateLastRecord-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.LogRecordWithDLSN-">updateLastRecord</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
                 <a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&nbsp;record)</code>
 <div class="block">Update the log segment metadata with correct last <i>record</i>.</div>
 </td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">LogSegmentMetadataStoreUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#updateLastRecord-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.LogRecordWithDLSN-">updateLastRecord</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
-                <a href="../../../../org/apache/distributedlog/LogRecordWithDLSN.html" title="class in org.apache.distributedlog">LogRecordWithDLSN</a>&nbsp;record)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

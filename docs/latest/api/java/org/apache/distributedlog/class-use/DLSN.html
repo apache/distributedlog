@@ -96,7 +96,9 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.api.subscription">org.apache.distributedlog.api.subscription</a></td>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">subscription specific package.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.client">org.apache.distributedlog.client</a></td>
@@ -107,7 +109,7 @@
 <tr class="altColor">
 <td class="colFirst"><a href="#org.apache.distributedlog.logsegment">org.apache.distributedlog.logsegment</a></td>
 <td class="colLast">
-<div class="block">Log Segment Management</div>
+<div class="block">Log Segment Management.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -448,7 +450,7 @@
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></code></td>
 <td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSN--">getLastDLSN</a></span>()</code>
-<div class="block">Get Latest DLSN in the log</div>
+<div class="block">Get Latest DLSN in the log.</div>
 </td>
 </tr>
 </tbody>
@@ -475,7 +477,7 @@
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getLastDLSNAsync--">getLastDLSNAsync</a></span>()</code>
-<div class="block">Get Latest DLSN in the log - async</div>
+<div class="block">Get Latest DLSN in the log - async.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -521,7 +523,7 @@
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
 <td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-org.apache.distributedlog.DLSN-">getInputStream</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
-<div class="block">Get the input stream starting with fromTxnId for the specified log</div>
+<div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -533,13 +535,13 @@
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/api/AsyncLogReader.html" title="interface in org.apache.distributedlog.api">AsyncLogReader</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openAsyncLogReader-org.apache.distributedlog.DLSN-">openAsyncLogReader</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/api/LogReader.html" title="interface in org.apache.distributedlog.api">LogReader</a></code></td>
 <td class="colLast"><span class="typeNameLabel">DistributedLogManager.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/DistributedLogManager.html#openLogReader-org.apache.distributedlog.DLSN-">openLogReader</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;fromDLSN)</code>
-<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code></div>
+<div class="block">Open an async log reader to read records from a log starting from <code>fromDLSN</code>.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -565,7 +567,7 @@
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">SubscriptionStateStore.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/subscription/SubscriptionStateStore.html#getLastCommitPosition--">getLastCommitPosition</a></span>()</code>
-<div class="block">Get the last committed position stored for this subscription</div>
+<div class="block">Get the last committed position stored for this subscription.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -592,7 +594,7 @@
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">SubscriptionStateStore.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/subscription/SubscriptionStateStore.html#advanceCommitPosition-org.apache.distributedlog.DLSN-">advanceCommitPosition</a></span>(<a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;newPosition)</code>
-<div class="block">Advances the position associated with the subscriber</div>
+<div class="block">Advances the position associated with the subscriber.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -685,31 +687,31 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">MetadataUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
+<td class="colLast"><span class="typeNameLabel">LogSegmentMetadataStoreUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
                                <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;minActiveDLSN)</code>
-<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/CompletableFuture.html?is-external=true" title="class or interface in java.util.concurrent">CompletableFuture</a>&lt;<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">LogSegmentMetadataStoreUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
+<td class="colLast"><span class="typeNameLabel">MetadataUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(<a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
                                <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;minActiveDLSN)</code>
-<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated</div>
+<div class="block">Change the truncation status of a <i>log segment</i> to partially truncated.</div>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></code></td>
+<td class="colLast"><span class="typeNameLabel">LogSegmentMetadataStoreUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(org.apache.distributedlog.util.Transaction&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;txn,
+                               <a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
+                               <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;minActiveDLSN)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></code></td>
 <td class="colLast"><span class="typeNameLabel">MetadataUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/MetadataUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(org.apache.distributedlog.util.Transaction&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;txn,
                                <a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
                                <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;minActiveDLSN)</code>
 <div class="block">Change the truncation status of a <i>log segment</i> to partially truncated.</div>
 </td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></code></td>
-<td class="colLast"><span class="typeNameLabel">LogSegmentMetadataStoreUpdater.</span><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/metadata/LogSegmentMetadataStoreUpdater.html#setLogSegmentPartiallyTruncated-org.apache.distributedlog.util.Transaction-org.apache.distributedlog.LogSegmentMetadata-org.apache.distributedlog.DLSN-">setLogSegmentPartiallyTruncated</a></span>(org.apache.distributedlog.util.Transaction&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;txn,
-                               <a href="../../../../org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a>&nbsp;segment,
-                               <a href="../../../../org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a>&nbsp;minActiveDLSN)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

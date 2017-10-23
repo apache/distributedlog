@@ -256,7 +256,6 @@ extends <a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" t
     throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">This isn't a simple synchronous version of <code>asyncWrite</code>. It has different semantic.
  This method only writes data to the buffer and flushes buffer if needed.
-
  TODO: we should remove this method. when we rewrite synchronous writer based on asynchronous writer,
        since this is the semantic needed to be provided in higher level but just calling write & flush.</div>
 <dl>

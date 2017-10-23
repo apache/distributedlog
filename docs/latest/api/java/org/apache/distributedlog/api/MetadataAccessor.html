@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var methods = {"i0":38,"i1":38,"i2":38,"i3":38,"i4":38};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -104,6 +104,10 @@ var activeTableTab = "activeTableTab";
 <dd><a href="../../../../org/apache/distributedlog/io/AsyncCloseable.html" title="interface in org.apache.distributedlog.io">AsyncCloseable</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/AutoCloseable.html?is-external=true" title="class or interface in java.lang">AutoCloseable</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.html?is-external=true" title="class or interface in java.io">Closeable</a></dd>
 </dl>
 <hr>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">this class is here for legacy reason. It is not recommended to use this class for storing customized
+             metadata.</span></div>
+</div>
 <br>
 <pre>@InterfaceAudience.LimitedPrivate
  @InterfaceStability.Evolving
@@ -138,7 +142,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -146,25 +150,33 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#close--">close</a></span>()</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Close the distributed log metadata, freeing any resources it may hold.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#createOrUpdateMetadata-byte:A-">createOrUpdateMetadata</a></span>(byte[]&nbsp;metadata)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#createOrUpdateMetadata-byte:A-">createOrUpdateMetadata</a></span>(byte[]&nbsp;metadata)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#deleteMetadata--">deleteMetadata</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#deleteMetadata--">deleteMetadata</a></span>()</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#getMetadata--">getMetadata</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#getMetadata--">getMetadata</a></span>()</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/apache/distributedlog/api/MetadataAccessor.html#getStreamName--">getStreamName</a></span>()</code>
-<div class="block">Get the name of the stream managed by this log manager</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+<div class="block">Get the name of the stream managed by this log manager.</div>
 </td>
 </tr>
 </table>
@@ -196,7 +208,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <li class="blockList">
 <h4>getStreamName</h4>
 <pre><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getStreamName()</pre>
-<div class="block">Get the name of the stream managed by this log manager</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+<div class="block">Get the name of the stream managed by this log manager.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>streamName</dd>
@@ -211,6 +224,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <h4>createOrUpdateMetadata</h4>
 <pre>void&nbsp;createOrUpdateMetadata(byte[]&nbsp;metadata)
                      throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
@@ -225,6 +239,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <h4>deleteMetadata</h4>
 <pre>void&nbsp;deleteMetadata()
              throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
@@ -239,6 +254,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <h4>getMetadata</h4>
 <pre>byte[]&nbsp;getMetadata()
             throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
@@ -253,6 +269,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/io/Closeable.
 <h4>close</h4>
 <pre>void&nbsp;close()
     throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Close the distributed log metadata, freeing any resources it may hold.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
