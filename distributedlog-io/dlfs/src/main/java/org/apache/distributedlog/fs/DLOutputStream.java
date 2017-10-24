@@ -18,12 +18,13 @@
 
 package org.apache.distributedlog.fs;
 
-import static org.apache.distributedlog.DistributedLogConstants.CONTROL_RECORD_CONTENT;
+import static com.google.common.base.Charsets.UTF_8;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.bookkeeper.common.concurrent.FutureUtils;
@@ -40,6 +41,8 @@ import org.apache.distributedlog.util.Utils;
  */
 @Slf4j
 class DLOutputStream extends OutputStream {
+
+    private static final byte[] CONTROL_RECORD_CONTENT = "control".getBytes(UTF_8);
 
     private final DistributedLogManager dlm;
     private final AsyncLogWriter writer;
@@ -106,12 +109,20 @@ class DLOutputStream extends OutputStream {
         });
     }
 
+    private CompletableFuture<DLSN> writeControlRecord() {
+        LogRecord record;
+        synchronized (this) {
+            record = new LogRecord(writePos, Unpooled.wrappedBuffer(CONTROL_RECORD_CONTENT));
+            record.setControl();
+        }
+        return writer.write(record);
+    }
+
     @Override
     public void flush() throws IOException {
         try {
-            LogRecord record = new LogRecord(writePos, Unpooled.wrappedBuffer(CONTROL_RECORD_CONTENT));
-            record.setControl();
-            FutureUtils.result(writer.write(record));
+
+            FutureUtils.result(writeControlRecord());
         } catch (IOException ioe) {
             throw ioe;
         } catch (Exception e) {
@@ -122,10 +133,8 @@ class DLOutputStream extends OutputStream {
 
     @Override
     public void close() throws IOException {
-        LogRecord record = new LogRecord(writePos, Unpooled.wrappedBuffer(CONTROL_RECORD_CONTENT));
-        record.setControl();
         Utils.ioResult(
-            writer.write(record)
+            writeControlRecord()
                 .thenCompose(ignored -> writer.asyncClose())
                 .thenCompose(ignored -> dlm.asyncClose()));
     }

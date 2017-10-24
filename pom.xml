@@ -243,7 +243,7 @@
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>**/org/apache/distributedlog/thrift/*</exclude>
             <exclude>**/logs/*.log</exclude>
-            <exclude>**/target/*</exclude>
+            <exclude>**/target/**/*</exclude>
             <!-- Git -->
             <exclude>.git/**/*</exclude>
             <exclude>.github/**/*</exclude>
