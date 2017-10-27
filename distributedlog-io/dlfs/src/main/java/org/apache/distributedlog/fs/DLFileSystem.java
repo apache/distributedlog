@@ -254,10 +254,6 @@ public class DLFileSystem extends FileSystem {
         }
     }
 
-    //
-    // Not Supported
-    //
-
     @Override
     public FileStatus[] listStatus(Path path) throws FileNotFoundException, IOException {
         String logName = getStreamName(path);
@@ -322,6 +318,10 @@ public class DLFileSystem extends FileSystem {
         namespace.renameLog(srcLog, dstLog);
         return true;
     }
+
+    //
+    // Not Supported
+    //
 
     @Override
     public boolean truncate(Path f, long newLength) throws IOException {

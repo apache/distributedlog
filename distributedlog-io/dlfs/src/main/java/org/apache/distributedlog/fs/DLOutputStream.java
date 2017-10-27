@@ -121,7 +121,6 @@ class DLOutputStream extends OutputStream {
     @Override
     public void flush() throws IOException {
         try {
-
             FutureUtils.result(writeControlRecord());
         } catch (IOException ioe) {
             throw ioe;
