@@ -21,6 +21,7 @@ org.apache.distributedlog.common.stats
 org.apache.distributedlog.common.util
 org.apache.distributedlog.exceptions
 org.apache.distributedlog.feature
+org.apache.distributedlog.fs
 org.apache.distributedlog.io
 org.apache.distributedlog.lock
 org.apache.distributedlog.logsegment

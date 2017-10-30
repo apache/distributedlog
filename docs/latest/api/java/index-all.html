@@ -196,6 +196,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/AlreadyTruncatedTransactionException.html#AlreadyTruncatedTransactionException-java.lang.String-">AlreadyTruncatedTransactionException(String)</a></span> - Constructor for exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/AlreadyTruncatedTransactionException.html" title="class in org.apache.distributedlog.exceptions">AlreadyTruncatedTransactionException</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#append-org.apache.hadoop.fs.Path-int-org.apache.hadoop.util.Progressable-">append(Path, int, Progressable)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/AppendOnlyStreamReader.html" title="class in org.apache.distributedlog"><span class="typeNameLink">AppendOnlyStreamReader</span></a> - Class in <a href="org/apache/distributedlog/package-summary.html">org.apache.distributedlog</a></dt>
 <dd>
 <div class="block">AppendOnlyStreamReader.</div>
@@ -1145,6 +1147,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManagerImpl.html#close--">close()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManagerImpl.html" title="class in org.apache.distributedlog">DistributedLogManagerImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#close--">close()</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/DistributedLogNamespace.html#close--">close()</a></span> - Method in interface org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/DistributedLogNamespace.html" title="interface in org.apache.distributedlog.namespace">DistributedLogNamespace</a></dt>
 <dd>
 <div class="block">Close the namespace.</div>
@@ -1308,6 +1312,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/DistributedLogClientImpl.html#create-java.lang.String-">create(String)</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/DistributedLogClientImpl.html" title="class in org.apache.distributedlog.client">DistributedLogClientImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#create-org.apache.hadoop.fs.Path-org.apache.hadoop.fs.permission.FsPermission-boolean-int-short-long-org.apache.hadoop.util.Progressable-">create(Path, FsPermission, boolean, int, short, long, Progressable)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/DLMetadata.html#create-java.net.URI-">create(URI)</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/DLMetadata.html" title="class in org.apache.distributedlog.metadata">DLMetadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/DLMetadata.html#create-org.apache.distributedlog.impl.metadata.BKDLConfig-">create(BKDLConfig)</a></span> - Static method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/DLMetadata.html" title="class in org.apache.distributedlog.metadata">DLMetadata</a></dt>
@@ -1425,6 +1431,8 @@
 <div class="block">Delete the log.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogManagerImpl.html#delete--">delete()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogManagerImpl.html" title="class in org.apache.distributedlog">DistributedLogManagerImpl</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#delete-org.apache.hadoop.fs.Path-boolean-">delete(Path, boolean)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/io/AsyncDeleteable.html#delete--">delete()</a></span> - Method in interface org.apache.distributedlog.io.<a href="org/apache/distributedlog/io/AsyncDeleteable.html" title="interface in org.apache.distributedlog.io">AsyncDeleteable</a></dt>
 <dd>
@@ -1647,6 +1655,14 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/DLException.html#DLException-int-java.lang.Throwable-">DLException(int, Throwable)</a></span> - Constructor for exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/DLException.html" title="class in org.apache.distributedlog.exceptions">DLException</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/exceptions/DLException.html#DLException-int-java.lang.String-java.lang.Throwable-">DLException(int, String, Throwable)</a></span> - Constructor for exception org.apache.distributedlog.exceptions.<a href="org/apache/distributedlog/exceptions/DLException.html" title="class in org.apache.distributedlog.exceptions">DLException</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs"><span class="typeNameLink">DLFileSystem</span></a> - Class in <a href="org/apache/distributedlog/fs/package-summary.html">org.apache.distributedlog.fs</a></dt>
+<dd>
+<div class="block">A FileSystem Implementation powered by replicated logs.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#DLFileSystem--">DLFileSystem()</a></span> - Constructor for class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#DLFS_CONF_FILE">DLFS_CONF_FILE</a></span> - Static variable in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/apache/distributedlog/exceptions/DLIllegalStateException.html" title="class in org.apache.distributedlog.exceptions"><span class="typeNameLink">DLIllegalStateException</span></a> - Exception in <a href="org/apache/distributedlog/exceptions/package-summary.html">org.apache.distributedlog.exceptions</a></dt>
 <dd>
@@ -2317,6 +2333,8 @@
 <dd>
 <div class="block">Get the overlay config path for file feature provider.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#getFileStatus-org.apache.hadoop.fs.Path-">getFileStatus(Path)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/stats/ClientStats.html#getFinagleStatsReceiver-java.net.SocketAddress-">getFinagleStatsReceiver(SocketAddress)</a></span> - Method in class org.apache.distributedlog.client.stats.<a href="org/apache/distributedlog/client/stats/ClientStats.html" title="class in org.apache.distributedlog.client.stats">ClientStats</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.html#getFinalisedData--">getFinalisedData()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></dt>
@@ -2375,6 +2393,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/ClientConfig.html#getHandshakeWithClientInfo--">getHandshakeWithClientInfo()</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/ClientConfig.html" title="class in org.apache.distributedlog.client">ClientConfig</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#getHomeDirectory--">getHomeDirectory()</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/routing/ConsistentHashRoutingService.html#getHost-java.lang.String-org.apache.distributedlog.client.routing.RoutingService.RoutingContext-">getHost(String, RoutingService.RoutingContext)</a></span> - Method in class org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/ConsistentHashRoutingService.html" title="class in org.apache.distributedlog.client.routing">ConsistentHashRoutingService</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/routing/RegionsRoutingService.html#getHost-java.lang.String-org.apache.distributedlog.client.routing.RoutingService.RoutingContext-">getHost(String, RoutingService.RoutingContext)</a></span> - Method in class org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/RegionsRoutingService.html" title="class in org.apache.distributedlog.client.routing">RegionsRoutingService</a></dt>
@@ -2413,6 +2433,8 @@
 <dd>
 <div class="block">Is immediate flush enabled.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#getInitialWorkingDirectory--">getInitialWorkingDirectory()</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#getInputStream-long-">getInputStream(long)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
 <div class="block">Get the input stream starting with fromTxnId for the specified log.</div>
@@ -3144,6 +3166,8 @@
 <dd>
 <div class="block">Get name of the unpartitioned stream.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#getUri--">getUri()</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LocalDLMEmulator.html#getUri--">getUri()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LocalDLMEmulator.html" title="class in org.apache.distributedlog">LocalDLMEmulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/metadata/LogMetadata.html#getUri--">getUri()</a></span> - Method in class org.apache.distributedlog.metadata.<a href="org/apache/distributedlog/metadata/LogMetadata.html" title="class in org.apache.distributedlog.metadata">LogMetadata</a></dt>
@@ -3161,6 +3185,8 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.html#getVersion--">getVersion()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.html" title="class in org.apache.distributedlog">LogSegmentMetadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/ZooKeeperClient.html#getWatcherManager--">getWatcherManager()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/ZooKeeperClient.html" title="class in org.apache.distributedlog">ZooKeeperClient</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#getWorkingDirectory--">getWorkingDirectory()</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#getWriteQuorumSize--">getWriteQuorumSize()</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -3307,6 +3333,8 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LocalDLMEmulator.Builder.html#initialBookiePort-int-">initialBookiePort(int)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LocalDLMEmulator.Builder.html" title="class in org.apache.distributedlog">LocalDLMEmulator.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DLSN.html#InitialDLSN">InitialDLSN</a></span> - Static variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/DLSN.html" title="class in org.apache.distributedlog">DLSN</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#initialize-java.net.URI-org.apache.hadoop.conf.Configuration-">initialize(URI, Configuration)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/NamespaceDriver.html#initialize-org.apache.distributedlog.DistributedLogConfiguration-org.apache.distributedlog.config.DynamicDistributedLogConfiguration-java.net.URI-org.apache.distributedlog.util.OrderedScheduler-org.apache.bookkeeper.feature.FeatureProvider-org.apache.distributedlog.injector.AsyncFailureInjector-org.apache.bookkeeper.stats.StatsLogger-org.apache.bookkeeper.stats.StatsLogger-java.lang.String-int-">initialize(DistributedLogConfiguration, DynamicDistributedLogConfiguration, URI, OrderedScheduler, FeatureProvider, AsyncFailureInjector, StatsLogger, StatsLogger, String, int)</a></span> - Method in interface org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/NamespaceDriver.html" title="interface in org.apache.distributedlog.namespace">NamespaceDriver</a></dt>
 <dd>
@@ -3502,6 +3530,8 @@
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/functions/VoidFunctions.html#LIST_TO_VOID_FUNC">LIST_TO_VOID_FUNC</a></span> - Static variable in class org.apache.distributedlog.common.functions.<a href="org/apache/distributedlog/common/functions/VoidFunctions.html" title="class in org.apache.distributedlog.common.functions">VoidFunctions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/namespace/NamespaceWatcher.html#listeners">listeners</a></span> - Variable in class org.apache.distributedlog.namespace.<a href="org/apache/distributedlog/namespace/NamespaceWatcher.html" title="class in org.apache.distributedlog.namespace">NamespaceWatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#listStatus-org.apache.hadoop.fs.Path-">listStatus(Path)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#loadConf-java.net.URL-">loadConf(URL)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
@@ -3972,6 +4002,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html#minActiveSlotId">minActiveSlotId</a></span> - Variable in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.LogSegmentMetadataBuilder.html" title="class in org.apache.distributedlog">LogSegmentMetadata.LogSegmentMetadataBuilder</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#mkdirs-org.apache.hadoop.fs.Path-org.apache.hadoop.fs.permission.FsPermission-">mkdirs(Path, FsPermission)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/routing/ServerSetWatcher.MonitorException.html#MonitorException-java.lang.String-">MonitorException(String)</a></span> - Constructor for exception org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/ServerSetWatcher.MonitorException.html" title="class in org.apache.distributedlog.client.routing">ServerSetWatcher.MonitorException</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/routing/ServerSetWatcher.MonitorException.html#MonitorException-java.lang.String-java.lang.Throwable-">MonitorException(String, Throwable)</a></span> - Constructor for exception org.apache.distributedlog.client.routing.<a href="org/apache/distributedlog/client/routing/ServerSetWatcher.MonitorException.html" title="class in org.apache.distributedlog.client.routing">ServerSetWatcher.MonitorException</a></dt>
@@ -4303,6 +4335,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/common/stats/OpStatsListener.html#onSuccess-T-">onSuccess(T)</a></span> - Method in class org.apache.distributedlog.common.stats.<a href="org/apache/distributedlog/common/stats/OpStatsListener.html" title="class in org.apache.distributedlog.common.stats">OpStatsListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#open-org.apache.hadoop.fs.Path-int-">open(Path, int)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/DistributedLogManager.html#openAsyncLogReader-long-">openAsyncLogReader(long)</a></span> - Method in interface org.apache.distributedlog.api.<a href="org/apache/distributedlog/api/DistributedLogManager.html" title="interface in org.apache.distributedlog.api">DistributedLogManager</a></dt>
 <dd>
 <div class="block">Open an async log reader to read records from a log starting from <code>fromTxnId</code>.</div>
@@ -4488,6 +4522,10 @@
 <dt><a href="org/apache/distributedlog/feature/package-summary.html">org.apache.distributedlog.feature</a> - package org.apache.distributedlog.feature</dt>
 <dd>
 <div class="block">Feature & FeatureProvider for distributedlog.</div>
+</dd>
+<dt><a href="org/apache/distributedlog/fs/package-summary.html">org.apache.distributedlog.fs</a> - package org.apache.distributedlog.fs</dt>
+<dd>
+<div class="block">A filesystem API built over distributedlog.</div>
 </dd>
 <dt><a href="org/apache/distributedlog/io/package-summary.html">org.apache.distributedlog.io</a> - package org.apache.distributedlog.io</dt>
 <dd>
@@ -4980,6 +5018,8 @@
 <dd>
 <div class="block">Remove the owner <code>addr</code> from <code>stream</code> for a given <code>reason</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#rename-org.apache.hadoop.fs.Path-org.apache.hadoop.fs.Path-">rename(Path, Path)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/api/namespace/Namespace.html#renameLog-java.lang.String-java.lang.String-">renameLog(String, String)</a></span> - Method in interface org.apache.distributedlog.api.namespace.<a href="org/apache/distributedlog/api/namespace/Namespace.html" title="interface in org.apache.distributedlog.api.namespace">Namespace</a></dt>
 <dd>
 <div class="block">Rename a log from <i>oldName</i> to <i>newName</i>.</div>
@@ -5789,6 +5829,8 @@ upgraded and did not have ledger sequence number to start with or for newly crea
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/LogSegmentMetadata.Mutator.html#setVersion-org.apache.distributedlog.LogSegmentMetadata.LogSegmentMetadataVersion-">setVersion(LogSegmentMetadata.LogSegmentMetadataVersion)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/LogSegmentMetadata.Mutator.html" title="class in org.apache.distributedlog">LogSegmentMetadata.Mutator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#setWorkingDirectory-org.apache.hadoop.fs.Path-">setWorkingDirectory(Path)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/DistributedLogConfiguration.html#setWriteLockEnabled-boolean-">setWriteLockEnabled(boolean)</a></span> - Method in class org.apache.distributedlog.<a href="org/apache/distributedlog/DistributedLogConfiguration.html" title="class in org.apache.distributedlog">DistributedLogConfiguration</a></dt>
 <dd>
 <div class="block">Enable lock for opening a writer to write a stream?</div>
@@ -6197,6 +6239,8 @@ upgraded and did not have ledger sequence number to start with or for newly crea
 <div class="block">Truncate the log until <i>dlsn</i>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/client/DistributedLogClientImpl.html#truncate-java.lang.String-org.apache.distributedlog.DLSN-">truncate(String, DLSN)</a></span> - Method in class org.apache.distributedlog.client.<a href="org/apache/distributedlog/client/DistributedLogClientImpl.html" title="class in org.apache.distributedlog.client">DistributedLogClientImpl</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/apache/distributedlog/fs/DLFileSystem.html#truncate-org.apache.hadoop.fs.Path-long-">truncate(Path, long)</a></span> - Method in class org.apache.distributedlog.fs.<a href="org/apache/distributedlog/fs/DLFileSystem.html" title="class in org.apache.distributedlog.fs">DLFileSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/apache/distributedlog/service/DistributedLogClient.html#truncate-java.lang.String-org.apache.distributedlog.DLSN-">truncate(String, DLSN)</a></span> - Method in interface org.apache.distributedlog.service.<a href="org/apache/distributedlog/service/DistributedLogClient.html" title="interface in org.apache.distributedlog.service">DistributedLogClient</a></dt>
 <dd>
