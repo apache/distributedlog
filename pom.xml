@@ -86,6 +86,7 @@
     <module>distributedlog-common</module>
     <module>distributedlog-protocol</module>
     <module>distributedlog-core</module>
+    <module>distributedlog-io</module>
     <module>distributedlog-proxy-protocol</module>
     <module>distributedlog-proxy-client</module>
     <module>distributedlog-proxy-server</module>
@@ -242,7 +243,7 @@
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>**/org/apache/distributedlog/thrift/*</exclude>
             <exclude>**/logs/*.log</exclude>
-            <exclude>**/target/*</exclude>
+            <exclude>**/target/**/*</exclude>
             <!-- Git -->
             <exclude>.git/**/*</exclude>
             <exclude>.github/**/*</exclude>
