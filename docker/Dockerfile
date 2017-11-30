@@ -28,7 +28,7 @@ ENV DL_USER=distributedlog
 
 # install dependencies
 RUN set -x \
-    && yum install -y wget \
+    && yum install -y wget nc \
     && wget -q https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
     && pip install zk-shell \
