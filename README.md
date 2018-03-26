@@ -14,6 +14,9 @@ reliable _real-time_ applications.
 
 _Apache DistributedLog project graduated from Incubator at July 2017. It is now a sub-project of Apache BookKeeper._
 
+The core components of _Apache DistributedLog_ has been merged as part of _Apache BookKeeper_. The development of _Apache DistributedLog_ has been moved under BookKeeper.
+See [BP-26: Move distributedlog library as part of bookkeeper](http://bookkeeper.apache.org/bps/BP-26-move-distributedlog-core-library/) for more details.
+
 ## Features
 
 #### High Performance
