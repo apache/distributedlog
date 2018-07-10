@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 gem 'jekyll'
+gem 'nokogiri', '1.8.2'
 gem 'jekyll-redirect-from'
 gem 'html-proofer'
 gem 'RbST'
