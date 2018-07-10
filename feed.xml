@@ -6,9 +6,9 @@
 </description>
     <link>http://bookkeeper.apache.org/distributedlog/distributedlog/</link>
     <atom:link href="http://bookkeeper.apache.org/distributedlog/distributedlog/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 28 Mar 2018 05:57:36 +0000</pubDate>
-    <lastBuildDate>Wed, 28 Mar 2018 05:57:36 +0000</lastBuildDate>
-    <generator>Jekyll v3.2.1</generator>
+    <pubDate>Tue, 10 Jul 2018 17:17:16 +0000</pubDate>
+    <lastBuildDate>Tue, 10 Jul 2018 17:17:16 +0000</lastBuildDate>
+    <generator>Jekyll v3.8.3</generator>
     
       <item>
         <title>The first release of Apache DistributedLog</title>
@@ -274,31 +274,31 @@ or when the owner of the log stream fails.&lt;/p&gt;
 &lt;div class=&quot;footnotes&quot;&gt;
   &lt;ol&gt;
     &lt;li id=&quot;fn:distributedlog&quot;&gt;
-      &lt;p&gt;DistributedLog Website: http://distributedLog.io &lt;a href=&quot;#fnref:distributedlog&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;DistributedLog Website: http://distributedLog.io &lt;a href=&quot;#fnref:distributedlog&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:kafka&quot;&gt;
-      &lt;p&gt;Apache Kafka Website: http://kafka.apache.org/ &lt;a href=&quot;#fnref:kafka&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Apache Kafka Website: http://kafka.apache.org/ &lt;a href=&quot;#fnref:kafka&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:bookkeeper&quot;&gt;
-      &lt;p&gt;Apache BookKeeper Website: http://bookKeeper.apache.org/ &lt;a href=&quot;#fnref:bookkeeper&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Apache BookKeeper Website: http://bookKeeper.apache.org/ &lt;a href=&quot;#fnref:bookkeeper&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:ledger&quot;&gt;
-      &lt;p&gt;BookKeeper Ledger: http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html &lt;a href=&quot;#fnref:ledger&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;BookKeeper Ledger: http://bookkeeper.apache.org/docs/r4.4.0/bookkeeperOverview.html &lt;a href=&quot;#fnref:ledger&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:corelibrary&quot;&gt;
-      &lt;p&gt;Applications can also use the core library directly to append log records. This is very useful for use cases like replicated state machines that require ordering and exclusive write semantics. &lt;a href=&quot;#fnref:corelibrary&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Applications can also use the core library directly to append log records. This is very useful for use cases like replicated state machines that require ordering and exclusive write semantics. &lt;a href=&quot;#fnref:corelibrary&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:logcompaction&quot;&gt;
-      &lt;p&gt;Kafka Log Compaction: https://cwiki.apache.org/confluence/display/KAFKA/Log+Compaction &lt;a href=&quot;#fnref:logcompaction&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Kafka Log Compaction: https://cwiki.apache.org/confluence/display/KAFKA/Log+Compaction &lt;a href=&quot;#fnref:logcompaction&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:consistency&quot;&gt;
-      &lt;p&gt;Strong consistency in Manhattan: https://blog.twitter.com/2016/strong-consistency-in-manhattan &lt;a href=&quot;#fnref:consistency&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Strong consistency in Manhattan: https://blog.twitter.com/2016/strong-consistency-in-manhattan &lt;a href=&quot;#fnref:consistency&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:kafkareplication&quot;&gt;
-      &lt;p&gt;Kafka Replication: https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication &lt;a href=&quot;#fnref:kafkareplication&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Kafka Replication: https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication &lt;a href=&quot;#fnref:kafkareplication&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:jepsen&quot;&gt;
-      &lt;p&gt;Jepsen: Kafka: https://aphyr.com/posts/293-jepsen-Kafka &lt;a href=&quot;#fnref:jepsen&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Jepsen: Kafka: https://aphyr.com/posts/293-jepsen-Kafka &lt;a href=&quot;#fnref:jepsen&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;

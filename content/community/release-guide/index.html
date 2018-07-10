@@ -292,18 +292,16 @@
 
 <p>Determine your Apache GPG Key and Key ID, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>gpg --list-keys
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gpg --list-keys
+</code></pre></div></div>
 
 <p>This will list your GPG keys. One of these should reflect your Apache account, for example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>--------------------------------------------------
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--------------------------------------------------
 pub   2048R/845E6689 2016-02-23
 uid                  Nomen Nescio &lt;anonymous@apache.org&gt;
 sub   2048R/BA4D50BE 2016-02-23
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Here, the key ID is the 8-digit hex string in the <code class="highlighter-rouge">pub</code> line: <code class="highlighter-rouge">845E6689</code>.</p>
 
@@ -311,19 +309,17 @@ sub   2048R/BA4D50BE 2016-02-23
 
 <p>Configure <code class="highlighter-rouge">git</code> to use this key when signing code by giving it your key ID, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git config --global user.signingkey 845E6689
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global user.signingkey 845E6689
+</code></pre></div></div>
 
 <p>You may drop the <code class="highlighter-rouge">--global</code> option if you’d prefer to use this key for the current repository only.</p>
 
 <p>You may wish to start <code class="highlighter-rouge">gpg-agent</code> to unlock your GPG key only once using your passphrase. Otherwise, you may need to enter this passphrase hundreds of times. The setup for <code class="highlighter-rouge">gpg-agent</code> varies based on operating system, but may be something like this:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>eval $(gpg-agent --daemon --no-grab --write-env-file $HOME/.gpg-agent-info)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eval $(gpg-agent --daemon --no-grab --write-env-file $HOME/.gpg-agent-info)
 export GPG_TTY=$(tty)
 export GPG_AGENT_INFO
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="access-to-apache-nexus-repository">Access to Apache Nexus repository</h4>
 
@@ -337,7 +333,7 @@ export GPG_AGENT_INFO
   <li>
     <p>Insert this snippet twice into your global Maven <code class="highlighter-rouge">settings.xml</code> file, typically <code class="highlighter-rouge">${HOME}/.m2/settings.xml</code>. The end result should look like this, where <code class="highlighter-rouge">TOKEN_NAME</code> and <code class="highlighter-rouge">TOKEN_PASSWORD</code> are your secret tokens:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> &lt;settings&gt;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;settings&gt;
    &lt;servers&gt;
      &lt;server&gt;
        &lt;id&gt;apache.releases.https&lt;/id&gt;
@@ -351,8 +347,7 @@ export GPG_AGENT_INFO
      &lt;/server&gt;
    &lt;/servers&gt;
  &lt;/settings&gt;
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
 </ol>
 
@@ -404,44 +399,39 @@ export GPG_AGENT_INFO
 
 <p>Check out the version of the codebase from which you start the release. For a new minor or major release, this may be <code class="highlighter-rouge">HEAD</code> of the <code class="highlighter-rouge">master</code> branch. To build a hotfix/incremental release, instead of the <code class="highlighter-rouge">master</code> branch, use the release tag of the release being patched. (Please make sure your cloned repository is up-to-date before starting.)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout &lt;master branch OR release tag&gt;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout &lt;master branch OR release tag&gt;
+</code></pre></div></div>
 
 <p>Set up a few environment variables to simplify Maven commands that follow. (We use <code class="highlighter-rouge">bash</code> Unix syntax in this guide.)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>VERSION="0.4.0-incubating"
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>VERSION="0.4.0-incubating"
 NEXT_VERSION="0.5.0"
 BRANCH_NAME="release-${VERSION}"
 DEVELOPMENT_VERSION="${NEXT_VERSION}-SNAPSHOT"
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Version represents the release currently underway, while next version specifies the anticipated next version to be released from that branch. Normally, 0.4.0 is followed by 0.5.0, while 0.4.0 is followed by 0.4.1.</p>
 
 <p>Use Maven release plugin to create the release branch and update the current branch to use the new development version. This command applies for the new major or minor version. (Warning: this command automatically pushes changes to the code repository.)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mvn release:branch \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn release:branch \
     -DbranchName=${BRANCH_NAME} \
     -DdevelopmentVersion=${DEVELOPMENT_VERSION}
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>However, if you are doing an incremental/hotfix release, please run the following command after checking out the release tag of the release being patched.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mvn release:branch \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn release:branch \
     -DbranchName=${BRANCH_NAME} \
     -DupdateWorkingCopyVersions=false \
     -DupdateBranchVersions=true \
     -DreleaseVersion="${VERSION}-SNAPSHOT"
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Check out the release branch.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout ${BRANCH_NAME}
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout ${BRANCH_NAME}
+</code></pre></div></div>
 
 <p>The rest of this guide assumes that commands are run in the root of a repository on <code class="highlighter-rouge">${BRANCH_NAME}</code> with the above environment variables set.</p>
 
@@ -469,26 +459,23 @@ DEVELOPMENT_VERSION="${NEXT_VERSION}-SNAPSHOT"
 
 <p>Set up a few environment variables to simplify Maven commands that follow. This identifies the release candidate being built. Start with <code class="highlighter-rouge">RC_NUM</code> equal to <code class="highlighter-rouge">1</code> and increment it for each candidate.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>RC_NUM="1"
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RC_NUM="1"
 TAG="v${VERSION}-RC${RC_NUM}"
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Use Maven release plugin to build the release artifacts, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mvn release:prepare \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn release:prepare \
     -Dresume=false \
     -DreleaseVersion=${VERSION} \
     -Dtag=${TAG} \
     -DupdateWorkingCopyVersions=false
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Use Maven release plugin to stage these artifacts on the Apache Nexus repository, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mvn release:perform
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn release:perform
+</code></pre></div></div>
 
 <p>Review all staged artifacts. They should contain all relevant parts for each module, including <code class="highlighter-rouge">pom.xml</code>, jar, test jar, source, test source, javadoc, etc. Artifact names should follow <a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.apache.distributedlog%22">the existing format</a> in which artifact name mirrors directory structure, e.g., <code class="highlighter-rouge">distributedlog-core</code>. Carefully review any new artifacts.</p>
 
@@ -502,21 +489,19 @@ TAG="v${VERSION}-RC${RC_NUM}"
   <li>
     <p>If you have not already, check out the DistributedLog section of the <code class="highlighter-rouge">dev</code> repository on <code class="highlighter-rouge">dist.apache.org</code> via Subversion. In a fresh directory:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> svn co https://dist.apache.org/repos/dist/dev/bookkeeper/distributedlog
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> svn co https://dist.apache.org/repos/dist/dev/bookkeeper/distributedlog
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Make a directory for the new release:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> mkdir distributedlog/${VERSION}
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> mkdir distributedlog/${VERSION}
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Copy and rename the DistributedLog source distribution, hashes, and GPG signature:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz
  cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz.asc distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz.asc
  cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz.md5 distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz.md5
  cp ${DL_ROOT}/target/distributedlog-${VERSION}-src.tar.gz.sha1 distributedlog/${VERSION}/distributedlog-${VERSION}-src.tar.gz.sha1
@@ -528,16 +513,14 @@ TAG="v${VERSION}-RC${RC_NUM}"
  cp ${DL_ROOT}/distributedlog-service/target/distributedlog-service-${VERSION}-bin.tar.gz.asc distributedlog/${VERSION}/distributedlog-service-${VERSION}-bin.tar.gz.asc
  cp ${DL_ROOT}/distributedlog-service/target/distributedlog-service-${VERSION}-bin.tar.gz.md5 distributedlog/${VERSION}/distributedlog-service-${VERSION}-bin.tar.gz.md5
  cp ${DL_ROOT}/distributedlog-service/target/distributedlog-service-${VERSION}-bin.tar.gz.sha1 distributedlog/${VERSION}/distributedlog-service-${VERSION}-bin.tar.gz.sha1
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Add and commit all the files.</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> svn add distributedlog/${VERSION}
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> svn add distributedlog/${VERSION}
  svn commit
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Verify that files are <a href="https://dist.apache.org/repos/dist/dev/bookkeeper/distributedlog">present</a>.</p>
@@ -550,18 +533,16 @@ TAG="v${VERSION}-RC${RC_NUM}"
 
 <p>Check out release candidate, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout ${TAG}
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout ${TAG}
+</code></pre></div></div>
 
 <p>Use Maven Javadoc plugin to generate the new Java reference manual, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mvn -DskipTests clean package javadoc:aggregate \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn -DskipTests clean package javadoc:aggregate \
     -Ddoctitle="Apache DistributedLog Library for Java, version ${VERSION}" \
     -Dwindowtitle="Apache DistributedLog Library for Java, version ${VERSION}" \
     -Dmaven.javadoc.failOnError=false
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>By default, the Javadoc will be generated in <code class="highlighter-rouge">target/site/apidocs/</code>. Let <code class="highlighter-rouge">${JAVADOC_ROOT}</code> be the absolute path to <code class="highlighter-rouge">apidocs</code>. (<a href="https://github.com/apache/distributedlog/pull/1015">Pull request #1015</a> will hopefully simplify this process.)</p>
 
@@ -569,16 +550,14 @@ TAG="v${VERSION}-RC${RC_NUM}"
 
 <p>Checkout the <code class="highlighter-rouge">asf-site</code> branch, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout asf-site
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout asf-site
+</code></pre></div></div>
 
 <p>Copy the generated javadoc files to the asf site, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mkdir -p content/docs/${VERSION}/api/java 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir -p content/docs/${VERSION}/api/java 
 cp -r target/site/apidocs/* content/docs/${VERSION}/api/java/
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="propose-a-pull-request-for-website-updates">Propose a pull request for website updates</h3>
 
@@ -604,7 +583,7 @@ cp -r target/site/apidocs/* content/docs/${VERSION}/api/java/
 
 <p>Start the review-and-vote thread on the dev@ mailing list. Here’s an email template; please adjust as you see fit.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>From: Release Manager
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>From: Release Manager
 To: distributedlog-dev@bookkeeper.apache.org
 Subject: [VOTE] Release 0.4.0, release candidate #0
 
@@ -631,14 +610,13 @@ Release Manager
 [3] link
 [4] link
 [5] link
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>If there are any issues found in the release candidate, reply on the vote thread to cancel the vote. There’s no need to wait 72 hours. Proceed to the <code class="highlighter-rouge">Fix Issues</code> step below and address the problem. However, some issues don’t require cancellation. For example, if an issue is found in the website pull request, just correct it on the spot and the vote can continue as-is.</p>
 
 <p>If there are no issues, reply on the vote thread to close the voting. Then, tally the votes in a separate email. Here’s an email template; please adjust as you see fit.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>From: Release Manager
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>From: Release Manager
 To: distributedlog-dev@bookkeeper.apache.org
 Subject: [RESULT] [VOTE] Release 0.4.0, release candidate #0
 
@@ -653,8 +631,7 @@ There are XXX approving votes, XXX of which are binding:
 There are no disapproving votes.
 
 Thanks everyone!
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="checklist-to-proceed-to-the-finalization-step">Checklist to proceed to the finalization step</h3>
 
@@ -696,9 +673,8 @@ Thanks everyone!
 
 <p>Create a new Git tag for the released version by copying the tag for the final release candidate, as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git tag -s “v${VERSION}” ${TAG}
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git tag -s “v${VERSION}” ${TAG}
+</code></pre></div></div>
 
 <h3 id="merge-website-pull-request">Merge website pull request</h3>
 

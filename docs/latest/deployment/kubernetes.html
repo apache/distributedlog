@@ -376,15 +376,14 @@ you can skip deploying bookkeeper and start from <a href="#create_namespace">Cre
 
 <p>As an example, we’ll create a new GKE cluster for Kubernetes version <a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v175">1.7.5</a> in the <a href="https://cloud.google.com/compute/docs/regions-zones/regions-zones#available">us-central1-a</a> zone. The cluster will be named <code class="highlighter-rouge">bookkeeper-gke-cluster</code> and will consist of three VMs, each using two locally attached SSDs and running on <a href="https://cloud.google.com/compute/docs/machine-types">n1-standard-8</a> machines. These SSDs will be used by Bookie instances, one for the BookKeeper journal and the other for storing the actual data.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>gcloud config <span class="nb">set </span>compute/zone us-central1-a
-<span class="gp">$ </span>gcloud config <span class="nb">set </span>project your-project-name
-<span class="gp">$ </span>gcloud container clusters create bookkeeper-gke-cluster <span class="se">\</span>
-  --machine-type<span class="o">=</span>n1-standard-8 <span class="se">\</span>
-  --num-nodes<span class="o">=</span>3 <span class="se">\</span>
-  --local-ssd-count<span class="o">=</span>2 <span class="se">\</span>
-  --cluster-version<span class="o">=</span>1.7.5
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcloud config <span class="nb">set </span>compute/zone us-central1-a
+<span class="nv">$ </span>gcloud config <span class="nb">set </span>project your-project-name
+<span class="nv">$ </span>gcloud container clusters create bookkeeper-gke-cluster <span class="se">\</span>
+  <span class="nt">--machine-type</span><span class="o">=</span>n1-standard-8 <span class="se">\</span>
+  <span class="nt">--num-nodes</span><span class="o">=</span>3 <span class="se">\</span>
+  <span class="nt">--local-ssd-count</span><span class="o">=</span>2 <span class="se">\</span>
+  <span class="nt">--cluster-version</span><span class="o">=</span>1.7.5
+</code></pre></div></div>
 
 <p>By default, bookies will run on all the machines that have locally attached SSD disks. In this example, all of those machines will have two SSDs, but you can add different types of machines to the cluster later. You can control which machines host bookie servers using <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels">labels</a>.</p>
 
@@ -392,20 +391,18 @@ you can skip deploying bookkeeper and start from <a href="#create_namespace">Cre
 
 <p>You can observe your cluster in the <a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/">Kubernetes Dashboard</a> by downloading the credentials for your Kubernetes cluster and opening up a proxy to the cluster:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>gcloud container clusters get-credentials bookkeeper-gke-cluster <span class="se">\</span>
-  --zone<span class="o">=</span>us-central1-a <span class="se">\</span>
-  --project<span class="o">=</span>your-project-name
-<span class="gp">$ </span>kubectl proxy
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcloud container clusters get-credentials bookkeeper-gke-cluster <span class="se">\</span>
+  <span class="nt">--zone</span><span class="o">=</span>us-central1-a <span class="se">\</span>
+  <span class="nt">--project</span><span class="o">=</span>your-project-name
+<span class="nv">$ </span>kubectl proxy
+</code></pre></div></div>
 
 <p>By default, the proxy will be opened on port 8001. Now you can navigate to <a href="http://localhost:8001/ui">localhost:8001/ui</a> in your browser to access the dashboard. At first your GKE cluster will be empty, but that will change as you begin deploying.</p>
 
 <p>When you create a cluster, your <code class="highlighter-rouge">kubectl</code> config in <code class="highlighter-rouge">~/.kube/config</code> (on MacOS and Linux) will be updated for you, so you probably won’t need to change your configuration. Nonetheless, you can ensure that <code class="highlighter-rouge">kubectl</code> can interact with your cluster by listing the nodes in the cluster:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl get nodes
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get nodes
+</code></pre></div></div>
 
 <p>If <code class="highlighter-rouge">kubectl</code> is working with your cluster, you can proceed to deploy ZooKeeper and Bookies.</p>
 
@@ -413,57 +410,50 @@ you can skip deploying bookkeeper and start from <a href="#create_namespace">Cre
 
 <p>You <em>must</em> deploy ZooKeeper as the first component, as it is a dependency for the others.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f zookeeper.yaml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> zookeeper.yaml
+</code></pre></div></div>
 
 <p>Wait until all three ZooKeeper server pods are up and have the status <code class="highlighter-rouge">Running</code>. You can check on the status of the ZooKeeper pods at any time:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl get pods -l <span class="nv">component</span><span class="o">=</span>zookeeper
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get pods <span class="nt">-l</span> <span class="nv">component</span><span class="o">=</span>zookeeper
 NAME      READY     STATUS             RESTARTS   AGE
 zk-0      1/1       Running            0          18m
 zk-1      1/1       Running            0          17m
 zk-2      0/1       Running            6          15m
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This step may take several minutes, as Kubernetes needs to download the Docker image on the VMs.</p>
 
 <p>If you want to connect to one of the remote zookeeper server, you can use<a href="https://github.com/rgs1/zk_shell">zk-shell</a>, you need to forward a local port to the
 remote zookeeper server:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl port-forward zk-0 2181:2181
-<span class="gp">$ </span>zk-shell localhost 2181
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl port-forward zk-0 2181:2181
+<span class="nv">$ </span>zk-shell localhost 2181
+</code></pre></div></div>
 
 <h3 id="deploy-bookies">Deploy Bookies</h3>
 
 <p>Once ZooKeeper cluster is Running, you can then deploy the bookies.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f bookkeeper.yaml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> bookkeeper.yaml
+</code></pre></div></div>
 
 <p>You can check on the status of the Bookie pods for these components either in the Kubernetes Dashboard or using <code class="highlighter-rouge">kubectl</code>:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl get pods
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get pods
+</code></pre></div></div>
 
 <p>While all BookKeeper pods is Running, by zk-shell you could find all available bookies under /ledgers/</p>
 
 <p>You can also verify the deployment by ssh to a bookie pod.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl <span class="nb">exec</span> -it &lt;pod_name&gt; -- bash
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;pod_name&gt; <span class="nt">--</span> bash
+</code></pre></div></div>
 
 <p>On the bookie pod, you can run simpletest to verify the installation. The simpletest will create a ledger and append a few entries into the ledger.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nv">BOOKIE_CONF</span><span class="o">=</span>/opt/bookkeeper/conf/bk_server.conf /opt/distributedlog/bin/dlog bkshell simpletest
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ BOOKIE_CONF</span><span class="o">=</span>/opt/bookkeeper/conf/bk_server.conf /opt/distributedlog/bin/dlog bkshell simpletest
+</code></pre></div></div>
 
 <h3 id="monitoring">Monitoring</h3>
 
@@ -472,9 +462,8 @@ on Kubernetes has consists of <a href="https://prometheus.io/">Prometheus</a> an
 
 <p>You can deploy one instance of Prometheus and one instance of Grafana by running following command:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f monitoring.yaml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> monitoring.yaml
+</code></pre></div></div>
 
 <h4 id="prometheus">Prometheus</h4>
 
@@ -486,9 +475,8 @@ Prometheus directly. Instead, you can use the Grafana interface that displays th
 <p>In your Kubernetes cluster, you can use Grafana to view dashbaords for JVM stats, ZooKeeper, and BookKeeper. You can get access to the pod serving Grafana
 using kubectl’s port-forward command:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl port-forward <span class="k">$(</span>kubectl get pods | grep grafana | awk <span class="s1">'{print $1}'</span><span class="k">)</span> 3000
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl port-forward <span class="k">$(</span>kubectl get pods | <span class="nb">grep </span>grafana | <span class="nb">awk</span> <span class="s1">'{print $1}'</span><span class="k">)</span> 3000
+</code></pre></div></div>
 
 <p>You can then access the dashboard in your web browser at <a href="http://localhost:3000">localhost:3000</a>.</p>
 
@@ -501,9 +489,8 @@ namespace <code class="highlighter-rouge">distributedlog://zookeeper/distributed
 
 <p>You can create a distributedlog namespace using the <code class="highlighter-rouge">dlog</code> tool.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl run dlog --rm<span class="o">=</span><span class="nb">true</span> --attach --image<span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 --restart<span class="o">=</span>OnFailure -- /opt/distributedlog/bin/dlog admin <span class="nb">bind</span> -l /bookkeeper/ledgers -s zookeeper -c distributedlog://zookeeper/distributedlog
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl run dlog <span class="nt">--rm</span><span class="o">=</span><span class="nb">true</span> <span class="nt">--attach</span> <span class="nt">--image</span><span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 <span class="nt">--restart</span><span class="o">=</span>OnFailure <span class="nt">--</span> /opt/distributedlog/bin/dlog admin <span class="nb">bind</span> <span class="nt">-l</span> /bookkeeper/ledgers <span class="nt">-s</span> zookeeper <span class="nt">-c</span> distributedlog://zookeeper/distributedlog
+</code></pre></div></div>
 
 <p>After you have a distributedlog namespace, you can play around the namespace by using <code class="highlighter-rouge">dlog</code> tool to create, delete, list and show the streams.</p>
 
@@ -511,21 +498,19 @@ namespace <code class="highlighter-rouge">distributedlog://zookeeper/distributed
 
 <p>Create 10 streams prefixed with <code class="highlighter-rouge">mystream-</code>.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl run dlog --rm<span class="o">=</span><span class="nb">true</span> --attach --image<span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 --restart<span class="o">=</span>OnFailure -- /opt/distributedlog/bin/dlog tool create -u distributedlog://zookeeper/distributedlog -r mystream- -e 0-9 -f
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl run dlog <span class="nt">--rm</span><span class="o">=</span><span class="nb">true</span> <span class="nt">--attach</span> <span class="nt">--image</span><span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 <span class="nt">--restart</span><span class="o">=</span>OnFailure <span class="nt">--</span> /opt/distributedlog/bin/dlog tool create <span class="nt">-u</span> distributedlog://zookeeper/distributedlog <span class="nt">-r</span> mystream- <span class="nt">-e</span> 0-9 <span class="nt">-f</span>
+</code></pre></div></div>
 
 <h4 id="list-streams">List Streams</h4>
 
 <p>List the streams under the namespace.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl run dlog --rm<span class="o">=</span><span class="nb">true</span> --attach --image<span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 --restart<span class="o">=</span>OnFailure -- /opt/distributedlog/bin/dlog tool list -u distributedlog://zookeeper/distributedlog
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl run dlog <span class="nt">--rm</span><span class="o">=</span><span class="nb">true</span> <span class="nt">--attach</span> <span class="nt">--image</span><span class="o">=</span>apachedistributedlog/distributedlog:0.5.0 <span class="nt">--restart</span><span class="o">=</span>OnFailure <span class="nt">--</span> /opt/distributedlog/bin/dlog tool list <span class="nt">-u</span> distributedlog://zookeeper/distributedlog
+</code></pre></div></div>
 
 <p>An example of the output of this command is:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Streams under distributedlog://zookeeper/distributedlog :
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Streams under distributedlog://zookeeper/distributedlog :
 --------------------------------
 mystream-0
 mystream-9
@@ -538,8 +523,7 @@ mystream-1
 mystream-4
 mystream-3
 --------------------------------
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="write-and-read-records">Write and Read Records</h3>
 
@@ -547,34 +531,29 @@ mystream-3
 
 <p>Start one instance of benchmark-writer to write to 100 streams. (The streams are automatically created by the benchmark writer)</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f benchmark-writer.yaml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> benchmark-writer.yaml
+</code></pre></div></div>
 
 <p>Start one instance of benchmark-reader to read from those 100 streams.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kubectl apply -f benchmark-reader.yaml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> benchmark-reader.yaml
+</code></pre></div></div>
 
 <p>You can monitor the Grafana dashboard for the traffic comes from benchmark writer and reader.</p>
 
 <h3 id="un-deploy">Un-Deploy</h3>
 
-<p>Delete BookKeeper
-<code class="highlighter-rouge">bash
-$ kubectl delete -f bookkeeper.yaml    
-</code></p>
+<p>Delete BookKeeper</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl delete <span class="nt">-f</span> bookkeeper.yaml    
+</code></pre></div></div>
 
-<p>Delete ZooKeeper
-<code class="highlighter-rouge">bash
-$ kubectl delete -f zookeeper.yaml    
-</code></p>
+<p>Delete ZooKeeper</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl delete <span class="nt">-f</span> zookeeper.yaml    
+</code></pre></div></div>
 
-<p>Delete cluster
-<code class="highlighter-rouge">bash
-$ gcloud container clusters delete bookkeeper-gke-cluster    
-</code></p>
+<p>Delete cluster</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcloud container clusters delete bookkeeper-gke-cluster    
+</code></pre></div></div>
 
 </div>
 
